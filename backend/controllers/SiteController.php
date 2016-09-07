@@ -24,7 +24,7 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error', 'get-menu'],
+                        'actions' => ['login', 'error', 'get-menu', 'php-info'],
                         'allow' => true,
                     ],
                     [
@@ -55,6 +55,11 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionPhpInfo()
+    {
+    	phpinfo();
+    }
+    
     public function actionIndex()
     {
         //return $this->render('index');

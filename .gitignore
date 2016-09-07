@@ -18,6 +18,9 @@ Thumbs.db
 # composer vendor dir
 /vendor
 
+# backend linnks for web server
+/frontend/web/backend
+
 # composer itself is not needed
 composer.phar
 

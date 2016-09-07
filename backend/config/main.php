@@ -25,7 +25,7 @@ return [
     ],
     'components' => [
         'urlManager' => [
-            'class' => 'yii\web\urlManager',
+            'class' => 'yii\web\UrlManager',
         	'rules' => [
         		'class' => 'app\components\DeviceUrlRule'	
         	]	
