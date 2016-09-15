@@ -45,9 +45,11 @@ $this->registerCssFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/themes/def
 
 <!--------------------------------------------------------------------------------------------------------------------->  
 
-
-<div id="device_tree" class="col-sm-4 sidebar"></div>
-<div id="device_desc" class="col-sm-8 tabbable tabs-left"></div>                      
+<div class="col-sm-4">
+<input class="search-input form-control"></input>
+<div id="device_tree" class="sidebar"></div>
+</div>
+<div id="device_desc" class="col-sm-8 tabbable tabs-left"></div>  
 
 <script>
     
@@ -55,7 +57,14 @@ $(function() {
 
 	function getId(id) {
       	return id.substr(0, id.indexOf("."));
-    }       
+    }
+
+	$(".search-input").keyup(function() {
+
+        var searchString = $(this).val();
+        console.log(searchString);
+        $('#device_tree').jstree('search', searchString);
+    });       
         
         //tworzymy drzewo urządzeń
         $("#device_tree").jstree({
@@ -85,6 +94,7 @@ $(function() {
 	   			 // Same as above - the `ajax` config option is actually jQuery's AJAX object
 	   			 'ajax' : {
 	   				 'url' : '<?= Url::toRoute('tree/search') ?>',
+	   				'dataType': 'json'
 	   				 // You get the search string as a parameter
 // 	   				 "data" : function (str) {
 // 	   					 return { 
@@ -164,10 +174,10 @@ $(function() {
         	'plugins' : ['contextmenu', 'search', 'types']    	
         });
 
-        $("#searchTree").click(function() {
-            $("#device_tree").jstree("search", $("#device_tree_q").val());
-            return false;
-        });
+//         $("#searchTree").click(function() {
+//             $("#device_tree").jstree("search", $("#device_tree_q").val());
+//             return false;
+//         });
       
     
         //lewy przycisk dla węzła
@@ -241,7 +251,6 @@ $(function() {
 				}                  
             }
        	);
-
 //         $("#device_tree").on(
 //             "ready.jstree",
 //             function(e, data) {

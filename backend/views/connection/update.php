@@ -10,44 +10,12 @@ use yii\bootstrap\Modal;
 /* @var $this yii\web\View */
 /* @var $modelConnection backend\models\Connection */
 
-$this->title = 'Edycja: ' . ' ' . $modelConnection->modelAddress->fullAddress;
-$this->params['breadcrumbs'][] = ['label' => 'Umowy', 'url' => ['index']];
-$this->params['breadcrumbs'][] = 'Edycja';
-$this->params['breadcrumbs'][] = ['label' => $modelConnection->modelAddress->fullAddress];
-
-$this->params['menu']=[
-		['label'=>'Usuń umowę', 'url' => ['delete', 'id'=>$modelConnection->id], 'data' => [
-				'confirm' => 'Are you sure you want to delete this item?',
-				'method' => 'post',
-		],
-		],
-		//['label'=>'Montaż', 'url' => ['task/view-calendar', 'connectionId'=>$modelConnection->id]],
-];
-
+//echo '<center><h4>'.$modelConnection->modelAddress->fullAddress.'</h4></center>';
 ?>
+<div class="connection-update">
 
-<!-------------------------------------------- dodaj na drzewo okno modal --------------------------------------------->
-
-	<?php Modal::begin([
-		'id' => 'modal_add_tree',	
-		'header' => '<center><h4>Dodaj do drzewa</h4></center>',
-		'size' => 'modal-mg',
-		'options' => [
-			'tabindex' => false // important for Select2 to work properly
-		],
-	]);
-	
-	echo "<div id='modal_content_add_tree'></div>";
-	
-	Modal::end(); ?>
-
-<!--------------------------------------------------------------------------------------------------------------------->
-
-<div class="connection-update col-md-6">
-
-    <div style="float:left; width:90%">
     	<?php $form = ActiveForm::begin([
-            'id' => 'update-connection-form',
+            'id'=>$modelConnection->formName()
     	])?>
         
         <div style="display: flex">
@@ -71,6 +39,7 @@ $this->params['menu']=[
                 'attribute' => 'pay_date',
                 'language'=>'pl',
 				'removeButton' => FALSE,
+				'disabled' => $modelConnection->socket > 0 ? false : true,
                 'pluginOptions' => [
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
@@ -106,6 +75,7 @@ $this->params['menu']=[
     			//'initValueText' => 'test',
     			'language' => 'pl',
             	'options' => [
+            		'id' => 'select2-connection-update',	
             		'placeholder' => 'Urządzenie nadrzędne',
             		'onchange' => new yii\web\JsExpression("
 
@@ -150,27 +120,52 @@ $this->params['menu']=[
         
         <?php ActiveForm::end() ?>
         
-    </div>	
+	
 </div>
 
 <script>
 
 $(function(){
-
-	$("a[title='Zamontuj']").click(function(event){
-        
-		$('#modal_add_tree').modal('show')
-			.find('#modal_content_add_tree')
-			.load($(this).attr('href'));
-    
-        return false;
-	});
 	
-	$.getJSON('<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>', function(data){
-		$('#select2-connection-device-container').html(data.results.concat);
+	var device = <?= json_encode($modelConnection->device); ?>
+
+	if (device){
+		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
+			$('#select2-connection-device-container').html(data.results.concat);
+		});
+	
+		$("#connection-device").trigger("change");
+	}
+
+	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
+
+	$("#<?= $modelConnection->formName(); ?>").on('beforeSubmit', function(e){
+
+		var form = $(this);
+	 	$.post(
+	  		form.attr("action"), // serialize Yii2 form
+	  		form.serialize()
+	 	).done(function(result){
+			
+//	 		console.log(result);
+	 		if(result == 1){
+	 			//$(form).trigger('reset');
+				$('#modal-connection-update').modal('hide');
+	 			$.pjax.reload({container: '#connection-grid-pjax'});
+	 		}
+	 		else{
+			
+	 			$('#message').html(result);
+	 		}
+	 	}).fail(function(){
+	 		console.log('server error');
+	 	});
+		return false;				
 	});
 
-	$("#connection-device").trigger("change");
+// 	if (!($("#connection-device").val()) && !($("#connection-mac").val())){
+// 		$(".add-to-tree").hide();
+// 	}	
 })
 
 </script>

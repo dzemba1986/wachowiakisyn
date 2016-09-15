@@ -24,7 +24,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view'],
         				'roles' => ['@']	
         			]	
         		]
@@ -124,20 +124,25 @@ class ConnectionController extends Controller
      */
     public function actionUpdate($id)
     {
-    	$this->layout = 'column2';
-    	
         $modelConnection = $this->findModel($id);
+        $request = Yii::$app->request;
 
-        if ($modelConnection->load(Yii::$app->request->post())) {
-            
-            if($modelConnection->save()){
-                
-                return $this->redirect(['index', 'id' => $modelConnection->id]);
-            }
-        } else {
-            return $this->render('update', [
-                'modelConnection' => $modelConnection,
-            ]);
+        if ($request->isAjax){
+	        if ($modelConnection->load(Yii::$app->request->post())) {
+	        	
+	        	try {
+	        		if(!($modelConnection->save()))
+	        			throw new Exception('Problem z zapisem połączenia');
+	        		
+        			return 1;
+	        	} catch (Exception $e) {
+	        		return 0;
+	        	}
+	        } else {
+	            return $this->renderAjax('update', [
+	                'modelConnection' => $modelConnection,
+	            ]);
+	        }
         }
     }
 

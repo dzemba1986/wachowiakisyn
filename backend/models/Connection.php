@@ -29,6 +29,7 @@ use vakorovin\yii2_macaddress_validator\MacaddressValidator;
  * @property integer $address
  * @property integer $port
  * @property integer $device
+ * @property integer $host
  * @property string $mac
  * @property integer $type
  * @property integer $package

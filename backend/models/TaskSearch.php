@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -82,7 +81,7 @@ class TaskSearch extends Task
         $query->andFilterWhere([
             'id' => $this->id,
             'create' => $this->create,
-            'start_date' => $this->start_date,
+            'task.start_date' => $this->start_date,
             'start_time' => $this->start_time,
             'end_date' => $this->end_date,
             'end_time' => $this->end_time,

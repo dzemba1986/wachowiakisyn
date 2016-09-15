@@ -14,12 +14,46 @@ $this->params['breadcrumbs'][] = $this->title;
 <!-------------------------------------------- widok połączenia okno modal -------------------------------------------->
 
 	<?php Modal::begin([
-		'id' => 'modal_view_connection',	
+		'id' => 'modal-connection-view',	
 		'header' => '<center><h4>Widok umowy</h4></center>',
 		'size' => 'modal-mm',	
 	]);
 	
-	echo "<div id='modal_content_connection'></div>";
+	echo "<div id='modal-content-connection-view'></div>";
+	
+	Modal::end(); ?>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<!-------------------------------------------- edycja połączenia okno modal -------------------------------------------->
+
+	<?php Modal::begin([
+		'id' => 'modal-connection-update',	
+		'header' => '<center><h4>Edycja umowy</h4></center>',
+		'size' => 'modal-mm',
+		'options' => [
+				'tabindex' => false // important for Select2 to work properly
+		],
+	]);
+	
+	echo "<div id='modal-content-connection-update'></div>";
+	
+	Modal::end(); ?>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<!-------------------------------------------- edycja połączenia okno modal -------------------------------------------->
+
+	<?php Modal::begin([
+		'id' => 'modal-connection-add-tree',	
+		'header' => '<center><h4>Edycja umowy</h4></center>',
+		'size' => 'modal-mm',
+		'options' => [
+				'tabindex' => false // important for Select2 to work properly
+		],
+	]);
+	
+	echo "<div id='modal-content-connection-add-tree'></div>";
 	
 	Modal::end(); ?>
 
@@ -81,11 +115,31 @@ $(document).ready(function() {
         
         //event.preventDefault();
         
-		$('#modal_view_connection').modal('show')
-			.find('#modal_content_connection')
+		$('#modal-connection-view').modal('show')
+			.find('#modal-content-connection-view')
 			.load($(this).attr('href') + ' .connection-view');
     
         return false;
+	});
+
+	$('body').on('click', 'a[title="Update"]', function(event){
+        
+        //event.preventDefault();
+        
+		$('#modal-connection-update').modal('show')
+			.find('#modal-content-connection-update')
+			.load($(this).attr('href'));
+    
+        return false;
+	});
+
+	$('body').on('click', 'a[title="Zamontuj"]', function(event){
+        
+		$('#modal-connection-add-tree').modal('show')
+			.find('#modal-content-connection-add-tree')
+			.load($(this).attr('href'));
+
+    	return false;
 	});
     
     //reinicjalizacja kalendarza z datami po użyciu pjax'a

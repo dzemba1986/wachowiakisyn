@@ -49,6 +49,7 @@ class ConnectionSearch extends Connection
 				'start_date',
 				'conf_date',
 				'pay_date',
+				'close_date',	
 				'type',
 				'nocontract',
 				'poll',
@@ -81,7 +82,7 @@ class ConnectionSearch extends Connection
 		$query->FilterWhere([
 			'connection.id' => $this->id,
 			'ara_id' => $this->ara_id,
-			'start_date' => $this->start_date,
+			'connection.start_date' => $this->start_date,
 			'conf_date' => $this->conf_date,
 			'activ_date' => $this->address,
 			'pay_date' => $this->pay_date,

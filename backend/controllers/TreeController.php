@@ -33,9 +33,11 @@ class TreeController extends Controller
      * Lists all Modyfication models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id = null)
     {
-        return $this->render('index');
+        return $this->render('index', [
+        	'id' => $id	
+        ]);
     }
 
     protected function findModel($id)
@@ -65,7 +67,7 @@ class TreeController extends Controller
         		$address = Address::findOne($child->modelDevice->address);
         	
         		$arChildren[] = [
-        			'id' => (int) $child->modelDevice->id . '.' . $child->port . '-' . rand(1,1000),
+        			'id' => (int) $child->modelDevice->id . '.' . $child->port,
         			'text' => $id != 1	?	
         				$model->port[$child->parent_port - 1].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress  :	 
         				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress,
@@ -78,6 +80,39 @@ class TreeController extends Controller
         	}
         	
         	return $arChildren;
+    }
+    
+    public function actionSearch($str) {
+    
+    	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    
+//     	$children = Tree::find()->
+//     	joinWith('modelDevice')->
+//     	where(['parent_device' => $id])->
+//     	orderBy('parent_port')->all();
+    	 
+    
+//     	$arChildren = [];
+    	 
+//     	foreach ($children as $child){
+    		 
+//     		$model = Model::findOne(Device::findOne($id)->model);
+//     		$address = Address::findOne($child->modelDevice->address);
+    		 
+//     		$arChildren[] = [
+//     				'id' => (int) $child->modelDevice->id . '.' . $child->port . '-' . rand(1,1000),
+//     				'text' => $id != 1	?
+//     				$model->port[$child->parent_port - 1].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress  :
+//     				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress,
+//     				'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
+//     				'icon' => false,
+//     				'port' => $child->port,
+//     				'parent_port' => $model->port[$child->parent_port - 1],
+//     				'children' => $child->modelDevice->modelType->name <> 'Host' ? TRUE : FALSE,
+//     		];
+//     	}
+    	 
+    	return $arChildren = ['17213.16', '209.24'];
     }
     
     public function actionAdd($id)
@@ -145,7 +180,7 @@ class TreeController extends Controller
     					throw new Exception('Problem z zapisem device');
     			} catch (\Exception $e) {
     				$transaction->rollBack();
-    				echo $e->getMessage();
+    				return $e->getMessage();
     			}
     			
     			$modelTree->device = $modelDevice->id;
@@ -158,7 +193,7 @@ class TreeController extends Controller
     					throw new Exception('Problem z zapisem na drzewie');
     			} catch (\Exception $e) {
     				$transaction->rollBack();
-    				echo $e->getMessage();
+    				return $e->getMessage();
     			}
     			
     			$modelIp->ip = $request->post('ip');
@@ -171,8 +206,21 @@ class TreeController extends Controller
     					throw new Exception('Problem z zapisem ip');
     			} catch (\Exception $e) {
     				$transaction->rollBack();
-    				echo $e->getMessage();
+    				return $e->getMessage();
     			}
+    			
+    			$modelConnection->host = $modelDevice->id;
+    			$modelConnection->conf_date = date('Y-m-d');
+    			$modelConnection->conf_user = Yii::$app->user->identity->id;
+    			 
+    			try {
+    				if (!$modelConnection->save())
+    					throw new Exception('Problem z zapisem połączenia');
+    			} catch (\Exception $e) {
+    				$transaction->rollBack();
+    				return $e->getMessage();
+    			}
+    			
     			$transaction->commit();
     			$this->redirect(['tree/index']);
     		} else {
@@ -417,8 +465,8 @@ class TreeController extends Controller
 						throw new Exception('Problem z zapisem urządzenia');
 				} catch (\Exception $e) {
 					$transaction->rollBack();
-					echo $e->getMessage();
-					return 0;
+					echo $deviceSource->hasErrors();
+					//return 0;
 				}
 				
 				$transaction->commit();

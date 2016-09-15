@@ -154,9 +154,15 @@ class Address extends \yii\db\ActiveRecord
 	public function getFullDeviceAddress(){
 	
 		if ($this->pietro)
-			return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.' (piętro '.$this->pietro.')';
+			if ($this->lokal)
+				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol.' (piętro '.$this->pietro.')';
+			else 
+				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.' (piętro '.$this->pietro.')';
 		else 
-			return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol;				
+			if ($this->lokal)
+				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
+			else 
+				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol;				
 	}
 	
 	public function getShortAddress(){

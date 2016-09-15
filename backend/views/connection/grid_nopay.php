@@ -53,15 +53,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 	'rowOptions' => function($model){
 		if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
 	
-			return ['class' => 'afterdate'];
-		}
-		elseif ($model->pay_date <> null) {
-	
-			return ['class' => 'activ'];
-		}
-		elseif ($model->close_date <> null) {
-	
-			return ['class' => 'inactiv'];
+			return ['class' => 'after-date'];
 		}
 	},
 	'columns' => [
@@ -239,13 +231,19 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'template' => '{view} {update} {tree}',
         	'buttons' => [
         		'tree' => function ($model, $data) {
-        			if($data->mac && $data->port && $data->device && !$data->nocontract){
+        			if($data->mac && $data->port && $data->device && !$data->nocontract && !$data->host){
         				$url = Url::toRoute(['tree/add-host', 'id' => $data->id]);
 	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
 	        				'title' => \Yii::t('yii', 'Zamontuj'),
 	        				'data-pjax' => '0',
 	        			]);
-        			} else 
+        			} elseif ($data->host) {
+        				$url = Url::toRoute(['tree/index', 'id' => $data->host]);
+        				return Html::a('<span class="glyphicon glyphicon-minus"></span>', $url, [
+        					'title' => \Yii::t('yii', 'Drzewo'),
+        					'data-pjax' => '0',
+        				]);
+        			} else
         				return null;
         		},
         	]

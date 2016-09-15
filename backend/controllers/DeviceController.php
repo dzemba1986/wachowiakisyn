@@ -129,7 +129,7 @@ class DeviceController extends Controller
         return $this->redirect(['index']);
     }
     
-	public function actionList($q = null, $id = null, $type = null, $dist = null) {
+	public function actionList($q = null, $id = null, $type = null, $distribution = null) {
 		
 	    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 	    
@@ -159,7 +159,7 @@ class DeviceController extends Controller
 	    	if(!is_null($type))
 	    		$query->andWhere(['type' => $type]);
 	    	
-	    	if(!is_null($dist)) 
+	    	if(!is_null($distribution)) 
 	    		$query->andWhere(['distribution' => $dist]);
 	    	
 	    	$command = $query->createCommand();
@@ -169,6 +169,7 @@ class DeviceController extends Controller
 	    elseif ($id > 0) {
 	    	$out['results'] = ['id' => $id, 'concat' => Device::findOne($id)->modelAddress->fullDeviceAddress];
 	    }
+	    
 	    return $out;
 	}
 	

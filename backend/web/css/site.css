@@ -111,3 +111,21 @@ a[title="Show all data"] {
     width: 1870px;
   }
 }
+
+/* grid view */
+
+#connection-grid .pay {
+	background-color: #d7ffd7;
+}
+
+#connection-grid .inactiv {
+	background-color: #e1e1e1;
+}
+
+/* #connection-grid .after-date:nth-child(even) { */
+/* 	background-color: #c5c5c5; */
+/* } */
+
+/* #connection-grid .after-date:nth-child(odd) { */
+/* 	background-color: #d6d6d6; */
+/* } */

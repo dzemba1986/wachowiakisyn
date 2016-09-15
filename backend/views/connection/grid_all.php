@@ -31,13 +31,9 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
 			]),
 	],
 	'rowOptions' => function($model){
-		if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
+		if ($model->pay_date <> null && $model->close_date == null) {
 	
-			return ['class' => 'afterdate'];
-		}
-		elseif ($model->activ_date <> null) {
-	
-			return ['class' => 'activ'];
+			return ['class' => 'pay'];
 		}
 		elseif ($model->close_date <> null) {
 	
@@ -158,6 +154,23 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
                 ]
             ]),
             'options' => ['style'=>'width:7%;'],
+        ],
+        [
+        'attribute'=>'close_date',
+        'value'=>'close_date',
+        'format'=>'raw',
+        'filter'=>	DatePicker::widget([
+        		'model' => $searchModel,
+        		'attribute' => 'close_date',
+        		'removeButton' => FALSE,
+        		'language'=>'pl',
+        		'pluginOptions' => [
+        				'format' => 'yyyy-mm-dd',
+        				'todayHighlight' => true,
+        				'endDate' => '0d', //wybór daty max do dziś
+        		]
+        ]),
+        'options' => ['style'=>'width:7%;'],
         ],
         [   
             'header' => PageSize::widget([

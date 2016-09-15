@@ -18,21 +18,21 @@ use common\models\User;
 
     <?php $form = ActiveForm::begin(['id'=>$modelInstallation->formName()]); ?>
     
-    <?= '<center><h4>'.Html::label($modelConnection->modelAddress->fullAddress).'</h4></center>' ?>
-    
     <div class="row">
+    
+    <?php $label = $modelConnection->type == 1 ? 'przełącznik' : 'bramkę'; ?>
     
     <?= $form->field($modelConnection, 'device', [
     		'options' => ['class' => 'col-md-9', 'style' => 'padding-right: 5px;'],
-    	])->widget(Select2::classname(), [
+    	])->label("Wybierz $label")->widget(Select2::classname(), [
     		'language' => 'pl',
             'options' => [
             	'placeholder' => 'Urządzenie nadrzędne',
-            	'onchange' => '
-                	$.get( "' . Url::toRoute('tree/select-list-port') . '&device=" + $("select#connection-device").val() + "&mode=free", function(data){
-						$("select#connection-port").html(data);
-					} );
-            	'
+            	'onchange' => new JsExpression("
+            		$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $('select#connection-device').val() + '&mode=free', function(data){
+						$('select#connection-port').html(data);
+					});
+            	")
             ],
     		'pluginOptions' => [
     			'allowClear' => true,
@@ -44,7 +44,12 @@ use common\models\User;
     			'ajax' => [
     				'url' => Url::toRoute('device/list'),
     				'dataType' => 'json',
-    				'data' => new JsExpression('function(params) { return {q:params.term}; }')
+    				'data' => new JsExpression("function(params) {
+    					return {
+    						q : params.term,
+    						type : $modelConnection->type == 1 ? 2 : 3
+						}; 
+					}")
 	    		],
 	    		'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
 	    		'templateResult' => new JsExpression('function(device) { return device.concat; }'),
@@ -100,11 +105,18 @@ use common\models\User;
 
 $(function(){
 
-	$.getJSON('<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>', function(data){
-		$('#select2-connection-device-container').html(data.results.concat);
-	});
+	var device = <?= json_encode($modelConnection->device); ?>
 
-	$("#connection-device").trigger("change");
+	if (device){
+		$.getJSON("<?= Url::toRoute(["device/list", "id" => $modelConnection->device])?>", function(data){
+			$("#select2-connection-device-container").html(data.results.concat);
+		});
+	
+		$("#connection-device").trigger("change");
+	}
+
+	
+	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
 
 	$('#<?= $modelInstallation->formName(); ?>').on('beforeSubmit', function(e){
 
@@ -127,6 +139,7 @@ $(function(){
 	 	}).fail(function(){
 	 		console.log('server error');
 	 	});
+	 	
 		return false;				
 	});
 })
