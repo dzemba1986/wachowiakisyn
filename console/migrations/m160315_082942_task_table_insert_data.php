@@ -127,9 +127,7 @@ class m160315_082942_task_table_insert_data extends Migration
 
     public function down()
     {
-        echo "m150909_124142_insert_data cannot be reverted.\n";
-
-        return false;
+        $this->truncateTable('task');
     }
     
     /*

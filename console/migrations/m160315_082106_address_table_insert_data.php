@@ -68,9 +68,7 @@ class m160315_082106_address_table_insert_data extends Migration
 
     public function down()
     {
-        echo "m160315_082106_address_table_insert_data cannot be reverted.\n";
-
-        return false;
+        $this->truncateTable('address');
     }
 
     /*

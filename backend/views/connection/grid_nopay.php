@@ -232,7 +232,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         	'buttons' => [
         		'tree' => function ($model, $data) {
         			if($data->mac && $data->port && $data->device && !$data->nocontract && !$data->host){
-        				$url = Url::toRoute(['tree/add-host', 'id' => $data->id]);
+        				$url = Url::toRoute(['tree/add', 'id' => $data->id, 'host' => true]);
 	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
 	        				'title' => \Yii::t('yii', 'Zamontuj'),
 	        				'data-pjax' => '0',

@@ -3,7 +3,6 @@
 namespace backend\models;
 
 use Yii;
-use yii\data\ActiveDataProvider;
 
 class DeviceRouterOld extends \yii\db\ActiveRecord
 {

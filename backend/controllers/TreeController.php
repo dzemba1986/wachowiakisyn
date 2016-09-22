@@ -115,122 +115,197 @@ class TreeController extends Controller
     	return $arChildren = ['17213.16', '209.24'];
     }
     
-    public function actionAdd($id)
+    public function actionAdd($id, $host = false)
     { 	
-    	
-    	$modelDevice = Device::findOne($id);
-    	$modelTree = new Tree();
-    	$modelAddress = new Address();
-    
-    	if ($modelTree->load(Yii::$app->request->post()) && $modelAddress->load(Yii::$app->request->post())) {
-    
-    		$modelTree->device = $id;
-    		$modelDevice->status = true;
-    		
-    		$transaction = Yii::$app->getDb()->beginTransaction();    		
-    		
-//     		var_dump($modelAddress->validate()); exit();
-     			
-    		try {
-    			if (!$modelAddress->save())
-    				throw new Exception('Problem z zapisem adresu');
-    			if (!$modelTree->save())
-    				throw new Exception('Problem z zapisem drzewa');
-
-    			$modelDevice->address = $modelAddress->id;
-    			if (!$modelDevice->save())
-    				throw new Exception('Problem z zapisem device');
-    			
-    			$transaction->commit();    			
-    			$this->redirect(['tree/index']);
-    		} catch (\Exception $e) {
-    			$transaction->rollBack();
-    			echo $e->getMessage();
-    		}	
-    	} else {
-    		
-    		return $this->renderAjax('add', [
-    				'modelDevice' => $modelDevice,
-    				'modelTree' => $modelTree,
-    				'modelAddress' => $modelAddress,
-    		]);
-    	}
-    }
-    
-    public function actionAddHost($id){
-    	
-    	$modelIp = new Ip();
-    	$modelTree = new Tree();
-    	
     	$request = Yii::$app->request;
     	
     	if($request->isAjax){
-    		if($request->post('ip')){
-    			$transaction = Yii::$app->getDb()->beginTransaction();
-    			
-    			$modelConnection = Connection::findOne($id);
-    			
-    			$modelDevice = new Host();
-    			$modelDevice->status = true;
-    			$modelDevice->mac = $modelConnection->mac;
-    			$modelDevice->address = $modelConnection->address;
-    			
-    			try {
-    				if (!$modelDevice->save())
-    					throw new Exception('Problem z zapisem device');
-    			} catch (\Exception $e) {
-    				$transaction->rollBack();
-    				return $e->getMessage();
-    			}
-    			
-    			$modelTree->device = $modelDevice->id;
-    			$modelTree->port = 1;
-    			$modelTree->parent_device = $modelConnection->device;
-    			$modelTree->parent_port = $modelConnection->port;
-    			
-    			try {
-    				if (!$modelTree->save())
-    					throw new Exception('Problem z zapisem na drzewie');
-    			} catch (\Exception $e) {
-    				$transaction->rollBack();
-    				return $e->getMessage();
-    			}
-    			
-    			$modelIp->ip = $request->post('ip');
-    			$modelIp->subnet = $request->post('subnet');
-    			$modelIp->main = true;
-    			$modelIp->device = $modelDevice->id;
-    			
-    			try {
-    				if (!$modelIp->save())
-    					throw new Exception('Problem z zapisem ip');
-    			} catch (\Exception $e) {
-    				$transaction->rollBack();
-    				return $e->getMessage();
-    			}
-    			
-    			$modelConnection->host = $modelDevice->id;
-    			$modelConnection->conf_date = date('Y-m-d');
-    			$modelConnection->conf_user = Yii::$app->user->identity->id;
-    			 
-    			try {
-    				if (!$modelConnection->save())
-    					throw new Exception('Problem z zapisem połączenia');
-    			} catch (\Exception $e) {
-    				$transaction->rollBack();
-    				return $e->getMessage();
-    			}
-    			
-    			$transaction->commit();
-    			$this->redirect(['tree/index']);
-    		} else {
+	    	if (!$host){
+		    	$modelDevice = Device::findOne($id);
+		    	$modelTree = new Tree();
+		    	$modelAddress = new Address();
+		    
+		    	if ($modelTree->load(Yii::$app->request->post()) && $modelAddress->load(Yii::$app->request->post())) {
+		    
+		    		$modelTree->device = $id;
+		    		$modelDevice->status = true;
+		    		
+		    		$transaction = Yii::$app->getDb()->beginTransaction();    		
+		    		
+		//     		var_dump($modelAddress->validate()); exit();
+		     			
+		    		try {
+		    			if (!$modelAddress->save())
+		    				throw new Exception('Problem z zapisem adresu');
+		    			if (!$modelTree->save())
+		    				throw new Exception('Problem z zapisem drzewa');
+		
+		    			$modelDevice->address = $modelAddress->id;
+		    			if (!$modelDevice->save())
+		    				throw new Exception('Problem z zapisem device');
+		    			
+		    			$transaction->commit();    			
+		    			$this->redirect(['tree/index']);
+		    		} catch (\Exception $e) {
+		    			$transaction->rollBack();
+		    			echo $e->getMessage();
+		    		}	
+		    	} else {
+		    		
+		    		return $this->renderAjax('add', [
+		    				'modelDevice' => $modelDevice,
+		    				'modelTree' => $modelTree,
+		    				'modelAddress' => $modelAddress,
+		    		]);
+		    	}
+	    	} else {
     		
-	    		return $this->renderAjax('add_host_network', [
-	   				'modelIp' => $modelIp,
-	    		]);
+	    		$modelIp = new Ip();
+	    		$modelTree = new Tree();
+	    		 
+	    			if($request->post('ip')){
+	    				$transaction = Yii::$app->getDb()->beginTransaction();
+	    				 
+	    				$modelConnection = Connection::findOne($id);
+	    				 
+	    				$modelDevice = new Host();
+	    				$modelDevice->status = true;
+	    				$modelDevice->mac = $modelConnection->mac;
+	    				$modelDevice->address = $modelConnection->address;
+	    				 
+	    				try {
+	    					if (!$modelDevice->save())
+	    						throw new Exception('Problem z zapisem device');
+	    				} catch (\Exception $e) {
+	    					$transaction->rollBack();
+	    					return $e->getMessage();
+	    				}
+	    				 
+	    				$modelTree->device = $modelDevice->id;
+	    				$modelTree->port = 1;
+	    				$modelTree->parent_device = $modelConnection->device;
+	    				$modelTree->parent_port = $modelConnection->port;
+	    				 
+	    				try {
+	    					if (!$modelTree->save())
+	    						throw new Exception('Problem z zapisem na drzewie');
+	    				} catch (\Exception $e) {
+	    					$transaction->rollBack();
+	    					return $e->getMessage();
+	    				}
+	    				 
+	    				$modelIp->ip = $request->post('ip');
+	    				$modelIp->subnet = $request->post('subnet');
+	    				$modelIp->main = true;
+	    				$modelIp->device = $modelDevice->id;
+	    				 
+	    				try {
+	    					if (!$modelIp->save())
+	    						throw new Exception('Problem z zapisem ip');
+	    				} catch (\Exception $e) {
+	    					$transaction->rollBack();
+	    					return $e->getMessage();
+	    				}
+	    				 
+	    				$modelConnection->host = $modelDevice->id;
+	    				$modelConnection->conf_date = date('Y-m-d');
+	    				$modelConnection->conf_user = Yii::$app->user->identity->id;
+	    		
+	    				try {
+	    					if (!$modelConnection->save())
+	    						throw new Exception('Problem z zapisem połączenia');
+	    				} catch (\Exception $e) {
+	    					$transaction->rollBack();
+	    					return $e->getMessage();
+	    				}
+	    				 
+	    				$transaction->commit();
+	    				$this->redirect(['tree/index']);
+	    			} else {
+	    		
+	    				return $this->renderAjax('add_host_network', [
+	    						'modelIp' => $modelIp,
+	    				]);
+	    			}
+    		
     		}
-    	} 
-    }
+    	}
+	}
+    
+//     public function actionAddHost($id){
+    	
+//     	$modelIp = new Ip();
+//     	$modelTree = new Tree();
+    	
+//     	$request = Yii::$app->request;
+    	
+//     	if($request->isAjax){
+//     		if($request->post('ip')){
+//     			$transaction = Yii::$app->getDb()->beginTransaction();
+    			
+//     			$modelConnection = Connection::findOne($id);
+    			
+//     			$modelDevice = new Host();
+//     			$modelDevice->status = true;
+//     			$modelDevice->mac = $modelConnection->mac;
+//     			$modelDevice->address = $modelConnection->address;
+    			
+//     			try {
+//     				if (!$modelDevice->save())
+//     					throw new Exception('Problem z zapisem device');
+//     			} catch (\Exception $e) {
+//     				$transaction->rollBack();
+//     				return $e->getMessage();
+//     			}
+    			
+//     			$modelTree->device = $modelDevice->id;
+//     			$modelTree->port = 1;
+//     			$modelTree->parent_device = $modelConnection->device;
+//     			$modelTree->parent_port = $modelConnection->port;
+    			
+//     			try {
+//     				if (!$modelTree->save())
+//     					throw new Exception('Problem z zapisem na drzewie');
+//     			} catch (\Exception $e) {
+//     				$transaction->rollBack();
+//     				return $e->getMessage();
+//     			}
+    			
+//     			$modelIp->ip = $request->post('ip');
+//     			$modelIp->subnet = $request->post('subnet');
+//     			$modelIp->main = true;
+//     			$modelIp->device = $modelDevice->id;
+    			
+//     			try {
+//     				if (!$modelIp->save())
+//     					throw new Exception('Problem z zapisem ip');
+//     			} catch (\Exception $e) {
+//     				$transaction->rollBack();
+//     				return $e->getMessage();
+//     			}
+    			
+//     			$modelConnection->host = $modelDevice->id;
+//     			$modelConnection->conf_date = date('Y-m-d');
+//     			$modelConnection->conf_user = Yii::$app->user->identity->id;
+    			 
+//     			try {
+//     				if (!$modelConnection->save())
+//     					throw new Exception('Problem z zapisem połączenia');
+//     			} catch (\Exception $e) {
+//     				$transaction->rollBack();
+//     				return $e->getMessage();
+//     			}
+    			
+//     			$transaction->commit();
+//     			$this->redirect(['tree/index']);
+//     		} else {
+    		
+// 	    		return $this->renderAjax('add_host_network', [
+// 	   				'modelIp' => $modelIp,
+// 	    		]);
+//     		}
+//     	} 
+//     }
     
     public function actionSelectListPort($device, $mode='free')
     {

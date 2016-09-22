@@ -53,9 +53,7 @@ class m160315_082409_installation_table_insert_data extends Migration
 
     public function down()
     {
-        echo "m160315_082409_installation_table_insert_data cannot be reverted.\n";
-
-        return false;
+        $this->truncateTable('installation');
     }
 
     /*

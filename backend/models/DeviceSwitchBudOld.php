@@ -18,4 +18,10 @@ class DeviceSwitchBudOld extends \yii\db\ActiveRecord
     {
         return 'switch_bud';
     }
+    
+    public function getModelModel(){
+    
+    	//urządzenie ma jeden typ
+    	return $this->hasOne(ModelOld::className(), ['id'=>'model']);
+    }
 }

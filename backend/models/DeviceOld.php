@@ -3,7 +3,6 @@
 namespace backend\models;
 
 use Yii;
-use yii\data\ActiveDataProvider;
 use backend\models\Device;
 
 class DeviceOld extends \yii\db\ActiveRecord
@@ -24,6 +23,18 @@ class DeviceOld extends \yii\db\ActiveRecord
 	
 		//urządzenie ma jeden adres
 		return $this->hasOne(DeviceVoipOld::className(), ['device'=>'dev_id']);
+	}
+	
+	public function getModelDeviceHost(){
+	
+		//urządzenie ma jeden adres
+		return $this->hasOne(DeviceHostOld::className(), ['device'=>'dev_id']);
+	}
+	
+	public function getModelDeviceServer(){
+	
+		//urządzenie ma jeden adres
+		return $this->hasOne(DeviceServerOld::className(), ['device'=>'dev_id']);
 	}
     
     public function getModelDeviceCamera(){

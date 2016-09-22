@@ -145,9 +145,7 @@ class m160315_082820_connection_table_insert_data extends Migration
 
     public function down()
     {
-        echo "m160315_082820_connection_table_insert_data cannot be reverted.\n";
-
-        return false;
+        $this->truncateTable('connection');
     }
 
     /*

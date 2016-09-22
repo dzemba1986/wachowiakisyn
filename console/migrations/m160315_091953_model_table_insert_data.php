@@ -42,15 +42,16 @@ class m160315_091953_model_table_insert_data extends Migration
                 "type" => $arTypeMap[$modelOld->device_type],
                 "manufacturer" => $modelOld->producent,
                 'layer3' => $arLayerMap[$modelOld->device_type],
+            	'port' => function ($modelOld){
+            		return '{' . str_replace(';', ',', $modelOld->ports) . '}';	
+            	}
             ]);
         }
     }
 
     public function down()
     {
-        echo "m160315_091953_model_table_insert_data cannot be reverted.\n";
-
-        return false;
+        $this->truncateTable('model');
     }
 
     /*
