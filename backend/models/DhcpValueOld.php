@@ -27,6 +27,6 @@ class DhcpValueOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'dhcp_group_option';
+        return 'Dhcp_group_option';
     }
 }

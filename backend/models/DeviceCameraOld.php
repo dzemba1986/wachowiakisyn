@@ -16,7 +16,7 @@ class DeviceCameraOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'kamera';
+        return 'Kamera';
     }
     
     public function getModelModel(){

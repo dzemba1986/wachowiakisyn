@@ -25,7 +25,7 @@ class AddressOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'lokalizacja';
+        return 'Lokalizacja';
     }
     
     public function getFullAddress(){

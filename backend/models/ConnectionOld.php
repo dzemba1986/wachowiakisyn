@@ -49,6 +49,6 @@ class ConnectionOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'connections';
+        return 'Connections';
     }
 }

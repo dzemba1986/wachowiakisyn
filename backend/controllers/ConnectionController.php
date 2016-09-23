@@ -53,7 +53,7 @@ class ConnectionController extends Controller
         		$dataProvider->query->joinWith('modelTask')->andWhere([
         			'pay_date' => null, 
         			Connection::tableName().'.close_date' => null
-        		])->orderBy(['start_date' => SORT_DESC]);
+        		]);
         		break;
         	case 'install':
         		$dataProvider->query->joinWith('modelTask')->andWhere([

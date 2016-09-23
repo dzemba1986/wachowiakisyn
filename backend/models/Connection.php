@@ -23,7 +23,6 @@ use vakorovin\yii2_macaddress_validator\MacaddressValidator;
  * @property integer $vip
  * @property integer $poll
  * @property integer $again
- * @property integer $inea
  * @property integer $wire
  * @property integer $socket
  * @property integer $address

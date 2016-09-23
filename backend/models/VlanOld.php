@@ -27,6 +27,6 @@ class VlanOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'vlan';
+        return 'Vlan';
     }
 }

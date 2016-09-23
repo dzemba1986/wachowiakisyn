@@ -1,36 +1,35 @@
 <?php
 
 use yii\db\Migration;
-use backend\models\DeviceOld;
 use backend\models\SubnetOld;
 
 class m160315_124603_subnet_table_insert_data extends Migration
 {
     public function up()
     {
-        
+        $dhcpGroup = function ($x) {
+        	if ($x->dhcp_group == 1)
+            	return null;
+            elseif ($x->dhcp_group == 2)
+            	return 1;
+            elseif ($x->dhcp_group == 3) 
+            	return 2;
+        };
         //insert bramek
         $subnetsOld = SubnetOld::find()->all();
         
         foreach ($subnetsOld as $subnetOld){ 
         
-            //var_dump($addressOld);
-            //exit;
+           	if($subnetOld->id == 1)
+           		continue;
             
             $this->insert('subnet', [
                 "id" => $subnetOld->id,
-                "ip" => $subnetOld->address . '/' . $subnetOld->netmask,
-                "desc" => $deviceOld->opis,
-                "vlan" => $deviceOld->vlan,
-                'dhcp' => is_null($deviceOld->dhcp) || $deviceOld->dhcp == 0 ? false : true,
-                "dhcp_group" => function () {
-                	if ($deviceOld->dhcp_group == 1)
-                		return null;
-                	elseif ($deviceOld->dhcp_group == 2)
-                		return 1;
-                	elseif ($deviceOld->dhcp_group == 3) 
-                		return 2;
-                }
+                "ip" => "$subnetOld->address/$subnetOld->netmask",
+                "desc" => $subnetOld->opis,
+                "vlan" => $subnetOld->vlan,
+                'dhcp' => is_null($subnetOld->dhcp) || $subnetOld->dhcp == 0 ? false : true,
+                "dhcp_group" => $dhcpGroup($subnetOld)
             ]);
         }
         

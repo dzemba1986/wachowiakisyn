@@ -25,6 +25,6 @@ class IpOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'adres_ip';
+        return 'Adres_ip';
     }
 }

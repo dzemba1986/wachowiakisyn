@@ -13,19 +13,19 @@ class m160315_124508_device_switch_rej_table_insert_data extends Migration
 		$this->insert('device', [
         		"id" => 1,
         		"status" => true,
-        		"name" => '',
+        		"name" => 'ROOT',
         		//mac" => null,
         		//'serial' => $deviceOld->modelDeviceSwitchBud->sn ? strtoupper($deviceOld->modelDeviceSwitchBud->sn) : null,
         		"desc" => '',
         		'address' => 7024,
         		"type" => 9,
-        		'model' => 62,
+        		'model' => 64,
         		//"manufacturer" => $deviceOld->modelDeviceSwitchBud->producent,
         		//'distribution' => FALSE,
         ]);
         
         $this->insert('device', [
-        		"id" => 2,
+        		"id" => 3,
         		"status" => true,
         		"name" => '',
         		"mac" => '00:00:cd:29:e9:ac',

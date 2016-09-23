@@ -8,7 +8,14 @@ class m160315_124605_dhcp_value_table_insert_data extends Migration
 {
     public function up()
     {
-        
+    	$dhcpGroup = function ($x) {
+    		if ($x->dhcp_group == 1)
+    			return null;
+    			elseif ($x->dhcp_group == 2)
+    			return 1;
+    			elseif ($x->dhcp_group == 3)
+    			return 2;
+    	};
         //insert bramek
         $dhcpValuesOld = DhcpValueOld::find()->all();
         
@@ -23,14 +30,7 @@ class m160315_124605_dhcp_value_table_insert_data extends Migration
                 "option" => $dhcpValueOld->option,
                 "value" => $dhcpValueOld->value,
                 'subnet' => $dhcpValueOld->subnet <> 1 ? $dhcpValueOld->subnet : null,
-                "dhcp_group" => function () {
-                	if ($dhcpValueOld->dhcp_group == 1)
-                		return null;
-                	elseif ($dhcpValueOld->dhcp_group == 2)
-                		return 1;
-                	elseif ($dhcpValueOld->dhcp_group == 3) 
-                		return 2;
-                }
+                "dhcp_group" => $dhcpGroup($dhcpValueOld)
             ]);
         }
         

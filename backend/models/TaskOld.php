@@ -16,7 +16,7 @@ class TaskOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'modyfications';
+        return 'Modyfications';
     }
     
     public function getModelAddress(){

@@ -30,6 +30,6 @@ class InstallationOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'installations';
+        return 'Installations';
     }
 }

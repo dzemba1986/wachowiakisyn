@@ -9,64 +9,97 @@ class m160315_124607_agregation_table_insert_data extends Migration
 {
     public function up()
     {
+        $port = function ($x){
+                	
+        	$modelDevice = DeviceOld::findOne($x->device);
+                	
+            switch ($modelDevice->device_type) {
+				case 'Host':
+					return $x->local_port;
+				case 'Switch_bud':
+			        $arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
+			        return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+			    case 'Switch_rejon':
+			       	$arPorts =  explode(';', $modelDevice->modelDeviceSwitchRejon->modelModel->ports);
+			        return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+				case 'Kamera':
+				   	$arPorts =  explode(';', $modelDevice->modelDeviceCamera->modelModel->ports);
+				    return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+			    case 'Bramka_voip':
+			    	$arPorts =  explode(';', $modelDevice->modelDeviceVoip->modelModel->ports);
+				    return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+			    case 'Router':
+			    	$arPorts =  explode(';', $modelDevice->modelDeviceRouter->modelModel->ports);
+				    return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+			    case 'Serwer':
+			    	$arPorts =  explode(';', $modelDevice->modelDeviceServer->modelModel->ports);
+				    return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+			    case 'Virtual':
+			    	return $x->local_port;
+				case 'Switch_centralny':
+				    $arPorts =  explode(';', $modelDevice->modelDeviceSwitchRejon->modelModel->ports);
+				    return array_search($x->local_port, $arPorts) + 1; //zwraca index znalezionego portu
+				}
+                
+				$arPorts = explode(';', DeviceOld::findOne($x->device));
+        };
         
+        
+        $parent_port = function ($x){
+        	 
+        	$modelDevice = DeviceOld::findOne($x->parent_device);
+        	 
+        	switch ($modelDevice->device_type) {
+        		case 'Host':
+        			return $x->parent_port;
+        		case 'Switch_bud':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        		case 'Switch_rejon':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceSwitchRejon->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        		case 'Kamera':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceCamera->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        		case 'Bramka_voip':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceVoip->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        		case 'Router':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceRouter->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        		case 'Serwer':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceServer->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        		case 'Virtual':
+        			return $x->parent_port;
+        		case 'Switch_centralny':
+        			$arPorts =  explode(';', $modelDevice->modelDeviceSwitchRejon->modelModel->ports);
+        			return array_search($x->parent_port, $arPorts) + 1; //zwraca index znalezionego portu
+        	}
+        
+        	$arPorts = explode(';', DeviceOld::findOne($x->device));
+        };
         //insert bramek
         $treesOld = TreeOld::find()->all();
         
         foreach ($treesOld as $treeOld){ 
         
-            //var_dump($addressOld);
-            //exit;
+            echo 'Dodaje link ' . $treeOld->device . ' <-> ' . $treeOld->parent_device;
             
-            $this->insert('tree', [
+            $this->insert('agregation', [
                 "device" => $treeOld->device,
-                "port" => function (){
-                	
-                	$modelDevice = DeviceOld::findOne($treeOld->device);
-                	
-	                switch ($modelDevice->device_type) {
-					    case 'Host':
-					        return $treeOld->port;
-					    case 'Switch_bud':
-					        $arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-					    case 'Switch_rejon':
-					       	$arPorts =  explode(';', $modelDevice->modelDeviceSwitchRejon->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-					    case 'Kamera':
-					    	$arPorts =  explode(';', $modelDevice->modelDeviceCamera->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-				    	case 'Bramka_voip':
-				    		$arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-				    	case 'Router':
-				    		$arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-				    	case 'Serwer':
-				    		$arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-				    	case 'Virtual':
-				    		$arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-					    case 'Switch_centralny':
-					        $arPorts =  explode(';', $modelDevice->modelDeviceSwitchBud->modelModel->ports);
-					        return array_search($treeOld->port, $arPorts) + 1; //zwraca index znalezionego portu
-					}
-                	$arPorts = explode(';', DeviceOld::findOne($treeOld->device));
-                },
+                "port" => $port($treeOld),
                 "parent_device" => $treeOld->parent_device,
-                "parent_port" => function (){
-                	
-                }
+                "parent_port" => $parent_port($treeOld)
             ]);
         }
         
-        $this->execute("SELECT setval('ip_id_seq', (SELECT MAX(id) FROM ip))");
+//         $this->execute("SELECT setval('ip_id_seq', (SELECT MAX(id) FROM ip))");
     }
 
     public function down()
     {
-        $this->truncateTable('ip');
+        $this->truncateTable('agregation');
     }
 
     /*

@@ -64,6 +64,8 @@ class TreeController extends Controller
         	foreach ($children as $child){
         	
         		$model = Model::findOne(Device::findOne($id)->model);
+        		
+//         		var_dump($child); exit();
         		$address = Address::findOne($child->modelDevice->address);
         	
         		$arChildren[] = [

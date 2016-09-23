@@ -24,7 +24,7 @@ class m160315_124606_ip_table_insert_data extends Migration
             ]);
         }
         
-        $this->execute("SELECT setval('ip_id_seq', (SELECT MAX(id) FROM ip))");
+        //$this->execute("SELECT setval('ip_id_seq', (SELECT MAX(id) FROM ip))");
     }
 
     public function down()

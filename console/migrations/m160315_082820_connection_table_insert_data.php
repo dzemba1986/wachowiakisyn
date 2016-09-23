@@ -53,8 +53,6 @@ class m160315_082820_connection_table_insert_data extends Migration
            'iptv' => 1,
        ];
        
-       $connectionsOld = ConnectionOld::find()->orderBy('start_date')->all();
-       
        $pakiet = function ($x) {
                    
            if($x->service == 'net')
@@ -71,47 +69,42 @@ class m160315_082820_connection_table_insert_data extends Migration
 
        };
        
-       $inea = function ($x) {
-       	 
-       	if($x->ara_id == 'a1234'){
-       		if(strpos($x->info, 'TAK') === false ){
-       			return false;
-       		} else {
-       			return true;
-       		}
-       			
-       	}
-       	return false;
+       $pay = function ($y){
+           			
+           			if(isset($y->service_activation))
+           				return $y->service_activation;
+           			elseif(isset($y->payment_activation))
+           				return $y->payment_activation;
+           			else
+           				return NULL;
+           		};
        
-       };
-       
-       $again = function ($x) {
+//        $again = function ($x) {
 			
-       		$ilosc = ConnectionOld::find()->where([
-       			'localization' => $x->localization,
-       			'service' => $x->service	
-       		])->andWhere('is not', 'resignation_date', null)->count();
+//        		$ilosc = ConnectionOld::find()->where([
+//        			'localization' => $x->localization,
+//        			'service' => $x->service	
+//        		])->andWhere('is not', 'resignation_date', null)->count();
        		
-       		if ($ilosc > 0)
-       			return true;
-       		else 
-       			return false;
-       };
+//        		if ($ilosc > 0)
+//        			return true;
+//        		else 
+//        			return false;
+//        };
+       
+       $connectionsOld = ConnectionOld::find()->orderBy('start_date')->all();
        
        foreach ($connectionsOld as $connectionOld){ 
            
 //            var_dump($connectionOld);
 //            exit;
-       
+//        	echo $connectionOld->service_activation; exit();
            $this->insert('connection', [
                "id" => $connectionOld->id,
                "ara_id" => isset($connectionOld->ara_id) ? $connectionOld->ara_id : NULL,
                "start_date" => $connectionOld->start_date,
                "conf_date" => isset($connectionOld->service_configuration) ? $connectionOld->service_configuration : NULL,
-           		"pay_date" => isset($connectionOld->service_activation) ? $connectionOld->service_activation 		: 
-           			isset($connectionOld->payment_activation) ? $connectionOld->payment_activation : NULL,
-           		
-           		
+           		"pay_date" => $pay($connectionOld),
                //"activ_date" => isset($connectionOld->service_activation) ? $connectionOld->service_activation : NULL,
                //'pay_date' => isset($connectionOld->payment_activation) ? $connectionOld->payment_activation : NULL,
                'close_date' => isset($connectionOld->resignation_date) ? $connectionOld->resignation_date : NULL,
@@ -121,8 +114,8 @@ class m160315_082820_connection_table_insert_data extends Migration
                'close_user' => isset($connectionOld->resignation_date) ? 1 : NULL,
                'nocontract' => isset($connectionOld->ara_id)   ?    substr($connectionOld->ara_id, FALSE, TRUE) == 'a' ? TRUE : FALSE    :    FALSE,
            		'poll' => isset($connectionOld->ara_id)   ?    $connectionOld->ara_id == 'a1234' ? TRUE : FALSE    :    FALSE,
-           		'inea' => $inea($connectionOld),
-           		'again' => $again($connectionOld),
+           		//'inea' => $inea($connectionOld),
+//            		'again' => $again($connectionOld),
                'vip' => FALSE,
                'port' => $connectionOld->port, //będzie nowa baza SEU
                'mac' => (isset($connectionOld->mac) ) ?     $connectionOld->mac == '' ? NULL : str_replace(':', '', $connectionOld->mac)      :     NULL,                   
@@ -130,10 +123,10 @@ class m160315_082820_connection_table_insert_data extends Migration
                'phone2' => isset($connectionOld->phone) ? $connectionOld->phone2 : NULL,
                'info' => isset($connectionOld->info) ? $connectionOld->info : NULL,
                'info_boa' => isset($connectionOld->info_boa) ? $connectionOld->info_boa : NULL,
-               //'device' => $connectionOld->switch,   //będzie nowa baza SEU
+//                'device' => isset($connectionOld->switch) ? $connectionOld->switch : null,   //będzie nowa baza SEU
                'wire' => NULL,
                'socket' => NULL,
-               'task' => isset($connectionOld->modyfication) 	? 	$connectionOld->modyfication === 0 ? NULL : $connectionOld->modyfication	:	null,
+               'task' => isset($connectionOld->modyfication) && $connectionOld->modyfication <> 0	?	$connectionOld->modyfication	:	null,
                'package' => $pakiet($connectionOld),
                'address' => $connectionOld->localization,
                'type' => $arTypeMap[$connectionOld->service],       

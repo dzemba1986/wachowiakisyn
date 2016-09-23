@@ -17,12 +17,12 @@ class m160315_124601_vlan_table_insert_data extends Migration
             //exit;
             
             $this->insert('vlan', [
-                "id" => $vlanOld->id,
+                "id" => $vlanOld->vid,
                 "desc" => $vlanOld->opis,
             ]);
         }
         
-        $this->execute("SELECT setval('vlan_id_seq', (SELECT MAX(id) FROM vlan))");
+//         $this->execute("SELECT setval('vlan_id_seq', (SELECT MAX(id) FROM vlan))");
     }
 
     public function down()

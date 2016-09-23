@@ -16,7 +16,7 @@ class DeviceSwitchRejonOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'switch_rejon';
+        return 'Switch_rejon';
     }
     
     public function getModelModel(){

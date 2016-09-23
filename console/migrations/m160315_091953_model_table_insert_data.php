@@ -29,6 +29,10 @@ class m160315_091953_model_table_insert_data extends Migration
             'Bramka_voip' => NULL,
         ];
         
+        $port = function ($x){
+        	return '{' . str_replace(';', ',', $x->ports) . '}';	
+        };
+        
         
         foreach ($modelsOld as $modelOld){ 
         
@@ -42,11 +46,22 @@ class m160315_091953_model_table_insert_data extends Migration
                 "type" => $arTypeMap[$modelOld->device_type],
                 "manufacturer" => $modelOld->producent,
                 'layer3' => $arLayerMap[$modelOld->device_type],
-            	'port' => function ($modelOld){
-            		return '{' . str_replace(';', ',', $modelOld->ports) . '}';	
-            	}
+            	'port' => $port($modelOld)
             ]);
         }
+        
+        $this->execute("SELECT setval('model_id_seq', (SELECT MAX(id) FROM model))");
+        
+        $this->insert('model', [
+//         	"id" => $modelOld->id,
+        	"name" => 'ROOT',
+        	"port_count" => 2,
+        	"type" => 9,
+        	"manufacturer" => 10,
+        	'layer3' => null,
+        	'port' => '{1,2}'
+        ]);
+        
     }
 
     public function down()

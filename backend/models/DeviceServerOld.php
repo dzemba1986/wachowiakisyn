@@ -15,6 +15,12 @@ class DeviceServerOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'serwer';
+        return 'Serwer';
+    }
+    
+    public function getModelModel(){
+    
+    	//urządzenie ma jeden typ
+    	return $this->hasOne(ModelOld::className(), ['id'=>'model']);
     }
 }

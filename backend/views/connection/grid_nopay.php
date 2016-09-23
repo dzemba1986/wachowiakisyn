@@ -158,8 +158,12 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'format'=>'raw',
             'value'=> function($data){
                 if (!is_null($data->task)){
-                    return Html::a($data->modelTask->start_date, Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
-                    //return $data->modelTask->start_date;
+//                 	if (is_object($data->modelTask))
+                    	return Html::a($data->modelTask->start_date, Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
+//                     else {
+// 						return $data->task;
+						//exit();
+//                     }
                 }
                 elseif ($data->socket <> 0)
                 	return null;

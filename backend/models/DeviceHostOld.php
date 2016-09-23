@@ -16,7 +16,7 @@ class DeviceHostOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'host';
+        return 'Host';
     }
     
     public function getModelConnection(){

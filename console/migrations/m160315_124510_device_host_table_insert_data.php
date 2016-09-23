@@ -3,18 +3,24 @@
 use yii\db\Migration;
 use backend\models\DeviceOld;
 
-class m160315_124509_device_host_table_insert_data extends Migration
+class m160315_124510_device_host_table_insert_data extends Migration
 {
     public function up()
     {
         //insert budynkowych
         $devicesOld = DeviceOld::find()->       
-        where(['device_type' => 'Host'])->all();
+        where(['device_type' => 'Host'])->orderBy('dev_id')->all();
+        
+        $address = function ($x){
+        	if(is_object($x->modelDeviceHost->modelConnection))
+        		return $x->modelDeviceHost->modelConnection->localization;
+        	else 
+        		return 7024;
+        };
         
         foreach ($devicesOld as $deviceOld){ 
         
-            //var_dump($addressOld);
-            //exit;
+            echo 'Dodaje hosta o id = ' . $deviceOld->dev_id;
             
             $this->insert('device', [
                 "id" => $deviceOld->dev_id,
@@ -23,12 +29,13 @@ class m160315_124509_device_host_table_insert_data extends Migration
                 "mac" => $deviceOld->mac ? $deviceOld->mac : NULL,
                 //'serial' => $deviceOld->modelDeviceSwitchBud->sn ? strtoupper($deviceOld->modelDeviceSwitchBud->sn) : null,
                 "desc" => $deviceOld->opis,
-                'address' => $deviceOld->modelDeviceHost->modelConnection->localization,
+                'address' => $address($deviceOld),
                 "type" => 5,
                 //'model' => $deviceOld->modelDeviceSwitchBud->model,
                 //"manufacturer" => $deviceOld->modelDeviceSwitchBud->producent,
                 //'distribution' => FALSE,
             ]);
+            
         }
         
         $this->execute("SELECT setval('device_id_seq', (SELECT MAX(id) FROM device))");

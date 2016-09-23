@@ -16,7 +16,7 @@ class DeviceOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'device';
+        return 'Device';
     }
     
     public function getModelDeviceVoip(){

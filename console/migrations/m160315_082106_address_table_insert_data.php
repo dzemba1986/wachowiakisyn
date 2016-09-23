@@ -6,23 +6,23 @@ class m160315_082106_address_table_insert_data extends Migration
 {
     public function up()
     {
-       $arStreetMap = [
-           '01957' => 'Bóżnicza',
-           '03269' => 'Czarna Rola',
-           '09439' => 'Kosmonautów',
-           '12272' => 'Marcelińska',
-           '13631' => 'Na Murawie',
-           '13989' => 'Naramowicka',
-           '15776' => 'Pasterska',
-           '16636' => 'Pod Lipami',
-           '17923' => 'Przyjaźni',
-           '19232' => 'Kondratija Rylejewa',
-           '22907' => 'Towarowa',
-           '23990' => 'Wichrowe Wzgórze',
-           '24263' => 'Wilczak',
-           '26323' => 'Zwycięstwa',
-       		'23306' => 'Ugory',
-       ];
+		$arStreetMap = [
+           	'01957' => 'Bóżnicza',
+           	'03269' => 'Czarna Rola',
+           	'09439' => 'Kosmonautów',
+           	'12272' => 'Marcelińska',
+           	'13631' => 'Na Murawie',
+           	'13989' => 'Naramowicka',
+           	'15776' => 'Pasterska',
+           	'16636' => 'Pod Lipami',
+           	'17923' => 'Przyjaźni',
+           	'19232' => 'Kondratija Rylejewa',
+           	'22907' => 'Towarowa',
+           	'23990' => 'Wichrowe Wzgórze',
+           	'24263' => 'Wilczak',
+           	'26323' => 'Zwycięstwa',
+			'23306' => 'Ugory',
+       	];
        
        	function getPrefix($t_ulic){
 			

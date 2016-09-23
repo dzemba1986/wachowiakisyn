@@ -17,6 +17,12 @@ class DeviceVoipOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'bramka_voip';
+        return 'Bramka_voip';
+    }
+    
+    public function getModelModel(){
+    
+    	//urządzenie ma jeden typ
+    	return $this->hasOne(ModelOld::className(), ['id'=>'model']);
     }
 }

@@ -27,6 +27,6 @@ class ModelOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'model';
+        return 'Model';
     }
 }

@@ -16,7 +16,7 @@ class DeviceSwitchBudOld extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'switch_bud';
+        return 'Switch_bud';
     }
     
     public function getModelModel(){
