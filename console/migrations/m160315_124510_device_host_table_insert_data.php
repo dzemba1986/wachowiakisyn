@@ -2,6 +2,7 @@
 
 use yii\db\Migration;
 use backend\models\DeviceOld;
+use backend\models\Connection;
 
 class m160315_124510_device_host_table_insert_data extends Migration
 {
@@ -18,7 +19,16 @@ class m160315_124510_device_host_table_insert_data extends Migration
         		return 7024;
         };
         
-        foreach ($devicesOld as $deviceOld){ 
+        foreach ($devicesOld as $deviceOld){
+        	
+        	if(is_object(Connection::findOne($deviceOld->modelDeviceHost->con_id))){
+        	
+        		$modelConnection = Connection::findOne($deviceOld->modelDeviceHost->con_id);
+  				$modelConnection->host = $deviceOld->modelDeviceHost->device;
+  				$modelConnection->save();
+        	} else {
+        		null;
+        	}
         
             echo 'Dodaje hosta o id = ' . $deviceOld->dev_id;
             
@@ -31,8 +41,8 @@ class m160315_124510_device_host_table_insert_data extends Migration
                 "desc" => $deviceOld->opis,
                 'address' => $address($deviceOld),
                 "type" => 5,
-                //'model' => $deviceOld->modelDeviceSwitchBud->model,
-                //"manufacturer" => $deviceOld->modelDeviceSwitchBud->producent,
+                'start' => $deviceOld->modelDeviceHost->data_uruchomienia,
+                //"close" => $deviceOld->modelDeviceSwitchBud->producent,
                 //'distribution' => FALSE,
             ]);
             

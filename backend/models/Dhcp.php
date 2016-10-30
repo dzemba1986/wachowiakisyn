@@ -9,7 +9,7 @@ class Dhcp extends Model
 {
 	private $path;
 	
-	public function generateFile(){
+	public static function generateFile(){
 		
 		echo \Yii::getAlias('@console/dhcp');
 		$test = ob_get_contents();
@@ -59,7 +59,7 @@ subnet ' . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->block
 				}
 				$data .= "}";
 // 				exit();
-				$fileConfig = $test . '/subnets/' . $dhcpSubnet->desc . '.conf';
+				$fileConfig = $test . '/subnets/' . iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', $dhcpSubnet->desc) . '.conf';
 				$file = fopen($fileConfig, 'w');
 				fwrite($file, $data);
 				fclose($file);

@@ -11,6 +11,8 @@ use backend\models\Device;
  * The followings are the available columns in table 'tbl_package':
  * @property integer $id
  * @property string $name
+ * @property boolean $list
+ * @property boolean $children
 
  */
 class DeviceType extends \yii\db\ActiveRecord
@@ -37,6 +39,7 @@ class DeviceType extends \yii\db\ActiveRecord
 		// will receive user inputs.
 		return [
 			[['name'], 'required'],
+			[['list', 'children'], 'boolean'],	
 			[['name'], 'safe'],
 		];
 	}

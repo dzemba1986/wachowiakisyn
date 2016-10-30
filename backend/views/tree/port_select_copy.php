@@ -23,11 +23,11 @@ use yii\helpers\Url;
 var device = $('#modal-port-select').data('device');
 var newParentDevice = $('#modal-port-select').data('newParentDevice');
 
-$.get( " <?= Url::toRoute('tree/free-port-list') ?>&id=" + device, function(data){
+$.get( " <?= Url::toRoute('tree/select-list-port') ?>&device=" + device, function(data){
 	$("select[name='localPort']").html(data);
 } );
 
-$.get( " <?= Url::toRoute('tree/free-port-list') ?>&id=" + newParentDevice, function(data){
+$.get( " <?= Url::toRoute('tree/select-list-port') ?>&device=" + newParentDevice, function(data){
 	$("select[name='parentPort']").html(data);
 } );
 

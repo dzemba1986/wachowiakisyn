@@ -7,6 +7,8 @@ use kartik\select2\Select2;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\bootstrap\Modal;
+use backend\models\Connection;
+use backend\models\Device;
 /* @var $this yii\web\View */
 /* @var $modelConnection backend\models\Connection */
 
@@ -69,13 +71,15 @@ use yii\bootstrap\Modal;
 				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 			]) ?>
 			
+			<?php $concatInit = empty($modelConnection->device) ? '' : Device::findOne($modelConnection->device)->modelAddress->fullDeviceAddress; ?>
+			
 			<?= $form->field($modelConnection, 'device', [
     			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     		])->widget(Select2::classname(), [
-    			//'initValueText' => 'test',
+    			'initValueText' => $concatInit,
     			'language' => 'pl',
             	'options' => [
-            		'id' => 'select2-connection-update',	
+            		//'id' => 'select2-connection-update',	
             		'placeholder' => 'Urządzenie nadrzędne',
             		'onchange' => new yii\web\JsExpression("
 
@@ -96,8 +100,8 @@ use yii\bootstrap\Modal;
 	    				'dataType' => 'json',
 	    				'data' => new JsExpression('function(params) { return {
 	    					q:params.term, 
-	    						type: 2, 
-	    						dist:false
+	    					type: 2, 
+	    					dist:false
 						}; }')
 		    		],
 		    		'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
@@ -130,9 +134,9 @@ $(function(){
 	var device = <?= json_encode($modelConnection->device); ?>
 
 	if (device){
-		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
-			$('#select2-connection-device-container').html(data.results.concat);
-		});
+//		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
+// 			$('#select2-connection-device-container').html(data.results.concat);
+// 		});
 	
 		$("#connection-device").trigger("change");
 	}

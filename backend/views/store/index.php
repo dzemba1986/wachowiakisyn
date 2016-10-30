@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'options' => ['class' => 'col-md-2', 'style' => 'padding-right: 5px;'],
 		'template' => "{input}\n{hint}\n{error}"
 	])->dropDownList(
-		ArrayHelper::map(DeviceType::find()->where(['<>', 'name', 'Host'])->andWhere(['<>', 'name', 'ROOT'])->orderBy('name')->all(), 'id', 'name'),
+		ArrayHelper::map(DeviceType::find()->where(['list' => true])->orderBy('name')->all(), 'id', 'name'),
 		[
 				'prompt' => 'Wybierz typ',
 		]
@@ -134,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'type',
                 'value'=>'modelType.name',
-                'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(DeviceType::find()->orderBy('name')->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+                'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(DeviceType::find()->where(['list' => true])->orderBy('name')->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
                 //'options' => ['style'=>'width:5%;'],
             ],
             [

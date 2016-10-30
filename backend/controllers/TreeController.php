@@ -71,13 +71,13 @@ class TreeController extends Controller
         		$arChildren[] = [
         			'id' => (int) $child->modelDevice->id . '.' . $child->port,
         			'text' => $id != 1	?	
-        				$model->port[$child->parent_port - 1].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress  :	 
+        				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress  :	 
         				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress,
         			'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
         			'icon' => false,
         			'port' => $child->port,
-        			'parent_port' => $model->port[$child->parent_port - 1],	
-        			'children' => $child->modelDevice->modelType->name <> 'Host' ? TRUE : FALSE,
+        			'parent_port' => $model->port[$child->parent_port],	
+        			'children' => $child->modelDevice->modelType->children,
         		];
         	}
         	
@@ -184,7 +184,7 @@ class TreeController extends Controller
 	    				}
 	    				 
 	    				$modelTree->device = $modelDevice->id;
-	    				$modelTree->port = 1;
+	    				$modelTree->port = 0;
 	    				$modelTree->parent_device = $modelConnection->device;
 	    				$modelTree->parent_port = $modelConnection->port;
 	    				 
@@ -321,17 +321,18 @@ class TreeController extends Controller
     			$ports_count = Tree::find()->select('parent_port')->where(['parent_device' => $device])
     				->union(Tree::find()->select('port AS parent_port')->where(['device' => $device]))->count();
     			
+    				
     			if ($ports_count > 0){
     				foreach ($modelsTree as $modelTree){
-    					$ports[$modelTree->parent_port - 1] = $modelTree->parent_port;
+    					$ports[$modelTree->parent_port] = $modelTree->parent_port;
     				}
-    			
+    				
     				$free_ports = array_diff_key($model->port, $ports);
-    			
+    				//var_dump($ports); var_dump($model->port); exit();
     				echo '<option value="-1">Brak miejsca</option>';
     				echo '<option value="-2">Brak na liście</option>';
     				foreach ($free_ports as $key => $free_port ){
-    					echo '<option value="' . ($key + 1) . '">' . $free_port . '</option>';
+    					echo '<option value="' . ($key) . '">' . $free_port . '</option>';
     				}
     			} else {
    					echo '<option value="-1">Brak miejsca</option>';
@@ -342,7 +343,7 @@ class TreeController extends Controller
     		case 'all' :
     			echo '<option>-</option>';
     			foreach ($model->port as $key => $port){
-    				echo '<option value="' . ($key + 1) . '">' . $port . '</option>';
+    				echo '<option value="' . ($key) . '">' . $port . '</option>';
     			}
     			break;
     			
@@ -355,12 +356,12 @@ class TreeController extends Controller
     			 
     			if ($ports_count > 0){
     				foreach ($modelsTree as $modelTree){
-    					$ports[$modelTree->parent_port - 1] = $modelTree->parent_port;
+    					$ports[$modelTree->parent_port] = $modelTree->parent_port;
     				}
     				
     				echo '<option>-</option>';
     				foreach ($ports as $key => $port ){
-    					echo '<option value="' . ($key + 1) . '">' . $port . '</option>';
+    					echo '<option value="' . ($key) . '">' . $port . '</option>';
     				}
     			} else
     				echo '<option>-</option>';

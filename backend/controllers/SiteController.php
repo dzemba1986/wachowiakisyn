@@ -63,8 +63,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         //return $this->render('index');
-        $dhcp = new Dhcp();
-        $dhcp->generateFile();
+        Dhcp::generateFile();
     }
 
     public function actionLogin()

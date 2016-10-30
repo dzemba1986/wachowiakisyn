@@ -36,6 +36,45 @@ class DeviceController extends Controller
         ]);
     }
     
+    public function actionChangeMac($id)
+    {
+    	$modelDevice = $this->findModel($id);
+    	$modelDevice->scenario = Device::SCENARIO_UPDATE;
+    	
+    	$request = Yii::$app->request;
+    	
+    	if ($request->isAjax){
+    		if($modelDevice->load($request->post())){
+    			if($modelDevice->validate()){
+    				try {
+    					if(!$modelDevice->save())
+    						throw new Exception('Problem z zapisem urządzenia');
+    						return 1;
+    				} catch (Exception $e) {
+    					var_dump($modelDevice->errors);
+    					var_dump($e->getMessage());
+    					exit();
+    				}
+    			} else {
+    				var_dump($modelDevice->errors);
+    				exit();
+    			}
+    		} else {
+    			return $this->renderAjax('change_mac', [
+    				'modelDevice' => $modelDevice,
+    			]);
+    		}
+    	}
+    }
+    
+    public function actionScript($device)
+    {
+    	return $this->renderPartial('script', [
+    		'modelDevice' => $this->findModel($device),
+    		'modelIps' => $this->findModel($device)->modelIps
+    	]);
+    }
+    
     public function actionStore()
     {
         $searchModel = new DeviceSearch();

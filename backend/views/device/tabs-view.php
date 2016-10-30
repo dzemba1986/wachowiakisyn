@@ -14,12 +14,12 @@ echo Tabs::widget([
 		    ],
 			[
 				'label' => 'Skrypty',
-				'content' => 'wkrótce',
+				'linkOptions' => ['data-url' => Url::toRoute(['device/script', 'device' => $modelDevice->id])]
 			],
 			[
 				'label' => 'Historia',
 				'content' => 'wkrótce',
-				//'linkOptions' => ['data-url' => Url::toRoute(['ip/view', 'device' => $modelDevice->id])]
+				//'linkOptions' => ['data-url' => Url::toRoute(['device/history', 'device' => $modelDevice->id])]
 			],
 		]
 		

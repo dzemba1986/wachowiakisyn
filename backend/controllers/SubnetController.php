@@ -98,7 +98,7 @@ class SubnetController extends Controller
     	if(!is_null($vlan)){
     	
 	        $countSubnets = Subnet::find()->where(['vlan' => $vlan])->count();
-	        $subnets = Subnet::find()->where(['vlan' => $vlan])->all();
+	        $subnets = Subnet::find()->where(['vlan' => $vlan])->orderBy('desc')->all();
 	        
 	        if($countSubnets > 0){
 	            foreach ($subnets as $subnet){

@@ -167,7 +167,7 @@ class Address extends \yii\db\ActiveRecord
 	
 	public function getShortAddress(){
 	
-		return $this->ulica_prefix.' '.$this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
+		return $this->modelShortStreet->name . $this->dom.$this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
 	}
 
 	public function getInstallations(){
@@ -184,10 +184,10 @@ class Address extends \yii\db\ActiveRecord
 		return $this->hasMany(Connection::className(), ['address'=>'id']);
 	}
 	
-	private function getModelShortStreet(){
+	public function getModelShortStreet(){
 	
 		//Wiele umów na danym adresie
-		return $this->hasOne(AddressShort::className(), ['id'=>'t_ulica']);
+		return $this->hasOne(AddressShort::className(), ['t_ulica'=>'t_ulica']);
 	}
 	
 	private function getTUlica(){

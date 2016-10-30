@@ -172,26 +172,12 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 //        ],
         [
             'class'=>'kartik\grid\BooleanColumn',
-            'attribute' => 'socketDate', // it can be 'attribute' => 'tableField' to.
+            'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
             'header' => 'Gniazdo',
-            //'format' => 'raw',
-            'value' => 'socket',
-//            'value' => function($data) {
-//                if($data->modelInstallationByType <> NULL){
-//                    
-//                    foreach ($data->modelInstallationByType as $installation){
-//                        
-//                        if (isset($installation->socket_date))
-//                            return TRUE;
-//                        else
-//                            return FALSE;
-//                    }
-//                }    
-//                else
-//                    return FALSE;
-//            },
-            'options' => ['style'=>'width:7%;'],
-        ],                       
+        	'trueLabel' => 'Tak',
+        	'falseLabel' => 'Nie',
+//             'options' => ['style'=>'width:7%;'],
+        ],                                 
         [
             'attribute'=>'conf_date',
             'value'=>'conf_date',

@@ -65,15 +65,15 @@ class ConnectionController extends Controller
         		$dataProvider->query->andWhere([
         			'conf_date' => NULL, 
         			'close_date' => NULL, 
-        			Connection::tableName().'.type' => 2 
-        		])->andWhere(['>', 'wire', 0])->andWhere(['>', 'socket', 0])->andWhere(['is not', 'mac', null]);
+        			Connection::tableName().'.type' => 1 
+        		])->andWhere(['and', ['>', 'wire', 0], ['is not', 'mac', null], ['is', 'host', null]]);
         		break;
         	case 'off':
         		$dataProvider->sort = ['defaultOrder' => ['close_date' => SORT_ASC]];
         		$dataProvider->query->andWhere(['is not', 'close_date', null]);
         		break;
         	case 'pay':
-        		$dataProvider->query->andWhere(['is not', 'activ_date', null])->andWhere(['close_date' => null]);
+        		$dataProvider->query->andWhere(['and', ['is not', 'pay_date', null], ['close_date' => null]]);
         		break;
         }
         

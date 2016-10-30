@@ -1,10 +1,16 @@
 <?php
-class CreatetableController extends \yii\console\Controller {
+
+namespace console\controllers;
+
+use yii\console\Controller;
+use backend\models\Dhcp;
+
+class DhcpController extends Controller {
 	
 	// The command "yii example/create test" will call "actionCreate('test')"
-	public function actionCreate($name) {
+	public function actionGenerate() {
 		
-		
+		Dhcp::generateFile();
 	}
 
 	// The command "yii example/index city" will call "actionIndex('city', 'name')"

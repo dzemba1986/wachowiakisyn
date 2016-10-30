@@ -25,8 +25,8 @@ use common\models\User;
     
     <?= $form->field($modelTask, 'status', [
     		'template' => "{input}\n{hint}\n{error}",
-    		'options' => ['placeholder' => 'Status', 'class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-    ])->dropDownList([1 => 'Wykonane', 0 => 'Niewykonane']) ?>
+    		'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
+    ])->dropDownList([1 => 'Wykonane', 0 => 'Niewykonane'], ['prompt' => 'Status']) ?>
     
     </div>
     

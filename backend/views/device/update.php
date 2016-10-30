@@ -1,6 +1,12 @@
 <?php
 // var_dump(get_class($modelDevice)); exit();
 switch (get_class($modelDevice)){
+	case 'backend\models\Host':
+		echo $this->render('_update_host', [
+		'modelDevice' => $modelDevice,
+		'modelAddress' => $modelAddress,
+		]);
+		break;
 	case 'backend\models\Router':
 		echo $this->render('_update_router', [
 			'modelDevice' => $modelDevice,

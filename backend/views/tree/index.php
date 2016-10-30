@@ -2,6 +2,7 @@
 
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\AddressSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -11,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //var_dump(Yii::$app->request->BaseUrl);
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/jstree.min.js');
 $this->registerCssFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/themes/default/style.min.css');
+$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/clipboard.min.js');
 
 ?>
 
@@ -49,8 +51,9 @@ $this->registerCssFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/themes/def
 <input class="search-input form-control"></input>
 <div id="device_tree" class="sidebar"></div>
 </div>
+<?php Pjax::begin(['id' => 'device-desc-pjax']); ?>
 <div id="device_desc" class="col-sm-8 tabbable tabs-left"></div>  
-
+<?php Pjax::end()?>
 <script>
     
 $(function() {
@@ -195,11 +198,12 @@ $(function() {
         	"paste.jstree",
             function(e, data) {
 
+        		//alert('Dupa');
 				var device = getId(data.node[0].original.id);
 				var port = data.node[0].original.port;
 				var newParentDevice = getId(data.parent);
         		var mode = data.mode;
-
+        		console.log(mode);
 				if (mode == 'move_node') {
 				
 	        		$('#modal-port-select').modal('show').find('#modal-content-port-select').load('<?= Url::toRoute(['tree/port-select', 'mode' => 'move']) ?>');

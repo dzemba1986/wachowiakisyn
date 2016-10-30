@@ -242,9 +242,9 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 	        				'data-pjax' => '0',
 	        			]);
         			} elseif ($data->host) {
-        				$url = Url::toRoute(['tree/index', 'id' => $data->host]);
-        				return Html::a('<span class="glyphicon glyphicon-minus"></span>', $url, [
-        					'title' => \Yii::t('yii', 'Drzewo'),
+        				$url = Url::toRoute(['tree/index', 'id' => $data->host, 'host' => true]);
+        				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
+        					'title' => \Yii::t('yii', 'SEU'),
         					'data-pjax' => '0',
         				]);
         			} else

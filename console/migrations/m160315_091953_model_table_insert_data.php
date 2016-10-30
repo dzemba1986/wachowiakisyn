@@ -62,7 +62,10 @@ class m160315_091953_model_table_insert_data extends Migration
         	'port' => '{1,2}'
         ]);
         
+        $this->update('model', ['config' => 1], ['in', 'id', [2, 21]]);
+        $this->update('model', ['config' => 2], ['in', 'id', [1, 5, 13, 15, 31, 40, 41, 46, 47, 57, 58, 59, 60]]);
     }
+    
 
     public function down()
     {
