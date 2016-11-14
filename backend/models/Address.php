@@ -146,6 +146,11 @@ class Address extends \yii\db\ActiveRecord
 		return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
 	}
 	
+	public function getShortAddress(){
+	
+		return $this->modelShortStreet->name . $this->dom.$this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
+	}
+	
 	public static function getFloor(){
 	
 		return [-1 => -1, 3 => 3, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 11 => 11];
@@ -165,9 +170,18 @@ class Address extends \yii\db\ActiveRecord
 				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol;				
 	}
 	
-	public function getShortAddress(){
+	public function getFullDeviceShortAddress(){
 	
-		return $this->modelShortStreet->name . $this->dom.$this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
+		if ($this->pietro)
+			if ($this->lokal)
+				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol.' (piętro '.$this->pietro.')';
+			else
+				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.' (piętro '.$this->pietro.')';
+		else
+			if ($this->lokal)
+				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
+			else
+				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol;
 	}
 
 	public function getInstallations(){

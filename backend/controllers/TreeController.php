@@ -66,13 +66,13 @@ class TreeController extends Controller
         		$model = Model::findOne(Device::findOne($id)->model);
         		
 //         		var_dump($child); exit();
-        		$address = Address::findOne($child->modelDevice->address);
+//         		$address = Address::findOne($child->modelDevice->address);
         	
         		$arChildren[] = [
         			'id' => (int) $child->modelDevice->id . '.' . $child->port,
         			'text' => $id != 1	?	
-        				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress  :	 
-        				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress,
+        				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->modelAddress->fullDeviceShortAddress  :	 
+        				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->modelAddress->fullDeviceShortAddress,
         			'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
         			'icon' => false,
         			'port' => $child->port,
@@ -87,11 +87,41 @@ class TreeController extends Controller
     public function actionSearch($str) {
     
     	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    
+    	
+    	if (strlen($str) > 3){
+	    	$path = [];
+	    	
+	    	$modelsDevice = Device::find()->where(['like', 'name', $str])->andWhere(['status' => true])->all();
+	    	
+	    	foreach ($modelsDevice as $modelDevice) {
+	    		
+	    		$modelTree = Tree::findOne($modelDevice->id);
+	    		$id = $modelTree->device;
+	    		$parent = $modelTree->parent_device;
+	    		
+	    		while ($parent <> 3) {
+	    		
+	    			$modelTree = Tree::findOne($id);
+	    			$parent = $modelTree->parent_device;
+	    			$modelTree = Tree::find()->where(['device' => $parent])->one();
+	    			
+	    			if (!in_array($modelTree->device . '.' . $modelTree->port, $path))
+	    				array_push($path, $modelTree->device . '.' . $modelTree->port);
+	    		
+	    			$id = $parent;
+	    		}
+	    	}
+// 	    	if (is_object($modelTree)){
+// 		    	$parent = $modelTree->parent_device;
+		    	
+		    	
+// 	    	} else 
+// 	    		return null;
+    	} else 
+    		return null;
 //     	$children = Tree::find()->
 //     	joinWith('modelDevice')->
-//     	where(['parent_device' => $id])->
-//     	orderBy('parent_port')->all();
+//     	where(['device' => $str]);
     	 
     
 //     	$arChildren = [];
@@ -114,7 +144,8 @@ class TreeController extends Controller
 //     		];
 //     	}
     	 
-    	return $arChildren = ['17213.16', '209.24'];
+    	return array_reverse($path);
+//     	return ["3.74","10.12","5442.47"];
     }
     
     public function actionAdd($id, $host = false)

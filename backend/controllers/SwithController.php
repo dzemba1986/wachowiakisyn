@@ -8,23 +8,23 @@ use yii\widgets\ActiveForm;
 
 class SwithController extends DeviceController
 {	
-	public function actionValidation($id = null){
+// 	public function actionValidation($id = null){
 		 
-		$modelDevice = is_null($id) ? new Swith() : Swith::findOne($id);
+// 		$modelDevice = is_null($id) ? new Swith() : Swith::findOne($id);
 		
-		$request = Yii::$app->request;
+// 		$request = Yii::$app->request;
 		
-		if ($request->isAjax && $modelDevice->load($request->post())) {
+// 		if ($request->isAjax && $modelDevice->load($request->post())) {
 			
 //  				var_dump($modelDevice); exit();
-	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-	               	return ActiveForm::validate($modelDevice, 'mac');
+// 	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+// 	               	return ActiveForm::validate($modelDevice, 'mac');
 
-              	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return ActiveForm::validate($modelDevice, 'serial');
+//               	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//                 return ActiveForm::validate($modelDevice, 'serial');
 
-		}
-	}
+// 		}
+// 	}
     
     protected function findModel($id)
     {

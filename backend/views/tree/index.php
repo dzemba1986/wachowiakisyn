@@ -62,11 +62,13 @@ $(function() {
       	return id.substr(0, id.indexOf("."));
     }
 
-	$(".search-input").keyup(function() {
+	$(".search-input").keyup(function(e) {
 
-        var searchString = $(this).val();
-        console.log(searchString);
-        $('#device_tree').jstree('search', searchString);
+		if (e.which == 13) {
+	        var searchString = $(this).val();
+	        console.log(searchString);
+	        $('#device_tree').jstree('search', searchString);
+		}
     });       
         
         //tworzymy drzewo urządzeń

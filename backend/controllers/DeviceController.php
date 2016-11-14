@@ -132,7 +132,8 @@ class DeviceController extends Controller
         		}
         		
         		if($modelDevice->validate()){
-        			
+//         			var_dump($modelDevice);
+//         			exit();
         			try {
         				if(!$modelDevice->save())
         					throw new Exception('Problem z zapisem urządzenia');
@@ -143,7 +144,7 @@ class DeviceController extends Controller
         				exit();
         			}
         		} else {
-        			var_dump($modelDevice->errors);
+        			var_dump($modelDevice);
         			exit();
         		}
         	} else {
