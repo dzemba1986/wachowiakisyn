@@ -76,6 +76,8 @@ class Device extends \yii\db\ActiveRecord
             ['status', 'required', 'message'=>'Pole jest wymagane', 'on' => self::SCENARIO_TOSTORE],
                       
             ['name', 'string', 'min' => 3, 'max' => 50],
+				
+			['original_name', 'boolean'],	
             
             ['desc', 'string'],
             
@@ -85,7 +87,7 @@ class Device extends \yii\db\ActiveRecord
             ['type', 'integer'],
             ['type', 'required', 'message'=>'Wartość wymagana'],           
 				
-			[['status', 'desc', 'address', 'type', 'name'],'safe'],
+			[['status', 'desc', 'address', 'type', 'name', 'original_name'],'safe'],
 		];
 	}
     
@@ -93,7 +95,7 @@ class Device extends \yii\db\ActiveRecord
 	{
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['desc', 'address', 'type'];
-		$scenarios[self::SCENARIO_UPDATE] = ['status', 'name', 'desc'];
+		$scenarios[self::SCENARIO_UPDATE] = ['status', 'name', 'desc', 'original_name'];
 		$scenarios[self::SCENARIO_TOSTORE] = ['address', 'status'];
 		$scenarios[self::SCENARIO_TOTREE] = ['address', 'status'];
 		//$scenarios[self::SCENARIO_DELETE] = ['close_date', 'close_user'];

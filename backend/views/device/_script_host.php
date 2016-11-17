@@ -12,8 +12,8 @@ $arPortsParent = $modelDeviceParent->modelModel->port;
 
 if($modelDeviceParent->modelModel->config == 1){
 
-$add = 'no ip access-list user' . ($parentPortIndex + 1) .
-'no service-acl input' . '
+$add = 'no ip access-list user' . ($parentPortIndex + 1) . '
+no service-acl input' . '
 exit' . '
 no ip access-list user' . ($parentPortIndex + 1) . '
 no ip access-list user' . ($parentPortIndex + 1) . '

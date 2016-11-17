@@ -4,6 +4,7 @@ namespace backend\models;
 
 use yii\data\ActiveDataProvider;
 use backend\models\Connection;
+use yii\db\Expression;
 
 class ConnectionSearch extends Connection
 {	
@@ -43,7 +44,12 @@ class ConnectionSearch extends Connection
 		$query->joinWith(['modelAddress', 'modelType']);
 		
 		$dataProvider->setSort([
-			'defaultOrder' => ['start_date' => SORT_ASC, 'street' => SORT_ASC, 'house' => SORT_ASC | SORT_FLAG_CASE, 'flat' => SORT_ASC],
+			'defaultOrder' => [
+				'start_date' => SORT_ASC, 
+				'street' => SORT_ASC, 
+				'house' => new Expression('case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end, dom'), 
+				'flat' => new Expression('case when substring(lokal from \'^\d+$\') is null then 9999 else cast(lokal as integer) end, lokal')
+			],
 			//'enableMultiSort' => true,	
 			'attributes' => [
 				'start_date',
@@ -64,12 +70,20 @@ class ConnectionSearch extends Connection
 					'desc' => ['ulica' => SORT_DESC]
 				],
 				'house' => [
-						'asc' => ['dom' => SORT_ASC | SORT_NATURAL | SORT_FLAG_CASE],
-						'desc' => ['dom' => SORT_DESC]
+						'asc' => ['dom' => new Expression(
+							'case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end, dom'
+						)],
+						'desc' => ['dom' => new Expression(
+							'case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end DESC, dom DESC'
+						)],
 				],
 				'flat' => [
-						'asc' => ['lokal' => SORT_ASC],
-						'desc' => ['lokal' => SORT_DESC]
+						'asc' => ['lokal' => new Expression(
+							'case when substring(lokal from \'^\d+$\') is null then 9999 else cast(lokal as integer) end, lokal'
+						)],
+						'desc' => ['lokal' => new Expression(
+							'case when substring(lokal from \'^\d+$\') is null then 9999 else cast(lokal as integer) end DESC, lokal DESC'
+						)]
 				],
 			]
 		]);

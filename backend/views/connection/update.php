@@ -76,12 +76,12 @@ use backend\models\Device;
 			<?= $form->field($modelConnection, 'device', [
     			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     		])->widget(Select2::classname(), [
-    			'initValueText' => $concatInit,
+    			'initValueText' => 'OP 120/ - OP120 - [172.20.4.44]', //$concatInit,
     			'language' => 'pl',
             	'options' => [
             		//'id' => 'select2-connection-update',	
             		'placeholder' => 'Urządzenie nadrzędne',
-            		'onchange' => new yii\web\JsExpression("
+            		'onchange' => new JsExpression("
 
 						$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $(this).val() + '&type=free', function(data){
 							$('#connection-port').html(data).val('" . $modelConnection->port . "');
@@ -144,7 +144,7 @@ $(function(){
 	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
 
 	$("#<?= $modelConnection->formName(); ?>").on('beforeSubmit', function(e){
-
+		
 		var form = $(this);
 	 	$.post(
 	  		form.attr("action"), // serialize Yii2 form

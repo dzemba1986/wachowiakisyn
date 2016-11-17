@@ -14,7 +14,7 @@ class Dhcp extends Model
 		echo \Yii::getAlias('@console/dhcp');
 		$test = ob_get_contents();
 		
-		//$sysout = system('rm ' . $this->path . '/subnets/*');
+		$sysout = system('rm ' . $test . '/subnets/*');
 		$updateFile = $test . '/subnets/.update_notify';
 // 		var_dump($test); exit();
 		$dhcpSubnets = Subnet::find()->where(['dhcp' => true])->all();
@@ -67,5 +67,9 @@ subnet ' . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->block
 // 			} else
 // 				return 'Nieprawidłowy adres ip podsieci';
 		}
+		
+		$file = fopen($updateFile, "w");
+		fwrite($file, time());
+		fclose($file);
 	}
 }

@@ -14,6 +14,7 @@ use backend\models\Connection;
 use backend\models\Host;
 use backend\models\Ip;
 use yii\db\Query;
+use backend\models\Dhcp;
 
 class TreeController extends Controller
 {
@@ -71,8 +72,8 @@ class TreeController extends Controller
         		$arChildren[] = [
         			'id' => (int) $child->modelDevice->id . '.' . $child->port,
         			'text' => $id != 1	?	
-        				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->modelAddress->fullDeviceShortAddress  :	 
-        				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->modelAddress->fullDeviceShortAddress,
+        				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->name  :	 
+        				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->name,
         			'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
         			'icon' => false,
         			'port' => $child->port,
@@ -211,7 +212,7 @@ class TreeController extends Controller
 	    						throw new Exception('Problem z zapisem device');
 	    				} catch (\Exception $e) {
 	    					$transaction->rollBack();
-	    					return $e->getMessage();
+	    					return $modelDevice; //$e->getMessage();
 	    				}
 	    				 
 	    				$modelTree->device = $modelDevice->id;
@@ -253,7 +254,10 @@ class TreeController extends Controller
 	    				}
 	    				 
 	    				$transaction->commit();
+	    				
 	    				$this->redirect(['tree/index']);
+	    				
+	    				Dhcp::generateFile();
 	    			} else {
 	    		
 	    				return $this->renderAjax('add_host_network', [

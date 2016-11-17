@@ -1,6 +1,6 @@
 <div class="col-md-10">
 
-	<div class="col-md-5">
+	<div class="col-md-6">
 	<?php
 	// var_dump(get_class($modelDevice)); exit();
 	switch (get_class($modelDevice)){

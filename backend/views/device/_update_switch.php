@@ -32,19 +32,19 @@ $form = ActiveForm::begin([
 	    ?>
 	    
 	    <?= $form->field($modelAddress, 'dom' , [
-	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 	    		'template' => "{input}\n{hint}\n{error}",
 	    	])->textInput(['placeholder' => $modelAddress->getAttributeLabel('dom')]) 
 	    ?>
 	    
 	    <?= $form->field($modelAddress, 'dom_szczegol' , [
-	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 	    		'template' => "{input}\n{hint}\n{error}",
 	    	])->textInput(['placeholder' => $modelAddress->getAttributeLabel('dom_szczegol')]) 
 	    ?>
 	    
 	    <?= $form->field($modelAddress, 'pietro' , [
-	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 0px;'],
+	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 0px;'],
 	    		'template' => "{input}\n{hint}\n{error}",
 	    	])->dropDownList(Address::getFloor(), ['prompt' => $modelAddress->getAttributeLabel('pietro')]) 
 	    ?>
@@ -56,14 +56,24 @@ $form = ActiveForm::begin([
 		]) ?>
 		
 		<?= $form->field($modelDevice, 'serial', [
-			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;']
+			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 0px;']
+		]) ?>
+		</div>
+		
+		<div style="display: flex">
+		<?= $form->field($modelDevice, 'name', [
+			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
 		]) ?>
 		
+		<?= $form->field($modelDevice, 'original_name', [
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+			//'template' => "{input}\n{hint}\n{error}",
+		])->checkbox(['label' => 'Oryginalna']) ?>
+		
 		<?= $form->field($modelDevice, 'distribution', [
-			'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 0px;'],
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 0px;'],
 			//'template' => "{input}\n{hint}\n{error}",
 		])->checkbox(['label' => 'Szkielet']) ?>
-		
 		</div>
 	
 		<?= $form->field($modelDevice, 'desc', [
@@ -103,6 +113,13 @@ $(function() {
      		console.log('server error');
      	});
     	return false;				
+    });
+
+    if($("#swith-original_name").is(':checked'))
+    	$("#swith-name").attr('disabled', true); 
+
+    $("#swith-original_name").change(function() {
+        $("#swith-name").attr('disabled', this.checked);
     });
 });
 </script>

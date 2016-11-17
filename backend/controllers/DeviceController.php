@@ -113,6 +113,7 @@ class DeviceController extends Controller
         				$newModelAddress->dom_szczegol = $modelAddress->dom_szczegol;
         				$newModelAddress->lokal = $modelAddress->lokal;
         				$newModelAddress->lokal_szczegol = $modelAddress->lokal_szczegol;
+        				$newModelAddress->pietro = $modelAddress->pietro;
         				
 	        			try {
 							if(!$newModelAddress->save())
@@ -132,8 +133,11 @@ class DeviceController extends Controller
         		}
         		
         		if($modelDevice->validate()){
-//         			var_dump($modelDevice);
+//         			var_dump($modelDevice->modelAddress);
 //         			exit();
+					if (($modelDevice->isAttributeChanged('original_name') && $modelDevice->original_name) || (!empty($modelAddress->dirtyAttributes) && $modelDevice->original_name))
+						$modelDevice->name = isset($newModelAddress) ? $newModelAddress->fullDeviceShortAddress : $modelDevice->modelAddress->fullDeviceShortAddress;
+        			
         			try {
         				if(!$modelDevice->save())
         					throw new Exception('Problem z zapisem urządzenia');

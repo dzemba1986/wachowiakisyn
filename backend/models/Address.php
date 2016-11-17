@@ -158,7 +158,9 @@ class Address extends \yii\db\ActiveRecord
 	
 	public function getFullDeviceAddress(){
 	
-		if ($this->pietro)
+		//var_dump($this->pietro); exit();
+		
+		if (!is_null($this->pietro))
 			if ($this->lokal)
 				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol.' (piętro '.$this->pietro.')';
 			else 
@@ -172,7 +174,7 @@ class Address extends \yii\db\ActiveRecord
 	
 	public function getFullDeviceShortAddress(){
 	
-		if ($this->pietro)
+		if (!is_null($this->pietro))
 			if ($this->lokal)
 				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol.' (piętro '.$this->pietro.')';
 			else
