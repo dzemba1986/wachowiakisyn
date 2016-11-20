@@ -23,12 +23,7 @@ echo DetailView::widget([
 		[
 			'label' => 'Mac',
 			'value' => $modelDevice->mac,
-		],
-		'serial',
-		[
-			'label' => 'Rodzaj',
-			'value' => $modelDevice->distribution ? 'szkieletowy' : 'dostępowy',
-		],
+		]
 	]
 ]);
 ?>

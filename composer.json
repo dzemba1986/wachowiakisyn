@@ -29,7 +29,8 @@
         "kossmoss/yii2-postgresql-array-field": "^0.2",
         "rlanvin/php-ip": "1.*",
         "vakorovin/yii2-macaddress-validator": "dev-master",
-        "yii2tech/ar-role": "^1.0"
+        "yii2tech/ar-role": "^1.0",
+        "bobchengbin/yii2-xml-request-parser" : "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

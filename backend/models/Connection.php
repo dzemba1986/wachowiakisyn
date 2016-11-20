@@ -10,6 +10,7 @@ use vakorovin\yii2_macaddress_validator\MacaddressValidator;
  *
  * @property integer $id
  * @property string $ara_id
+ * @property string $soa_id
  * @property string $start_date
  * @property string $conf_date
  * @property string $activ_date
@@ -68,6 +69,9 @@ class Connection extends \yii\db\ActiveRecord
 		return [
             
             ['ara_id', 'string', 'min' => 5, 'max' => 6, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
+				
+			['soa_id', 'integer'],
+			['soa_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],
             
             ['phone', 'trim'],
             ['phone', 'string', 'min'=>9, 'max'=>12, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
@@ -117,7 +121,7 @@ class Connection extends \yii\db\ActiveRecord
             ['task', 'integer'],
 
 			[
-				['ara_id', 'start_date', 'conf_date', 'activ_date', 'pay_date', 'close_date', 'phone_date',
+				['ara_id', 'soa_id', 'start_date', 'conf_date', 'activ_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'again',
 				'address', 'phone', 'phone2', 'info', 'info_boa',
 				'port', 'device', 'mac', 'type', 'package', 'task'],

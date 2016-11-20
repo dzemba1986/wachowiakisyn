@@ -12,8 +12,11 @@ use yii\helpers\Url;
 		'header' => '<center><h4>Zmiana MAC</h4></center>',
 		'size' => 'modal-sm',
 		'options' => [
-				'tabindex' => false, // important for Select2 to work properly
-				'enforceFocus' => false
+			'tabindex' => false, // important for Select2 to work properly
+			'enforceFocus' => false,
+			'style' => ['position' => 'fixed'],
+			'backdrop' => false,
+			//'class' => 'modal bottom-sheet'
 		],	
 	]);
 	
@@ -61,8 +64,18 @@ $(function(){
 			.data('mac', '<?= $modelDevice->mac ?>')
 			.find('#modal-content-change-mac')
 			.load($(this).attr('href'));
-    
+
+		//potrzebne by okno modal nie blokowało się
+		$("#device_desc").css("position", "absolute");
+
+		
+	
         return false;
+	});
+
+	//włącza spowtorem przesówanie opisu urządzenia po zmianie mac
+	$('#modal-change-mac').on('hidden.bs.modal', function () {
+		$("#device_desc").css("position", "fixed");
 	});
 });
 

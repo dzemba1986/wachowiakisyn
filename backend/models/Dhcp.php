@@ -9,15 +9,15 @@ class Dhcp extends Model
 {
 	private $path;
 	
-	public static function generateFile(){
+	public static function generateFile($subnet = null){
 		
 		echo \Yii::getAlias('@console/dhcp');
 		$test = ob_get_contents();
-		
+// var_dump($test); exit();		
 		$sysout = system('rm ' . $test . '/subnets/*');
 		$updateFile = $test . '/subnets/.update_notify';
 // 		var_dump($test); exit();
-		$dhcpSubnets = Subnet::find()->where(['dhcp' => true])->all();
+		$dhcpSubnets = Subnet::find()->where(['id' => $subnet, 'dhcp' => true])->all();
 		
 		$ipValidator = new IpValidator(['ipv6' => false]);
 		
@@ -71,5 +71,7 @@ subnet ' . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->block
 		$file = fopen($updateFile, "w");
 		fwrite($file, time());
 		fclose($file);
+		
+		ob_end_clean();
 	}
 }

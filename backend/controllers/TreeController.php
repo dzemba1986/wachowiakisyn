@@ -214,7 +214,8 @@ class TreeController extends Controller
 	    					$transaction->rollBack();
 	    					return $modelDevice; //$e->getMessage();
 	    				}
-	    				 
+	    				$modelDevice->name = $modelDevice->modelAddress->fullDeviceShortAddress;
+	    				
 	    				$modelTree->device = $modelDevice->id;
 	    				$modelTree->port = 0;
 	    				$modelTree->parent_device = $modelConnection->device;
@@ -257,7 +258,7 @@ class TreeController extends Controller
 	    				
 	    				$this->redirect(['tree/index']);
 	    				
-	    				Dhcp::generateFile();
+	    				Dhcp::generateFile($request->post('subnet'));
 	    			} else {
 	    		
 	    				return $this->renderAjax('add_host_network', [

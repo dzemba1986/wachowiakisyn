@@ -11,6 +11,7 @@ use backend\models\DeviceFactory;
 use yii\widgets\ActiveForm;
 use backend\models\Address;
 use backend\models\Ip;
+use backend\models\Dhcp;
 
 class DeviceController extends Controller
 {
@@ -49,6 +50,7 @@ class DeviceController extends Controller
     				try {
     					if(!$modelDevice->save())
     						throw new Exception('Problem z zapisem urządzenia');
+    						Dhcp::generateFile($modelDevice->modelIps[0]->modelSubnet->id);
     						return 1;
     				} catch (Exception $e) {
     					var_dump($modelDevice->errors);

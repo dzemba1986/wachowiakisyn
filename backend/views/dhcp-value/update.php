@@ -17,7 +17,7 @@ use backend\models\DhcpValue;
 <div id="dhcp-template" class="dhcp-group" style="display : none">
 	<div class="col-xs-2 form-group" style="padding-left: 0px; padding-right: 3px;">
 	
-		<? $modelDhcpValue = new DhcpValue(); ?>
+		<?php $modelDhcpValue = new DhcpValue(); ?>
 				
 		<?= $form->field($modelDhcpValue, 'option')->dropDownList(
 			ArrayHelper::map(DhcpOption::find()->select(['id', 'name'])->orderBy('name'), 'id', 'name')) ?>

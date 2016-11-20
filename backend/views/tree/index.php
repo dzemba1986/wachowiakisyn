@@ -37,7 +37,7 @@ $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/clipboard.min.js');
 		'header' => '<center><h4>Zamień</h4></center>',
 		'size' => 'modal-lg',
 		'options' => [
-			'tabindex' => false // important for Select2 to work properly
+			'tabindex' => false, // important for Select2 to work properly
 		],
 	]);
 	
@@ -52,7 +52,7 @@ $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/clipboard.min.js');
 <div id="device_tree" class="sidebar"></div>
 </div>
 <?php Pjax::begin(['id' => 'device-desc-pjax']); ?>
-<div id="device_desc" class="col-sm-8 tabbable tabs-left"></div>  
+<div id="device_desc" style="position: fixed; right:-2%;" class="col-sm-8 tabbable tabs-left"></div>  
 <?php Pjax::end()?>
 <script>
     

@@ -57,6 +57,12 @@ class Swith extends Device
             	['mac', 'filter', 'filter' => function($value) { return strtolower($value); }],
             	['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
             	['mac', 'required', 'message'=>'Wartość wymagana'],
+//             	['mac', MacaddressValidator::className(), 'patterns' => [
+//             			'/^[0-9a-f]{2}[\-: ]{1}[0-9a-f]{2}[\-: ]{1}[0-9a-f]{2}[\-: ]{1}[0-9a-f]{2}[\-: ]{1}[0-9a-f]{2}[\-: ]{1}[0-9a-f]{2}$/i'
+//             		], 'message'=>'Zły format', 'when' => function ($model, $attribute) {
+//             			return $model->modelModel->config == 1 ? true : false;
+//             		}
+//             	],
             	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
             	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
             		return $model->{$attribute} !== $model->getOldAttribute($attribute);
