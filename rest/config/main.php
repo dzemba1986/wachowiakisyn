@@ -25,7 +25,7 @@ return [
 						'enableSession' => false,
 				],
 				'response' => [
-						'format' => yii\web\Response::FORMAT_XML,
+						'format' => yii\web\Response::FORMAT_JSON,
 						'charset' => 'UTF-8',
 				],
 				'log' => [

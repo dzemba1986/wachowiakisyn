@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use Yii;
 use backend\models\Address;
 use yii\data\ActiveDataProvider;
 

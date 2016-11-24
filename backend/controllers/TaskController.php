@@ -8,7 +8,6 @@ use backend\models\TaskSearch;
 use backend\models\Connection;
 use backend\models\Address;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use common\models\User;
 use backend\models\Installation;
 use yii\base\Exception;
@@ -164,6 +163,7 @@ class TaskController extends Controller
 	    			}
 	    		}
 	    		
+	    		$modelTask->address = $modelAddress->id;
 	    		$modelTask->add_user = Yii::$app->user->identity->id;
 	    		$modelTask->start_time = $modelTask->start_time.':00';
 	    		$modelTask->end_time = $modelTask->end_time.':00';

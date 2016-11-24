@@ -86,7 +86,11 @@ class SubnetController extends Controller
 	public function actionDelete($id)
 	{
 		if($id){
-			$this->findModel($id)->delete();
+			if (count($this->findModel($id)->modelIps) > 0)
+				return 'Podsieć wykorzystywana';
+			else
+				$this->findModel($id)->delete();
+			
 			return 1;
 		} else
 			return 0;

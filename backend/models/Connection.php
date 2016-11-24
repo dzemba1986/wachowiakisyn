@@ -133,7 +133,7 @@ class Connection extends \yii\db\ActiveRecord
 	public function scenarios()
 	{
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ['id', 'ara_id', 'start_date', 'add_user', 'nocontract', 'vip', 'port', 'mac',
+		$scenarios[self::SCENARIO_CREATE] = ['id', 'soa_id', 'ara_id', 'start_date', 'add_user', 'nocontract', 'vip', 'port', 'mac',
 				'phone', 'phone2', 'info_boa', 'device', 'package', 'address', 'type', 'phone_date'
 		];
 		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'activ_date', 'pay_date', 'phone_date', 'nocontract', 'vip', 'port',

@@ -80,11 +80,11 @@ echo DetailView::widget([
             'options' => [
             	'placeholder' => 'Urządzenie nadrzędne',
             	'onchange' => '
-                	$.get( "' . Url::toRoute('tree/free-port-list') . '&id=" + $("select#tree-parent_device").val(), function(data){
+                	$.get( "' . Url::toRoute('tree/select-list-port') . '&device=" + $("select#tree-parent_device").val(), function(data){
 						$("select#tree-parent_port").html(data);
 					} );
                                         		
-                    $.get( "' . Url::toRoute('tree/free-port-list') . '&id=" + "' . Yii::$app->request->get("id") . '", function(data){
+                    $.get( "' . Url::toRoute('tree/select-list-port') . '&device=" + "' . Yii::$app->request->get("id") . '" + "&mode=all", function(data){
 						$("select#tree-port").html(data);
 					} );
                                         		'
@@ -103,6 +103,7 @@ echo DetailView::widget([
     				'data' => new JsExpression('function(params) {
     					return { 
     						q : params.term,
+    						type : 2
 						}; 
 					}')
 	    		],

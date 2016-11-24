@@ -80,6 +80,12 @@ class Subnet extends \yii\db\ActiveRecord
 		return $this->hasOne(Vlan::className(), ['id' => 'vlan']);
 	}
 	
+	public function getModelIps(){
+	
+		//Connection ma tylko 1 Address
+		return $this->hasMany(Ip::className(), ['subnet' => 'id']);
+	}
+	
 	private function getModelsDhcpValueForSubnet(){
 	
 // 		return DhcpValue::find()->select('option, value, weight')->where(['subnet' => $this->id])->orWhere(['dhcp_group' => $this->dhcp_group])->asArray()->all();

@@ -124,15 +124,26 @@ class InstallationController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+    	$modelInstallation = $this->findModel($id);
+    	$request = Yii::$app->request;
+    	
+    	if ($request->isAjax){
+    		if ($modelInstallation->load(Yii::$app->request->post())) {
+    	
+    			try {
+    				if(!($modelInstallation->save()))
+    					throw new Exception('Problem z zapisem połączenia');
+    					 
+    					return 1;
+    			} catch (Exception $e) {
+    				return 0;
+    			}
+    		} else {
+    			return $this->renderAjax('update', [
+    					'modelInstallation' => $modelInstallation,
+    			]);
+    		}
+    	}
     }
 
     /**

@@ -231,7 +231,7 @@ $this->params['breadcrumbs'][] = 'Do zrobienia';
                     'template' => '{list}',
                 ]),
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{close}{delete}',
+                'template' => '{close}',
             	'buttons' => [
             		'close' => function ($model, $data) {
             			$url = Url::toRoute(['task/close', 'id' => $data->id]);

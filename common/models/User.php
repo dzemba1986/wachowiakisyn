@@ -188,8 +188,12 @@ class User extends ActiveRecord implements IdentityInterface
     
     public static function getIstallers(){
     	
-    	return ['Andrzej Ż.' => 'Andrzej Ż.', 'Darek P.' => 'Darek P.', 'Marek S.' => 'Marek S.', 'Kaziu K.' => 'Kaziu K.', 
-    			'Tomek' => 'Tomek', 'Adam' => 'Adam'
+    	return [
+    		'Andrzej Ż.' => 'Andrzej Ż.', 
+    		'Darek P.' => 'Darek P.', 
+    		'Marek S.' => 'Marek S.', 
+    		'Kaziu K.' => 'Kaziu K.', 
+    		'Tomek' => 'Tomek'
     	];
     }
 }

@@ -58,9 +58,9 @@ $(function() {
 		timezone : 'local',
 		defaultView : 'agendaDay',
 		defaultDate : '<?= !is_null($conId) && is_object(Connection::findOne($conId)->modelTask) ? Connection::findOne($conId)->modelTask->start_date : date("Y-m-d H:i:s") ?>',   
-		minTime : '08:00',
-		maxTime : '18:00',
-		slotDuration : '00:30:00',
+		minTime : '09:00',
+		maxTime : '16:00',
+		slotDuration : '01:00:00',
 		hiddenDays : [0], //ukryj niedzielę
 		contentHeight : 500,
 		height : 500,
@@ -101,6 +101,7 @@ $(function() {
 // 			console.log(event.description);
 // 		}
 	});
+
 });
 
 

@@ -158,7 +158,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'format'=>'raw',
             'value'=> function($data){
                 if (!is_null($data->task)){
-//                 	if (is_object($data->modelTask))
+                	if (is_object($data->modelTask))
                     	return Html::a($data->modelTask->start_date, Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
 //                     else {
 // 						return $data->task;

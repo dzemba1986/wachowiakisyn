@@ -62,4 +62,9 @@ class Vlan extends \yii\db\ActiveRecord
 			'desc' => 'Opis',
 		);
 	}
+	
+	public function getModelSubnets(){
+	
+		return $this->hasMany(Subnet::className(), ['vlan'=> 'id']);
+	}
 }

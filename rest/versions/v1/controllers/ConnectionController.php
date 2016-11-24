@@ -11,4 +11,11 @@ use yii\rest\ActiveController;
 class ConnectionController extends ActiveController
 {
 	public $modelClass = 'backend\models\Connection';
+	
+	public function actions() {
+		$actions = parent::actions();
+		unset($actions['delete']);
+		
+		return $actions;
+	}
 }

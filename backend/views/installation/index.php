@@ -7,6 +7,7 @@ use kartik\date\DatePicker;
 use backend\models\Address;
 use backend\models\Type;
 use nterms\pagesize\PageSize;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\InstallationSearch */
@@ -15,6 +16,24 @@ use nterms\pagesize\PageSize;
 $this->title = 'Instalacje';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<!-------------------------------------------- edycja instalacji okno modal -------------------------------------------->
+
+	<?php Modal::begin([
+		'id' => 'modal-installation-update',	
+		'header' => '<center><h4>Edycja instalacji</h4></center>',
+		'size' => 'modal-sm',
+		'options' => [
+				'tabindex' => false // important for Select2 to work properly
+		],
+	]);
+	
+	echo "<div id='modal-content-installation-update'></div>";
+	
+	Modal::end(); ?>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
 <div class="installation-index">
 
     <?= GridView::widget([
@@ -134,6 +153,17 @@ $this->params['breadcrumbs'][] = $this->title;
 <script>
     
 $(document).ready(function() {
+
+	$(function(){
+		$('body').on('click', 'a[title="Update"]', function(event){
+	        
+			$('#modal-installation-update').modal('show')
+				.find('#modal-content-installation-update')
+				.load($(this).attr('href'));
+	    
+	        return false;
+		});
+	});
 
     //reinicjalizacja kalendarza z datami po użyciu pjax'a
     $("#installation-grid-pjax").on("pjax:complete", function() {

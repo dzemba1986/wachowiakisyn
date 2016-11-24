@@ -105,7 +105,11 @@ class VlanController extends Controller
     public function actionDelete($id)
     {
     	if($id){
-    		$this->findModel($id)->delete();
+    		if (count($this->findModel($id)->modelSubnets) > 0)
+    			return 'Vlan wykorzystywany';
+    		else
+    			$this->findModel($id)->delete();
+    		
     		return 1;
     	} else 
     		return 0;
