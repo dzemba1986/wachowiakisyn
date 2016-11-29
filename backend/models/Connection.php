@@ -91,7 +91,11 @@ class Connection extends \yii\db\ActiveRecord
 			['port', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
 			
 			['device', 'integer'],
-			['device', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],	
+			['device', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
+				
+			['start_date', 'date', 'format'=>'yyyy-MM-dd'],
+			['start_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
+			['start_date', 'default', 'value' => new \yii\db\Expression('NOW()')],
                       
             ['conf_date', 'date', 'format'=>'yyyy-MM-dd'],
             ['conf_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
@@ -104,6 +108,10 @@ class Connection extends \yii\db\ActiveRecord
             ['activ_date', 'date', 'format'=>'yyyy-MM-dd'],
             ['activ_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['activ_date', 'default', 'value'=>NULL],
+				
+			['phone_date', 'date', 'format'=>'yyyy-MM-dd'],
+			['phone_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
+			['phone_date', 'default', 'value'=>NULL],
             
             ['close_date', 'date', 'format'=>'yyyy-MM-dd'],
             ['close_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],

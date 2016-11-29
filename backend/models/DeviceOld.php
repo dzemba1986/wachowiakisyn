@@ -19,6 +19,12 @@ class DeviceOld extends \yii\db\ActiveRecord
         return 'Device';
     }
     
+    public function getModelAddressDeviceOld(){
+    
+    	//urządzenie ma jeden adres
+    	return $this->hasOne(AddressDeviceOld::className(), ['id'=>'lokalizacja']);
+    }
+    
     public function getModelDeviceVoip(){
 	
 		//urządzenie ma jeden adres

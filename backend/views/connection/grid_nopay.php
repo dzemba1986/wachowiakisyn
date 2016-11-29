@@ -125,9 +125,12 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         ],
         [
             'class'=>'kartik\grid\BooleanColumn',
+        	'header'=>'Umowa',
             'attribute'=>'nocontract',
-            'trueLabel' => 'Tak', 
-            'falseLabel' => 'Nie',
+            'trueLabel' => 'Nie', 
+            'falseLabel' => 'Tak',
+        	'trueIcon' => GridView::ICON_INACTIVE,
+        	'falseIcon' => GridView::ICON_ACTIVE,
             'options' => ['style'=>'width:5%;'],
         ],
 //         [

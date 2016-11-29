@@ -206,6 +206,7 @@ class TreeController extends Controller
 	    				$modelDevice->status = true;
 	    				$modelDevice->mac = $modelConnection->mac;
 	    				$modelDevice->address = $modelConnection->address;
+	    				
 	    				 
 	    				try {
 	    					if (!$modelDevice->save())
@@ -214,7 +215,9 @@ class TreeController extends Controller
 	    					$transaction->rollBack();
 	    					return $modelDevice; //$e->getMessage();
 	    				}
+	    				
 	    				$modelDevice->name = $modelDevice->modelAddress->fullDeviceShortAddress;
+	    				$modelDevice->save();
 	    				
 	    				$modelTree->device = $modelDevice->id;
 	    				$modelTree->port = 0;
