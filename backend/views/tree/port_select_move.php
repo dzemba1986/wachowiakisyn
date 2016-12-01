@@ -24,7 +24,7 @@ var newParentDevice = $('#modal-port-select').data('newParentDevice');
 var mode = $('#modal-port-select').data('mode');
 
 
-$.get( " <?= Url::toRoute('tree/select-list-port') ?>&device=" + newParentDevice, function(data){
+$.get( " <?= Url::toRoute('tree/select-list-port') ?>&device=" + newParentDevice + "&type=SEU", function(data){
 	$("select[name='parentPort']").html(data);
 } );
 

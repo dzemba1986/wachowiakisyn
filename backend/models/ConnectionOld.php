@@ -51,4 +51,10 @@ class ConnectionOld extends \yii\db\ActiveRecord
     {
         return 'Connections';
     }
+    
+    public function getModelBoa(){
+    
+    	//Connection ma tylko 1 Address
+    	return $this->hasOne(BoaOld::className(), ['id'=>'connection_id']);
+    }
 }

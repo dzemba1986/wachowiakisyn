@@ -62,7 +62,8 @@ $(function() {
      		if(result == 1){
 //      			$("#device_tree").jstree(true).refresh();
     			$('#modal-change-mac').modal('hide');
-//      			$.pjax.reload({container: '#device-desc-pjax'});
+    			$("#device_desc").load(location.href + " #device_desc");
+//      		$.pjax.reload({container: '#device-desc-pjax'});
      		}
      		else{
     		

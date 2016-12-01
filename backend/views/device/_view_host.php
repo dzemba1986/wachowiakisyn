@@ -39,6 +39,10 @@ echo DetailView::widget([
 			'value' => $modelDevice->modelAddress->fullDeviceAddress
 		],
 		[
+			'label' => 'Konfiguracja',
+			'value' => $modelDevice->start_date
+		],
+		[
 			'label' => 'Status',
 			'value' => $modelDevice->status ? 'Aktywny' : 'Nieaktywny'
 		],

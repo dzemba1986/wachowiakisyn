@@ -113,7 +113,7 @@ class m160315_082820_connection_table_insert_data extends Migration
                'conf_user' => isset($connectionOld->configuration_user) ? $arUserMap[$connectionOld->configuration_user] : NULL,
                'close_user' => isset($connectionOld->resignation_date) ? 1 : NULL,
                'nocontract' => isset($connectionOld->ara_id)   ?    substr($connectionOld->ara_id, FALSE, TRUE) == 'a' ? TRUE : FALSE    :    FALSE,
-           		'poll' => isset($connectionOld->ara_id)   ?    $connectionOld->ara_id == 'a1234' ? TRUE : FALSE    :    FALSE,
+//           		'poll' => isset($connectionOld->ara_id)   ?    $connectionOld->ara_id == 'a1234' ? TRUE : FALSE    :    FALSE,
            		//'inea' => $inea($connectionOld),
 //            		'again' => $again($connectionOld),
                'vip' => FALSE,
@@ -129,7 +129,8 @@ class m160315_082820_connection_table_insert_data extends Migration
                'task' => isset($connectionOld->modyfication) && $connectionOld->modyfication <> 0	?	$connectionOld->modyfication	:	null,
                'package' => $pakiet($connectionOld),
                'address' => $connectionOld->localization,
-               'type' => $arTypeMap[$connectionOld->service],       
+               'type' => $arTypeMap[$connectionOld->service],
+           		'synch_date' => $connectionOld->modelBoa->ara_sync
            ]);
        }
        

@@ -41,7 +41,7 @@ class m160315_124510_device_host_table_insert_data extends Migration
                 "desc" => $deviceOld->opis,
                 'address' => $address($deviceOld),
                 "type" => 5,
-                'start' => $deviceOld->modelDeviceHost->data_uruchomienia,
+                'start_date' => $deviceOld->modelDeviceHost->data_uruchomienia,
                 //"close" => $deviceOld->modelDeviceSwitchBud->producent,
                 //'distribution' => FALSE,
             ]);

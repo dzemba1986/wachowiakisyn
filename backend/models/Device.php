@@ -17,6 +17,7 @@ use yii\db\Query;
  * @property string $name
  * @property string $desc
  * @property integer $address
+ * @property date $start_date
  */
 
 class Device extends \yii\db\ActiveRecord

@@ -144,8 +144,8 @@ class Connection extends \yii\db\ActiveRecord
 		$scenarios[self::SCENARIO_CREATE] = ['id', 'soa_id', 'ara_id', 'start_date', 'add_user', 'nocontract', 'vip', 'port', 'mac',
 				'phone', 'phone2', 'info_boa', 'device', 'package', 'address', 'type', 'phone_date'
 		];
-		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'activ_date', 'pay_date', 'phone_date', 'nocontract', 'vip', 'port',
-				'mac', 'phone', 'phone2', 'info', 'info_boa'
+		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'activ_date', 'pay_date', 'phone_date', 'close_date', 'nocontract', 'vip', 'port',
+				'mac', 'phone', 'phone2', 'info', 'info_boa', 'device'
 		];
 		$scenarios[self::SCENARIO_CLOSE] = ['close_date', 'close_user'];
 		$scenarios[self::SCENARIO_CREATE_INSTALLATION] = ['port', 'device', 'info'];

@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace boa\controllers;
 
 use Yii;
 use backend\models\Connection;
@@ -25,7 +25,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'boa'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view'],
         				'roles' => ['@']	
         			]	
         		]
@@ -162,24 +162,6 @@ class ConnectionController extends Controller
 	            ]);
 	        }
         }
-    }
-    
-    public function actionBoa()
-    {
-    	$searchModel = new ConnectionSearch();
-    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    
-
-    	$dataProvider->query->andWhere([
-    		'nocontract' => false,
-    		'synch_date' => null,
-    	])->andWhere(['is not', 'pay_date', null]);
-    			
-    
-    	return $this->render('boa', [
-    			'searchModel' => $searchModel,
-    			'dataProvider' => $dataProvider,
-    	]);
     }
 
     /**
