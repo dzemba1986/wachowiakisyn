@@ -13,7 +13,6 @@ use vakorovin\yii2_macaddress_validator\MacaddressValidator;
  * @property string $soa_id
  * @property string $start_date
  * @property string $conf_date
- * @property string $activ_date
  * @property string $pay_date
  * @property string $close_date
  * @property string $phone_date
@@ -22,7 +21,6 @@ use vakorovin\yii2_macaddress_validator\MacaddressValidator;
  * @property integer $close_user
  * @property integer $nocontract
  * @property integer $vip
- * @property integer $poll
  * @property integer $again
  * @property integer $wire
  * @property integer $socket
@@ -105,10 +103,6 @@ class Connection extends \yii\db\ActiveRecord
             ['pay_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['pay_date', 'default', 'value'=>NULL],
             
-            ['activ_date', 'date', 'format'=>'yyyy-MM-dd'],
-            ['activ_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
-            ['activ_date', 'default', 'value'=>NULL],
-				
 			['phone_date', 'date', 'format'=>'yyyy-MM-dd'],
 			['phone_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
 			['phone_date', 'default', 'value'=>NULL],
@@ -129,7 +123,7 @@ class Connection extends \yii\db\ActiveRecord
             ['task', 'integer'],
 
 			[
-				['ara_id', 'soa_id', 'start_date', 'conf_date', 'activ_date', 'pay_date', 'close_date', 'phone_date',
+				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'again',
 				'address', 'phone', 'phone2', 'info', 'info_boa',
 				'port', 'device', 'mac', 'type', 'package', 'task'],
@@ -144,7 +138,7 @@ class Connection extends \yii\db\ActiveRecord
 		$scenarios[self::SCENARIO_CREATE] = ['id', 'soa_id', 'ara_id', 'start_date', 'add_user', 'nocontract', 'vip', 'port', 'mac',
 				'phone', 'phone2', 'info_boa', 'device', 'package', 'address', 'type', 'phone_date'
 		];
-		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'activ_date', 'pay_date', 'phone_date', 'close_date', 'nocontract', 'vip', 'port',
+		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'pay_date', 'phone_date', 'close_date', 'nocontract', 'vip', 'port',
 				'mac', 'phone', 'phone2', 'info', 'info_boa', 'device'
 		];
 		$scenarios[self::SCENARIO_CLOSE] = ['close_date', 'close_user'];
@@ -164,7 +158,6 @@ class Connection extends \yii\db\ActiveRecord
 			'ara_id' => 'Ara',
 			'start_date' => 'Data od',
 			'conf_date' => 'Konfiguracja',
-			'activ_date' => 'Aktywacja',
 			'pay_date' => 'Płatność',
 			'close_date' => 'Rezygnacja',
 			'phone_date' => 'Przeniesienie',

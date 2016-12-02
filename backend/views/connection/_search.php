@@ -106,22 +106,6 @@ use kartik\select2\Select2;
             ]
     ]) ?>
 
-    <?= $form->field($searchModel, 'activ_date', [
-        'options' => ['class' => 'col-xs-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
-        'template' => "{input}\n{hint}\n{error}",
-    ])->widget(DatePicker::className(), [
-            'model' => $searchModel,
-            'attribute' => 'activ_date',
-            //'removeButton' => FALSE,
-            'language'=>'pl',
-            'options' => ['id' => 'activ', 'placeholder' => $searchModel->getAttributeLabel('activ_date')],
-            'pluginOptions' => [
-                'format' => 'yyyy-mm-dd',
-                'todayHighlight' => true,
-                'endDate' => '0d', //wybór daty max do dziś
-            ]
-    ]) ?>
-
     <?= $form->field($searchModel, 'pay_date', [
         'options' => ['class' => 'col-xs-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
         'template' => "{input}\n{hint}\n{error}",
@@ -153,10 +137,9 @@ use kartik\select2\Select2;
                 //'endDate' => '0d', //wybór daty max do dziś
             ]
     ]) ?>
-    </div>
-    <div class="row">
+    
     <?= $form->field($searchModel, 'close_date', [
-        'options' => ['class' => 'col-xs-2', 'style' => 'padding-left: 15px; padding-right: 5px;'],
+        'options' => ['class' => 'col-xs-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
         'template' => "{input}\n{hint}\n{error}",
     ])->widget(DatePicker::className(), [
             'model' => $searchModel,
@@ -170,9 +153,12 @@ use kartik\select2\Select2;
                 'endDate' => '0d', //wybór daty max do dziś
             ]
     ]) ?>
+    
+    </div>
+    <div class="row">
         
     <?= $form->field($searchModel, 'nocontract', [
-        'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+        'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 15px; padding-right: 5px;'],
     ])->checkbox(['uncheck' => null, 'checked' => 1]) ?>  
         
     <?= $form->field($searchModel, 'vip', [

@@ -22,7 +22,7 @@ class ConnectionSearch extends Connection
 	{
 		return $rules = [
 			[	
-				['ara_id', 'start_date', 'conf_date', 'activ_date', 'pay_date', 'close_date', 'phone_date',
+				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'task', 'poll',
 				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again',
 				'port', 'device', 'mac', 'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
@@ -58,7 +58,6 @@ class ConnectionSearch extends Connection
 				'close_date',	
 				'type',
 				'nocontract',
-				'poll',
 				'socket',
 				'again',	
 				'task' => [
@@ -97,7 +96,6 @@ class ConnectionSearch extends Connection
 			'ara_id' => $this->ara_id,
 			'connection.start_date' => $this->start_date,
 			'conf_date' => $this->conf_date,
-			'activ_date' => $this->address,
 			'pay_date' => $this->pay_date,
 			'close_date' => $this->close_date,
 			'phone_date' => $this->phone_date,

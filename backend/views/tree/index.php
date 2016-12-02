@@ -200,12 +200,15 @@ $(function() {
         	"paste.jstree",
             function(e, data) {
 
+        		var tree = $("#device_tree").jstree(true);
+
         		//alert('Dupa');
 				var device = getId(data.node[0].original.id);
 				var port = data.node[0].original.port;
 				var newParentDevice = getId(data.parent);
         		var mode = data.mode;
-        		console.log(mode);
+
+//         		console.log(mode);
 				if (mode == 'move_node') {
 				
 	        		$('#modal-port-select').modal('show').find('#modal-content-port-select').load('<?= Url::toRoute(['tree/port-select', 'mode' => 'move']) ?>');
@@ -222,6 +225,7 @@ $(function() {
 	            		newParentDevice : newParentDevice,
 	            	});
 				}
+				//}
       		}
        	); 
 
