@@ -143,12 +143,12 @@ class Address extends \yii\db\ActiveRecord
 	 */
 	public function getFullAddress(){
 		
-		return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
+		return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
 	}
 	
 	public function getShortAddress(){
 	
-		return $this->modelShortStreet->name . $this->dom.$this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
+		return $this->modelShortStreet->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
 	}
 	
 	public static function getFloor(){
@@ -162,28 +162,28 @@ class Address extends \yii\db\ActiveRecord
 		
 		if (!is_null($this->pietro))
 			if ($this->lokal)
-				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol.' (piętro '.$this->pietro.')';
+				return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
 			else 
-				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.' (piętro '.$this->pietro.')';
+				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . ' (piętro ' . $this->pietro . ')';
 		else 
 			if ($this->lokal)
-				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
+				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol;
 			else 
-				return $this->ulica_prefix.' '.$this->ulica.' '.$this->dom.$this->dom_szczegol;				
+				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol);				
 	}
 	
 	public function getFullDeviceShortAddress(){
 	
 		if (!is_null($this->pietro))
 			if ($this->lokal)
-				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol.' (piętro '.$this->pietro.')';
+				return $this->modelShortStreet->name . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
 			else
-				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.' (piętro '.$this->pietro.')';
+				return $this->modelShortStreet->name . ' ' .$this->dom . strtoupper($this->dom_szczegol) . ' (piętro ' . $this->pietro . ')';
 		else
 			if ($this->lokal)
-				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol.'/'.$this->lokal.$this->lokal_szczegol;
+				return $this->modelShortStreet->name . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol;
 			else
-				return $this->modelShortStreet->name.' '.$this->dom.$this->dom_szczegol;
+				return $this->modelShortStreet->name . ' ' . $this->dom . strtoupper($this->dom_szczegol);
 	}
 
 	public function getInstallations(){

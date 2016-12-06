@@ -189,26 +189,45 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
                 'template' => '{list}',
             ]),
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {update} {tree}',
+            'template' => '{view} {sync}',
         	'buttons' => [
-        		'tree' => function ($model, $data) {
-        			if($data->mac && $data->port && $data->device && !$data->nocontract && !$data->host){
-        				$url = Url::toRoute(['tree/add', 'id' => $data->id, 'host' => true]);
-        				return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
-        					'title' => \Yii::t('yii', 'Zamontuj'),
-        					'data-pjax' => '0',
-        				]);
-        			} elseif($data->host){
-        				$url = Url::toRoute(['tree/index', 'id' => $data->host, 'host' => true]);
-        				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
-        					'title' => \Yii::t('yii', 'SEU'),
-        					'data-pjax' => '0',
-        				]);
-        			} else
-        				return null;
-        		},
+        		'sync' => function ($model, $data) {
+
+        			$url = Url::toRoute(['connection/sync', 'id' => $data->id]);
+        			return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, [
+        				'title' => \Yii::t('yii', 'Synchronizacja'),
+        				'data-pjax' => '0',
+        			]);
+        		}
         	]
         ],            
     ]
-		]); 
+]); 
 ?>
+
+<script>
+
+$(document).ready(function() {
+
+	$('body').on('click', 'a[title="Synchronizacja"]', function(event){
+        
+        //event.preventDefault();
+        
+        $.get($(this).attr('href'), function(data) {
+
+        	$.pjax.reload({container: '#connection-grid-pjax'});
+//   			alert( "Aktywowano" );
+		});
+        
+// 		$('#modal-connection-update').modal('show')
+// 			.find('#modal-content-connection-update')
+// 			.load($(this).attr('href'));
+    
+        return false;
+	});
+
+    
+
+});
+
+</script>

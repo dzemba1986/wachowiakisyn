@@ -106,7 +106,13 @@ if ($mode == 'nopay'){
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider
 	]);
-} 
+} elseif ($mode == 'boa'){
+	
+	echo $this->render('grid_boa', [
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider
+	]);
+}
 ?>    
 
 <!---------------------------------------------------------------------------------------------------------------------> 

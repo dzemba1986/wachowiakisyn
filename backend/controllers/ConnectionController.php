@@ -25,7 +25,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'boa'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync'],
         				'roles' => ['@']	
         			]	
         		]
@@ -77,7 +77,10 @@ class ConnectionController extends Controller
         		$dataProvider->query->andWhere(['and', ['is not', 'pay_date', null], ['close_date' => null]]);
         		break;
         	case 'noboa':
-        		$dataProvider->query->andWhere(['synch_date' => null, 'nocontract' => false]);
+        		$dataProvider->query->andWhere(['synch_date' => null, 'nocontract' => false])->andWhere(['is not', 'pay_date', null]);
+        		break;
+        	case 'boa':
+        		$dataProvider->query->andWhere(['close_date' => null, 'nocontract' => false])->andWhere(['is not', 'synch_date', null]);
         		break;
         }
         
@@ -167,22 +170,26 @@ class ConnectionController extends Controller
         }
     }
     
-    public function actionBoa()
+    public function actionSync($id)
     {
-    	$searchModel = new ConnectionSearch();
-    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-    
+    	$modelConnection = $this->findModel($id);
+    	$modelConnection->scenario = Connection::SCENARIO_UPDATE;
+    	
+    	$request = Yii::$app->request;
 
-    	$dataProvider->query->andWhere([
-    		'nocontract' => false,
-    		'synch_date' => null,
-    	])->andWhere(['is not', 'pay_date', null]);
+    	if ($request->isAjax){
+    		
+    		$modelConnection->synch_date = date('Y-m-d H:i:s');
+    		
+    		try {
+    			if(!($modelConnection->save()))
+    				throw new Exception('Problem z zapisem połączenia');
     			
-    
-    	return $this->render('boa', [
-    			'searchModel' => $searchModel,
-    			'dataProvider' => $dataProvider,
-    	]);
+    			return 1;	
+    		} catch (Exception $e) {
+    			return 0;
+    		}
+    	}
     }
 
     /**

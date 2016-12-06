@@ -47,7 +47,7 @@ class m160315_124517_device_address_update_data extends Migration
     			$modelAddress->lokal_szczegol = '';
     			$modelAddress->pietro = null;
     			
-    			if (preg_match('/^[p]{1}[0-9]{1,}$/', $modelAddress->dom_szczegol))
+    			if (preg_match('/^[p]{1}[0-9]{1,}$/', $modelAddress->dom_szczegol) || preg_match('/[^x]$/', $modelAddress->dom_szczegol))
     				continue;
     			
     			try {

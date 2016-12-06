@@ -121,30 +121,6 @@ use yii\bootstrap\Modal;
             'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
             'options' => ['style'=>'width:5%;'],
         ],
-//         [
-//             'class'=>'kartik\grid\BooleanColumn',
-//         	'header'=>'Umowa',
-//             'attribute'=>'nocontract',
-//             'trueLabel' => 'Nie', 
-//             'falseLabel' => 'Tak',
-//         	'trueIcon' => GridView::ICON_INACTIVE,
-//         	'falseIcon' => GridView::ICON_ACTIVE,
-//             'options' => ['style'=>'width:5%;'],
-//         ],
-//         [
-// 	        'class'=>'kartik\grid\BooleanColumn',
-// 	        'attribute'=>'poll',
-// 	        'trueLabel' => 'Tak',
-// 	        'falseLabel' => 'Nie',
-// 	        'options' => ['style'=>'width:5%;'],
-//         ],
-//         [
-// 	        'class'=>'kartik\grid\BooleanColumn',
-// 	        'attribute'=>'inea',
-// 	        'trueLabel' => 'Tak',
-// 	        'falseLabel' => 'Nie',
-// 	        'options' => ['style'=>'width:5%;'],
-//         ],
         [
             'class'=>'kartik\grid\BooleanColumn',
             'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
@@ -153,55 +129,6 @@ use yii\bootstrap\Modal;
         	'falseLabel' => 'Nie',
             'options' => ['style'=>'width:7%;'],
         ],            
-//         [
-//             'attribute'=>'task',
-//             'label' => 'Montaż',
-//             'format'=>'raw',
-//             'value'=> function($data){
-//                 if (!is_null($data->task)){
-//                 	if (is_object($data->modelTask))
-//                     	return Html::a($data->modelTask->start_date, Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
-// //                     else {
-// // 						return $data->task;
-// 						//exit();
-// //                     }
-//                 }
-//                 elseif ($data->socket <> 0)
-//                 	return null;
-//                 else
-//                     return Html::a('dodaj', Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
-//             },
-            
-//             'filter'=>	DatePicker::widget([
-//                 'model' => $searchModel,
-//                 'attribute' => 'task',
-//                 'removeButton' => FALSE,
-//                 'language'=>'pl',	
-//                 'pluginOptions' => [
-//                     'format' => 'yyyy-mm-dd',
-//                     'todayHighlight' => true,
-//                     'endDate' => '0d', //wybór daty max do dziś
-//                 ]
-//             ]),
-//             'options' => ['style'=>'width:7%;'],
-//         ],            
-//         [
-//             'attribute'=>'conf_date',
-//             'value'=>'conf_date',
-//             'format'=>'raw',
-//             'filter'=>	DatePicker::widget([
-//                 'model' => $searchModel,
-//                 'attribute' => 'conf_date',
-//                 'removeButton' => FALSE,
-//                 'language'=>'pl',	
-//                 'pluginOptions' => [
-//                     'format' => 'yyyy-mm-dd',
-//                     'todayHighlight' => true,
-//                     'endDate' => '0d', //wybór daty max do dziś
-//                 ]
-//             ]),
-//             'options' => ['style'=>'width:7%;'],
-//         ],
         [
             'attribute'=>'pay_date',
             'value'=>'pay_date',
@@ -218,6 +145,25 @@ use yii\bootstrap\Modal;
                 ]
             ]),
             'options' => ['style'=>'width:7%;'],
+        ],
+        [
+	        'attribute'=>'synch_date',
+	        'value'=> function ($model){
+				return $new_date = date('Y-m-d', strtotime($model->synch_date));	        	
+        	},
+	        'format'=>'raw',
+	        'filter'=>	DatePicker::widget([
+	        		'model' => $searchModel,
+	        		'attribute' => 'conf_date',
+	        		'removeButton' => FALSE,
+	        		'language'=>'pl',
+	        		'pluginOptions' => [
+	        				'format' => 'yyyy-mm-dd',
+	        				'todayHighlight' => true,
+	        				'endDate' => '0d', //wybór daty max do dziś
+	        		]
+	        ]),
+	        'options' => ['style'=>'width:7%;'],
         ],
         [   
             'header' => PageSize::widget([

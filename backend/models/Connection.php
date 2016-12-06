@@ -162,6 +162,7 @@ class Connection extends \yii\db\ActiveRecord
 			'close_date' => 'Rezygnacja',
 			'phone_date' => 'Przeniesienie',
 			'install_date' => 'Data instalacji',
+			'synch_date' => 'Synchronizacja',	
 			'add_user' => 'Dodał',
 			'conf_user' => 'Skonfigurował',
 			'install_user' => 'Zainstalował',
@@ -187,7 +188,7 @@ class Connection extends \yii\db\ActiveRecord
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
 			'typeName' => 'Usługa',
-			'fullAddress' => 'Adres',					
+			'fullAddress' => 'Adres',
 		];
 	}
     

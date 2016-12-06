@@ -28,32 +28,32 @@ class Dhcp extends Model
 			//var_dump($ipValidator->validateAttribute($dhcpSubnet, 'ip')); exit();
 			//if($ipValidator->validateAttribute($dhcpSubnet, 'ip')){
 				
-				$data = '# PODSIEC ' . $dhcpSubnet->desc . '
-#######################################
-#         INTERNET - ADRESACJA
-#######################################
-						
-subnet ' . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->blockIp->getMask() . " {\n";
+				$data = "# PODSIEC " . $dhcpSubnet->desc . "\n
+#######################################\n
+#         INTERNET - ADRESACJA\n
+#######################################\n
+\n						
+subnet " . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->blockIp->getMask() . " {\n";
 				$options = $dhcpSubnet->generateOptionsDhcp();
 				foreach ($options as $option){
 					$modelDhcpOption = DhcpOption::findOne($option['option']);
 					$data .= "\t" . $modelDhcpOption->name . " " . $option['value'].";\n";
 				}
 				
-				$data .= "\tdefault-lease-time " . $options[49]['value'] . ";
-\tmax-lease-time " . $options[49]['value'] . ";
-\tmin-lease-time 7200;
-
-		
-\t#######################################
-\t# USERS
+				$data .= "\tdefault-lease-time " . $options[49]['value'] . ";\n
+\tmax-lease-time " . $options[49]['value'] . ";\n
+\tmin-lease-time 7200;\n
+\n
+\n		
+\t#######################################\n
+\t# USERS\n
 \t#######################################\n\n";
 				
 				$modelsIp = Ip::find()->joinWith('modelDevice')->where(['subnet' => $dhcpSubnet->id, 'type' => 5])->orderBy('ip')->all();
 				foreach ($modelsIp as $modelIp){
-					$data .= "\thost " . $modelIp->modelDevice->id . " {
-\t\thardware ethernet " .$modelIp->modelDevice->mac . ";
-\t\tfixed-address " . $modelIp->ip . ";
+					$data .= "\thost " . $modelIp->modelDevice->id . " {\n
+\t\thardware ethernet " .$modelIp->modelDevice->mac . ";\n
+\t\tfixed-address " . $modelIp->ip . ";\n
 \t}\n";
 					//var_dump($modelIP->modelDevice);
 				}
