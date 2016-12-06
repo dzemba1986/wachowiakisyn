@@ -147,6 +147,17 @@ class SiteController extends Controller
             			],
             		],
             	],
+            	[
+            		'html' => 'Boa',
+            		'items' => [
+            				[
+            						'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'noboa']) . '>Niezaksięgowane</a>'
+            				],
+            				[
+            						'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'boa']) . '>Zaksiegowane</a>'
+            				],
+            		],
+            	],
             ];
         }
         else{

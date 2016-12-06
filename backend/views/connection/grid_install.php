@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
 	
 			return ['class' => 'afterdate'];
 		}
-		elseif ($model->activ_date <> null) {
+		elseif ($model->pay_date <> null) {
 	
 			return ['class' => 'activ'];
 		}

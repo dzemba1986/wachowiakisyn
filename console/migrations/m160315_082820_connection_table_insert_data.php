@@ -124,13 +124,13 @@ class m160315_082820_connection_table_insert_data extends Migration
                'info' => isset($connectionOld->info) ? $connectionOld->info : NULL,
                'info_boa' => isset($connectionOld->info_boa) ? $connectionOld->info_boa : NULL,
 //                'device' => isset($connectionOld->switch) ? $connectionOld->switch : null,   //będzie nowa baza SEU
-               'wire' => NULL,
-               'socket' => NULL,
+               'wire' => 0,
+               'socket' => 0,
                'task' => isset($connectionOld->modyfication) && $connectionOld->modyfication <> 0	?	$connectionOld->modyfication	:	null,
                'package' => $pakiet($connectionOld),
                'address' => $connectionOld->localization,
                'type' => $arTypeMap[$connectionOld->service],
-           		'synch_date' => $connectionOld->modelBoa->ara_sync
+           		'synch_date' => is_object($connectionOld->modelBoa) ? $connectionOld->modelBoa->ara_sync : null
            ]);
        }
        

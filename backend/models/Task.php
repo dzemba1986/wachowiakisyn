@@ -26,6 +26,7 @@ use yii\web\JsExpression;
  * @property string $phone
  * @property double $cost
  * @property integer $editable
+ * @property boolean $nocontract
  
  * @property integer $category
  * @property integer $type
@@ -125,7 +126,7 @@ class Task extends \yii\db\ActiveRecord
 
             [
             	['id', 'create', 'start_date', 'start_time', 'end_date', 'end_time', 'all_day', 'address', 'category', 'type', 'description', 
-                'add_user', 'close_user', 'installer', 'color', 'status', 'editable', 'class_name', 'cost', 'phone'], 
+                'add_user', 'close_user', 'installer', 'color', 'status', 'editable', 'class_name', 'cost', 'phone', 'nocontract'], 
 				'safe',
 			],
         ];
@@ -135,7 +136,7 @@ class Task extends \yii\db\ActiveRecord
     {
     	$scenarios = parent::scenarios();
     	$scenarios[self::SCENARIO_CREATE] = ['id', 'create', 'start_date', 'start_time', 'end_date', 'end_time', 'color', 'clas_name',
-    		'all_day', 'editable', 'phone', 'description', 'address', 'category', 'type', 'add_user', 'phone'
+    		'all_day', 'editable', 'phone', 'description', 'address', 'category', 'type', 'add_user', 'phone', 'nocontract'
     			];
     	$scenarios[self::SCENARIO_UPDATE] = ['start_date', 'start_time', 'end_date', 'end_time', 'color', 'class_name', 'all_day', 
     		'phone', 'description', 'category', 'type', 'phone', 'cost'

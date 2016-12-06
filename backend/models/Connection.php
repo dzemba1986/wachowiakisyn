@@ -180,7 +180,6 @@ class Connection extends \yii\db\ActiveRecord
 			'again'	=> 'Ponowne',
 			'task' => 'Zadania',
 			'nocontract' => 'Bez umowy',
-			'poll' => 'Ankieta',	
 			'vip' => 'Vip',
 			'street' => 'Ulica',
 			'house' => 'Blok',

@@ -5,7 +5,7 @@ namespace backend\models;
 use Yii;
 
 /**
- * This is the model class for table "connection".
+ * This is the model class for table "boa".
  *
  * @property integer $connection_id
  * @property date $ara_sync

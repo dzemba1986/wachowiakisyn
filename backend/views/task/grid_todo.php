@@ -66,11 +66,11 @@ $this->params['breadcrumbs'][] = 'Do zrobienia';
     		'class' => 'yii\i18n\Formatter',
     		'nullDisplay' => ''
     	],
-        'export'=>[
+        'export' => [
             'fontAwesome'=>true,
             'showConfirmAlert'=>false,
             'target'=>GridView::TARGET_BLANK,
-            'exportConfig' => ['pdf' => TRUE, 'json' => FALSE],
+            'exportConfig' => ['pdf' => TRUE],
         ],
         'panel' => [
                 //'heading'=> true,
@@ -209,6 +209,16 @@ $this->params['breadcrumbs'][] = 'Do zrobienia';
                 'value'=>'modelTaskCategory.name',
                 'filter'=> Html::activeDropDownList($searchModel, 'category', ArrayHelper::map(TaskCategory::find()->orderBy('name')->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
                 'options' => ['style'=>'width:5%;'],
+            ],
+            [
+	            'class'=>'kartik\grid\BooleanColumn',
+	            'header'=>'Umowa',
+	            'attribute'=>'nocontract',
+	            'trueLabel' => 'Nie',
+	            'falseLabel' => 'Tak',
+	            'trueIcon' => GridView::ICON_INACTIVE,
+	            'falseIcon' => GridView::ICON_ACTIVE,
+	            'options' => ['style'=>'width:5%;'],
             ],
             [
                 'attribute' => 'add_user',

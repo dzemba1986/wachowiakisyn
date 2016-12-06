@@ -38,7 +38,7 @@ class TaskController extends Controller
         if ($mode == 'todo') {
         	$dataProvider->query->andWhere([
         		'close_date' => null,
-        		//'close_user' => null,	
+        		'task.status' => true,	
         	]);
         	
         	$dataProvider->query->orderBy('start_date, start_time');
@@ -71,7 +71,7 @@ class TaskController extends Controller
         
         
             	
-    	$tasks = Task::find()->where(['between', 'start_date', $start, $end])->orderBy('start_date')->asArray()->all();
+    	$tasks = Task::find()->where(['between', 'start_date', $start, $end])->andWhere(['status' => true])->orderBy('start_date')->asArray()->all();
         
 //         var_dump($tasks); exit();
     	
@@ -148,6 +148,7 @@ class TaskController extends Controller
 	    		if (is_object($modelConnection)){ //jeżeli zadanie tworzymy z LP
 	    			
 	    			$modelTask->address = $modelConnection->address;
+	    			$modelTask->nocontract = $modelConnection->nocontract;
 	    			
 	    		} else { //zadanie poza LP
 	    			if ($modelAddress->load(Yii::$app->request->post())){

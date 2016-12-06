@@ -119,6 +119,7 @@ class m160315_082942_task_table_insert_data extends Migration
                'type' => isset($taskOld->mod_inst) ? $arTypeTaskMap[$taskOld->mod_inst] : NULL,
                'add_user' => isset($taskOld->mod_user_add) ? $arUserMap[$taskOld->mod_user_add] : NULL,
                'close_user' => isset($taskOld->mod_user_closed) ? $arUserMap[$taskOld->mod_user_closed] : NULL,
+           		'nocontract' => isset($taskOld->mod_type) ? 	($taskOld->mod_type == 'bu_net' || $taskOld->mod_type == 'bu_phone') ? true : false		: false,	
            ]);
        }
        

@@ -53,7 +53,7 @@ class m160315_091953_model_table_insert_data extends Migration
         $this->execute("SELECT setval('model_id_seq', (SELECT MAX(id) FROM model))");
         
         $this->insert('model', [
-//         	"id" => $modelOld->id,
+        	"id" => 64,
         	"name" => 'ROOT',
         	"port_count" => 2,
         	"type" => 9,

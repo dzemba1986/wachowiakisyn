@@ -59,7 +59,7 @@ class ConnectionController extends Controller
         	case 'install':
         		$dataProvider->query->joinWith('modelTask')->andWhere([
         			'wire' => 0, 
-        			Connection::tableName().'.close_date' => null
+        			'connection.close_date' => null
         		]);
         		break;
         	case 'conf':
@@ -75,6 +75,9 @@ class ConnectionController extends Controller
         		break;
         	case 'pay':
         		$dataProvider->query->andWhere(['and', ['is not', 'pay_date', null], ['close_date' => null]]);
+        		break;
+        	case 'noboa':
+        		$dataProvider->query->andWhere(['synch_date' => null, 'nocontract' => false]);
         		break;
         }
         

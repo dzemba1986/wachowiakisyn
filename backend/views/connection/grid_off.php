@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = 'Odłączone';
 	
 			return ['class' => 'afterdate'];
 		}
-		elseif ($model->activ_date <> null) {
+		elseif ($model->pay_date <> null) {
 	
 			return ['class' => 'activ'];
 		}

@@ -5,7 +5,7 @@ use backend\models\Device;
 use backend\models\DeviceOld;
 use backend\models\Address;
 
-class m160315_124512_device_address_update_data extends Migration
+class m160315_124515_device_address_update_data extends Migration
 {
     public function up()
     {
@@ -28,7 +28,7 @@ class m160315_124512_device_address_update_data extends Migration
     			'11111' => 'Virtual'
     	];
     	
-    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 8])->all();
+    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 1])->all();
     	
     	foreach ($modelDevices as $modelDevice){
     		
@@ -36,7 +36,7 @@ class m160315_124512_device_address_update_data extends Migration
     		
     		if (is_object($modelDeviceOld)) {
     			
-    			echo 'Update MC o id = ' . $modelDevice->id . "\n";
+    			echo 'Update routera o id = ' . $modelDevice->id . "\n";
     			
     			$modelAddress = new Address();
     			
@@ -68,16 +68,6 @@ class m160315_124512_device_address_update_data extends Migration
     			continue;
     		}
     	}
-    	
-//     	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type', 5])->all();
-    	
-//     	foreach ($modelDevices as $modelDevice){
-    		
-//     		echo 'Update host o id = ' . $modelDevice->id . "\n";
-    		
-//     		if (empty($modelDevice->name))
-//     			$this->update('device', ['name' => $modelDevice->modelAddress->fullDeviceShortAddress], ['id' => $modelDevice->id]);
-//     	}
     }
 
     public function down()

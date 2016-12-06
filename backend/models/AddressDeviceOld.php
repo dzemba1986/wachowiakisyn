@@ -19,6 +19,11 @@ class AddressDeviceOld extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+	public static function getDb() {
+	
+		return \Yii::$app->dbSeu;
+	}
+	
     public static function tableName()
     {
         return 'Lokalizacja';
