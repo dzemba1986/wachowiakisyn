@@ -53,6 +53,8 @@ use yii\bootstrap\Collapse;
 	],
 ]);
 ?>
+
+<?= Html::label('<h4>Instalacje : </h4>') ?> 
     
 <div class="installation">
 	<?php 

@@ -8,7 +8,7 @@ use backend\models\Type;
 use nterms\pagesize\PageSize;
 use yii\helpers\Url;
 
-$this->params['breadcrumbs'][] = 'Wszystkie';
+$this->params['breadcrumbs'][] = 'Niezaksięgowane';
 ?>
 
 <?= GridView::widget([

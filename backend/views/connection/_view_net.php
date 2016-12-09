@@ -2,6 +2,7 @@
 
 use yii\widgets\DetailView;
 use yii\bootstrap\Collapse;
+use yii\helpers\Html;
 
 ?>
 
@@ -55,6 +56,8 @@ use yii\bootstrap\Collapse;
 	],
 ]);
 ?>
+
+<?= Html::label('<h4>Instalacje : </h4>') ?> 
     
 <div class="installation">
 	<?php 

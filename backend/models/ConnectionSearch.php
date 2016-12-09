@@ -22,7 +22,7 @@ class ConnectionSearch extends Connection
 	{
 		return $rules = [
 			[	
-				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
+				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date', 'synch_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'task',
 				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again',
 				'port', 'device', 'mac', 'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
@@ -103,7 +103,7 @@ class ConnectionSearch extends Connection
 			'ulica' => $this->street,
 			'dom' => $this->house,
 			'lokal' => $this->flat,	
-            'nocontract' => $this->nocontract,
+            'connection.nocontract' => $this->nocontract,
 			'socket' => $this->socket,	
             'vip' => $this->vip,
 			'again' => $this->again,	
@@ -112,6 +112,7 @@ class ConnectionSearch extends Connection
 	
 		$query->andFilterWhere(['like', 'dom_szczegol', $this->house_detail])
 			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail])
+			//->andFilterWhere(['like', 'synch_date', $this->synch_date]) @todo operacja like na polu date niedozwolona
 			->andFilterWhere(['>=', 'conf_date', $this->minConfDate])
 			->andFilterWhere(['<=', 'conf_date', $this->maxConfDate]);
 		

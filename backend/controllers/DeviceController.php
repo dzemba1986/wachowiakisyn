@@ -185,28 +185,21 @@ class DeviceController extends Controller
 
 	    	$query = new Query();
 	    	$query->select(['d.id', new \yii\db\Expression("
-	    		CASE
-	    			WHEN d.name IS NOT NULL OR d.name <> '' THEN
-	    				CONCAT(d.name, ' - ', adrs.name, '  ', dom, dom_szczegol, ' - ', '[', ip, ']')
-	    			WHEN pietro IS NULL THEN	
-	    				CONCAT(adrs.name, ' ', dom, dom_szczegol, ' - ', '[', ip, ']')
-	    			ELSE
-	    				CONCAT(adrs.name, ' ', dom, dom_szczegol, ' (piętro', pietro, ')', ' - ', '[', ip, ']')
-	    		END	
+	    		CONCAT(d.name, ' - ', '[', ip, ']', ' - ', m.name)
 	    	")])
 	    	->from('device d')
-	    	->join('INNER JOIN', 'address a', 'a.id = d.address')
+	    	->join('INNER JOIN', 'model m', 'm.id = d.model')
 	    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
-	    	->join('INNER JOIN', 'address_short adrs', 'adrs.t_ulica = a.t_ulica')
-	    	->where(['like', new \yii\db\Expression("CONCAT(adrs.name, ' ', dom, dom_szczegol)"), $q])
-	    	->orWhere(['like', 'd.name', $q])
+	    	//->join('INNER JOIN', 'address_short adrs', 'adrs.t_ulica = a.t_ulica')
+	    	//->where(['like', new \yii\db\Expression("CONCAT(adrs.name, ' ', dom, dom_szczegol)"), $q])
+	    	->where(['like', 'd.name', $q])
 	    	->limit(20);
 	    	
 	    	if(!is_null($type))
-	    		$query->andWhere(['type' => $type]);
+	    		$query->andWhere(['d.type' => $type]);
 	    	
 	    	if(!is_null($distribution)) 
-	    		$query->andWhere(['distribution' => $dist]);
+	    		$query->andWhere(['distribution' => $distribution]);
 	    	
 	    	$command = $query->createCommand();
 	    	$data = $command->queryAll();

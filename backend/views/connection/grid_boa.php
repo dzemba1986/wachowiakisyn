@@ -9,6 +9,7 @@ use backend\models\Task;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
 
+$this->params['breadcrumbs'][] = 'Zaksięgowane';
 ?>
 
 <!-------------------------------------------- otwórz kalendarz okno modal -------------------------------------------->
@@ -154,7 +155,7 @@ use yii\bootstrap\Modal;
 	        'format'=>'raw',
 	        'filter'=>	DatePicker::widget([
 	        		'model' => $searchModel,
-	        		'attribute' => 'conf_date',
+	        		'attribute' => 'synch_date',
 	        		'removeButton' => FALSE,
 	        		'language'=>'pl',
 	        		'pluginOptions' => [

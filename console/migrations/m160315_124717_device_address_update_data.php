@@ -5,7 +5,7 @@ use backend\models\Device;
 use backend\models\DeviceOld;
 use backend\models\Address;
 
-class m160315_124515_device_address_update_data extends Migration
+class m160315_124717_device_address_update_data extends Migration
 {
     public function up()
     {
@@ -28,7 +28,7 @@ class m160315_124515_device_address_update_data extends Migration
     			'11111' => 'Virtual'
     	];
     	
-    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 1])->all();
+    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 2])->all();
     	
     	foreach ($modelDevices as $modelDevice){
     		
@@ -36,7 +36,7 @@ class m160315_124515_device_address_update_data extends Migration
     		
     		if (is_object($modelDeviceOld)) {
     			
-    			echo 'Update routera o id = ' . $modelDevice->id . "\n";
+    			echo 'Update switcha o id = ' . $modelDevice->id . "\n";
     			
     			$modelAddress = new Address();
     			
@@ -47,7 +47,7 @@ class m160315_124515_device_address_update_data extends Migration
     			$modelAddress->lokal_szczegol = '';
     			$modelAddress->pietro = null;
     			
-    			if (preg_match('/^[p]{1}[0-9]{1,}$/', $modelAddress->dom_szczegol))
+    			if (preg_match('/^[p]{1}[0-9]{1,}$/', $modelAddress->dom_szczegol) || preg_match('/[^x]$/', $modelAddress->dom_szczegol))
     				continue;
     			
     			try {

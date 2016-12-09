@@ -5,7 +5,7 @@ use backend\models\Device;
 use backend\models\DeviceOld;
 use backend\models\Address;
 
-class m160315_124518_device_address_update_data extends Migration
+class m160315_124718_device_address_update_data extends Migration
 {
     public function up()
     {

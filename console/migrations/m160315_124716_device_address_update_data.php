@@ -5,7 +5,7 @@ use backend\models\Device;
 use backend\models\DeviceOld;
 use backend\models\Address;
 
-class m160315_124514_device_address_update_data extends Migration
+class m160315_124716_device_address_update_data extends Migration
 {
     public function up()
     {
@@ -28,7 +28,7 @@ class m160315_124514_device_address_update_data extends Migration
     			'11111' => 'Virtual'
     	];
     	
-    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 4])->all();
+    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 3])->all();
     	
     	foreach ($modelDevices as $modelDevice){
     		
@@ -36,7 +36,7 @@ class m160315_124514_device_address_update_data extends Migration
     		
     		if (is_object($modelDeviceOld)) {
     			
-    			echo 'Update serwera o id = ' . $modelDevice->id . "\n";
+    			echo 'Update bramki o id = ' . $modelDevice->id . "\n";
     			
     			$modelAddress = new Address();
     			

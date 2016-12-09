@@ -205,6 +205,13 @@ $(document).ready(function() {
 
         if (jQuery('#connectionsearch-street').data('select2')) { jQuery('#connectionsearch-street').select2('destroy'); }
         jQuery.when(jQuery('#connectionsearch-street').select2(select2_817d1b80)).done(initS2Loading('connectionsearch-street','s2options_d6851687'));
+
+        initDPAddon('connectionsearch-street');
+
+        if (jQuery('#connectionsearch-synch_date').data('kvDatepicker')) { jQuery('#connectionsearch-synch_date').kvDatepicker('destroy'); }
+        jQuery('#connectionsearch-synch_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
+
+        initDPAddon('connectionsearch-synch_date');
     });
 });
 

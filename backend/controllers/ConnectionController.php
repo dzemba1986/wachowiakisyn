@@ -150,13 +150,15 @@ class ConnectionController extends Controller
 	        			$modelDevice->modelTree[0]->delete();
 	        			$modelDevice->modelIps[0]->delete();
 	        			$modelDevice->delete();
+	        			
+	        			Dhcp::generateFile($subnet);
 	        		}
 	        		
 	        		if(!($modelConnection->save()))
 	        			throw new Exception('Problem z zapisem połączenia');
 	        		
 	        		$transaction->commit();
-	        		Dhcp::generateFile($subnet);
+	        		
         			return 1;
 	        	} catch (Exception $e) {
 	        		$transaction->rollBack();

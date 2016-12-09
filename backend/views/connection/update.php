@@ -110,9 +110,11 @@ use backend\models\Device;
 	    		]
     		]) ?>
     		
+    		<?php $port = isset($modelConnection->port) ? $modelConnection->port : null?>
+    		
 			<?= $form->field($modelConnection, 'port', [
 				'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 0px;'],
-			])->dropDownList([], ['prompt'=>'port']) ?>
+			])->dropDownList([$port], ['prompt'=>'port']) ?>
 			
 		</div>
         
@@ -133,13 +135,13 @@ $(function(){
 	
 	var device = <?= json_encode($modelConnection->device); ?>
 
-	if (device){
+// 	if (device){
 //		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
-// 			$('#select2-connection-device-container').html(data.results.concat);
-// 		});
+// // 			$('#select2-connection-device-container').html(data.results.concat);
+// // 		});
 	
-		$("#connection-device").trigger("change");
-	}
+// 		$("#connection-device").trigger("change");
+// 	}
 
 	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
 
