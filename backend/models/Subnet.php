@@ -35,8 +35,8 @@ class Subnet extends \yii\db\ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return [
-			['ip', 'required', 'message' => 'Wartość wymagana'],			
-			['ip', 'ip', 'subnet' => true, 'ipv6' => false, 'message' => 'Zły format adresu ip', 'wrongCidr' => 'Adres ip dla podsieci', 'noSubnet' => 'Brak prefiksu'],
+			['ip', 'required', 'message' => 'Wartość wymagana'],
+			['ip', 'ip', 'subnet' => true, 'ipv6' => false, 'message' => 'Zły format adresu ip', 'wrongCidr' => 'Niewłasciwy prefix', 'noSubnet' => 'Brak prefiksu'],
 				
 			['desc', 'required', 'message' => 'Wartość wymagana'],
 			['desc', 'string'],

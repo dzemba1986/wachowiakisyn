@@ -36,7 +36,7 @@ $form = ActiveForm::begin([
 	
 	<?= $form->field($modelDevice, 'mac', []) ?>
 
-    <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
+    <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary save', 'disabled' => true]) ?>
     
     <button class="change btn" type="button">Skrypt</button>
     
@@ -80,6 +80,9 @@ $(function() {
     	var mac = $("#host-mac").val();
 
     	var regex = /^(([a-fA-F0-9]{2}-){5}[a-fA-F0-9]{2}|([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}|([0-9A-Fa-f]{4}\.){2}[0-9A-Fa-f]{4})?$/;
+
+    	//odblokuj button "zapisz"
+    	$(".save").attr("disabled", false);
 
     	if (regex.test(mac)) {
     	

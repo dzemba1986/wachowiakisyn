@@ -60,7 +60,7 @@ class SiteController extends Controller
     	phpinfo();
     }
     
-    public function actionIndex()
+    public function actionDhcp()
     {
         //return $this->render('index');
         Dhcp::generateFile();
