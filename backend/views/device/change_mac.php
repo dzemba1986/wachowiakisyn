@@ -10,6 +10,8 @@ $parentPortIndex = $modelDevice->modelTree[0]->parent_port; //index port
 $modelDeviceParent = Device::findOne($parent);
 $arPortsParent = $modelDeviceParent->modelModel->port;
 
+if($modelDeviceParent->modelModel->config == 1){
+
 $change = 'interface ethernet ' . $arPortsParent[$parentPortIndex] . '
 shutdown' . '
 no port security' . '
@@ -28,6 +30,25 @@ copy r s' . '
 y' . '
 ';
 
+} elseif($modelDeviceParent->modelModel->config == 2){
+
+$change = 'interface ' . $arPortsParent[$parentPortIndex] . '
+shutdown' . '
+no switchport port-security' . '
+exit' . '
+no mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelDevice->modelIps[0]->modelSubnet->modelVlan->id . '
+no mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelDevice->modelIps[0]->modelSubnet->modelVlan->id . '
+exit' . '
+clear ip dhcp snooping binding ' . $modelDevice->modelIps[0]->ip . '
+configure terminal' . '
+interface ' . $arPortsParent[$parentPortIndex] . '
+no shutdown' . '
+exit' . '
+exit' . '
+wr' . '
+';
+	
+}
 
 $form = ActiveForm::begin([
 	'id' => $modelDevice->formName(),
@@ -38,7 +59,7 @@ $form = ActiveForm::begin([
 
     <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary save', 'disabled' => true]) ?>
     
-    <button class="change btn" type="button">Skrypt</button>
+    <button class="change btn" type="button" data-clipboard-text="<?= $change; ?>">Skrypt</button>
     
     <p id="log"></p>
     
@@ -86,26 +107,7 @@ $(function() {
 
     	if (regex.test(mac)) {
     	
-			var clipboard = new Clipboard(".change", {
-				text : function() {
-					return 'interface ethernet ' + <?= json_encode($arPortsParent[$parentPortIndex]) ?> + "\n" +
-							"shutdown\n" +
-							"no port security\n" +
-							"exit" +
-							"interface vlan " + <?= json_encode($modelDevice->modelIps[0]->modelSubnet->modelVlan->id) ?> + "\n" +
-							"no bridge address " + <?= json_encode($modelDevice->mac) ?> + "\n" +
-							"bridge address " + $("#host-mac").val() + " permanent ethernet " + <?= json_encode($arPortsParent[$parentPortIndex]) ?> + "\n" +
-							"exit\n" +
-							"interface ethernet " + <?= json_encode($arPortsParent[$parentPortIndex]) ?> + "\n" +
-							"port security mode lock\n" +
-							"port security discard\n" +
-							"no shutdown\n" +
-							"exit\n" +
-							"exit\n" +
-							"copy r s\n" +		
-							"y\n";
-				}
-			});
+			var clipboard = new Clipboard(".change");
 
 			clipboard.on('success', function(e) {
 				$('#log').text('Skrypt zmiany MAC w schowku');;
@@ -116,17 +118,6 @@ $(function() {
     	
 		
     });
-// 	clipboard.on('success', function(e) {
-// 		if(e.trigger.textContent == 'Dodaj')
-// 			$('#log').text('Skrypt dodaj w schowku');
-// 		else if(e.trigger.textContent == 'Usuń') 
-// 			$('#log').text('Skrypt usuń w schowku');
-// // 		console.log(e.trigger.textContent);
-// 		//e.clearSelection();
-// 	});
-
-
-    
 });
 </script>
 
