@@ -57,7 +57,7 @@ class m160315_124716_device_address_update_data extends Migration
 //     				echo 'Update device o id = ' . $modelDevice->id;
     				
     				if (!empty($modelDevice->name))
-    					$this->update('device', ['address' => $modelAddress->id], ['id' => $modelDevice->id]);
+    					$this->update('device', ['address' => $modelAddress->id, 'name' => $modelAddress->fullDeviceShortAddress . ' ' . '[' . $modelDevice->name . ']'], ['id' => $modelDevice->id]);
     				else 
     					$this->update('device', ['address' => $modelAddress->id, 'name' => $modelAddress->fullDeviceShortAddress, 'original_name' => true], ['id' => $modelDevice->id]);
     					
