@@ -17,13 +17,13 @@ then
   rm $LOCAL_DIR/error.lock
 fi
 
-rsync -a -e 'ssh -q -p 22222' --size-only --checksum --delete-after $LOCAL_DIR/subnets/ dhcp_sync@172.20.4.5:$REMOTE_DIR/ &>> /home/daniel/log/updateDHCP.log
-echo "$CZAS Wykonano synchronizacje plikow dhcp." >> /home/daniel/log/$CZAS_FILE.updateDHCP.log
+rsync -a -e 'ssh -q -p 22222' --size-only --checksum --delete-after $LOCAL_DIR/subnets/ dhcp_sync@172.20.4.5:$REMOTE_DIR/ &>> $LOCAL_DIR/log/updateDHCP.log
+echo "$CZAS Wykonano synchronizacje plikow dhcp." >> $LOCAL_DIR/log/$CZAS_FILE.updateDHCP.log
 sleep 1
 if [ `rsync -t -e 'ssh -q -p 22222' --size-only --dry-run dhcp_sync@172.20.4.5:$REMOTE_ROOT/ | grep error.lock | wc -l` -gt 0 ]
 then
-        echo "$CZAS Wystapil blad podczas synchronizacji plikow dhcp!" >> /home/daniel/log/$CZAS_FILE.updateDHCP_error.log
-        rsync -e 'ssh -q -p 22222' --size-only dhcp_sync@172.20.4.5:$REMOTE_ROOT/error.lock $LOCAL_DIR/ &>> /home/daniel/log/$CZAS_FILE.updateDHCP_error.log
+        echo "$CZAS Wystapil blad podczas synchronizacji plikow dhcp!" >> $LOCAL_DIR/log/$CZAS_FILE.updateDHCP_error.log
+        rsync -e 'ssh -q -p 22222' --size-only dhcp_sync@172.20.4.5:$REMOTE_ROOT/error.lock $LOCAL_DIR/ &>> $LOCAL_DIR/log/$CZAS_FILE.updateDHCP_error.log
 fi
 rm $LOCK_FILE
 sleep 1
