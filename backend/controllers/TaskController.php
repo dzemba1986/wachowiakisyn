@@ -162,9 +162,11 @@ class TaskController extends Controller
 	    					exit();
 	    				}
 	    			}
+	    			
+	    			$modelTask->address = $modelAddress->id;
 	    		}
 	    		
-	    		$modelTask->address = $modelAddress->id;
+	    		
 	    		$modelTask->add_user = Yii::$app->user->identity->id;
 	    		$modelTask->start_time = $modelTask->start_time.':00';
 	    		$modelTask->end_time = $modelTask->end_time.':00';
