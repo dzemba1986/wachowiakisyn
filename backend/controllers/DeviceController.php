@@ -137,7 +137,7 @@ class DeviceController extends Controller
         		if($modelDevice->validate()){
 //         			var_dump($modelDevice->modelAddress);
 //         			exit();
-					if (($modelDevice->isAttributeChanged('original_name') && $modelDevice->original_name) || (!empty($modelAddress->dirtyAttributes) && $modelDevice->original_name))
+					if (($modelDevice->isAttributeChanged('original_name') && $modelDevice->original_name) || (!empty($modelAddress->dirtyAttributes) && $modelDevice->original_name) || (!empty($modelAddress->dirtyAttributes) && !$modelDevice->original_name))
 						$modelDevice->name = isset($newModelAddress) ? $newModelAddress->fullDeviceShortAddress : $modelDevice->modelAddress->fullDeviceShortAddress;
         			
         			try {
@@ -150,7 +150,7 @@ class DeviceController extends Controller
         				exit();
         			}
         		} else {
-        			var_dump($modelDevice);
+        			var_dump($modelDevice->errors);
         			exit();
         		}
         	} else {

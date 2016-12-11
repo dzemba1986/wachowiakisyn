@@ -5,7 +5,7 @@ use backend\models\Device;
 use backend\models\DeviceOld;
 use backend\models\Address;
 
-class m160315_124718_device_address_update_data extends Migration
+class m160315_124711_device_address_update_data extends Migration
 {
     public function up()
     {
@@ -35,7 +35,7 @@ class m160315_124718_device_address_update_data extends Migration
     		echo 'Update host o id = ' . $modelDevice->id . "\n";
     		
     		if (empty($modelDevice->name))
-    			$this->update('device', ['name' => $modelDevice->modelAddress->fullDeviceShortAddress], ['id' => $modelDevice->id]);
+    			$this->update('device', ['name' => $modelDevice->modelAddress->fullDeviceShortAddress, 'original_name' => true], ['id' => $modelDevice->id]);
     	}
     }
 
