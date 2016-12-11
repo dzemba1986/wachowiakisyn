@@ -56,7 +56,7 @@ class Task extends \yii\db\ActiveRecord
         return [	
         		
             ['create', 'date', 'format' => 'yyyy-MM-dd H:i:s'],
-        	['create', 'default', 'value' => new Expression('NOW()')],
+        	['create', 'default', 'value' => date('Y-m-d H:i:s')],
         	['create', 'required', 'message'=>'Wartość wymagana'],	
             
             ['start_date', 'date', 'format' => 'yyyy-MM-dd'],

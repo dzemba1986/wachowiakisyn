@@ -169,6 +169,7 @@ class TaskController extends Controller
 	    		$modelTask->start_time = $modelTask->start_time.':00';
 	    		$modelTask->end_time = $modelTask->end_time.':00';
 	    		$modelTask->editable = true;
+	    		$modelTask->status = true;
 	    		
 				try {
 					if (!$modelTask->save())
@@ -180,13 +181,15 @@ class TaskController extends Controller
 					}
 					
 					$transaction->commit();
-					return 1;
+					
 				} catch (Exception $e) {
 					$transaction->rollBack();
 					var_dump($modelTask);
 					var_dump($modelConnection);
 					exit();
-				}	    		
+				}
+				
+				return 1;
 	    	} else {
 	    		
 	    		$dateTime = new \DateTime();

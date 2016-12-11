@@ -137,6 +137,9 @@ class DeviceController extends Controller
         		if($modelDevice->validate()){
 //         			var_dump($modelDevice->modelAddress);
 //         			exit();
+//					jeżeli zmieniono oririnal_name i original name_zaznaczone || 
+// 					jeżeli zmieniono adres i zaznaczone original_name ||
+//         			jeżeli zmieniono adres i nie zaznaczone original_name ||
 					if (($modelDevice->isAttributeChanged('original_name') && $modelDevice->original_name) || (!empty($modelAddress->dirtyAttributes) && $modelDevice->original_name) || (!empty($modelAddress->dirtyAttributes) && !$modelDevice->original_name))
 						$modelDevice->name = isset($newModelAddress) ? $newModelAddress->fullDeviceShortAddress : $modelDevice->modelAddress->fullDeviceShortAddress;
         			
