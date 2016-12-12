@@ -117,7 +117,7 @@ $(function() {
 						return 'interface ethernet ' + <?= json_encode($arPortsParent[$parentPortIndex]) ?> + "\n" +
 							"shutdown\n" +
 							"no port security\n" +
-							"exit" +
+							"exit\n" +
 							"interface vlan " + <?= json_encode($modelDevice->modelIps[0]->modelSubnet->modelVlan->id) ?> + "\n" +
 							"no bridge address " + <?= json_encode($modelDevice->mac) ?> + "\n" +
 							"bridge address " + $("#host-mac").val() + " permanent ethernet " + <?= json_encode($arPortsParent[$parentPortIndex]) ?> + "\n" +

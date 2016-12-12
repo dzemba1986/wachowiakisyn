@@ -12,7 +12,7 @@ $arPortsParent = $modelDeviceParent->modelModel->port;
 
 if($modelDeviceParent->modelModel->config == 1){
 
-$add = 'no ip access-list user' . ($parentPortIndex + 1) . '
+$add = 'interface ethernet ' . $arPortsParent[$parentPortIndex] . '
 no service-acl input' . '
 exit' . '
 no ip access-list user' . ($parentPortIndex + 1) . '
@@ -49,7 +49,7 @@ $delete = 'interface vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
 no bridge address ' . $modelDevice->mac . '
 exit' . '
 ! Podac port klienta' . '
-interface ethernet' . $arPortsParent[$parentPortIndex] . '
+interface ethernet ' . $arPortsParent[$parentPortIndex] . '
 shutdown' . '
 no service-acl input' . '
 no traffic-shape' . '
