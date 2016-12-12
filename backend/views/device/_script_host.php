@@ -83,30 +83,27 @@ spanning-tree portfast' . '
 spanning-tree portfast bpdu-guard enable' . '
 no shutdown' . '
 exit' . '
-mac address-table static ' . $modelDevice->mac . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
 exit' . '
 wr' . '
 ';
 
-$delete = 'interface vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
-no bridge address ' . $modelDevice->mac . '
+
+
+
+
+$delete = 'no mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+interface ' . $arPortsParent[$parentPortIndex] . '
+no switchport port-security' . '
+no service-policy input 501M' . '		
+no egress-rate-limit' . '	
+no access-group anyuser' . '			
+switchport access vlan 555' . '	
 exit' . '
-! Podac port klienta' . '
-interface ethernet' . $arPortsParent[$parentPortIndex] . '
-shutdown' . '
-no service-acl input' . '
-no traffic-shape' . '
-no rate-limit' . '
-no port security' . '
-sw a v 555' . '
-no shutdown' . '
+do clear ip dhcp snooping binding int ' . $arPortsParent[$parentPortIndex] . '		
 exit' . '
-no ip access-list user ' . ($parentPortIndex + 1) . '
-no ip access-list user ' . ($parentPortIndex + 1) . '
-exit' . '
-copy r s' . '
-y' . '
-';
+wr' . '
+';		
 }
 ?>
 
