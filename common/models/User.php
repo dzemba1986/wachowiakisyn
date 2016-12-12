@@ -193,7 +193,10 @@ class User extends ActiveRecord implements IdentityInterface
     		'Darek P.' => 'Darek P.', 
     		'Marek S.' => 'Marek S.', 
     		'Kaziu K.' => 'Kaziu K.', 
-    		'Tomek' => 'Tomek'
+    		'Tomek Ch.' => 'Tomek Ch.',
+    		'Serwis' => 'Sorwis',
+    		'Deweloper' => 'Developer',
+    		'Brak danych' => 'Brak danych'
     	];
     }
 }
