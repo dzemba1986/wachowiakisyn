@@ -28,6 +28,7 @@ class Device extends \yii\db\ActiveRecord
 	const SCENARIO_TOSTORE = 'toStore';
 	const SCENARIO_TOTREE = 'toTree';
 	
+	
 	/**
 	 * @return string the associated database table name
 	 */
