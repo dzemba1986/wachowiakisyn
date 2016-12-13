@@ -213,7 +213,7 @@ class DeviceController extends Controller
 	    	//->join('INNER JOIN', 'address_short adrs', 'adrs.t_ulica = a.t_ulica')
 	    	//->where(['like', new \yii\db\Expression("CONCAT(adrs.name, ' ', dom, dom_szczegol)"), $q])
 	    	->where(['like', 'd.name', $q])
-	    	->limit(20);
+	    	->limit(25)->orderBy('d.name');
 	    	
 	    	if(!is_null($type))
 	    		$query->andWhere(['d.type' => $type]);
