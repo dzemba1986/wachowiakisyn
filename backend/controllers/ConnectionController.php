@@ -144,14 +144,16 @@ class ConnectionController extends Controller
 	        	try {
 	        		if (is_null($modelConnection->getOldAttribute('cloase_date')) && $modelConnection->close_date){
 	        			
-	        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
-	        			
-	        			$modelDevice = Device::findOne($modelConnection->host);
-	        			$modelDevice->modelTree[0]->delete();
-	        			$modelDevice->modelIps[0]->delete();
-	        			$modelDevice->delete();
-	        			
-	        			Dhcp::generateFile($subnet);
+	        			if ($modelConnection->host) {
+		        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
+		        			
+		        			$modelDevice = Device::findOne($modelConnection->host);
+		        			$modelDevice->modelTree[0]->delete();
+		        			$modelDevice->modelIps[0]->delete();
+		        			$modelDevice->delete();
+		        			
+		        			Dhcp::generateFile($subnet);
+	        			}
 	        		}
 	        		
 	        		if(!($modelConnection->save()))
