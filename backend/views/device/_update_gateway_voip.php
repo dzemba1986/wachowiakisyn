@@ -112,6 +112,13 @@ $(function() {
      	});
     	return false;				
     });
+
+    if($("#gatewayvoip-original_name").is(':checked'))
+    	$("#gatewayvoip-name").attr('disabled', true); 
+
+    $("#gatewayvoip-original_name").change(function() {
+        $("#gatewayvoip-name").attr('disabled', this.checked);
+    });
 });
 </script>
 
