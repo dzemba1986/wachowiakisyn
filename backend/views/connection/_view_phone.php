@@ -2,6 +2,7 @@
 
 use yii\widgets\DetailView;
 use yii\bootstrap\Collapse;
+use yii\helpers\Html;
 
 ?>
 

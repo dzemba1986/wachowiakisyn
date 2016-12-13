@@ -154,8 +154,9 @@ class Connection extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id' => 'ID',
+			'id' => 'Id',
 			'ara_id' => 'Ara',
+			'soa_id' => 'Soa',
 			'start_date' => 'Data od',
 			'conf_date' => 'Konfiguracja',
 			'pay_date' => 'Płatność',

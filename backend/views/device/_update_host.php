@@ -49,6 +49,19 @@ $form = ActiveForm::begin([
 	    	])->textInput(['placeholder' => $modelAddress->getAttributeLabel('lokal')]) 
 	    ?>
      	</div>
+     	
+     	<div style="display: flex">
+     	
+		<?= $form->field($modelDevice, 'name', [
+			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
+		]) ?>
+		
+		<?= $form->field($modelDevice, 'original_name', [
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+			//'template' => "{input}\n{hint}\n{error}",
+		])->checkbox(['label' => 'Oryginalna']) ?>
+				
+		</div>
     
 		<?= $form->field($modelDevice, 'desc', [
 			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']

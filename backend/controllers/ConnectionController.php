@@ -145,9 +145,11 @@ class ConnectionController extends Controller
 	        		if (is_null($modelConnection->getOldAttribute('cloase_date')) && $modelConnection->close_date){
 	        			
 	        			if ($modelConnection->host) {
-		        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
 		        			
 		        			$modelDevice = Device::findOne($modelConnection->host);
+		        			
+		        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
+		        			
 		        			$modelDevice->modelTree[0]->delete();
 		        			$modelDevice->modelIps[0]->delete();
 		        			$modelDevice->delete();
