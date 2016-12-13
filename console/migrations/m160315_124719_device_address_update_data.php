@@ -9,7 +9,7 @@ class m160315_124719_device_address_update_data extends Migration
     public function up()
     {
     	
-    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 5])->limit(100)->orderBy('id')->all();
+    	$modelDevices = Device::find()->where(['is not', 'address', null])->andWhere(['type' => 5])->orderBy('id')->all();
     	
     	foreach ($modelDevices as $modelDevice){
     		

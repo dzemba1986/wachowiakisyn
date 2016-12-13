@@ -77,7 +77,7 @@ class Device extends \yii\db\ActiveRecord
 			['status', 'default', 'value' => null],
             ['status', 'required', 'message'=>'Pole jest wymagane', 'on' => self::SCENARIO_TOSTORE],
                       
-            ['name', 'string', 'min' => 3, 'max' => 50],
+            ['name', 'string', 'min' => 2, 'max' => 50],
 				
 			['original_name', 'boolean'],	
             

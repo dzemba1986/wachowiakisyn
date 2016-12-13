@@ -76,7 +76,8 @@ class Address extends \yii\db\ActiveRecord
 			['dom', 'trim'],				
 				
 			['dom_szczegol', 'string', 'min' => 1, 'max' => 50],
-			['dom_szczegol', 'default', 'value' => ''],	
+			['dom_szczegol', 'default', 'value' => ''],
+			['dom_szczegol', 'filter', 'filter'=>'strtoupper'],
 			['dom_szczegol', 'trim'],
 			
 			['lokal', 'string', 'min' => 1, 'max' => 20],
@@ -85,6 +86,7 @@ class Address extends \yii\db\ActiveRecord
 			
 			['lokal_szczegol', 'string', 'min' => 1, 'max' => 50],
 			['lokal_szczegol', 'default', 'value' => ''],
+			['lokal_szczegol', 'filter', 'filter'=>'strtoupper'],
 			['lokal_szczegol', 'trim'],
 			
 			['pietro', 'integer', 'min' => -1, 'max' => 16, 'message' => 'Przedział od -1 do 16'],
