@@ -218,7 +218,7 @@ class DeviceController extends Controller
 	    	if(!is_null($type))
 	    		$query->andWhere(['d.type' => $type]);
 	    	
-	    	if(!is_null($distribution)) 
+	    	if(!empty($distribution)) 
 	    		$query->andWhere(['distribution' => $distribution]);
 	    	
 	    	$command = $query->createCommand();

@@ -89,8 +89,8 @@ class Address extends \yii\db\ActiveRecord
 			['lokal_szczegol', 'filter', 'filter'=>'strtoupper'],
 			['lokal_szczegol', 'trim'],
 			
-			['pietro', 'integer', 'min' => -1, 'max' => 16, 'message' => 'Przedział od -1 do 16'],
-			['pietro', 'default', 'value' => null],
+			['pietro', 'string', 'min' => -1, 'max' => 2],
+			['pietro', 'default', 'value' => ''],
 				
 			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix',
 				'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'], 'safe'],
@@ -155,7 +155,7 @@ class Address extends \yii\db\ActiveRecord
 	
 	public static function getFloor(){
 	
-		return [-1 => -1, 3 => 3, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 11 => 11];
+		return ['-1' => '-1', '2' => '2', '3' => '3', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '11' => '11'];
 	}
 	
 	public function getFullDeviceAddress(){
