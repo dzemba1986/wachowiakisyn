@@ -155,19 +155,20 @@ class TreeController extends Controller
     	
     	if($request->isAjax){
 	    	if (!$host){
+	    		
 		    	$modelDevice = Device::findOne($id);
 		    	$modelTree = new Tree();
 		    	$modelAddress = new Address();
+		    	
+		    	//var_dump($modelTree); exit();
 		    
-		    	if ($modelTree->load(Yii::$app->request->post()) && $modelAddress->load(Yii::$app->request->post())) {
+		    	if ($modelTree->load($request->post()) && $modelAddress->load($request->post())) {
 		    
 		    		$modelTree->device = $id;
 		    		$modelDevice->status = true;
 		    		
 		    		$transaction = Yii::$app->getDb()->beginTransaction();    		
 		    		
-		//     		var_dump($modelAddress->validate()); exit();
-		     			
 		    		try {
 		    			if (!$modelAddress->save())
 		    				throw new Exception('Problem z zapisem adresu');
@@ -175,6 +176,9 @@ class TreeController extends Controller
 		    				throw new Exception('Problem z zapisem drzewa');
 		
 		    			$modelDevice->address = $modelAddress->id;
+		    			$modelDevice->original_name = true;
+		    			$modelDevice->name = $modelDevice->modelAddress->fullDeviceShortAddress;
+		    			
 		    			if (!$modelDevice->save())
 		    				throw new Exception('Problem z zapisem device');
 		    			
@@ -216,6 +220,7 @@ class TreeController extends Controller
     					return $modelDevice; //$e->getMessage();
     				}
     				
+    				$modelDevice->original_name = true;
     				$modelDevice->name = $modelDevice->modelAddress->fullDeviceShortAddress;
     				$modelDevice->save();
     				
@@ -269,7 +274,8 @@ class TreeController extends Controller
     				]);
     			}
     		}
-    	}
+    	} else
+    		echo 'Zapytanie nie ajaxowe';
 	}
     
 //     public function actionAddHost($id){

@@ -29,7 +29,7 @@ echo DetailView::widget([
 ?>
 
 <?php $form = ActiveForm::begin([
-	'id' => 'update-device-form',
+	'id' => 'add-device-form',
     ])?>
     
     <?= Html::label('Lokalizacja') ?>
@@ -130,3 +130,33 @@ echo DetailView::widget([
     
 	<?= Html::submitButton($modelDevice->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
 <?php ActiveForm::end() ?>
+
+<script>
+
+$(function(){
+	$("#add-device-form").on('beforeSubmit', function(e){
+
+		var form = $(this);
+     	$.post(
+      		form.attr("action"), // serialize Yii2 form
+      		form.serialize()
+     	).done(function(result){
+		
+// 			console.log(result);
+ 			if(result == 1){
+ 				//$("#device_tree").jstree(true).refresh();
+// 				$('#modal-update-net').modal('hide');
+//  			$.pjax.reload({container: '#subnet-grid-pjax'});
+ 			}
+ 			else{
+		
+ 				$('#message').html(result);
+ 			}
+ 		}).fail(function(){
+ 			console.log('server error');
+ 		});
+		return false;				
+	});
+});
+
+</script>

@@ -101,6 +101,13 @@ $(function() {
      	});
     	return false;				
     });
+
+    if($("#host-original_name").is(':checked'))
+    	$("#host-name").attr('disabled', true); 
+
+    $("#host-original_name").change(function() {
+        $("#host-name").attr('disabled', this.checked);
+    });
 });
 </script>
 

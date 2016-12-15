@@ -176,7 +176,7 @@ class Address extends \yii\db\ActiveRecord
 	
 	public function getFullDeviceShortAddress(){
 	
-		if (!is_null($this->pietro))
+		if (!empty($this->pietro))
 			if ($this->lokal)
 				return $this->modelShortStreet->name . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
 			else
