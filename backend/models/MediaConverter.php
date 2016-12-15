@@ -55,7 +55,7 @@ class MediaConverter extends Device
             	['serial', 'filter', 'filter' => function($value) { return strtoupper($value); }],
             	['serial', 'string'],
             	['serial', 'unique', 'targetClass' => 'backend\models\Device', 'message'=>'Serial zajęty', 'when' => function ($model, $attribute) {
-            		return $model->{$attribute} !== $model->getOldAttribute($attribute);
+            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
             	}],
             	['serial', 'default', 'value' => NULL],
             	['serial', 'required', 'message'=>'Wartość wymagana'],

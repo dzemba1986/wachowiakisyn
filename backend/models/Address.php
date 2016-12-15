@@ -162,7 +162,7 @@ class Address extends \yii\db\ActiveRecord
 	
 		//var_dump($this->pietro); exit();
 		
-		if (!is_null($this->pietro))
+		if (!empty($this->pietro))
 			if ($this->lokal)
 				return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
 			else 

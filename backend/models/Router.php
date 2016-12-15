@@ -57,7 +57,7 @@ class Router extends Device
             	['mac', 'required', 'message'=>'Wartość wymagana'],
             	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
             	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-            		return $model->{$attribute} !== $model->getOldAttribute($attribute);
+            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
             	}],
             	['mac', 'trim', 'skipOnEmpty' => true],
             	

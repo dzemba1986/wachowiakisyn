@@ -57,9 +57,9 @@ class GatewayVoip extends Device
             	['mac', 'required', 'message'=>'Wartość wymagana'],
             	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
 //             	@todo pluje że mac zajęty przy edycji
-//             	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-//             		return $model->{$attribute} !== $model->getOldAttribute($attribute);
-//             	}],
+            	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
+            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
+            	}],
             	['mac', 'trim', 'skipOnEmpty' => true],
             	
             	['serial', 'filter', 'filter' => function($value) { return strtoupper($value); }],
