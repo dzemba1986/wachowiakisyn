@@ -202,6 +202,18 @@ class Address extends \yii\db\ActiveRecord
 		return $this->hasMany(Connection::className(), ['address'=>'id']);
 	}
 	
+	public function getModelsDevice(){
+	
+		//Wiele instalacji na danym adresie
+		return $this->hasMany(Device::className(), ['address'=>'id']);
+	}
+	
+	public function getModelsTask(){
+	
+		//Wiele instalacji na danym adresie
+		return $this->hasMany(Task::className(), ['address'=>'id']);
+	}
+	
 	public function getModelShortStreet(){
 	
 		//Wiele umów na danym adresie
