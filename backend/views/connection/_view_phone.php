@@ -18,7 +18,6 @@ use yii\helpers\Html;
         'attributes' => [
 	        'id',
 	        'soa_id',
-            'ara_id',
             'phone',
             'phone2',
             //'port',
@@ -36,6 +35,7 @@ use yii\helpers\Html;
         ],
         'attributes' => [
             'start_date',
+        	'soa_date',	
             'pay_date',
             'close_date',
         ],

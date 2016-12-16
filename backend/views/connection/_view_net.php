@@ -36,6 +36,7 @@ use yii\helpers\Html;
         ],
         'attributes' => [
             'start_date',
+        	'soa_date',
             'conf_date',
             'pay_date',
             'close_date',
