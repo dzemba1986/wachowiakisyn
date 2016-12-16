@@ -10,6 +10,7 @@ use IPBlock;
 use yii\helpers\ArrayHelper;
 use backend\models\IpSearch;
 use backend\models\Device;
+use backend\models\Dhcp;
 
 class IpController extends Controller
 {  
@@ -69,6 +70,9 @@ class IpController extends Controller
 							}
 						}
 					}
+					if (Device::findOne($device)->type == 5)
+						Dhcp::generateFile(Device::findOne($device)->modelIps[0]->subnet);
+					
 					return 1;
 				} elseif (count($modelIps) > count($newModelIps)){
 					 
@@ -97,6 +101,9 @@ class IpController extends Controller
 							$modelIps[$i]->delete();
 						}
 					}
+					if (Device::findOne($device)->type == 5)
+						Dhcp::generateFile(Device::findOne($device)->modelIps[0]->subnet);
+					
 					return 1;
 				} elseif (count($modelIps) < count($newModelIps)){
 					 
@@ -116,6 +123,9 @@ class IpController extends Controller
 						}
 					}
 				}
+				if (Device::findOne($device)->type == 5)
+					Dhcp::generateFile(Device::findOne($device)->modelIps[0]->subnet);
+				
 				return 1;
 				//var_dump($newModelIps); exit();
 			} else {
