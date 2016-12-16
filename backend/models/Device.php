@@ -168,6 +168,7 @@ class Device extends \yii\db\ActiveRecord
 			'id' => 'ID',
 			'status' => 'Status',
             'name' => 'Nazwa',
+			'original_name' => 'Org.',	
             'desc' => 'Opis',
 			'address' => 'Adres',
 			'type' => 'Typ',
