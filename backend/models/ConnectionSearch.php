@@ -24,7 +24,7 @@ class ConnectionSearch extends Connection
 			[	
 				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date', 'synch_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'task',
-				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again',
+				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again', 'wire',
 				'port', 'device', 'mac', 'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
 				'minConfDate', 'maxConfDate'],
 				'safe'
@@ -104,7 +104,8 @@ class ConnectionSearch extends Connection
 			'dom' => $this->house,
 			'lokal' => $this->flat,	
             'connection.nocontract' => $this->nocontract,
-			'socket' => $this->socket,	
+			'socket' => $this->socket,
+			'wire' => $this->wire,
             'vip' => $this->vip,
 			'again' => $this->again,	
 			'task.start_date' => $this->task,	

@@ -140,13 +140,14 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 // 	        'falseLabel' => 'Nie',
 // 	        'options' => ['style'=>'width:5%;'],
 //         ],
-//         [
-// 	        'class'=>'kartik\grid\BooleanColumn',
-// 	        'attribute'=>'inea',
-// 	        'trueLabel' => 'Tak',
-// 	        'falseLabel' => 'Nie',
-// 	        'options' => ['style'=>'width:5%;'],
-//         ],
+		[
+			'class'=>'kartik\grid\BooleanColumn',
+			'attribute' => 'wire', // it can be 'attribute' => 'tableField' to.
+			'header' => 'Kabel',
+			'trueLabel' => 'Tak',
+			'falseLabel' => 'Nie',
+			'options' => ['style'=>'width:7%;'],
+		],
         [
             'class'=>'kartik\grid\BooleanColumn',
             'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
