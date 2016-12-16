@@ -508,8 +508,15 @@ class TreeController extends Controller
     			try {
     				$modelDevice->address = null;
     				$modelDevice->status = null;
+    				
     				if (!$modelDevice->save())
     					throw new Exception('Nie można zapisać do device');
+    				
+    				foreach ($modelDevice->ips as $modelIp){
+    					if (!$modelIp->delete())
+    						throw new Exception('Nie można usunąć ip');
+    				}
+    					
     				if (!$modelTree->delete())
     					throw new Exception('Nie można usunąć agregacji');
     				return 1;
@@ -517,7 +524,7 @@ class TreeController extends Controller
     				var_dump($modelDevice->errors);
     				exit();
     			}
-    		} else { //nie jest ostatnia kopią
+    		} else { //nie jest ostatnią kopią
     			try {
     				if (!$modelTree->delete())
     					throw new Exception('Nie można usunąć agregacji');
