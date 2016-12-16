@@ -155,7 +155,7 @@ class Address extends \yii\db\ActiveRecord
 	
 	public static function getFloor(){
 	
-		return ['-1' => '-1', '2' => '2', '3' => '3', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '11' => '11'];
+		return ['-1' => '-1', '0' => '0', '1' => '1', '2' => '2', '3' => '3', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '11' => '11'];
 	}
 	
 	public function getFullDeviceAddress(){
