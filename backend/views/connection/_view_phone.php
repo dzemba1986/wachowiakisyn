@@ -16,7 +16,8 @@ use yii\helpers\Html;
         	'nullDisplay' => ''
         ],
         'attributes' => [
-        	//'id',             
+	        'id',
+	        'soa_id',
             'ara_id',
             'phone',
             'phone2',
