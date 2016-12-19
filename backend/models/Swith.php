@@ -64,7 +64,6 @@ class Swith extends Device
 //             		}
 //             	],
             	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
-//             	@todo pluje nadal że mac zajęty
             	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
             		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
             	}],

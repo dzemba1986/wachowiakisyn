@@ -51,6 +51,14 @@ use backend\models\MediaConverter;
         ]  
     )?>
     
+    <?= $form->field($modelDevice, 'mac', 
+        [       
+            'enableAjaxValidation' => true, 
+            'validateOnChange' => false,
+            'options' => ['style' => ['display' => 'none']],
+        ]
+    )?>
+    
     <?= $form->field($modelDevice, 'desc', ['options' => ['style' => ['display' => 'none']]])->textarea()?>
     
     <div class="form-group">

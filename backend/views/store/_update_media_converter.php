@@ -15,6 +15,8 @@ use backend\models\Swith;
     
     <?= $form->field($modelDevice, 'serial') ?>
     
+    <?= $form->field($modelDevice, 'mac') ?>
+    
     <?= $form->field($modelDevice, 'desc')->textarea()?>
 	
     

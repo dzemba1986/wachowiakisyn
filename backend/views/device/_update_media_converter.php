@@ -51,13 +51,21 @@ $form = ActiveForm::begin([
      	</div>
     
     	<div style="display: flex">
-		
-		<?= $form->field($modelDevice, 'serial', [
-			'options' => ['class' => 'col-sm-7', 'style' => 'padding-left: 0px; padding-right: 3px;']
+    	
+    	<?= $form->field($modelDevice, 'mac', [
+			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;']
 		]) ?>
 		
+		<?= $form->field($modelDevice, 'serial', [
+			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 3px; padding-right: 3px;']
+		]) ?>
+		
+		</div>
+		
+		<div style="display: flex">
+		
 		<?= $form->field($modelDevice, 'name', [
-			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;']
+			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
 		]) ?>
 		
 		<?= $form->field($modelDevice, 'original_name', [
@@ -66,13 +74,12 @@ $form = ActiveForm::begin([
 		])->checkbox() ?>
 		
 		</div>
-	
+		
 		<?= $form->field($modelDevice, 'desc', [
 			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']
 		])->textarea() ?>	
 
         <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
-  
 	
 	</div>
 	
