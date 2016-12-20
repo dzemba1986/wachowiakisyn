@@ -33,7 +33,7 @@ class IpController extends Controller
 		$request = Yii::$app->request;
 		
 		if ($request->isAjax){
-			if(!empty($request->post('network'))){
+			if(!empty($request->post('network')) && $request->post('save')){
 				$newModelIps = [];
 				$index = 0;
 				foreach ($request->post('network') as $net){
@@ -51,6 +51,7 @@ class IpController extends Controller
 				if(count($modelIps) == count($newModelIps)){
 					for($i=0; $i <= count($modelIps)-1; $i++){
 		
+// 						echo 'Tyle samo'; exit();
 						//var_dump($modelIps[$i]->ip); exit();
 		
 						if($modelIps[$i]->ip == $newModelIps[$i]->ip){
@@ -76,6 +77,7 @@ class IpController extends Controller
 					return 1;
 				} elseif (count($modelIps) > count($newModelIps)){
 					 
+// 					echo 'Mniej'; exit();
 					//var_dump($newModelIps); var_dump($modelIps); exit();
 					 
 					for($i=0; $i <= count($modelIps)-1; $i++){
@@ -107,6 +109,7 @@ class IpController extends Controller
 					return 1;
 				} elseif (count($modelIps) < count($newModelIps)){
 					 
+// 					echo 'Wiecej'; exit();
 					//var_dump($newModelIps); var_dump($modelIps); exit();
 					foreach ($modelIps as $modelIp)
 						$modelIp->delete();
@@ -128,6 +131,13 @@ class IpController extends Controller
 				
 				return 1;
 				//var_dump($newModelIps); exit();
+			} elseif ($request->post('save')){
+// 				echo 'Usuń wszystko'; exit();
+				
+				foreach ($modelIps as $modelIp)
+					$modelIp->delete();
+				
+				return 1;
 			} else {
 				return $this->renderAjax('update_by_device', [
 					'modelIps' => $modelIps,

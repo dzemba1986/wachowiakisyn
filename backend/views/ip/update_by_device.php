@@ -209,8 +209,8 @@ $(function() {
 
     		var form = $(this);
 	     	$.post(
-	      		form.attr("action"), // serialize Yii2 form
-	      		form.serialize()
+	      		form.attr("action"), //action url form
+	      		form.serialize() + "&save=yes"  // serialize Yii2 form
 	     	).done(function(result){
     		
 //     			console.log(result);
