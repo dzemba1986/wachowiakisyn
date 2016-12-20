@@ -7,6 +7,7 @@ use backend\models\Address;
 use backend\models\Type;
 use nterms\pagesize\PageSize;
 use yii\helpers\Url;
+use app\models\Package;
 
 $this->params['breadcrumbs'][] = 'Wszystkie';
 ?>
@@ -108,6 +109,12 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
             'options' => ['style'=>'width:5%;'],
         ],
         [
+	        'attribute'=>'package',
+	        'value'=>'modelPackage.name',
+	        'filter'=> Html::activeDropDownList($searchModel, 'package', ArrayHelper::map(Package::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+	        'options' => ['style'=>'width:5%;'],
+        ],
+        [
 	        'class'=>'kartik\grid\BooleanColumn',
 	        'header'=>'Umowa',
 	        'attribute'=>'nocontract',
@@ -120,7 +127,8 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         [
             'class'=>'kartik\grid\BooleanColumn',
             'attribute' => 'socket',
-            'header' => 'Gniazdo',
+            'trueLabel' => 'Tak',
+	        'falseLabel' => 'Nie',
             //'value' => 'socket',
             'options' => ['style'=>'width:7%;'],
         ],                       

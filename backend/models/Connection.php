@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
+use app\models\Package;
 
 /**
  * This is the model class for table "{{%connection}}".
@@ -184,6 +185,8 @@ class Connection extends \yii\db\ActiveRecord
 			'task' => 'Zadania',
 			'nocontract' => 'Bez umowy',
 			'vip' => 'Vip',
+			'socket' => 'Gniazdo',
+			'wire' => 'Kabel',	
 			'street' => 'Ulica',
 			'house' => 'Blok',
 			'house_detail' => 'Klatka',	
@@ -241,6 +244,11 @@ class Connection extends \yii\db\ActiveRecord
     public function getModelType(){
     
     	return $this->hasOne(Type::className(), ['id'=>'type']);
+    }
+    
+    public function getModelPackage(){
+    
+    	return $this->hasOne(Package::className(), ['id'=>'package']);
     }
     
     public function getInstallationType() {

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\package;
+namespace app\models;
 
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -23,7 +23,7 @@ class Package extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'tbl_package';
+		return 'package';
 	}
 
 	/**
