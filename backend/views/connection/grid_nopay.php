@@ -9,6 +9,7 @@ use backend\models\Type;
 use backend\models\Task;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
+use app\models\Package;
 
 $this->params['breadcrumbs'][] = 'Niepłacący';
 ?>
@@ -122,6 +123,12 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'value'=>'modelType.name',
             'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
             'options' => ['style'=>'width:5%;'],
+        ],
+        [
+	        'attribute'=>'package',
+	        'value'=>'modelPackage.name',
+	        'filter'=> Html::activeDropDownList($searchModel, 'package', ArrayHelper::map(Package::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+	        'options' => ['style'=>'width:5%;'],
         ],
         [
             'class'=>'kartik\grid\BooleanColumn',
