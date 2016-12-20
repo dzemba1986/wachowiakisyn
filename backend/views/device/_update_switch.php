@@ -117,7 +117,12 @@ $(function() {
 
     if($("#swith-original_name").is(':checked'))
     	$("#swith-name").attr('disabled', true); 
-
+    else { //jeżeli nazwa orginalna nie jest zaznaczona
+		var name = $("#swith-name").val()
+        
+    	$("#swith-name").val(name.replace(/^([\w|\W]{1,})([\[]{1})([\w|\W]{0,})([\]]{1})$/gi, "$3"));
+    } 
+    
     $("#swith-original_name").change(function() {
         $("#swith-name").attr('disabled', this.checked);
     });

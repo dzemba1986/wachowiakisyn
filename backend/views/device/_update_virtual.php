@@ -54,6 +54,16 @@ $form = ActiveForm::begin([
 		<?= $form->field($modelDevice, 'mac', [
 			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;']
 		]) ?>
+		
+		<?= $form->field($modelDevice, 'name', [
+			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;']
+		]) ?>
+		
+		<?= $form->field($modelDevice, 'original_name', [
+			'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+			//'template' => "{input}\n{hint}\n{error}",
+		])->checkbox() ?>
+		
 		</div>
 	
 		<?= $form->field($modelDevice, 'desc', [
@@ -93,6 +103,18 @@ $(function() {
      		console.log('server error');
      	});
     	return false;				
+    });
+
+    if($("#virtual-original_name").is(':checked'))
+    	$("#virtual-name").attr('disabled', true); 
+    else { //jeżeli nazwa orginalna nie jest zaznaczona
+		var name = $("#virtual-name").val()
+        
+    	$("#virtual-name").val(name.replace(/^([\w|\W]{1,})([\[]{1})([\w|\W]{0,})([\]]{1})$/gi, "$3"));
+    }
+
+    $("#virtual-original_name").change(function() {
+        $("#virtual-name").attr('disabled', this.checked);
     });
 });
 </script>

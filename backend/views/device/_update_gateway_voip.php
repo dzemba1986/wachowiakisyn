@@ -68,7 +68,7 @@ $form = ActiveForm::begin([
 			]) ?>
 			
 			<?= $form->field($modelDevice, 'original_name', [
-				'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+				'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 3px; padding-right: 3px;'],
 				//'template' => "{input}\n{hint}\n{error}",
 			])->checkbox(['label' => 'Oryginalna']) ?>
 		
@@ -114,7 +114,12 @@ $(function() {
     });
 
     if($("#gatewayvoip-original_name").is(':checked'))
-    	$("#gatewayvoip-name").attr('disabled', true); 
+    	$("#gatewayvoip-name").attr('disabled', true);
+    else { //jeżeli nazwa orginalna nie jest zaznaczona
+		var name = $("#gatewayvoip-name").val()
+        
+    	$("#gatewayvoip-name").val(name.replace(/^([\w|\W]{1,})([\[]{1})([\w|\W]{0,})([\]]{1})$/gi, "$3"));
+    } 
 
     $("#gatewayvoip-original_name").change(function() {
         $("#gatewayvoip-name").attr('disabled', this.checked);

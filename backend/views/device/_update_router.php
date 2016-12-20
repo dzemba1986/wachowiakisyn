@@ -60,6 +60,18 @@ $form = ActiveForm::begin([
 		]) ?>
 		
 		</div>
+		
+		<div style="display: flex">
+		<?= $form->field($modelDevice, 'name', [
+			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
+		]) ?>
+		
+		<?= $form->field($modelDevice, 'original_name', [
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+			//'template' => "{input}\n{hint}\n{error}",
+		])->checkbox() ?>
+		
+		</div>
 	
 		<?= $form->field($modelDevice, 'desc', [
 			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']
@@ -98,6 +110,18 @@ $(function() {
      		console.log('server error');
      	});
     	return false;				
+    });
+
+    if($("#router-original_name").is(':checked'))
+    	$("#router-name").attr('disabled', true); 
+    else { //jeżeli nazwa orginalna nie jest zaznaczona
+		var name = $("#router-name").val()
+        
+    	$("#router-name").val(name.replace(/^([\w|\W]{1,})([\[]{1})([\w|\W]{0,})([\]]{1})$/gi, "$3"));
+    } 
+    
+    $("#router-original_name").change(function() {
+        $("#router-name").attr('disabled', this.checked);
     });
 });
 </script>

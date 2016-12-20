@@ -103,7 +103,12 @@ $(function() {
     });
 
     if($("#host-original_name").is(':checked'))
-    	$("#host-name").attr('disabled', true); 
+    	$("#host-name").attr('disabled', true);
+    else { //jeżeli nazwa orginalna nie jest zaznaczona
+		var name = $("#host-name").val()
+        
+    	$("#host-name").val(name.replace(/^([\w|\W]{1,})([\[]{1})([\w|\W]{0,})([\]]{1})$/gi, "$3"));
+    } 
 
     $("#host-original_name").change(function() {
         $("#host-name").attr('disabled', this.checked);
