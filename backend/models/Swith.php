@@ -72,7 +72,7 @@ class Swith extends Device
             	['serial', 'filter', 'filter' => function($value) { return strtoupper($value); }],
             	['serial', 'string'],
             	['serial', 'unique', 'targetClass' => 'backend\models\Device', 'message'=>'Serial zajęty', 'when' => function ($model, $attribute) {
-            		return $model->{$attribute} !== $model->getOldAttribute($attribute);
+            		return strtoupper($model->{$attribute}) !== strtoupper($model->getOldAttribute($attribute));
             	}],
             	['serial', 'default', 'value' => NULL],
             	['serial', 'required', 'message'=>'Wartość wymagana'],
