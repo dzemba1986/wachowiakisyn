@@ -57,6 +57,7 @@ class MediaConverter extends Device
             		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
             	}],
             	['mac', 'trim', 'skipOnEmpty' => true],
+            	['mac', 'default', 'value' => NULL],
             		
             	['serial', 'filter', 'filter' => function($value) { return strtoupper($value); }],
             	['serial', 'string'],
