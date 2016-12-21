@@ -67,14 +67,10 @@ use backend\models\Device;
 		
 		<div style="display: flex">
 		
-			<?= $form->field($modelConnection, 'mac', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-			]) ?>
-			
 			<?php $concatInit = empty($modelConnection->device) ? '' : Device::findOne($modelConnection->device)->modelAddress->fullDeviceAddress; ?>
 			
 			<?= $form->field($modelConnection, 'device', [
-    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 3px;'],
     		])->widget(Select2::classname(), [
     			//'initValueText' => 'OP 120/ - OP120 - [172.20.4.44]', //$concatInit,
     			'language' => 'pl',
@@ -113,10 +109,20 @@ use backend\models\Device;
     		<?php $port = isset($modelConnection->port) ? $modelConnection->port : null?>
     		
 			<?= $form->field($modelConnection, 'port', [
-				'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 0px;'],
+				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
 			])->dropDownList([$port], ['prompt'=>'port']) ?>
 			
 		</div>
+		
+		<div style="display: flex">
+		
+		
+		
+		<?= $form->field($modelConnection, 'mac', [
+				'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+			]) ?>
+			
+		</div>	
         
 		<?= $form->field($modelConnection, 'info')->textarea(['style' => 'resize: vertical']) ?>
         
