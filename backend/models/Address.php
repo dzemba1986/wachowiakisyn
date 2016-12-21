@@ -118,7 +118,7 @@ class Address extends \yii\db\ActiveRecord
 				'dom' => 'Blok',
 				'dom_szczegol' => 'Klatka',
 				'lokal' => 'Lokal',
-				'lokal_szczegol' => 'Inne',
+				'lokal_szczegol' => 'Lokal szczegół',
 				'pietro' => 'Piętro'
 		);
 	}
