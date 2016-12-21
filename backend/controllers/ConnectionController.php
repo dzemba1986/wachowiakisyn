@@ -67,7 +67,7 @@ class ConnectionController extends Controller
         			'conf_date' => NULL, 
         			'close_date' => NULL, 
         			Connection::tableName().'.type' => 1 
-        		])->andWhere(['and', ['>', 'wire', 0], ['is', 'host', null]]);
+        		])->andWhere(['and', ['>', 'wire', 0], ['nocontract' => false], ['is', 'host', null]]);
         		break;
         	case 'off':
         		$dataProvider->sort = ['defaultOrder' => ['close_date' => SORT_ASC]];
