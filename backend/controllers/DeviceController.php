@@ -195,7 +195,7 @@ class DeviceController extends Controller
         return $this->redirect(['index']);
     }
     
-	public function actionList($q = null, $id = null, $type = null, $distribution = null) {
+	public function actionList($q = null, $id = null, array $type = [], $distribution = null) {
 		
 	    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 	    
@@ -215,8 +215,9 @@ class DeviceController extends Controller
 	    	->where(['like', 'd.name', $q])
 	    	->limit(25)->orderBy('d.name');
 	    	
-	    	if(!is_null($type))
+	    	if(!empty($type)){
 	    		$query->andWhere(['d.type' => $type]);
+	    	}	
 	    	
 	    	if(!empty($distribution)) 
 	    		$query->andWhere(['distribution' => $distribution]);

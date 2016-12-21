@@ -47,7 +47,7 @@ use common\models\User;
     				'data' => new JsExpression("function(params) {
     					return {
     						q : params.term,
-    						type : $modelConnection->type == 1 ? 2 : 3,
+    						type : $modelConnection->type == 1 ? [2] : [3],
     						distribution : $modelConnection->type == 1 ? false : null
 						}; 
 					}")

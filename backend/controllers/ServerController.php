@@ -3,7 +3,6 @@
 namespace backend\controllers;
 
 use Yii;
-use backend\models\Swith;
 use yii\widgets\ActiveForm;
 use backend\models\Server;
 

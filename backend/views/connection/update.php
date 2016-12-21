@@ -76,7 +76,7 @@ use backend\models\Device;
 			<?= $form->field($modelConnection, 'device', [
     			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     		])->widget(Select2::classname(), [
-    			'initValueText' => 'OP 120/ - OP120 - [172.20.4.44]', //$concatInit,
+    			//'initValueText' => 'OP 120/ - OP120 - [172.20.4.44]', //$concatInit,
     			'language' => 'pl',
             	'options' => [
             		//'id' => 'select2-connection-update',	
@@ -100,7 +100,7 @@ use backend\models\Device;
 	    				'dataType' => 'json',
 	    				'data' => new JsExpression('function(params) { return {
 	    					q:params.term, 
-	    					type: 2, 
+	    					type: [2, 8], 
 	    					dist:false
 						}; }')
 		    		],
