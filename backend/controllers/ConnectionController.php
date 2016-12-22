@@ -10,8 +10,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\models\Device;
-use yii\db\Expression;
-
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -82,10 +80,10 @@ class ConnectionController extends Controller
         		$dataProvider->query->andWhere(['and', ['is not', 'pay_date', null], ['close_date' => null]]);
         		break;
         	case 'noboa':
-        		$dataProvider->query->andWhere(['synch_date' => null, 'nocontract' => false])->andWhere(['is not', 'pay_date', null]);
+        		$dataProvider->query->andWhere(['synch_date' => null, 'nocontract' => false, 'vip' => false])->andWhere(['is not', 'pay_date', null]);
         		break;
         	case 'boa':
-        		$dataProvider->query->andWhere(['close_date' => null, 'nocontract' => false])->andWhere(['is not', 'synch_date', null]);
+        		$dataProvider->query->andWhere(['close_date' => null, 'nocontract' => false, 'vip' => false])->andWhere(['is not', 'synch_date', null]);
         		break;
         }
         
