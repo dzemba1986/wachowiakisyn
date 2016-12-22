@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\models\Device;
+use yii\db\Expression;
 
 /**
  * ConnectionController implements the CRUD actions for Connection model.
@@ -51,9 +52,13 @@ class ConnectionController extends Controller
         
         switch ($mode){
         	case 'nopay':
+        		$dataProvider->sort = ['defaultOrder' => [
+        			'start_date' => SORT_DESC, 
+        		]];
         		$dataProvider->query->joinWith('modelTask')->andWhere([
-        			'pay_date' => null, 
-        			Connection::tableName().'.close_date' => null
+        			'pay_date' => null,
+        			'connection.nocontract' => false,	
+        			'connection.close_date' => null
         		]);
         		break;
         	case 'install':
