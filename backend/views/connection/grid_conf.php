@@ -149,7 +149,25 @@ $this->params['breadcrumbs'][] = 'Do konfiguracji';
                 'template' => '{list}',
             ]),
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {update}',
+            'template' => '{view} {update} {tree}',
+        	'buttons' => [
+        		'tree' => function ($model, $data) {
+        			if($data->mac && $data->port >= 0 && $data->device && !$data->nocontract && !$data->host && $data->wire > 0){
+        				$url = Url::toRoute(['tree/add', 'id' => $data->id, 'host' => true]);
+	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
+	        				'title' => \Yii::t('yii', 'Zamontuj'),
+	        				'data-pjax' => '0',
+	        			]);
+        			} elseif ($data->host) {
+        				$url = Url::toRoute(['tree/index', 'id' => $data->host, 'host' => true]);
+        				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
+        					'title' => \Yii::t('yii', 'SEU'),
+        					'data-pjax' => '0',
+        				]);
+        			} else
+        				return null;
+        		},
+        	]
         ],                 
    ]
 ]); 
