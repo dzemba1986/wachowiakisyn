@@ -12,8 +12,9 @@ use nterms\pagesize\PageSize;
 /* @var $searchModel backend\models\InstallationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Instalacje';
+$this->title = 'Zestawienia';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = 'Instalacje';
 ?>
 <div class="installation-index">
 
@@ -35,7 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
     	'summary' => 'Widoczne {count} wierszy z {totalCount}',
     	'showPageSummary'=>true,
-    	'export' => FALSE,
+    	'export'=>[
+	    	'fontAwesome'=>true,
+	        'showConfirmAlert'=>false,
+	        'target'=>GridView::TARGET_BLANK,
+	        'exportConfig' => ['pdf' => TRUE, 'json' => FALSE],
+    	],
         'panel' => [
         	'heading'=> '',
 			'before' => $this->render('_search_installation', [
@@ -46,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header' => PageSize::widget([
 	                'defaultPageSize' => 100,
+                	'pageSizeParam' => 'per-page',
 	                'sizes' => [
 	                    10 => 10,
 	                    100 => 100,

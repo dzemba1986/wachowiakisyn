@@ -17,6 +17,10 @@ class RaportController extends Controller
     	$searchModel = new ConnectionSearch();
     	$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
     	
+    	$dataProvider->query->andWhere([
+    		'is not', 'conf_date', null
+    	]);
+    	
         return $this->render('grid_connection', [
             'searchModel' => $searchModel,
         	'dataProvider' => $dataProvider,	
@@ -27,6 +31,10 @@ class RaportController extends Controller
     {
     	$searchModel = new InstallationSearch();
     	$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+    	
+    	$dataProvider->query->andWhere([
+    		'is not', 'socket_date', null
+    	]);
     	 
     	return $this->render('grid_installation', [
     		'searchModel' => $searchModel,

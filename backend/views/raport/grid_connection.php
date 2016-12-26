@@ -7,7 +7,8 @@ use backend\models\Address;
 use backend\models\Type;
 use nterms\pagesize\PageSize;
 
-$this->params['breadcrumbs'][] = 'Raport';
+$this->title = 'Zestawienia';
+$this->params['breadcrumbs'][] = $this->title;
 $this->params['breadcrumbs'][] = 'Podłączenia';
 ?>
 
@@ -45,7 +46,7 @@ $this->params['breadcrumbs'][] = 'Podłączenia';
 	
 			return ['class' => 'afterdate'];
 		}
-		elseif ($model->activ_date <> null) {
+		elseif ($model->pay_date <> null) {
 	
 			return ['class' => 'activ'];
 		}
