@@ -71,7 +71,7 @@ $('#<?= $modelTask->formName()?>').on('beforeSubmit', function(e){
  		else{
 		
  			//$('#message').html(result);
-            alert('dupa');
+            alert(result);
  		}
  	}).fail(function(){
  		console.log('server error');

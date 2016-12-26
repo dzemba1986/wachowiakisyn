@@ -336,13 +336,14 @@ class TaskController extends Controller
 		        	if ($modelTask->status) { //zadanie wykonano
 		        		
 			        	$modelInstallation = null;
+			        	//przeszukaj wszystkie instalacje typu podłączenia
 			        	foreach ($modelConnection->modelInstallationsByType as $installation){
 			        		
 			        		if (!is_null($installation->wire_date) && is_null($installation->socket_date) && is_null($installation->socket_user)){
-			        			
+			        			// jeżeli znalazł jakąś instalację z kablem, bez gniazda i bez socket usera to podstaw
 			        			$modelInstallation = $installation;
 			        			break;
-			        		}
+			        		} 
 			        	}
 			        	
 			        	if (is_object($modelInstallation)) {
@@ -359,6 +360,8 @@ class TaskController extends Controller
 			        			$transaction->rollBack();
 			        			throw $e;
 			        		}
+			        	} else {
+								return 'Nie znaleziono instalacji z kablem a bez gniazda';			        			
 			        	}
 			        	
 			        	if ($modelConnection->load(Yii::$app->request->post())){ //wpisano mac
