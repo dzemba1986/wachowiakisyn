@@ -162,14 +162,25 @@ $(document).ready(function() {
     //reinicjalizacja kalendarza z datami po użyciu pjax'a
     $("#installation-grid-pjax").on("pjax:complete", function() {
         
-        if ($('#installationsearch-wire_date').data('kvDatepicker')) { $('#installationsearch-wire_date').kvDatepicker('destroy'); }
-        $('#installationsearch-wire_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
+    	if (jQuery('#installationsearch-minsocketdate').data('kvDatepicker')) { jQuery('#installationsearch-minsocketdate').kvDatepicker('destroy'); }
+    	jQuery('#installationsearch-minsocketdate-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
-        initDPAddon('installationsearch-wire_date');
-        if ($('#installationsearch-socket_date').data('kvDatepicker')) { $('#installationsearch-socket_date').kvDatepicker('destroy'); }
-        $('#installationsearch-socket_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
+    	initDPRemove('installationsearch-minsocketdate');
+    	initDPAddon('installationsearch-minsocketdate');
+    	if (jQuery('#installationsearch-maxsocketdate').data('kvDatepicker')) { jQuery('#installationsearch-maxsocketdate').kvDatepicker('destroy'); }
+    	jQuery('#installationsearch-maxsocketdate-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
-        initDPAddon('task-start');
+    	initDPRemove('installationsearch-maxsocketdate');
+    	initDPAddon('installationsearch-maxsocketdate');
+    	jQuery('#global-search').yiiActiveForm([], []);
+    	if (jQuery('#installationsearch-wire_date').data('kvDatepicker')) { jQuery('#installationsearch-wire_date').kvDatepicker('destroy'); }
+    	jQuery('#installationsearch-wire_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
+
+    	initDPAddon('installationsearch-wire_date');
+    	if (jQuery('#installationsearch-socket_date').data('kvDatepicker')) { jQuery('#installationsearch-socket_date').kvDatepicker('destroy'); }
+    	jQuery('#installationsearch-socket_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
+
+    	initDPAddon('installationsearch-socket_date');
     });
 });
 

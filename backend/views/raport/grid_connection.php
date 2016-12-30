@@ -205,42 +205,27 @@ $(document).ready(function() {
     //reinicjalizacja kalendarza z datami po użyciu pjax'a
     $("#connection-grid-pjax").on("pjax:complete", function() {
         
-    	kvInitPlugin(jQuery('#connectionsearch-minconfdate-kvdate').kvSelector(), function(){
-    	  if (jQuery('#connectionsearch-minconfdate').data('kvDatepicker')) { jQuery('#connectionsearch-minconfdate').kvDatepicker('destroy'); }
-    	  jQuery('#connectionsearch-minconfdate-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-    	});
+    	if (jQuery('#connectionsearch-minconfdate').data('kvDatepicker')) { jQuery('#connectionsearch-minconfdate').kvDatepicker('destroy'); }
+    	jQuery('#connectionsearch-minconfdate-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
     	initDPRemove('connectionsearch-minconfdate');
     	initDPAddon('connectionsearch-minconfdate');
-    	kvInitPlugin(jQuery('#connectionsearch-maxconfdate-kvdate').kvSelector(), function(){
-    	  if (jQuery('#connectionsearch-maxconfdate').data('kvDatepicker')) { jQuery('#connectionsearch-maxconfdate').kvDatepicker('destroy'); }
-    	  jQuery('#connectionsearch-maxconfdate-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-    	});
+    	if (jQuery('#connectionsearch-maxconfdate').data('kvDatepicker')) { jQuery('#connectionsearch-maxconfdate').kvDatepicker('destroy'); }
+    	jQuery('#connectionsearch-maxconfdate-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
     	initDPRemove('connectionsearch-maxconfdate');
     	initDPAddon('connectionsearch-maxconfdate');
     	jQuery('#global-search').yiiActiveForm([], []);
-    	kvInitPlugin(jQuery('#connectionsearch-start_date-kvdate').kvSelector(), function(){
-    	  if (jQuery('#connectionsearch-start_date').data('kvDatepicker')) { jQuery('#connectionsearch-start_date').kvDatepicker('destroy'); }
-    	  jQuery('#connectionsearch-start_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-    	});
+    	if (jQuery('#connectionsearch-start_date').data('kvDatepicker')) { jQuery('#connectionsearch-start_date').kvDatepicker('destroy'); }
+    	jQuery('#connectionsearch-start_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
     	initDPAddon('connectionsearch-start_date');
-    	kvInitPlugin(jQuery('#connectionsearch-conf_date-kvdate').kvSelector(), function(){
-    	  if (jQuery('#connectionsearch-conf_date').data('kvDatepicker')) { jQuery('#connectionsearch-conf_date').kvDatepicker('destroy'); }
-    	  jQuery('#connectionsearch-conf_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-    	});
+    	if (jQuery('#connectionsearch-conf_date').data('kvDatepicker')) { jQuery('#connectionsearch-conf_date').kvDatepicker('destroy'); }
+    	jQuery('#connectionsearch-conf_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
     	initDPAddon('connectionsearch-conf_date');
-    	kvInitPlugin(jQuery('#connectionsearch-pay_date-kvdate').kvSelector(), function(){
-    	  if (jQuery('#connectionsearch-pay_date').data('kvDatepicker')) { jQuery('#connectionsearch-pay_date').kvDatepicker('destroy'); }
-    	  jQuery('#connectionsearch-pay_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-    	});
+    	if (jQuery('#connectionsearch-pay_date').data('kvDatepicker')) { jQuery('#connectionsearch-pay_date').kvDatepicker('destroy'); }
+    	jQuery('#connectionsearch-pay_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
 
     	initDPAddon('connectionsearch-pay_date');
     });
