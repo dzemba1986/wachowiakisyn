@@ -159,11 +159,12 @@ class ConnectionController extends Controller
 		        			$modelDevice->delete();
 		        			
 		        			$modelConnection->host = null;
-		        			$modelConnection->close_user = Yii::$app->user->identity->id;
 		        			
 		        			Dhcp::generateFile($subnet);
 	        			}
 	        		}
+	        		
+	        		$modelConnection->close_user = Yii::$app->user->identity->id;
 	        		
 	        		if(!($modelConnection->save()))
 	        			throw new Exception('Problem z zapisem połączenia');
