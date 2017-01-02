@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         [	
             'attribute'=>'street',
             'value'=>'modelAddress.ulica',
-            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
+            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
             'options' => ['style'=>'width:12%;'],
         ],	
         [
