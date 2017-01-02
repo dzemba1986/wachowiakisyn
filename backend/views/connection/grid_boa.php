@@ -41,7 +41,8 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
 	'formatter' => [
 		'class' => 'yii\i18n\Formatter',
 		'nullDisplay' => ''
-	],		
+	],
+	'summary' => 'Widoczne {count} z {totalCount}',
 	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [

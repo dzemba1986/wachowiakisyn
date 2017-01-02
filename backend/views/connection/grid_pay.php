@@ -6,7 +6,6 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use backend\models\Address;
 use backend\models\Type;
-use backend\models\Task;
 use nterms\pagesize\PageSize;
 
 $this->params['breadcrumbs'][] = 'Aktywne';
@@ -24,7 +23,11 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 		]
 	],
 	'resizableColumns' => FALSE,
-	'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
+	'formatter' => [
+		'class' => 'yii\i18n\Formatter',
+		'nullDisplay' => ''
+	],
+	'summary' => 'Widoczne {count} z {totalCount}',
 	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [

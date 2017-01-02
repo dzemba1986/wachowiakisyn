@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = 'Podłączenia';
 			'class' => 'yii\i18n\Formatter',
 			'nullDisplay' => ''
 	],
+	'summary' => 'Widoczne {count} z {totalCount}',
 	'resizableColumns' => FALSE,
 	//'showPageSummary' => TRUE,
 	'export'=>[

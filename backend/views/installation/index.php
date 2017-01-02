@@ -52,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'class' => 'yii\i18n\Formatter',
 			'nullDisplay' => ''
 		],
+    	'summary' => 'Widoczne {count} z {totalCount}',
     	'export' => FALSE,
         'panel' => [
                 'heading'=> '',

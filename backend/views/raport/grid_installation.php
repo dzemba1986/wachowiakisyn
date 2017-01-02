@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = 'Instalacje';
 			'class' => 'yii\i18n\Formatter',
 			'nullDisplay' => ''
 		],
-    	'summary' => 'Widoczne {count} wierszy z {totalCount}',
+    	'summary' => 'Widoczne {count} z {totalCount}',
     	'showPageSummary'=>true,
     	'export'=>[
 	    	'fontAwesome'=>true,

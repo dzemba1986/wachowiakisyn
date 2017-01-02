@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
 		]
 	],
 	'resizableColumns' => FALSE,
+	'summary' => 'Widoczne {count} z {totalCount}',
 	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [

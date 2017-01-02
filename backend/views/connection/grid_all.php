@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
 	'resizableColumns' => FALSE,
 	//'showPageSummary' => TRUE,
 	'export' => false,
+	'summary' => 'Widoczne {count} z {totalCount}',
 	'panel' => [
 			'before' => $this->render('_search', [
 					'searchModel' => $searchModel,

@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
 		]
 	],
 	'resizableColumns' => FALSE,
+	'summary' => 'Widoczne {count} z {totalCount}',
 	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [

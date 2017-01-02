@@ -6,7 +6,6 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use backend\models\Address;
 use backend\models\Type;
-use backend\models\Task;
 use nterms\pagesize\PageSize;
 
 $this->params['breadcrumbs'][] = 'Odłączone';
@@ -24,6 +23,7 @@ $this->params['breadcrumbs'][] = 'Odłączone';
 		]
 	],
 	'resizableColumns' => FALSE,
+	'summary' => 'Widoczne {count} z {totalCount}',
 	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [
