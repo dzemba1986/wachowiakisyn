@@ -159,6 +159,7 @@ class ConnectionController extends Controller
 		        			$modelDevice->delete();
 		        			
 		        			$modelConnection->host = null;
+		        			$modelConnection->close_user = Yii::$app->user->identity->id;
 		        			
 		        			Dhcp::generateFile($subnet);
 	        			}
