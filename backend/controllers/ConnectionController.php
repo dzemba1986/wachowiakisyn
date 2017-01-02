@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\models\Device;
+use backend\models\Dhcp;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -147,7 +148,7 @@ class ConnectionController extends Controller
 	        	try {
 	        		if (is_null($modelConnection->getOldAttribute('cloase_date')) && $modelConnection->close_date){
 	        			
-	        			if ($modelConnection->host) {
+	        			if ($modelConnection->host && $modelConnection->type == 1) {
 		        			
 		        			$modelDevice = Device::findOne($modelConnection->host);
 		        			
@@ -156,6 +157,8 @@ class ConnectionController extends Controller
 		        			$modelDevice->modelTree[0]->delete();
 		        			$modelDevice->modelIps[0]->delete();
 		        			$modelDevice->delete();
+		        			
+		        			$modelConnection->host = null;
 		        			
 		        			Dhcp::generateFile($subnet);
 	        			}
