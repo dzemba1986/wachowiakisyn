@@ -200,6 +200,10 @@ class TreeController extends Controller
     		
 	    		$modelIp = new Ip();
 	    		$modelTree = new Tree();
+	    		$modelConnection = Connection::findOne($id);
+	    		
+	    		if($modelConnection->replaced_id)
+	    			return 'Na adresie jest aktywna umowa do zamknięcia o id: ' . $modelConnection->replaced_id; 
 	    		 
     			if($request->post('ip')){
     				$transaction = Yii::$app->getDb()->beginTransaction();

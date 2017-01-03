@@ -37,6 +37,10 @@ use app\models\Package;
  * @property string $info
  * @property string $info_boa
  * @property integer $task
+ * @property integer $soa_id
+ * @property integer $replaced_id
+ * @property date $synch_date
+ * @property integer $soa_iptv
  * @property Installation $modelInstallationByType
  * @property Installation $modelInstallations
  * @property Address $modelAddress
