@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\User;
+use yii\helpers\Url;
 /**
  * @var yii\web\View $this
  * @var app\models\Modyfication $modelTask
@@ -10,7 +11,11 @@ use common\models\User;
  */
 ?>
 	
-<?php $form = ActiveForm::begin(['id' => $modelTask->formName()]); ?>
+<?php $form = ActiveForm::begin([
+	'id' => $modelTask->formName(),
+	'validationUrl' => Url::toRoute('connection/validation')	
+]
+); ?>
 
 	<div class="row">
 
@@ -32,7 +37,10 @@ use common\models\User;
     
     <?php if (is_object($modelConnection)) : ?>
     
-   	<?= $form->field($modelConnection, 'mac') ?>
+   	<?= $form->field($modelConnection, 'mac', [
+   		'enableAjaxValidation' => true
+   	]
+   	) ?>
    	
    	
    	<?= Html::label('Komentarz') ?>

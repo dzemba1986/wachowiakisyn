@@ -53,7 +53,7 @@ class Host extends Device
             	['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
             	['mac', 'required', 'message'=>'Wartość wymagana'],
             	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
-            	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
+            	['mac', 'unique', 'targetClass' => 'backend\models\Host', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
             		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
             	}],
             	['mac', 'trim', 'skipOnEmpty' => true],

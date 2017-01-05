@@ -85,9 +85,9 @@ class Connection extends \yii\db\ActiveRecord
 			['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
 			['mac', 'default', 'value'=>NULL],
 			['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
-// 			['mac', 'unique', 'targetClass' => 'backend\models\Connection', 'message' => 'Mac zajęty',
-// 				'when' => function ($model) { return !is_null($model->conf_date); } 
-// 			],
+			['mac', 'unique', 'targetClass' => 'backend\models\Host', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
+            	return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
+            }],
 			['mac', 'trim', 'skipOnEmpty' => true],
 				
             ['port', 'integer'],

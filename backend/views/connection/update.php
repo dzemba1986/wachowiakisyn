@@ -17,7 +17,9 @@ use backend\models\Device;
 <div class="connection-update">
 
     	<?php $form = ActiveForm::begin([
-            'id'=>$modelConnection->formName()
+            'id'=>$modelConnection->formName(),
+    		'enableAjaxValidation' => true,
+    		'validationUrl' => Url::toRoute('connection/validation')	
     	])?>
         
         <div style="display: flex">

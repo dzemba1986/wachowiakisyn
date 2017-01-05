@@ -221,7 +221,7 @@ class TreeController extends Controller
     						throw new Exception('Problem z zapisem device');
     				} catch (\Exception $e) {
     					$transaction->rollBack();
-    					return $modelDevice; //$e->getMessage();
+    					return $e->getMessage();
     				}
     				
     				$modelDevice->original_name = true;

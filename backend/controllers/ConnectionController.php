@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\models\Device;
 use backend\models\Dhcp;
+use yii\widgets\ActiveForm;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -25,7 +26,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'validation'],
         				'roles' => ['@']	
         			]	
         		]
@@ -203,6 +204,20 @@ class ConnectionController extends Controller
     		} catch (Exception $e) {
     			return 0;
     		}
+    	}
+    }
+    
+    public function actionValidation($type = 5){
+    		
+    	$modelConnection = new Connection();
+    
+    	$request = Yii::$app->request;
+    
+    	if ($request->isAjax && $modelConnection->load($request->post())) {
+    			
+    		//var_dump($modelDevice); exit();
+    		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    		return ActiveForm::validate($modelConnection, 'mac');
     	}
     }
 
