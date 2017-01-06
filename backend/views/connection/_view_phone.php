@@ -6,7 +6,9 @@ use yii\helpers\Html;
 
 ?>
 
-<?php  echo '<center><h4>'.$modelConnection->modelAddress->fullAddress.'</h4></center>'; ?>
+<?php $vip = $modelConnection->vip == true ? "(VIP)" : null; ?>
+
+<?php  echo '<center><h4>' . $modelConnection->modelAddress->fullAddress . ' ' . $vip . '</h4></center>'; ?>
     
 <div style="width: 49%; display: inline-block;">
 	<?= DetailView::widget([
