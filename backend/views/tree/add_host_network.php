@@ -86,8 +86,7 @@ $(function(){
 //  			$.pjax.reload({container: '#subnet-grid-pjax'});
  			}
  			else{
-		
- 				$('#message').html(result);
+ 				alert(result);
  			}
  		}).fail(function(){
  			console.log('server error');

@@ -186,7 +186,7 @@ class TreeController extends Controller
 		    			$this->redirect(['tree/index']);
 		    		} catch (\Exception $e) {
 		    			$transaction->rollBack();
-		    			echo $e->getMessage();
+		    			echo $modelDevice->errors;
 		    		}	
 		    	} else {
 		    		
@@ -215,6 +215,9 @@ class TreeController extends Controller
     				$modelDevice->mac = $modelConnection->mac;
     				$modelDevice->address = $modelConnection->address;
     				$modelDevice->start_date = date('Y-m-d H:i:s');
+    				
+    				if(!$modelDevice->validate('mac'))
+    					return $modelDevice->getFirstError('mac') . ' przez ' . Host::findOne(['mac' => $modelDevice->mac])->name;
     				 
     				try {
     					if (!$modelDevice->save())
