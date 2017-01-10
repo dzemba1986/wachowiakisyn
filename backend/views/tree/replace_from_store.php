@@ -78,7 +78,10 @@ $(function(){
             
 			$.post(
 				$(this).attr("action"),
-				{map, 'deviceDestination' : $('#device-select').val()} 
+				{ 
+					map, 
+					'deviceDestination' : $('#device-select').val()
+				} 
 			).done(function(result){
 		 		if(result == 1){
 		 			$("#modal-replace-store").modal("hide");

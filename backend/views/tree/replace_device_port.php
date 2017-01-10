@@ -1,9 +1,6 @@
 <?php 
 
 use backend\models\Device;
-use yii\helpers\Html;
-use yii\helpers\Url;
-
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jquery-ui.min.js', ['position' => \yii\web\View::POS_BEGIN]); 
 
 ?>
@@ -37,12 +34,17 @@ $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jquery-ui.min.js', ['po
 	<?php
 	$modelDeviceSource = Device::findOne($deviceSource);
 	
+	//var_dump($modelsTree);
+	
 	echo '<div id="source" class="dropzones col-sm-4">';
 	foreach ($modelsTree as $modelTree){
-		echo '<div class="dragzones" id="' . $modelTree['port'] . '">' . $modelDeviceSource->modelModel->port[$modelTree['port']-1] . ' - ' . Device::findOne($modelTree['device'])->modelAddress->fullDeviceAddress . '</div>';
+	
+		echo '<div class="dragzones" id="' . ($modelTree['port']) . '">' . $modelDeviceSource->modelModel->port[$modelTree['port']] . ' - ' . Device::findOne($modelTree['device'])->modelAddress->fullDeviceAddress . '</div>';
+		//var_dump($modelTree['port']);
 	}
 	
 	echo '</div>';
+	
 	?>
 
 <div id="destination">
@@ -50,7 +52,9 @@ $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jquery-ui.min.js', ['po
 	<?php
 	
 	$modelDeviceDestination = Device::findOne($deviceDestination);
-	$counter = 1;
+	
+	//id elementów - mapowanie na numery portów
+	$counter = 0;
 	foreach ($modelDeviceDestination->modelModel->port as $port){
 		echo '<div class="dropzones col-sm-4" " id="' . $counter .'"><center>' . $port . '</center></div>';
 		$counter++;
