@@ -592,9 +592,19 @@ class TreeController extends Controller
 				
 				$deviceDestination->address = $deviceSource->address;
 				$deviceDestination->status = true;
+				$deviceDestination->name = $deviceSource->name;
 				
 				$deviceSource->address = null;
 				$deviceSource->status = false;
+				$deviceSource->name = null;
+				
+				
+				
+				foreach ($deviceSource->modelIps as $modelIp){
+// 					var_dump($modelIp); exit();
+					$modelIp->device = $deviceDestination->id;
+					$modelIp->save();
+				}
 				
 				try {
 					if (!$deviceSource->save())
