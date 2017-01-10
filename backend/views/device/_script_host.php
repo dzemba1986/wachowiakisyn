@@ -66,8 +66,9 @@ exit' . '
 copy r s' . '
 y' . '
 ';
-}
-elseif($modelDeviceParent->modelModel->config == 2){
+} elseif($modelDeviceParent->modelModel->config == 2){
+	
+if($modelDeviceParent->modelAddress->modelShortStreet->config == 1){	
 	
 $add = 'interface ' . $arPortsParent[$parentPortIndex] . '
 shutdown' . '
@@ -89,10 +90,6 @@ exit' . '
 wr' . '
 ';
 
-
-
-
-
 $delete = 'no mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
 interface ' . $arPortsParent[$parentPortIndex] . '
 no switchport port-security' . '
@@ -104,7 +101,46 @@ exit' . '
 do clear ip dhcp snooping binding int ' . $arPortsParent[$parentPortIndex] . '		
 exit' . '
 wr' . '
-';		
+';
+
+} elseif($modelDeviceParent->modelAddress->modelShortStreet->config == 2){
+
+$add = 'interface ' . $arPortsParent[$parentPortIndex] . '
+shutdown' . '
+no switchport port-security' . '
+switchport port-security violation protect' . '
+switchport port-security maximum 0' . '
+switchport port-security' . '
+description ' . $modelDevice->modelAddress->shortAddress . '
+egress-rate-limit 508032k' . '
+service-policy input 501M' . '
+access-group internet-user' . '
+switchport access vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+spanning-tree portfast' . '
+spanning-tree portfast bpdu-guard enable' . '
+no shutdown' . '
+exit' . '
+mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+exit' . '
+wr' . '
+';	
+
+$delete = 'no mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+interface ' . $arPortsParent[$parentPortIndex] . '
+no switchport port-security' . '
+no service-policy input internet-user-501M' . '
+no service-policy input iptv-user-501M' . '		
+no egress-rate-limit' . '
+no ip igmp trust all' . '		
+no access-group internet-user' . '
+no access-group iptv-user' . '		
+switchport access vlan 555' . '
+exit' . '
+do clear ip dhcp snooping binding int ' . $arPortsParent[$parentPortIndex] . '
+exit' . '
+wr' . '
+';
+}
 }
 ?>
 

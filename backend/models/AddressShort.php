@@ -8,6 +8,7 @@ namespace backend\models;
  * The followings are the available columns in table 'address_short':
  * @property integer $id
  * @property string $name
+ * @property integer $config
  */
 
 class AddressShort extends \yii\db\ActiveRecord

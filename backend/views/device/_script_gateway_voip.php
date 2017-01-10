@@ -53,9 +53,9 @@ elseif($modelDeviceParent->modelModel->config == 2){
 	
 $add = 'access-list hardware voip' . ($parentPortIndex + 1) . '
 deny udp any any eq 68' . '
-permit any ' . $modelDevice->modelIps[0]->ip . ' 0.0.0.0 213.5.208.0 0.0.0.63' . '
-permit any ' . $modelDevice->modelIps[0]->ip . ' 0.0.0.0 213.5.208.128 0.0.0.63' . '
-permit any ' . $modelDevice->modelIps[0]->ip . ' 0.0.0.0 10.111.0.0 0.0.255.255' . '
+permit ip ' . $modelDevice->modelIps[0]->ip . ' 0.0.0.0 213.5.208.0 0.0.0.63' . '
+permit ip ' . $modelDevice->modelIps[0]->ip . ' 0.0.0.0 213.5.208.128 0.0.0.63' . '
+permit ip ' . $modelDevice->modelIps[0]->ip . ' 0.0.0.0 10.111.0.0 0.0.255.255' . '
 permit udp 0.0.0.0 0.0.0.0 eq 68 any eq 67' . '		
 deny ip any any' . '
 exit' . '		
