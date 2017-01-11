@@ -211,7 +211,7 @@ class SiteController extends Controller
                     'html' => 'Połączenia',
                     'items' => [
                         [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'nopay']) . '>Niepłacący</a>'
+                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'nopay', 'ConnectionSearch[nocontract]' => 0]) . '>Niepłacący</a>'
                         ],
                         [
                             'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'install']) . '>Bez kabla</a>'
@@ -273,6 +273,9 @@ class SiteController extends Controller
                 [   
                     'html' => '<a href=' . Url::toRoute(['tree/index']) . '>Drzewo urządzeń</a>',                 
                 ],
+            	[
+            		'html' => '<a href=' . Url::toRoute(['device/black-hole']) . '>Black Hole</a>',
+            	],
             	[
             		'html' => 'Sieć',
             		'items' => [
