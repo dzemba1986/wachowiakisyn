@@ -57,7 +57,6 @@ class ConnectionController extends Controller
         		]];
         		$dataProvider->query->joinWith('modelTask')->andWhere([
         			'pay_date' => null,
-        			'connection.nocontract' => false,	
         			'connection.close_date' => null
         		]);
         		break;
