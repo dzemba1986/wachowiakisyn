@@ -37,6 +37,10 @@ class DeviceController extends Controller
         ]);
     }
     
+    public function actionBlackHole(){
+    	
+    }
+    
     public function actionChangeMac($id)
     {
     	$modelDevice = $this->findModel($id);
@@ -212,8 +216,8 @@ class DeviceController extends Controller
 	    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
 	    	//->join('INNER JOIN', 'address_short adrs', 'adrs.t_ulica = a.t_ulica')
 	    	//->where(['like', new \yii\db\Expression("CONCAT(adrs.name, ' ', dom, dom_szczegol)"), $q])
-	    	->where(['like', 'd.name', $q])
-	    	->limit(25)->orderBy('d.name');
+	    	->where(['like', 'd.name', $q.'%', false])
+	    	->limit(50)->orderBy('d.name');
 	    	
 	    	if(!empty($type)){
 	    		$query->andWhere(['d.type' => $type]);
@@ -279,7 +283,7 @@ class DeviceController extends Controller
 		
 		if ($request->isAjax && $modelDevice->load($request->post())) {
 			
-				var_dump($modelDevice); exit();
+// 				var_dump($modelDevice); exit();
 	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 	               	return ActiveForm::validate($modelDevice, 'mac');
 
