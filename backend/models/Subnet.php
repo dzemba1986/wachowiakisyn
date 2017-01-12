@@ -26,7 +26,7 @@ class Subnet extends \yii\db\ActiveRecord
 	{
 		return 'subnet';
 	}
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -101,6 +101,16 @@ class Subnet extends \yii\db\ActiveRecord
 	public function getBlockIp(){
 		
 		return new \IPv4Block($this->ip);
+	}
+	
+	public function getSize(){
+		
+		return $this->getBlockIp()->getNbAddresses() - 2;
+	}
+	
+	public function getIPFreeCount(){
+		
+		return $this->getSize() - Ip::find()->where(['subnet' => $this->id])->count();
 	}
 	
 	public function generateOptionsDhcp(){

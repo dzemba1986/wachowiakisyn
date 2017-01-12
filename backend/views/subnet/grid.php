@@ -47,6 +47,11 @@ use yii\bootstrap\Modal;
         		'trueLabel' => 'Tak',
         		'falseLabel' => 'Nie',
         	],
+        	//'size',
+        	[
+        		'header' => 'Wolne',
+        		'value' => 'ipFreeCount'
+        	],
         	[
         		'class' => 'yii\grid\ActionColumn',
         		'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', ['subnet/create', 'vlan' => $vlan], ['class' => 'create-subnet']),
