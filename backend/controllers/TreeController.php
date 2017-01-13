@@ -372,14 +372,14 @@ class TreeController extends Controller
     			$ports_count = Tree::find()->select('parent_port')->where(['parent_device' => $device])
     				->union(Tree::find()->select('port AS parent_port')->where(['device' => $device]))->count();
     			
-    				
+    			//jeżeli mamy jakieś zajęte porty	
     			if ($ports_count > 0){
     				foreach ($modelsTree as $modelTree){
     					$ports[$modelTree->parent_port] = $modelTree->parent_port;
     				}
     				
     				$free_ports = array_diff_key($model->port, $ports);
-    				//var_dump($ports); var_dump($model->port); exit();
+//     				var_dump($ports); var_dump($model->port); exit();
     				if (!$type == 'SEU'){
     					echo '<option value="-1">Brak miejsca</option>';
     					echo '<option value="-2">Brak na liście</option>';
