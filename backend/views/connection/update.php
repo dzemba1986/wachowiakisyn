@@ -76,16 +76,16 @@ use backend\models\Device;
     			'language' => 'pl',
             	'options' => [
             		//'id' => 'select2-connection-update',	
-            		'placeholder' => 'Urządzenie nadrzędne',
+            		
             		'onchange' => new JsExpression("
 
-						$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $(this).val() + '&type=free', function(data){
+						$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $(this).val() + '&mode=free', function(data){
 							$('#connection-port').html(data).val('" . $modelConnection->port . "');
 						});
 					")
             	],
 	    		'pluginOptions' => [
-	    			
+	    			'placeholder' => 'Urządzenie nadrzędne',
 	    			'allowClear' => true,
 	    			'minimumInputLength' => 1,
 	    			'language' => [
@@ -114,15 +114,17 @@ use backend\models\Device;
 			
 		</div>
 		
+		<?php if($modelConnection->type == 1) :?>
+		
 		<div style="display: flex">
-		
-		
 		
 		<?= $form->field($modelConnection, 'mac', [
 				'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 			]) ?>
 			
-		</div>	
+		</div>
+		
+		<?php endif; ?>	
         
 		<?= $form->field($modelConnection, 'info')->textarea(['style' => 'resize: vertical']) ?>
         
@@ -141,13 +143,13 @@ $(function(){
 	
 	var device = <?= json_encode($modelConnection->device); ?>
 
-// 	if (device){
-//		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
-// // 			$('#select2-connection-device-container').html(data.results.concat);
-// // 		});
+	if (device){
+		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
+			$('#select2-connection-device-container').html(data.results.concat);
+		});
 	
-// 		$("#connection-device").trigger("change");
-// 	}
+		$("#connection-device").trigger("change");
+	}
 
 	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
 

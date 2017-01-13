@@ -230,8 +230,25 @@ class DeviceController extends Controller
 	    	$data = $command->queryAll();
 	    	$out['results'] = array_values($data);
 	    }
-	    elseif ($id > 0) {
-	    	$out['results'] = ['id' => $id, 'concat' => Device::findOne($id)->modelAddress->fullDeviceAddress];
+	    elseif($id > 0){
+	    	
+	    	$query = new Query();
+	    	$query->select(['d.id', new \yii\db\Expression("
+	    		CONCAT(d.name, ' - ', '[', ip, ']', ' - ', m.name)
+	    	")])
+	    	->from('device d')
+	    	->join('INNER JOIN', 'model m', 'm.id = d.model')
+	    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
+	    	->where(['d.id' => $id]);
+	    	
+	    	$command = $query->createCommand();
+	    	$data = $command->queryAll();
+	    	
+// 	    	var_dump($data[0]['id']);
+// 	    	$out['results'] = array_values($data);
+	    	$out['results'] = ['id' => $data[0]['id'], 'concat' => $data[0]['concat']];
+// 	    	$out['results'] = ['id' => $id, 'concat' => Device::findOne($id)->modelAddress->fullDeviceAddress];
+	    	
 	    }
 	    
 	    return $out;
