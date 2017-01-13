@@ -271,10 +271,10 @@ class IpController extends Controller
 		$dataProvider = $modelIp->search(\Yii::$app->request->queryParams);
 		
 		if(!is_null($subnet))
-			$dataProvider->query->andWhere(['subnet' => $subnet])->orderBy('ip');
+			$dataProvider->query->joinWith('modelDevice')->andWhere(['subnet' => $subnet])->orderBy('ip');
 	
-		return $this->renderPartial('grid', [
-			'modelSubnet' => $modelIp,
+		return $this->renderAjax('grid', [
+			//'modelIp' => $modelIp,
 			'dataProvider' => $dataProvider,
 		]);
     }

@@ -1,9 +1,6 @@
 <?php
 
 use kartik\grid\GridView;
-use yii\helpers\Url;
-use yii\helpers\Html;
-
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ConnectionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -26,7 +23,14 @@ use yii\helpers\Html;
         'columns' => [
             'ip',		
 //         	'subnet',
-        	'device',	
+        	[
+		        'attribute' => 'device',
+		        'value' => 'modelDevice.name',
+        	],
+        	[
+        		'label' => 'Typ',
+        		'value' => 'modelDevice.modelType.name',
+        	],
         	[
         		'class' => 'kartik\grid\BooleanColumn',
         		'attribute' => 'main',
