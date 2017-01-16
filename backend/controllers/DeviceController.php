@@ -199,36 +199,58 @@ class DeviceController extends Controller
         return $this->redirect(['index']);
     }
     
-	public function actionList($q = null, $id = null, array $type = [], $distribution = null) {
+	public function actionList($q = null, $id = null, array $type = [], $distribution = null, $store = false) {
 		
 	    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 	    
 	    $out = ['results' => ['id' => '', 'concat' => '']];
 	    
 	    if (!is_null($q)) {
+	    	
+	    	if($store){
+	    		
+	    		$query = new Query();
+	    		$query->select(['d.id', new \yii\db\Expression("
+	    			CONCAT(m.name, ' - ', d.mac, ' - ', d.serial)
+	    		")])
+	    		->from('device d')
+	    		->join('INNER JOIN', 'model m', 'm.id = d.model')
+	    		->where(['address' => null, 'status' => false])
+	    		->andWhere(['or', ['like', new \yii\db\Expression('CAST(mac AS varchar)'), $q], ['like', 'serial', $q], ['like', 'm.name', $q]]);
+	    		
+	    		if(!empty($type))
+	    			$query->andWhere(['in', 'd.type' , $type]);
+	    		
+    			//js wysyłając null, php otrzymuje ''
+    			if(!empty($distribution))
+    				$query->andWhere(['distribution' => $distribution]);
+	    		
+	    		$command = $query->createCommand();
+	    		$data = $command->queryAll();
+	    		$out['results'] = array_values($data);
+	    	} else {
 
-	    	$query = new Query();
-	    	$query->select(['d.id', new \yii\db\Expression("
-	    		CONCAT(d.name, ' - ', '[', ip, ']', ' - ', m.name)
-	    	")])
-	    	->from('device d')
-	    	->join('INNER JOIN', 'model m', 'm.id = d.model')
-	    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
-	    	//->join('INNER JOIN', 'address_short adrs', 'adrs.t_ulica = a.t_ulica')
-	    	//->where(['like', new \yii\db\Expression("CONCAT(adrs.name, ' ', dom, dom_szczegol)"), $q])
-	    	->where(['like', 'd.name', $q.'%', false])
-	    	->limit(50)->orderBy('d.name');
-	    	
-	    	if(!empty($type)){
-	    		$query->andWhere(['d.type' => $type]);
-	    	}	
-	    	
-	    	if(!empty($distribution)) 
-	    		$query->andWhere(['distribution' => $distribution]);
-	    	
-	    	$command = $query->createCommand();
-	    	$data = $command->queryAll();
-	    	$out['results'] = array_values($data);
+		    	$query = new Query();
+		    	$query->select(['d.id', new \yii\db\Expression("
+		    		CONCAT(d.name, ' - ', '[', ip, ']', ' - ', m.name)
+		    	")])
+		    	->from('device d')
+		    	->join('INNER JOIN', 'model m', 'm.id = d.model')
+		    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
+		    	->where(['and', ['like', 'd.name', strtoupper($q) . '%', false], ['is not', 'address', null], ['is not', 'status', null]])
+		    	->limit(50)->orderBy('d.name');
+		    	
+		    	if(!empty($type))
+	    			$query->andWhere(['in', 'd.type' , $type]);	
+		    	
+	    		//js wysyłając null, php otrzymuje ''	
+		    	if(!empty($distribution)) 
+		    		$query->andWhere(['distribution' => $distribution]);
+		    	
+		    	$command = $query->createCommand();
+		    	$data = $command->queryAll();
+		    	$out['results'] = array_values($data);
+	    	}
 	    }
 	    elseif($id > 0){
 	    	

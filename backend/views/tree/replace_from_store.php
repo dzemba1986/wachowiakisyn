@@ -35,11 +35,12 @@ $form = ActiveForm::begin([
     				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     			],
     			'ajax' => [
-    				'url' => Url::toRoute('device/select-list-from-store'),
+    				'url' => Url::toRoute('device/list'),
     				'dataType' => 'json',
     				'data' => new JsExpression('function(params) { 
     					return {
     						q : params.term,
+    						type : [2, 3],
     						store : true
 						}; 
 					}')

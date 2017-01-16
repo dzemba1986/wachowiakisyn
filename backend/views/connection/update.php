@@ -94,11 +94,12 @@ use backend\models\Device;
 	    			'ajax' => [
 	    				'url' => Url::toRoute('device/list'),
 	    				'dataType' => 'json',
-	    				'data' => new JsExpression('function(params) { return {
-	    					q:params.term, 
-	    					type: [2, 8], 
-	    					dist:false
-						}; }')
+	    				'data' => new JsExpression("function(params) { return {
+	    					q : params.term, 
+	    					type : $modelConnection->type == 1 ? [2] : [3],
+    						distribution : $modelConnection->type == 1 ? false : null
+						}; 
+					}")
 		    		],
 		    		'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
 		    		'templateResult' => new JsExpression('function(device) { return device.concat; }'),
