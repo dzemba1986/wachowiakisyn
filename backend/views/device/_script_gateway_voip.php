@@ -35,7 +35,7 @@ copy r s' . '
 y' . '
 ';		
 		
-$delete = 'interface ethernet' . $arPortsParent[$parentPortIndex] . '
+$delete = 'interface ethernet ' . $arPortsParent[$parentPortIndex] . '
 shutdown' . '		
 switchport access vlan 555' . '		
 no service-acl input' . '
