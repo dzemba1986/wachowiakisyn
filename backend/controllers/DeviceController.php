@@ -215,7 +215,7 @@ class DeviceController extends Controller
 	    		")])
 	    		->from('device d')
 	    		->join('INNER JOIN', 'model m', 'm.id = d.model')
-	    		->where(['address' => null, 'status' => false])
+	    		->where(['address' => null, 'status' => null])
 	    		->andWhere(['or', ['like', new \yii\db\Expression('CAST(mac AS varchar)'), $q], ['like', 'serial', $q], ['like', 'm.name', $q]]);
 	    		
 	    		if(!empty($type))
