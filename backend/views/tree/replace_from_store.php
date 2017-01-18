@@ -40,7 +40,7 @@ $form = ActiveForm::begin([
     				'data' => new JsExpression('function(params) { 
     					return {
     						q : params.term,
-    						type : [2, 3],
+    						type : [1, 2, 3, 4, 6, 8],
     						store : true
 						}; 
 					}')
