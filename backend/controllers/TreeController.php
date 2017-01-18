@@ -508,7 +508,8 @@ class TreeController extends Controller
     	
     	// jeżeli urządzenie nie jest rodzicem
     	if ($countParent == 0) {
-
+			
+    		$transaction = Yii::$app->getDb()->beginTransaction();
     		// jeżeli urządzenie jest ostatnią kopią na drzewie
     		if ($countDevice == 1){
     			
@@ -519,17 +520,20 @@ class TreeController extends Controller
     				if (!$modelDevice->save())
     					throw new Exception('Nie można zapisać do device');
     				
-    				foreach ($modelDevice->ips as $modelIp){
+    				foreach ($modelDevice->modelIps as $modelIp){
     					if (!$modelIp->delete())
     						throw new Exception('Nie można usunąć ip');
     				}
     					
     				if (!$modelTree->delete())
     					throw new Exception('Nie można usunąć agregacji');
+    				
+    				$transaction->commit();
     				return 1;
     			} catch (Exception $e) {
-    				var_dump($modelDevice->errors);
-    				exit();
+    				$transaction->rollBack();
+    				return $e->getMessage();
+//     				exit();
     			}
     		} else { //nie jest ostatnią kopią
     			try {
