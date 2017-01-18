@@ -38,8 +38,7 @@ class TaskController extends Controller
         if ($mode == 'todo') {
         	$dataProvider->query->andWhere([
         		'close_date' => null,
-        		'task.status' => true,	
-        	]);
+        	])->andWhere(['or', ['task.status' => true], ['is', 'task.status', null]]);
         	
         	$dataProvider->query->orderBy('start_date, start_time');
         	
@@ -71,7 +70,7 @@ class TaskController extends Controller
         
         
             	
-    	$tasks = Task::find()->where(['between', 'start_date', $start, $end])->andWhere(['status' => true])->orderBy('start_date')->asArray()->all();
+    	$tasks = Task::find()->where(['between', 'start_date', $start, $end])->andWhere(['or', ['task.status' => true], ['is', 'task.status', null]])->orderBy('start_date')->asArray()->all();
         
 //         var_dump($tasks); exit();
     	
@@ -171,7 +170,7 @@ class TaskController extends Controller
 	    		$modelTask->start_time = $modelTask->start_time.':00';
 	    		$modelTask->end_time = $modelTask->end_time.':00';
 	    		$modelTask->editable = true;
-	    		$modelTask->status = true;
+	    		$modelTask->status = null;
 	    		
 				try {
 					if (!$modelTask->save())
@@ -333,7 +332,7 @@ class TaskController extends Controller
 	        	
 		        if (is_object($modelConnection)){ //zadanie powiązane z LP
 		        	
-		        	if ($modelTask->status) { //zadanie wykonano
+		        	if ($modelTask->status == true) { //zadanie wykonano
 		        		
 			        	$modelInstallation = null;
 			        	//przeszukaj wszystkie instalacje typu podłączenia

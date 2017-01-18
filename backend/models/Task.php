@@ -96,6 +96,7 @@ class Task extends \yii\db\ActiveRecord
         	['editable', 'default', 'value' => true],
         		
             ['status', 'boolean', 'trueValue' => true, 'falseValue' => false],
+        	['status', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
         	['status', 'default', 'value' => null],	
             
             ['cost', 'double', 'message' => 'Wartość liczbowa'],
