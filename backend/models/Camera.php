@@ -58,7 +58,7 @@ class Camera extends Device
             	['mac', 'default', 'value' => NULL],
             	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
             	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-            		return $model->{$attribute} !== $model->getOldAttribute($attribute);
+            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
             	}],
             	['mac', 'trim', 'skipOnEmpty' => true],
             	
