@@ -92,7 +92,7 @@ class TreeController extends Controller
     	if (strlen($str) > 3){
 	    	$path = [];
 	    	
-	    	$modelsDevice = Device::find()->where(['like', 'name', $str])->andWhere(['status' => true])->all();
+	    	$modelsDevice = Device::find()->where(['like', 'name', strtoupper($str)])->andWhere(['status' => true])->all();
 	    	
 	    	foreach ($modelsDevice as $modelDevice) {
 	    		
