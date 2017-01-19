@@ -517,6 +517,7 @@ class TreeController extends Controller
     				$modelDevice->address = null;
     				$modelDevice->status = null;
     				$modelDevice->name = null;
+    				$modelDevice->original_name = null;
     				
     				if (!$modelDevice->save())
     					throw new Exception('Nie można zapisać do device');
