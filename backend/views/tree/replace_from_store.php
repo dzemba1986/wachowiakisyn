@@ -52,7 +52,7 @@ $form = ActiveForm::begin([
     	])     
     ?>
     
-    <div id="port-select" style="display: table;"></div>
+    <div id="port-select" style="display: table; width: 100%"></div>
     
     <div class="form-group" style="display: table-row;">
 		<?= Html::submitButton('Zamień', ['id' => 'change', 'class' => 'btn btn-primary']); ?>
