@@ -247,7 +247,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'template' => '{view} {update} {tree}',
         	'buttons' => [
         		'tree' => function ($model, $data) {
-        			if($data->mac && $data->port >= 0 && $data->device && !$data->nocontract && !$data->host && $data->wire > 0){
+        			if($data->mac && $data->port >= 0 && $data->device && !$data->nocontract && !$data->host && $data->wire > 0 && $data->close_date <> null){
         				$url = Url::toRoute(['tree/add', 'id' => $data->id, 'host' => true]);
 	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
 	        				'title' => \Yii::t('yii', 'Zamontuj'),
