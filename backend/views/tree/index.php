@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/jstree.min.js');
 $this->registerCssFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/themes/default/style.min.css');
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/clipboard.min.js');
+$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jquery-url-min.js');
 
 ?>
 
@@ -183,6 +184,17 @@ $(function() {
 //             $("#device_tree").jstree("search", $("#device_tree_q").val());
 //             return false;
 //         });
+
+		//przejscie z LP do SEU
+		$("#device_tree").on(
+            "ready.jstree",
+            function(e, data) {
+            	data.instance.search($.url('?id').replace(/%2F/, "/")); 
+//             	console.log(decodeURI($.url('?id').replace(/%2F/, "/")));   
+            }
+        );
+
+      	$('#device_tree').on('search.jstree', function (e, data) { data.instance.select_node(data.res); });
       
     
         //lewy przycisk dla węzła

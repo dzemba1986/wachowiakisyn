@@ -7,6 +7,7 @@ use backend\models\Address;
 use backend\models\Type;
 use nterms\pagesize\PageSize;
 use yii\helpers\Url;
+use backend\models\Device;
 
 $this->params['breadcrumbs'][] = 'Do konfiguracji';
 ?>
@@ -161,7 +162,7 @@ $this->params['breadcrumbs'][] = 'Do konfiguracji';
 	        				'data-pjax' => '0',
 	        			]);
         			} elseif ($data->host) {
-        				$url = Url::toRoute(['tree/index', 'id' => $data->host, 'host' => true]);
+        				$url = Url::toRoute(['tree/index', 'id' => Device::findOne($data->host)->name]);
         				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
         					'title' => \Yii::t('yii', 'SEU'),
         					'data-pjax' => '0',
