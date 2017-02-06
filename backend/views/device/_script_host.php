@@ -166,6 +166,7 @@ wr' . '
 }
 ?>
 
+<a href="ssh://<?= $modelDeviceParent->modelIps[0]->ip; ?>:22222">Zaloguj</a>
 <button class="btn" data-clipboard-text="<?= $add; ?>">Dodaj</button>
 <?php if($modelDeviceParent->modelAddress->modelShortStreet->config == 2) :?>
 	<button class="btn" data-clipboard-text="<?= $addiptv; ?>">Dodaj IPTV</button>
