@@ -105,74 +105,16 @@ $this->params['breadcrumbs'][] = 'Aktywne';
             'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
             'options' => ['style'=>'width:5%;'],
         ],
-        [
-            'class'=>'kartik\grid\BooleanColumn',
-            'attribute'=>'nocontract',
-            'trueLabel' => 'Tak', 
-            'falseLabel' => 'Nie',
-            //'value'=>'modelType.name',
-            //'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
-            'options' => ['style'=>'width:5%;'],
-        ],            
-//        [
-//            'header' => 'Kabel',
-//            'format' => 'raw',
-//            'value' => function($data){
-//                if (sizeof($data->modelInstallationByType)  == 1)
-//                    return ArrayHelper::getValue($data->modelInstallationByType, '0.attributes.wire_date');
-//                elseif (sizeof($data->modelInstallationByType)  > 1){
-//                    $i = 0;
-//                    foreach ($data->modelInstallationByType as $objInstallation){
-//                        $arInstallation[$i] = ArrayHelper::getValue($data->modelInstallationByType, $i.'.attributes.wire_date');
-//                        $i++;
-//                    }
-//                    return Html::dropDownList('installation', 'id', $arInstallation, ['class'=>'form-control']);
-//                }	
-//                else 
-//                    //return Html::a('dodaj', '', ['id'=>'link_create_installation',]);
-//            return Html::a('dodaj', Url::to(['installation/wire-create', 'connectionId' => $data->id]), ['class'=>'button_create_installation']);
-//            },
-//            'options' => ['style'=>'width:7%;'],
-//        ],
-//        [
-//            'header' => 'Kabel',
-//            'format' => 'raw',
-//            'value' => function($data){
-//                if ($data->modelInstallationByType)
-//                    return 'OK';
-//                else 
-//                    //return Html::a('dodaj', '', ['id'=>'link_create_installation',]);
-//            return Html::a('dodaj', Url::to(['installation/wire-create', 'connectionId' => $data->id]), ['class'=>'button_create_installation']);
-//            },
-//            'options' => ['style'=>'width:7%;'],
-//        ],            
-//        [
-//            'attribute' => 'socketDate', // it can be 'attribute' => 'tableField' to.
-//            'header' => 'Gniazdo',
-//            'format' => 'raw',
-//            'value' => function($data) {
-//                if(sizeof($data->modelInstallationByType) > 0){
-//                    $i=0;
-//                    $noSocket = 0;
-//                    foreach ($data->modelInstallationByType as $installation){
-//                        $arInstallation[$i] = $installation->attributes;
-//
-//                        if($arInstallation[$i]['socket_date'] == null)
-//                            $noSocket++;
-//                            $i++;
-//                    }
-//                    if(sizeof($data->modelInstallationByType) == $noSocket)
-//                        return 'brak';
-//                    elseif(sizeof($data->modelInstallationByType) == 1)
-//                        return $arInstallation[0]['socket_date'];
-//                    else
-//                        return Html::dropDownList('ins', 'id', ArrayHelper::map($arInstallation, 'id', 'socket_date'), ['class'=>'form-control']);
-//                }
-//                else
-//                    return 'brak';
-//            },
-//            'options' => ['style'=>'width:7%;'],
-//        ],
+		[
+			'class'=>'kartik\grid\BooleanColumn',
+			'header'=>'Umowa',
+			'attribute'=>'nocontract',
+			'trueLabel' => 'Nie',
+			'falseLabel' => 'Tak',
+			'trueIcon' => GridView::ICON_INACTIVE,
+			'falseIcon' => GridView::ICON_ACTIVE,
+			'options' => ['style'=>'width:5%;'],
+		],
         [
             'class'=>'kartik\grid\BooleanColumn',
             'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
