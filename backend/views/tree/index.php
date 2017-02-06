@@ -67,7 +67,7 @@ $(function() {
 		// gdy wcisnieto [enter]
 		if (e.which == 13) {
 	        var searchString = $(this).val();
-	        console.log(searchString);
+// 	        console.log(searchString);
 	        $('#device_tree').jstree('search', searchString);
 		}
     });       
@@ -100,7 +100,7 @@ $(function() {
 	   			 // Same as above - the `ajax` config option is actually jQuery's AJAX object
 	   			 'ajax' : {
 	   				 'url' : '<?= Url::toRoute('tree/search') ?>',
-	   				'dataType': 'json'
+	   				'dataType' : 'json',
 	   				 // You get the search string as a parameter
 // 	   				 "data" : function (str) {
 // 	   					 return { 
@@ -108,7 +108,14 @@ $(function() {
 // 	   						 "search_str" : str 
 // 	   					 }; 
 // 	   				 }
-	   			 }
+	   			 },
+	   			'search_callback' : function (str, node) {
+// 	   				console.log(node.original.name);
+   		            if(node.id == str || node.original.name.includes(str.toUpperCase()) || node.original.mac == str.toLowerCase()) {
+	   		            //console.log('warunek');
+	   		    		return true; 
+	   		    	}
+   		        }
 	   		 },
         	'contextmenu' : {
                 "items": function (node) {
@@ -189,13 +196,14 @@ $(function() {
 		$("#device_tree").on(
             "ready.jstree",
             function(e, data) {
-            	data.instance.search($.url('?id').replace(/%2F/, "/")); 
+            	data.instance.search($.url("?id")); 
 //             	console.log(decodeURI($.url('?id').replace(/%2F/, "/")));   
             }
         );
 
-      	$('#device_tree').on('search.jstree', function (e, data) { data.instance.select_node(data.res); });
-      
+      	$('#device_tree').on('search.jstree', function (e, data) {
+        	data.instance.select_node(data.res); 
+        });
     
         //lewy przycisk dla węzła
         $("#device_tree").on(

@@ -74,6 +74,8 @@ class TreeController extends Controller
         			'text' => $id != 1	?	
         				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->name  :	 
         				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->name,
+        			'name' => $child->modelDevice->name,
+        			'mac' => $child->modelDevice->mac,	
         			'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
         			'icon' => false,
         			'port' => $child->port,
@@ -92,7 +94,7 @@ class TreeController extends Controller
     	if (strlen($str) > 3){
 	    	$path = [];
 	    	
-	    	$modelsDevice = Device::find()->where(['like', 'name', strtoupper($str)])->andWhere(['status' => true])->all();
+	    	$modelsDevice = Device::find()->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])->andWhere(['status' => true])->all();
 	    	
 	    	foreach ($modelsDevice as $modelDevice) {
 	    		
@@ -271,7 +273,7 @@ class TreeController extends Controller
     				 
     				$transaction->commit();
     				
-    				$this->redirect(['tree/index']);
+    				$this->redirect(['tree/index', 'id' => $modelDevice->id . '.0']);
     				
     				Dhcp::generateFile($request->post('subnet'));
     			} else {

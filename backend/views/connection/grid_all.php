@@ -209,7 +209,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         					'data-pjax' => '0',
         				]);
         			} elseif($data->host){
-        				$url = Url::toRoute(['tree/index', 'id' => Device::findOne($data->host)->name]);
+        				$url = Url::toRoute(['tree/index', 'id' => $data->host . '.0']);
         				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
         					'title' => \Yii::t('yii', 'SEU'),
         					'data-pjax' => '0',
