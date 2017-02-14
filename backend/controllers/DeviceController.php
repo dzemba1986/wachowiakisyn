@@ -54,7 +54,7 @@ class DeviceController extends Controller
     				try {
     					if(!$modelDevice->save())
     						throw new Exception('Problem z zapisem urządzenia');
-    						Dhcp::generateFile($modelDevice->modelIps[0]->modelSubnet->id);
+    						Dhcp::generateFile([$modelDevice->modelIps[0]->modelSubnet->id]);
     						return 1;
     				} catch (Exception $e) {
     					var_dump($modelDevice->errors);
