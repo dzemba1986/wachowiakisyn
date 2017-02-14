@@ -9,7 +9,7 @@ class Dhcp extends Model
 {
 	private $path;
 	
-	public static function generateFile($subnet = null){
+	public static function generateFile(array $subnets = []){
 		
 		echo \Yii::getAlias('@console/dhcp');
 		$test = ob_get_contents();
@@ -17,11 +17,11 @@ class Dhcp extends Model
 		$updateFile = $test . '/subnets/.update_notify';
 // 		$ipValidator = new IpValidator(['ipv6' => false]);
 		
-		if (is_null($subnet)){
+		if (empty($subnets)){
 			$dhcpSubnets = Subnet::find()->where(['dhcp' => true])->all();
 			$sysout = system('rm ' . $test . '/subnets/*');
 		} else {
-			$dhcpSubnets = Subnet::find()->where(['id' => $subnet, 'dhcp' => true])->all();
+			$dhcpSubnets = Subnet::find()->where(['and', ['in', 'id', $subnets], ['dhcp' => true]])->all();
 		}
 		
 		foreach ($dhcpSubnets as $dhcpSubnet){

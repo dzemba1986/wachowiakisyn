@@ -28,7 +28,14 @@ class IpController extends Controller
 	
 	public function actionUpdateByDevice($device)
 	{
-		$modelIps = !is_null($device) ? Device::findOne($device)->modelIps : [];
+		if(!is_null($device)){
+			$modelIps = Device::findOne($device)->modelIps;
+			if(Device::findOne($device)->type == 5){
+				$oldSubnetId = Device::findOne($device)->modelIps[0]->subnet;
+			}
+		} else {
+			$modelIps = [];
+		}
 		
 		$request = Yii::$app->request;
 		
@@ -71,8 +78,10 @@ class IpController extends Controller
 							}
 						}
 					}
-					if (Device::findOne($device)->type == 5)
-						Dhcp::generateFile(Device::findOne($device)->modelIps[0]->subnet);
+					
+					if (Device::findOne($device)->type == 5){
+						Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
+					}
 					
 					return 1;
 				} elseif (count($modelIps) > count($newModelIps)){
@@ -103,8 +112,10 @@ class IpController extends Controller
 							$modelIps[$i]->delete();
 						}
 					}
-					if (Device::findOne($device)->type == 5)
-						Dhcp::generateFile(Device::findOne($device)->modelIps[0]->subnet);
+					
+					if (Device::findOne($device)->type == 5){
+						Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
+					}
 					
 					return 1;
 				} elseif (count($modelIps) < count($newModelIps)){
@@ -126,8 +137,10 @@ class IpController extends Controller
 						}
 					}
 				}
-				if (Device::findOne($device)->type == 5)
-					Dhcp::generateFile(Device::findOne($device)->modelIps[0]->subnet);
+				
+				if (Device::findOne($device)->type == 5){
+					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
+				}
 				
 				return 1;
 				//var_dump($newModelIps); exit();
