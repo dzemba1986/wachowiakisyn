@@ -275,7 +275,7 @@ class TreeController extends Controller
     				
     				$this->redirect(['tree/index', 'id' => $modelDevice->id . '.0']);
     				
-    				Dhcp::generateFile($request->post('subnet'));
+    				Dhcp::generateFile([$request->post('subnet')]);
     			} else {
     		
     				return $this->renderAjax('add_host_network', [
