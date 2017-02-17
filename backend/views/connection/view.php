@@ -3,12 +3,12 @@
  <?php 
 if ($modelConnection->type == 1){
 	
-	echo $this->render('_view_net', [
+	echo $this->renderAjax('_view_net', [
 		'modelConnection' => $modelConnection,
 	]);
 } elseif ($modelConnection->type == 2){
 	
-	echo $this->render('_view_phone', [
+	echo $this->renderAjax('_view_phone', [
 			'modelConnection' => $modelConnection,
 	]);
 }
