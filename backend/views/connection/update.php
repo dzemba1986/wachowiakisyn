@@ -67,8 +67,6 @@ use backend\models\Device;
 		
 		<div style="display: flex">
 		
-			<?php $concatInit = empty($modelConnection->device) ? '' : Device::findOne($modelConnection->device)->modelAddress->fullDeviceAddress; ?>
-			
 			<?= $form->field($modelConnection, 'device', [
     			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 3px;'],
     		])->widget(Select2::classname(), [
