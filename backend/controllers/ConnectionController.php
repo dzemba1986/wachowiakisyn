@@ -160,7 +160,7 @@ class ConnectionController extends Controller
 		        			
 		        			$modelConnection->host = null;
 		        			
-		        			Dhcp::generateFile($subnet);
+		        			Dhcp::generateFile([$subnet]);
 	        			}
 	        		}
 	        		
