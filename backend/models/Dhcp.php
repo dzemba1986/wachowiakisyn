@@ -11,15 +11,14 @@ class Dhcp extends Model
 	
 	public static function generateFile(array $subnets = []){
 		
-		echo \Yii::getAlias('@console/dhcp');
-		$test = ob_get_contents();
+		$pathDhcp = '/var/www/wachowiakisyn/console/dhcp';
 		
-		$updateFile = $test . '/subnets/.update_notify';
+		$updateFile = $pathDhcp . '/subnets/.update_notify';
 // 		$ipValidator = new IpValidator(['ipv6' => false]);
 		
 		if (empty($subnets)){
 			$dhcpSubnets = Subnet::find()->where(['dhcp' => true])->all();
-			$sysout = system('rm ' . $test . '/subnets/*');
+			$sysout = system('rm ' . $pathDhcp . '/subnets/*');
 		} else {
 			$dhcpSubnets = Subnet::find()->where(['and', ['in', 'id', $subnets], ['dhcp' => true]])->all();
 		}
@@ -61,9 +60,10 @@ subnet " . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->block
 				}
 				$data .= "}";
 // 				exit();
-				$sysout = system('rm ' . $test . '/subnets/'  . $dhcpSubnet->id . '.conf');
+				if (!empty($subnets))
+					$sysout = system('rm ' . $pathDhcp . '/subnets/'  . $dhcpSubnet->id . '.conf');
 				
-				$fileConfig = $test . '/subnets/' . $dhcpSubnet->id . '.conf';
+				$fileConfig = $pathDhcp . '/subnets/' . $dhcpSubnet->id . '.conf';
 				$file = fopen($fileConfig, 'w');
 				fwrite($file, $data);
 				fclose($file);
@@ -75,7 +75,5 @@ subnet " . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->block
 		$file = fopen($updateFile, "w");
 		fwrite($file, time());
 		fclose($file);
-		
-		ob_end_clean();
 	}
 }
