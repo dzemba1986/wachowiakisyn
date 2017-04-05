@@ -8,7 +8,7 @@ fi
 touch $LOCK_FILE
 CZAS=$(/bin/date +'%Y.%m.%d %H:%M:%S')
 CZAS_FILE=$(/bin/date +'%Y.%m.%d')
-LOCAL_DIR='/usr/share/nginx/html/wachowiakisyn/console/dhcp'
+LOCAL_DIR='/var/www/wachowiakisyn/console/dhcp'
 REMOTE_ROOT='/home/dhcp_sync'
 REMOTE_DIR="$REMOTE_ROOT/awaiting_conf"
 
@@ -27,9 +27,7 @@ then
 fi
 rm $LOCK_FILE
 sleep 1
-/usr/share/nginx/html/wachowiakisyn/console/dhcp/bash/slave.sh
-#/home/daniel/skrypty/updateDHCP.sh
-#sleep 3
-#/home/daniel/skrypty/updateDHCPtemp.sh
+/var/www/wachowiakisyn/console/dhcp/bash/slave.sh
+
 
 
