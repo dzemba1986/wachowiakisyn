@@ -53,7 +53,7 @@ echo DetailView::widget([
 		[
 			'label' => 'Mac',
 			'format' => 'raw',	
-			'value' => Html::a($modelDevice->mac, Url::to("http://172.20.4.17/loganalyzer/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $modelDevice->mac), 16, 10) . "&search=Search"), ['target'=>'_blank']) . ' ' . Html::a('Zmień', Url::toRoute(['device/change-mac', 'id' => $modelDevice->id]),['class' => 'change-mac'])
+			'value' => Html::a($modelDevice->mac, Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $modelDevice->mac), 16, 10) . "&search=Search"), ['target'=>'_blank']) . ' ' . Html::a('Zmień', Url::toRoute(['device/change-mac', 'id' => $modelDevice->id]),['class' => 'change-mac'])
 		],
 	]
 ]);
