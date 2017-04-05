@@ -603,7 +603,7 @@ class TreeController extends Controller
 				$deviceDestination->name = $deviceSource->name;
 				
 				$deviceSource->address = null;
-				$deviceSource->status = false;
+				$deviceSource->status = null;
 				$deviceSource->name = null;
 				
 				

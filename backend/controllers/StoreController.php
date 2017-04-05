@@ -33,6 +33,9 @@ class StoreController extends Controller
         
     	if ($request->isAjax){
             if ($modelDevice->load($request->post())) {
+            	
+            	$modelDevice->status = null;
+            	
             	if($modelDevice->validate()){
 	                try {
 	                	if(!$modelDevice->save())
