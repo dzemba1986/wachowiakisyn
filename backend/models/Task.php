@@ -63,7 +63,7 @@ class Task extends \yii\db\ActiveRecord
             ['start_date', 'match', 'pattern' => '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['start_date', 'required', 'message'=>'Wartość wymagana'],
             
-            ['start_time', 'date', 'format' => 'H:i:s', 'whenClient' => new JsExpression('function() {return false}')],
+            ['start_time', 'date', 'format' => 'php:H:i:s', 'whenClient' => new JsExpression('function() {return false}')],
             ['start_time', 'match', 'pattern' => '/^(0[0-9]|1[0-9]|2[0123])\:([012345][0-9])\:([012345][0-9])$/u', 'message'=>'Zły format',
             	'whenClient' => new JsExpression('function() {return false}')
             ],
@@ -73,7 +73,7 @@ class Task extends \yii\db\ActiveRecord
             ['end_date', 'match', 'pattern' => '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['end_date', 'required', 'message'=>'Wartość wymagana'],
             
-            ['end_time', 'date', 'format' => 'H:i:s', 'whenClient' => new JsExpression('function() {return false}')],
+            ['end_time', 'date', 'format' => 'php:H:i:s', 'whenClient' => new JsExpression('function() {return false}')],
             ['end_time', 'match', 'pattern' => '/^(0[0-9]|1[0-9]|2[0123])\:([012345][0-9])\:([012345][0-9])$/u', 'message'=>'Zły format',
             	'whenClient' => new JsExpression('function() {return false}')
             ],
