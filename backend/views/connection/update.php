@@ -113,7 +113,7 @@ use backend\models\Device;
 			
 		</div>
 		
-		<?php if($modelConnection->type == 1) :?>
+		<?php if($modelConnection->type == 1 || $modelConnection->type == 3) :?>
 		
 		<div style="display: flex">
 		
