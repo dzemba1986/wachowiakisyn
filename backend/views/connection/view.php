@@ -1,7 +1,7 @@
 <div class="connection-view">
     
  <?php 
-if ($modelConnection->type == 1){
+ if ($modelConnection->type == 1 || $modelConnection->type == 3){
 	
 	echo $this->renderAjax('_view_net', [
 		'modelConnection' => $modelConnection,

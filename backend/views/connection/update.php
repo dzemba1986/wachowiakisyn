@@ -94,7 +94,7 @@ use backend\models\Device;
 	    				'dataType' => 'json',
 	    				'data' => new JsExpression("function(params) { return {
 	    					q : params.term, 
-	    					type : $modelConnection->type == 1 ? [2] : [3],
+	    					type : $modelConnection->type == 1 || $modelConnection->type == 3 ? [2] : [3],
     						distribution : $modelConnection->type == 1 ? false : null
 						}; 
 					}")

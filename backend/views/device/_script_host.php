@@ -148,15 +148,39 @@ exit' . '
 wr' . '
 ';
 
+$onlyiptv = 'interface ' . $arPortsParent[$parentPortIndex] . '
+shutdown' . '
+no switchport port-security' . '
+switchport port-security violation protect' . '
+switchport port-security maximum 0' . '
+switchport port-security' . '
+description ' . $modelDevice->modelAddress->shortAddress . '
+egress-rate-limit 508032k' . '
+service-policy input iptv-only-501M' . '
+access-group iptv-only' . '
+no ip igmp trusted all' . '
+ip igmp trusted report' . '
+switchport access vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+spanning-tree portfast' . '
+spanning-tree portfast bpdu-guard enable' . '
+no shutdown' . '
+exit' . '
+mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
+exit' . '
+wr' . '
+';
+
 $delete = 'no mac address-table static ' . preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $modelDevice->mac)) . ' forward interface ' . $arPortsParent[$parentPortIndex] . ' vlan ' . $modelIps[0]->modelSubnet->modelVlan->id . '
 interface ' . $arPortsParent[$parentPortIndex] . '
 no switchport port-security' . '
 no service-policy input internet-user-501M' . '
-no service-policy input iptv-user-501M' . '		
+no service-policy input iptv-user-501M' . '
+no service-policy input iptv-only-501M' . '		
 no egress-rate-limit' . '
 no ip igmp trust all' . '		
 no access-group internet-user' . '
-no access-group iptv-user' . '		
+no access-group iptv-user' . '
+no access-group iptv-only' . '		
 switchport access vlan 555' . '
 exit' . '
 do clear ip dhcp snooping binding int ' . $arPortsParent[$parentPortIndex] . '
@@ -168,9 +192,10 @@ wr' . '
 ?>
 
 <a href="ssh://<?= $modelDeviceParent->modelIps[0]->ip; ?>:22222">Zaloguj</a>
-<button class="btn" data-clipboard-text="<?= $add; ?>">Dodaj</button>
+<button class="btn" data-clipboard-text="<?= $add; ?>">Dodaj NET</button>
 <?php if($modelDeviceParent->modelAddress->modelShortStreet->config == 2) :?>
-	<button class="btn" data-clipboard-text="<?= $addiptv; ?>">Dodaj IPTV</button>
+	<button class="btn" data-clipboard-text="<?= $addiptv; ?>">Dodaj NET+IPTV</button>
+	<button class="btn" data-clipboard-text="<?= $onlyiptv; ?>">Dodaj IPTV</button>
 <?php endif;?>
 
 <button class="btn" data-clipboard-text="<?= $delete; ?>">Usuń</button>
@@ -182,10 +207,12 @@ $(function(){
 	var clipboard = new Clipboard('.btn');
 	
 	clipboard.on('success', function(e) {
-		if(e.trigger.textContent == 'Dodaj')
+		if(e.trigger.textContent == 'Dodaj NET')
 			$('#log').text('Skrypt dodaj w schowku');
 		else if(e.trigger.textContent == 'Dodaj IPTV') 
 			$('#log').text('Skrypt dodaj IPTV w schowku');
+		else if(e.trigger.textContent == 'Dodaj NET+IPTV') 
+			$('#log').text('Skrypt dodaj NET+IPTV w schowku');
 		else if(e.trigger.textContent == 'Usuń') 
 			$('#log').text('Skrypt usuń w schowku');
 // 		console.log(e.trigger.textContent);
