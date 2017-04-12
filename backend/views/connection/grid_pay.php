@@ -36,18 +36,8 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 			]),
 	],
 	'rowOptions' => function($model){
-		if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
-	
-			return ['class' => 'afterdate'];
-		}
-		elseif ($model->activ_date <> null) {
-	
-			return ['class' => 'activ'];
-		}
-		elseif ($model->close_date <> null) {
-	
-			return ['class' => 'inactiv'];
-		}
+
+		return ['class' => 'pay'];
 	},
 	'columns' => [
         [

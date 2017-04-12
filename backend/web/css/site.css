@@ -90,7 +90,7 @@ a.desc:after {
     margin: 0 0 15px 0;
 } 
 
-/* mniejsze litery w pokazywanych b³êdach */
+/* mniejsze litery w pokazywanych bï¿½ï¿½dach */
  .help-block {
 	font-size: 10px;
 }
@@ -114,11 +114,19 @@ a[title="Show all data"] {
 
 /* grid view */
 
-#connection-grid .pay {
+#connection-grid .pay:nth-child(odd) {
 	background-color: #d7ffd7;
 }
 
-#connection-grid .inactiv {
+#connection-grid .pay:nth-child(even) {
+	background-color: #a6ffa6;
+}
+
+#connection-grid .inactiv:nth-child(odd) {
+	background-color: #ebebeb;
+}
+
+#connection-grid .inactiv:nth-child(even) {
 	background-color: #e1e1e1;
 }
 

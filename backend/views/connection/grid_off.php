@@ -31,19 +31,8 @@ $this->params['breadcrumbs'][] = 'Odłączone';
 					'searchModel' => $searchModel,
 			]),
 	],
-	'rowOptions' => function($model){
-		if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
-	
-			return ['class' => 'afterdate'];
-		}
-		elseif ($model->pay_date <> null) {
-	
-			return ['class' => 'activ'];
-		}
-		elseif ($model->close_date <> null) {
-	
-			return ['class' => 'inactiv'];
-		}
+	'rowOptions' => function($model){	
+		return ['class' => 'inactiv'];
 	},
 	'columns' => [
         [
