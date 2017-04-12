@@ -46,20 +46,6 @@ $this->params['breadcrumbs'][] = 'Zrobione';
                 //'heading'=> true,
                'before' => '',
         ],
-//        'rowOptions' => function($model){
-//            if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
-//                
-//                return ['class' => 'afterdate'];
-//            }
-//            elseif ($model->activ_date <> null) {
-//                
-//                return ['class' => 'activ'];
-//            }
-//            elseif ($model->resignation_date <> null) {
-//            
-//                return ['class' => 'inactiv'];
-//            }
-//        },
         'columns' => [
             [
                 'header'=>'Lp.',
@@ -141,7 +127,6 @@ $this->params['breadcrumbs'][] = 'Zrobione';
                 'value'=>'modelAddress.lokal',
                 'options' => ['style'=>'width:5%;'],
             ],
-            'phone',            
             [
                 'attribute'=>'type',
                 'value'=>'modelTaskType.name',
@@ -153,6 +138,13 @@ $this->params['breadcrumbs'][] = 'Zrobione';
                 'value'=>'modelTaskCategory.name',
                 'filter'=> Html::activeDropDownList($searchModel, 'category', ArrayHelper::map(TaskCategory::find()->orderBy('name')->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
                 'options' => ['style'=>'width:5%;'],
+            ],
+            'cost',
+            [
+            	'class'=>'kartik\grid\BooleanColumn',
+            	'attribute'=>'status',
+            	'trueLabel' => 'Tak',
+            	'falseLabel' => 'Nie',
             ],
             [
                 'attribute' => 'add_user',

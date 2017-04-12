@@ -20,7 +20,7 @@ class TaskSearch extends Task
     {
         return [
             [['start_date', 'end', 'color', 'description', 'installer', 'street', 'house', 'house_detail', 
-              'flat', 'flat_detail', 'type', 'category', 'add_user', 'close_user'], 'safe'],
+              'flat', 'flat_detail', 'type', 'cost', 'status', 'category', 'add_user', 'close_user'], 'safe'],
         ];
     }
 
@@ -50,7 +50,7 @@ class TaskSearch extends Task
 				'close_date',
 				'color',
 				'all_day',
-				'status',
+				'task.status',
 				'type',
 				'category',
 				'add_user',
@@ -92,7 +92,7 @@ class TaskSearch extends Task
 			'lokal' => $this->flat,
             'add_user' => $this->add_user,
         	'close_user' => $this->close_user,
-            'cost' => $this->cost,
+        	'task.status' => $this->status,	
             'type' => $this->type,
             'category' => $this->category
             
