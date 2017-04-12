@@ -149,6 +149,7 @@ $(function() {
 							"clear ip dhcp snooping binding " + <?= json_encode($modelDevice->modelIps[0]->ip) ?> + "\n" +
 							"configure terminal\n" +
 							"interface " + <?= json_encode($arPortsParent[$parentPortIndex]) ?> + "\n" +
+							"switchport port-security\n" +
 							"no shutdown\n" +
 							"exit\n" +
 							"exit\n" +
