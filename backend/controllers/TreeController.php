@@ -91,64 +91,36 @@ class TreeController extends Controller
     
     	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     	
+    	//gdy dlugosc szukanego tekstu jest wieksza od 3
     	if (strlen($str) > 3){
 	    	$path = [];
 	    	
-	    	$modelsDevice = Device::find()->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])->andWhere(['status' => true])->all();
+			//wyszukanie wszystkich obiektów spełniajcych kryteria
+	    	$modelsDevice = Device::find()->select(['id', 'type'])->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])->andWhere(['status' => true])->all();
 	    	
+// 	    	var_dump($modelsDevice);
+// 	    	exit();
+	    	
+	    	//przejscie przez wszystkie wyszukane obiekty typu device 
 	    	foreach ($modelsDevice as $modelDevice) {
 	    		
-	    		$modelTree = Tree::findOne($modelDevice->id);
-	    		$id = $modelTree->device;
-	    		$parent = $modelTree->parent_device;
+	    		//powiazany element typu tree
+	    		$modelTree = Tree::findOne(['device' => $modelDevice->id]);
 	    		
-	    		while ($parent <> 3) {
-	    		
-	    			$modelTree = Tree::findOne($id);
-	    			$parent = $modelTree->parent_device;
-	    			$modelTree = Tree::find()->where(['device' => $parent])->one();
+	    		//sprawdz czy rodzic elementu tree nie jest root'em, jezeli tak zakoncz
+	    		while ($modelTree->parent_device <> 1) {
 	    			
+	    			
+	    			$modelTree = Tree::findOne($modelTree->parent_device);
+	    			//jezeli elementu tree rodzica nie ma w tablicy to dodaj 
 	    			if (!in_array($modelTree->device . '.' . $modelTree->port, $path))
 	    				array_push($path, $modelTree->device . '.' . $modelTree->port);
-	    		
-	    			$id = $parent;
 	    		}
 	    	}
-// 	    	if (is_object($modelTree)){
-// 		    	$parent = $modelTree->parent_device;
-		    	
-		    	
-// 	    	} else 
-// 	    		return null;
     	} else 
     		return null;
-//     	$children = Tree::find()->
-//     	joinWith('modelDevice')->
-//     	where(['device' => $str]);
-    	 
-    
-//     	$arChildren = [];
-    	 
-//     	foreach ($children as $child){
-    		 
-//     		$model = Model::findOne(Device::findOne($id)->model);
-//     		$address = Address::findOne($child->modelDevice->address);
-    		 
-//     		$arChildren[] = [
-//     				'id' => (int) $child->modelDevice->id . '.' . $child->port . '-' . rand(1,1000),
-//     				'text' => $id != 1	?
-//     				$model->port[$child->parent_port - 1].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress  :
-//     				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$address->fullDeviceAddress,
-//     				'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
-//     				'icon' => false,
-//     				'port' => $child->port,
-//     				'parent_port' => $model->port[$child->parent_port - 1],
-//     				'children' => $child->modelDevice->modelType->name <> 'Host' ? TRUE : FALSE,
-//     		];
-//     	}
     	 
     	return array_reverse($path);
-//     	return ["3.74","10.12","5442.47"];
     }
     
     public function actionAdd($id, $host = false)
