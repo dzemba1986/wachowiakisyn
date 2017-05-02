@@ -176,9 +176,11 @@ class TreeController extends Controller
 	    		$modelTree = new Tree();
 	    		$modelConnection = Connection::findOne($id);
 	    		
-	    		if($modelConnection->replaced_id)
-	    			return 'Na adresie jest aktywna umowa do zamknięcia o id: ' . $modelConnection->replaced_id; 
-	    		 
+	    		if($modelConnection->replaced_id){
+	    			if(Connection::findOne($modelConnection->replaced_id)->close_date == null)
+	    				return 'Na adresie jest aktywna umowa do zamknięcia o id: ' . $modelConnection->replaced_id; 
+	    		}
+	    		
     			if($request->post('ip')){
     				$transaction = Yii::$app->getDb()->beginTransaction();
     				 
