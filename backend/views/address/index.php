@@ -60,6 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'lokal_szczegol',
             [
             	'class' => 'yii\grid\ActionColumn',
+            	'template' => '{view} {update}',
             	'options' => ['style'=>'width:5%;']
         	],
         ],
