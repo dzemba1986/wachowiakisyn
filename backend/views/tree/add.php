@@ -20,7 +20,7 @@ echo DetailView::widget([
     	],
     	[
     		'attribute' => 'model',
-    		'value' => $modelDevice->modelModel->name,
+    			'value' => $modelDevice->modelModel->name,
     	],
      	'mac',
         'serial',
@@ -87,7 +87,7 @@ echo DetailView::widget([
                     $.get( "' . Url::toRoute('tree/select-list-port') . '&device=" + "' . Yii::$app->request->get("id") . '" + "&mode=all", function(data){
 						$("select#tree-port").html(data);
 					} );
-                                        		'
+            	'
             ],
     		'pluginOptions' => [
     			

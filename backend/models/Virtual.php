@@ -62,9 +62,9 @@ class Virtual extends Device
             	
             	['serial', 'default', 'value' => NULL],
             		
-            	['manufacturer', 'default', 'value' => NULL],
+            	['manufacturer', 'default', 'value' => 10],
 
-            	['model', 'default', 'value' => null],           		
+            	['model', 'default', 'value' => 14],           		
                 
                 [['mac'], 'safe'],
             ]
@@ -74,8 +74,8 @@ class Virtual extends Device
 	public function scenarios()
 	{
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac']);
-		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial']);
+		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'manufacturer', 'model']);
+		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac']);
 		$scenarios[self::SCENARIO_TOSTORE] = ArrayHelper::merge($scenarios[self::SCENARIO_TOSTORE], ['address', 'status']);
 		$scenarios[self::SCENARIO_TOTREE] = ArrayHelper::merge($scenarios[self::SCENARIO_TOTREE], ['address', 'status']);
 		//$scenarios[self::SCENARIO_DELETE] = ['close_date', 'close_user'];
