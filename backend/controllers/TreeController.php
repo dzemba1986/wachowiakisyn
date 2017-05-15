@@ -160,7 +160,7 @@ class TreeController extends Controller
 		    			$this->redirect(['tree/index']);
 		    		} catch (\Exception $e) {
 		    			$transaction->rollBack();
-		    			echo $modelDevice->errors;
+		    			var_dump($modelDevice->errors);
 		    		}	
 		    	} else {
 		    		
