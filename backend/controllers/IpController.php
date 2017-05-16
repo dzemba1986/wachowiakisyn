@@ -53,88 +53,19 @@ class IpController extends Controller
 					 
 					$newModelIps[] = $newModelIp;
 				}
-				$i = 0;
-		
-				if(count($modelIps) == count($newModelIps)){
-					for($i=0; $i <= count($modelIps)-1; $i++){
-		
-// 						echo 'Tyle samo'; exit();
-						//var_dump($modelIps[$i]->ip); exit();
-		
-						if($modelIps[$i]->ip == $newModelIps[$i]->ip){
-							null; //brak zmian
-						} else {
-							$modelIps[$i]->ip = $newModelIps[$i]->ip;
-							$modelIps[$i]->subnet = $newModelIps[$i]->subnet;
-							$modelIps[$i]->main = $i == 0 ? true : false;
-								
-							try {
-								if(!$modelIps[$i]->save())
-									throw new Exception('Problem z zapisem adresu ip');
-							} catch (Exception $e) {
-								var_dump($modelIps[$i]->errors);
-								var_dump($e->getMessage());
-								exit();
-							}
-						}
-					}
-					
-					if (Device::findOne($device)->type == 5){
-						Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
-					}
-					
-					return 1;
-				} elseif (count($modelIps) > count($newModelIps)){
 					 
-// 					echo 'Mniej'; exit();
-					//var_dump($newModelIps); var_dump($modelIps); exit();
-					 
-					for($i=0; $i <= count($modelIps)-1; $i++){
-						 
-						if($i <= count($newModelIps)-1){
-							if($modelIps[$i]->ip == $newModelIps[$i]->ip){
-								null; //brak zmian
-							} else {
-								$modelIps[$i]->ip = $newModelIps[$i]->ip;
-								$modelIps[$i]->subnet = $newModelIps[$i]->subnet;
-								$modelIps[$i]->main = $i == 0 ? true : false;
-								 
-								try {
-									if(!$modelIps[$i]->save())
-										throw new Exception('Problem z zapisem adresu ip');
-								} catch (Exception $e) {
-									var_dump($modelIps[$i]->errors);
-									var_dump($e->getMessage());
-									exit();
-								}
-							}
-						} else {
-							$modelIps[$i]->delete();
-						}
-					}
-					
-					if (Device::findOne($device)->type == 5){
-						Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
-					}
-					
-					return 1;
-				} elseif (count($modelIps) < count($newModelIps)){
-					 
-// 					echo 'Wiecej'; exit();
-					//var_dump($newModelIps); var_dump($modelIps); exit();
-					foreach ($modelIps as $modelIp)
-						$modelIp->delete();
-					 
-					foreach ($newModelIps as $newModelIp){
-								 
-						try {
-							if(!$newModelIp->save())
-								throw new Exception('Problem z zapisem adresu ip');
-						} catch (Exception $e) {
-							var_dump($newModelIp->errors);
-							var_dump($e->getMessage());
-							exit();
-						}
+				foreach ($modelIps as $modelIp)
+					$modelIp->delete();
+				 
+				foreach ($newModelIps as $newModelIp){
+							 
+					try {
+						if(!$newModelIp->save())
+							throw new Exception('Problem z zapisem adresu ip');
+					} catch (Exception $e) {
+						var_dump($newModelIp->errors);
+						var_dump($e->getMessage());
+						exit();
 					}
 				}
 				
@@ -143,12 +74,15 @@ class IpController extends Controller
 				}
 				
 				return 1;
-				//var_dump($newModelIps); exit();
+				
 			} elseif ($request->post('save')){
-// 				echo 'Usuń wszystko'; exit();
 				
 				foreach ($modelIps as $modelIp)
 					$modelIp->delete();
+				
+				if (Device::findOne($device)->type == 5){
+					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
+				}
 				
 				return 1;
 			} else {
