@@ -54,37 +54,39 @@ class TreeController extends Controller
         
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        	$children = Tree::find()->
-        	joinWith('modelDevice')->
-        	where(['parent_device' => $id])->
-        	orderBy('parent_port')->all();
+        $arChildren = [];
+        
+        $arChildren = (new \yii\db\Query())
+        ->select(['agregation.device', 'port', 'parent_device', 'parent_port', 'device.name', 'device.model', 'mac', 'ip', 'device_type.icon', 'device_type.children'])
+	        ->from('agregation')
+	        ->leftJoin('device', 'device.id = agregation.device')
+	        ->leftJoin('device_type', 'device_type.id = device.type')
+	        ->leftJoin('ip', 'ip.device = device.id AND ip.main is true')
+	        ->where(['parent_device' => $id])
+	        ->orderBy('parent_port')
+	        ->all();
+        
+        $model = Model::findOne(Device::findOne($id)->model);
+        
+        foreach ($arChildren as $child){
         	
-        	 
-        	$arChildren = [];
-        	
-        	foreach ($children as $child){
-        	
-        		$model = Model::findOne(Device::findOne($id)->model);
-        		
-//         		var_dump($child); exit();
-//         		$address = Address::findOne($child->modelDevice->address);
-        	
-        		$arChildren[] = [
-        			'id' => (int) $child->modelDevice->id . '.' . $child->port,
-        			'text' => $id != 1	?	
-        				$model->port[$child->parent_port].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->name  :	 
-        				'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child->modelDevice->modelType->icon .'\'); background-position: center center; background-size: auto auto;"></i>'.$child->modelDevice->name,
-        			'name' => $child->modelDevice->name,
-        			'mac' => $child->modelDevice->mac,	
-        			'state' => $child->modelDevice->model == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
+        	$nodes[] = [
+        			'id' => (int) $child['device'] . '.' . $child['port'],
+        			'text' => $id != 1	?
+        			$model->port[$child['parent_port']].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$child['name']  :
+        			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$child['name'],
+        			'name' => $child['name'],
+        			'mac' => $child['mac'],
+        			'ip' => $child['ip'],
+        			'state' => $child['model'] == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
         			'icon' => false,
-        			'port' => $child->port,
-        			'parent_port' => $model->port[$child->parent_port],	
-        			'children' => $child->modelDevice->modelType->children,
-        		];
-        	}
-        	
-        	return $arChildren;
+        			'port' => $child['port'],
+        			'parent_port' => $model->port[$child['parent_port']],
+        			'children' => $child['children']
+        	];
+        }
+        
+        return $nodes;
     }
     
     public function actionSearch($str) {
@@ -95,17 +97,34 @@ class TreeController extends Controller
     	if (strlen($str) > 3){
 	    	$path = [];
 	    	
-			//wyszukanie wszystkich obiektów spełniajcych kryteria
-	    	$modelsDevice = Device::find()->select(['id', 'type'])->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])->andWhere(['status' => true])->all();
+	    	$validatorIp = new \yii\validators\IpValidator(['ipv6' => false]);
 	    	
-// 	    	var_dump($modelsDevice);
-// 	    	exit();
+	    	//czy szukana fraza to adres ip
+	    	if ($validatorIp->validate($str)){
+				//wyszukanie wszystkich obiektów spełniajcych kryteria
+				$arsDevice = (new \yii\db\Query())
+					->select(['id', 'type'])
+					->from('device')
+					->leftJoin('ip', 'ip.device = device.id AND ip.main is true')
+					->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str], ["ip.ip"=> $str]])
+					->andWhere(['status' => true])
+					->all();
+	    	} else {
+	    		//wyszukanie wszystkich obiektów spełniajcych kryteria
+	    		$arsDevice = (new \yii\db\Query())
+	    		->select(['id', 'type'])
+	    		->from('device')
+	    		->leftJoin('ip', 'ip.device = device.id AND ip.main is true')
+	    		->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])
+	    		->andWhere(['status' => true])
+	    		->all();
+	    	}
 	    	
 	    	//przejscie przez wszystkie wyszukane obiekty typu device 
-	    	foreach ($modelsDevice as $modelDevice) {
+	    	foreach ($arsDevice as $arDevice) {
 	    		
 	    		//powiazany element typu tree
-	    		$modelTree = Tree::findOne(['device' => $modelDevice->id]);
+	    		$modelTree = Tree::findOne(['device' => $arDevice['id']]);
 	    		
 	    		//sprawdz czy rodzic elementu tree nie jest root'em, jezeli tak zakoncz
 	    		while ($modelTree->parent_device <> 1) {
@@ -121,6 +140,7 @@ class TreeController extends Controller
     		return null;
     	 
     	return array_reverse($path);
+// 		var_dump($arsDevice);
     }
     
     public function actionAdd($id, $host = false)

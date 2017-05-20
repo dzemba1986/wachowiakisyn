@@ -111,7 +111,7 @@ $(function() {
 	   			 },
 	   			'search_callback' : function (str, node) {
 // 	   				console.log(node.original.name);
-   		            if(node.id == str || node.original.name.includes(str.toUpperCase()) || node.original.mac == str.toLowerCase()) {
+   		            if(node.id == str || node.original.name.includes(str.toUpperCase()) || node.original.mac == str.toLowerCase() || node.original.ip == str.toLowerCase()) {
 	   		            //console.log('warunek');
 	   		    		return true; 
 	   		    	}
