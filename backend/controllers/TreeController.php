@@ -55,6 +55,7 @@ class TreeController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
         $arChildren = [];
+        $nodes = [];
         
         $arChildren = (new \yii\db\Query())
         ->select(['agregation.device', 'port', 'parent_device', 'parent_port', 'device.name', 'device.model', 'mac', 'ip', 'device_type.icon', 'device_type.children'])
@@ -114,7 +115,6 @@ class TreeController extends Controller
 	    		$arsDevice = (new \yii\db\Query())
 	    		->select(['id', 'type'])
 	    		->from('device')
-	    		->leftJoin('ip', 'ip.device = device.id AND ip.main is true')
 	    		->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])
 	    		->andWhere(['status' => true])
 	    		->all();
