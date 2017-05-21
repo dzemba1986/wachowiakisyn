@@ -190,8 +190,10 @@ wr' . '
 }
 }
 ?>
-
+<?php if(isset($modelDeviceParent->modelIps[0])) : ?>
 <a href="ssh://<?= $modelDeviceParent->modelIps[0]->ip; ?>:22222">Zaloguj</a>
+<?php endif; ?>
+
 <button class="btn" data-clipboard-text="<?= $add; ?>">Dodaj NET</button>
 <?php if($modelDeviceParent->modelAddress->modelShortStreet->config == 2) :?>
 	<button class="btn" data-clipboard-text="<?= $addiptv; ?>">Dodaj NET+IPTV</button>
