@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
 use backend\models\IpSearch;
 use backend\models\Device;
 use backend\models\Dhcp;
+use backend\models\HistoryIp;
 
 class IpController extends Controller
 {  
@@ -54,16 +55,47 @@ class IpController extends Controller
 					$newModelIps[] = $newModelIp;
 				}
 					 
-				foreach ($modelIps as $modelIp)
+				foreach ($modelIps as $modelIp){
+					
+					if (Device::findOne($device)->type == 5){
+						
+						$modelHistoryIp = HistoryIp::findOne(['ip' => $modelIp->ip, 'address' => Device::findOne($device)->address, 'to_date' => null]);
+						$modelHistoryIp->to_date = date('Y-m-d H:i:s');
+						
+						try {
+							if(!($modelHistoryIp->save()))
+								throw new Exception('Problem z zapisem histori ip');
+						} catch (Exception $e) {
+							var_dump($modelHistoryIp->errors);
+							exit();
+						}
+					}
+					
 					$modelIp->delete();
+				}
 				 
 				foreach ($newModelIps as $newModelIp){
 							 
 					try {
 						if(!$newModelIp->save())
 							throw new Exception('Problem z zapisem adresu ip');
+						
+						if (Device::findOne($device)->type == 5){
+							
+							$modelHistoryIp = new HistoryIp();
+							
+							$modelHistoryIp->scenario = HistoryIp::SCENARIO_CREATE;
+							$modelHistoryIp->ip = $newModelIp->ip;
+							$modelHistoryIp->from_date = date('Y-m-d H:i:s');
+							$modelHistoryIp->address = Device::findOne($device)->address;
+							
+							if(!($modelHistoryIp->save()))
+								throw new Exception('Problem z zapisem histori ip');
+						}
+							
 					} catch (Exception $e) {
 						var_dump($newModelIp->errors);
+						var_dump($modelHistoryIp->errors);
 						var_dump($e->getMessage());
 						exit();
 					}

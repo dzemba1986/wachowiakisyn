@@ -5,7 +5,7 @@ namespace backend\models;
 /**
  * This is the model class for table "history_ip".
  *
- * The followings are the available columns in table 'model':
+ * The followings are the available columns in table 'history_ip':
  * @property string $ip
  * @property string $from_date
  * @property string $to_date
@@ -36,6 +36,7 @@ class HistoryIp extends \yii\db\ActiveRecord
 			['from_date', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],
 				
 			['to_date', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_UPDATE],
+			['to_date', 'default', 'value' => NULL],
 				
 			['address', 'integer'],
 			['address', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],

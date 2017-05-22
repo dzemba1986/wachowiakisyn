@@ -15,6 +15,7 @@ use backend\models\Host;
 use backend\models\Ip;
 use yii\db\Query;
 use backend\models\Dhcp;
+use backend\models\HistoryIp;
 
 class TreeController extends Controller
 {
@@ -194,6 +195,7 @@ class TreeController extends Controller
     		
 	    		$modelIp = new Ip();
 	    		$modelTree = new Tree();
+	    		$modelHistoryIp = new HistoryIp();
 	    		$modelConnection = Connection::findOne($id);
 	    		
 	    		if($modelConnection->replaced_id){
@@ -244,10 +246,25 @@ class TreeController extends Controller
     				$modelIp->subnet = $request->post('subnet');
     				$modelIp->main = true;
     				$modelIp->device = $modelDevice->id;
-    				 
+    				
     				try {
     					if (!$modelIp->save())
     						throw new Exception('Problem z zapisem ip');
+    					
+    				} catch (\Exception $e) {
+    					$transaction->rollBack();
+    					return $e->getMessage();
+    				}
+    				
+    				$modelHistoryIp->scenario = HistoryIp::SCENARIO_CREATE;
+    				$modelHistoryIp->ip = $modelIp->ip;
+    				$modelHistoryIp->from_date = date('Y-m-d H:i:s');
+    				$modelHistoryIp->address = $modelDevice->address;
+    				
+    				try {
+    					if (!$modelHistoryIp->save())
+    						throw new Exception('Problem z zapisem historii ip');
+    						
     				} catch (\Exception $e) {
     					$transaction->rollBack();
     					return $e->getMessage();

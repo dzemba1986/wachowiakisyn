@@ -12,6 +12,7 @@ use yii\filters\AccessControl;
 use backend\models\Device;
 use backend\models\Dhcp;
 use yii\widgets\ActiveForm;
+use backend\models\HistoryIp;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -151,16 +152,21 @@ class ConnectionController extends Controller
 	        			if ($modelConnection->host && $modelConnection->type == 1) {
 		        			
 		        			$modelDevice = Device::findOne($modelConnection->host);
-		        			
+		        			$modelHistoryIp = HistoryIp::findOne(['ip' => $modelDevice->modelIps[0]->ip, 'address' => $modelDevice->address, 'to_date' => null]);
 		        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
 		        			
 		        			$modelDevice->modelTree[0]->delete();
 		        			$modelDevice->modelIps[0]->delete();
+		        			$modelHistoryIp->to_date = date('Y-m-d H:i:s');
+		        			
+		        			if(!($modelHistoryIp->save()))
+		        				throw new Exception('Problem z zapisem histori ip');
+		        			
 		        			$modelDevice->delete();
 		        			
 		        			$modelConnection->host = null;
 		        			
-		        			Dhcp::generateFile([$subnet]);
+// 		        			Dhcp::generateFile([$subnet]);
 	        			}
 	        		}
 	        		
