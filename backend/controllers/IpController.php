@@ -12,6 +12,7 @@ use backend\models\IpSearch;
 use backend\models\Device;
 use backend\models\Dhcp;
 use backend\models\HistoryIp;
+use backend\models\HistoryIpSearch;
 
 class IpController extends Controller
 {  
@@ -102,7 +103,7 @@ class IpController extends Controller
 				}
 				
 				if (Device::findOne($device)->type == 5){
-					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
+// 					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
 				}
 				
 				return 1;
@@ -256,6 +257,17 @@ class IpController extends Controller
 			//'modelIp' => $modelIp,
 			'dataProvider' => $dataProvider,
 		]);
+    }
+    
+    public function actionHistory(){
+    	
+    	$searchModel = new HistoryIpSearch();
+    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    	
+    	return $this->render('history', [
+    			'searchModel' => $searchModel,
+    			'dataProvider' => $dataProvider,
+    	]);
     }
 
     protected function findModel($ip, $subnet)

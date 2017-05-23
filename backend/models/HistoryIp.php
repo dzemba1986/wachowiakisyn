@@ -68,6 +68,6 @@ class HistoryIp extends \yii\db\ActiveRecord
     
     public function getModelAddress(){
 	
-		return $this->hasOne(Device::className(), ['address' => 'id']);
+		return $this->hasOne(Address::className(), ['id' => 'address']);
 	}
 }
