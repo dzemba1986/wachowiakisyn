@@ -12,6 +12,7 @@ use yii\widgets\ActiveForm;
 use backend\models\Address;
 use backend\models\Ip;
 use backend\models\Dhcp;
+use backend\models\Host;
 
 class DeviceController extends Controller
 {
@@ -50,12 +51,16 @@ class DeviceController extends Controller
     	
     	if ($request->isAjax){
     		if($modelDevice->load($request->post())){
+    			
+    			if(!$modelDevice->validate('mac'))
+    				return $modelDevice->getFirstError('mac') . ' przez ' . Host::findOne(['mac' => $modelDevice->mac])->name;
+    			
     			if($modelDevice->validate()){
     				try {
     					if(!$modelDevice->save())
     						throw new Exception('Problem z zapisem urządzenia');
-    						Dhcp::generateFile([$modelDevice->modelIps[0]->modelSubnet->id]);
-    						return 1;
+    					Dhcp::generateFile([$modelDevice->modelIps[0]->modelSubnet->id]);
+    					return 1;
     				} catch (Exception $e) {
     					var_dump($modelDevice->errors);
     					var_dump($e->getMessage());

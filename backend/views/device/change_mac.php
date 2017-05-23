@@ -87,8 +87,7 @@ $(function() {
 //      		$.pjax.reload({container: '#device-desc-pjax'});
      		}
      		else{
-    		
-     			$('#message').html(result);
+     			alert(result);
      		}
      	}).fail(function(){
      		console.log('server error');
