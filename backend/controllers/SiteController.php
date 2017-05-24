@@ -274,7 +274,7 @@ class SiteController extends Controller
                     'html' => '<a href=' . Url::toRoute(['tree/index']) . '>Drzewo urządzeń</a>',                 
                 ],
             	[
-            		'html' => '<a href=' . Url::toRoute(['device/black-hole']) . '>Black Hole</a>',
+            		'html' => '<a href=' . Url::toRoute(['ip/history']) . '>Historia IP</a>',
             	],
             	[
             		'html' => 'Sieć',
