@@ -63,6 +63,7 @@ class HistoryIp extends \yii\db\ActiveRecord
 			'ip' => 'Adres IP',
 			'from_date' => 'Data od',
 			'to_date' => 'Data do',
+			'address' => 'Adres'	
 		);
 	}
     
