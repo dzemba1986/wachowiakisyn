@@ -103,7 +103,7 @@ class IpController extends Controller
 				}
 				
 				if (Device::findOne($device)->type == 5){
-// 					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
+					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
 				}
 				
 				return 1;
