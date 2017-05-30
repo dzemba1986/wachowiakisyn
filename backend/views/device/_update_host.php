@@ -23,7 +23,7 @@ $form = ActiveForm::begin([
 				'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 	    		'template' => "{input}\n{hint}\n{error}",
 	    	])->widget(Select2::className(), [
-	     		'data' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+	     		'data' => ArrayHelper::map(Address::find()->select('ulica')->orderBy('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
 	       		'options' => ['placeholder' => 'Ulica'],
 	       		'pluginOptions' => [
 	            	'allowClear' => true
