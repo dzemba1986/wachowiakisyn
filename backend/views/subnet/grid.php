@@ -39,6 +39,7 @@ use yii\bootstrap\Modal;
         //'showPageSummary' => TRUE,
     	'export' => false,
         'columns' => [
+        	'id',	
             'ip',		
         	'desc',
         	[
