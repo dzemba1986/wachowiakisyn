@@ -32,7 +32,7 @@ class IpController extends Controller
 	{
 		if(!is_null($device)){
 			$modelIps = Device::findOne($device)->modelIps;
-			if(Device::findOne($device)->type == 5){
+			if(Device::findOne($device)->type == 5 && isset(Device::findOne($device)->modelIps[0])){
 				$oldSubnetId = Device::findOne($device)->modelIps[0]->subnet;
 			}
 		} else {
@@ -102,7 +102,7 @@ class IpController extends Controller
 					}
 				}
 				
-				if (Device::findOne($device)->type == 5){
+				if (Device::findOne($device)->type == 5 && isset($oldSubnetId)){
 					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
 				}
 				
@@ -113,7 +113,7 @@ class IpController extends Controller
 				foreach ($modelIps as $modelIp)
 					$modelIp->delete();
 				
-				if (Device::findOne($device)->type == 5){
+					if (Device::findOne($device)->type == 5 && isset($oldSubnetId)){
 					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
 				}
 				
