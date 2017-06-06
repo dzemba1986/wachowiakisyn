@@ -4,7 +4,7 @@ use yii\db\Migration;
 use backend\models\Connection;
 use backend\models\Task;
 
-class m160315_083006_update_con_of_ins extends Migration
+class m160315_083006_check_connection extends Migration
 {
     public function up()
     {
@@ -41,20 +41,6 @@ class m160315_083006_update_con_of_ins extends Migration
 	           	
 	           		$this->update('connection', ['again' => true], ['id' => $conn->id]);	
 	           }
-           	
-//            sprawdzam czy wszystkie odnosniki w connection pasuja do id w task
-//            $modelsConnection = Connection::find()->where(['is not', 'task', null])->andWhere(['<>', 'task', 0])->all();
-            
-//            foreach ($modelsConnection as $modelConnection){
-//            	if (is_object(Task::findOne($modelConnection->task))){
-//            		continue;
-//            	} else {
-//            		$modelConnection->task = null;
-//            		$modelConnection->save();
-//            	}
-//            }
-       		    	
-           	
        }
     }
 
