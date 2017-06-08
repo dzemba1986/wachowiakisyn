@@ -114,10 +114,9 @@ class ConnectionSearch extends Connection
 		]);
 	
 		$query->andFilterWhere(['like', 'dom_szczegol', $this->house_detail])
-			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail])
+			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail]);
 			//->andFilterWhere(['like', 'synch_date', $this->synch_date]) @todo operacja like na polu date niedozwolona
-			->andFilterWhere(['>=', 'conf_date', $this->minConfDate])
-			->andFilterWhere(['<=', 'conf_date', $this->maxConfDate]);
+
 		
 		return $dataProvider;
 	}

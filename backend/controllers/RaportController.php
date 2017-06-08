@@ -21,29 +21,29 @@ class RaportController extends Controller
     	
     	
     	if(!empty($request->queryParams['ConnectionSearch']['minConfDate']) && !empty($request->queryParams['ConnectionSearch']['maxConfDate'])){
-	    	$dataProvider->query->andWhere([
-	    		'and', ['is not', 'conf_date', null], ['type' => 1], ['>=', 'conf_date', $request->queryParams['ConnectionSearch']['minConfDate']], ['<=', 'conf_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
-	    	])->orWhere([
-	    		'and', ['is not', 'pay_date', null], ['type' => 2], ['>=', 'pay_date', $request->queryParams['ConnectionSearch']['minConfDate']], ['<=', 'pay_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
-	    	]);
+	    	$dataProvider->query->andWhere(['or', [
+	    			'and', ['is not', 'conf_date', null], ['type' => 1], ['nocontract' => false], ['>=', 'conf_date', $request->queryParams['ConnectionSearch']['minConfDate']], ['<=', 'conf_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
+	    	],[
+	    			'and', ['is not', 'pay_date', null], ['type' => 2], ['nocontract' => false], ['>=', 'pay_date', $request->queryParams['ConnectionSearch']['minConfDate']], ['<=', 'pay_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
+	    	]]);
     	} elseif(!empty($request->queryParams['ConnectionSearch']['minConfDate']) && empty($request->queryParams['ConnectionSearch']['maxConfDate'])){
-    		$dataProvider->query->andWhere([
-    				'and', ['is not', 'conf_date', null], ['type' => 1], ['>=', 'conf_date', $request->queryParams['ConnectionSearch']['minConfDate']]
-    		])->orWhere([
-    				'and', ['is not', 'pay_date', null], ['type' => 2], ['>=', 'pay_date', $request->queryParams['ConnectionSearch']['minConfDate']]
-    		]);
+    		$dataProvider->query->andWhere(['or', [
+    				'and', ['is not', 'conf_date', null], ['type' => 1], ['nocontract' => false], ['>=', 'conf_date', $request->queryParams['ConnectionSearch']['minConfDate']]
+    		],[
+    				'and', ['is not', 'pay_date', null], ['type' => 2], ['nocontract' => false], ['>=', 'pay_date', $request->queryParams['ConnectionSearch']['minConfDate']]
+    		]]);
     	} elseif(empty($request->queryParams['ConnectionSearch']['minConfDate']) && !empty($request->queryParams['ConnectionSearch']['maxConfDate'])){
-    		$dataProvider->query->andWhere([
-    				'and', ['is not', 'conf_date', null], ['type' => 1], ['<=', 'conf_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
-    		])->orWhere([
-    				'and', ['is not', 'pay_date', null], ['type' => 2], ['<=', 'pay_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
-    		]);
+    		$dataProvider->query->andWhere(['or', [
+    				'and', ['is not', 'conf_date', null], ['type' => 1], ['nocontract' => false], ['<=', 'conf_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
+    		],[
+    				'and', ['is not', 'pay_date', null], ['type' => 2], ['nocontract' => false], ['<=', 'pay_date', $request->queryParams['ConnectionSearch']['maxConfDate']]
+    		]]);
     	} else {
-    		$dataProvider->query->andWhere([
-    				'and', ['is not', 'conf_date', null], ['type' => 1]
-    		])->orWhere([
-    				'and', ['is not', 'pay_date', null], ['type' => 2]
-    		]);
+    		$dataProvider->query->andWhere(['or', [
+    				'and', ['is not', 'conf_date', null], ['type' => 1], ['nocontract' => false]
+    		],[
+    				'and', ['is not', 'pay_date', null], ['type' => 2], ['nocontract' => false]
+    		]]);
     	}
     	
         return $this->render('grid_connection', [
