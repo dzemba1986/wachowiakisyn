@@ -29,6 +29,8 @@ use backend\models\Device;
 		    <?= $form->field($modelConnection, 'phone2', [
 		    	'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
 		    ]) ?>
+		    
+		    <?= Html::a('Czysc instalacje', Url::to(['installation/crash', 'address' => $modelConnection->address]), ['class' => 'create-installation']); ?>
 		
 		</div>
 		

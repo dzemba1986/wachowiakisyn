@@ -221,7 +221,7 @@ class Connection extends \yii\db\ActiveRecord
     public function getModelInstallations(){
     
     	//Connection ma wiele instalacji na danym adresie
-    	return $this->hasMany(Installation::className(), ['address'=>'address']);
+    	return $this->hasMany(Installation::className(), ['address'=>'address'])->where(['status' => true]);
     }
     
     /**
