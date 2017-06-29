@@ -50,7 +50,7 @@ subnet " . $dhcpSubnet->blockIp->getFirstIp() . ' netmask ' . $dhcpSubnet->block
 \t# USERS
 \t#######################################\n\n";
 				
-				$modelsIp = Ip::find()->joinWith('modelDevice')->where(['subnet' => $dhcpSubnet->id, 'type' => 5])->orderBy('ip')->all();
+				$modelsIp = Ip::find()->joinWith('modelDevice')->where(['subnet' => $dhcpSubnet->id, 'type' => 5, 'main' => true])->orderBy('ip')->all();
 				foreach ($modelsIp as $modelIp){
 					$data .= "\thost " . $modelIp->modelDevice->id . " {
 \t\thardware ethernet " .$modelIp->modelDevice->mac . ";
