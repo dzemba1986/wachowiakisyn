@@ -81,7 +81,8 @@ class InstallationSearch extends Installation
 				'ulica' => $this->street,
 				'dom' => $this->house,
 				'lokal' => $this->flat,
-				'invoiced' => $this->invoice_date
+				'invoiced' => $this->invoice_date,
+				'status' => $this->status
 				]);
 		
 		

@@ -76,7 +76,7 @@ class Installation extends \yii\db\ActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			[
-				['address', 'wire_length', 'type',
+				['address', 'wire_length', 'type', 'status',
 			  	'wire_date', 'socket_date',
 				'wire_user', 'socket_user', 'invoice_date'], 		
 				'safe'
@@ -113,7 +113,8 @@ class Installation extends \yii\db\ActiveRecord
 			'house' => 'Blok',
 			'house_detail' => 'Klatka',	
 			'flat' => 'Lokal',
-			'flat_detail' => 'Nazwa'	
+			'flat_detail' => 'Nazwa',
+			'status' => 'Status'	
 		);
 	}
     

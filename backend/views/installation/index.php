@@ -131,6 +131,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ],    
             'wire_user',
             'socket_user',
+        	[
+        		'class'=>'kartik\grid\BooleanColumn',
+        		'attribute' => 'status',
+        		'trueLabel' => 'Istnieje',
+        		'falseLabel' => 'Brak',
+//         		'trueIcon' => GridView::ICON_INACTIVE,
+//         		'falseIcon' => GridView::ICON_ACTIVE,
+        		'options' => ['style'=>'width:5%;'],
+        	],
             [   
             'header' => PageSize::widget([
                 'defaultPageSize' => 100,
