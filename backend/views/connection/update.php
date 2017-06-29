@@ -30,8 +30,11 @@ use backend\models\Device;
 		    	'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
 		    ]) ?>
 		    
-		    <?= Html::a('Czysc instalacje', Url::to(['installation/crash', 'address' => $modelConnection->address]), ['class' => 'create-installation']); ?>
+		    <?php if(!$modelConnection->host && $modelConnection->wire >= 1 && $modelConnection->socket >= 1) :?>
+		    
+		    <?= Html::a('Czysc instalacje', Url::to(['installation/crash', 'connectionId' => $modelConnection->id]), ['class' => 'crash-installation']); ?>
 		
+			<?php endif; ?>
 		</div>
 		
 		<div style="display: flex">
@@ -176,6 +179,16 @@ $(function(){
 	 		console.log('server error');
 	 	});
 		return false;				
+	});
+
+	$("body").on('click', '.crash-installation', function(event){
+        
+		$.get($(this).attr('href'), function(data) {
+
+        	alert('Wyczyszczono !');
+		});
+    
+        return false;
 	});
 
 // 	if (!($("#connection-device").val()) && !($("#connection-mac").val())){

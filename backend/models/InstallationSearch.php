@@ -19,7 +19,7 @@ class InstallationSearch extends Installation
 		return [
 		// The following rule is used by search().
 		// @todo Please remove those attributes that should not be searched.
-		[['address', 'wire_length', 'type',
+		[['address', 'wire_length', 'type', 'status',
 		 'wire_date', 'socket_date', 'minSocketDate', 'maxSocketDate',
 		 'wire_user', 'socket_user', 'invoice_date', 'street', 'house', 'house_detail', 'flat', 'flat_detail'], 
 		 'safe'],

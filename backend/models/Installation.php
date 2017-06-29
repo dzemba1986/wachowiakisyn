@@ -17,6 +17,7 @@ use yii\db\Expression;
  * @property string $socket_user
  * @property integer $type
  * @property string $invoice_date
+ * @property string $status
  */
 class Installation extends \yii\db\ActiveRecord
 {
@@ -67,6 +68,10 @@ class Installation extends \yii\db\ActiveRecord
             
             ['address', 'integer'],
             ['address', 'required', 'message'=>'Wartość wymagana'],
+				
+			['status', 'boolean'],
+			['status', 'default', 'value' => true],
+			['status', 'required', 'message'=>'Wartość wymagana'],
             
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -83,7 +88,7 @@ class Installation extends \yii\db\ActiveRecord
 	{
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['id', 'wire_date', 'wire_length', 'wire_user', 'type', 'address'];
-		$scenarios[self::SCENARIO_UPDATE] = ['wire_date', 'wire_length', 'wire_user', 'socket_user', 'socket_date', 'invoice_date'];
+		$scenarios[self::SCENARIO_UPDATE] = ['wire_date', 'wire_length', 'wire_user', 'socket_user', 'socket_date', 'invoice_date', 'status'];
 		$scenarios[self::SCENARIO_SOCKET] = ['socket_date', 'socket_user'];
 		 
 		return $scenarios;

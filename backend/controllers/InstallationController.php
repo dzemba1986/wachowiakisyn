@@ -145,6 +145,39 @@ class InstallationController extends Controller
     		}
     	}
     }
+    
+    public function actionCrash($connectionId)
+    {
+    	$modelConnection = Connection::findOne($connectionId);
+    	$modelInstallation = Installation::find()->where(['and',
+    		['address' => $modelConnection->address], 
+    		['type' => $modelConnection->type],
+    		['is not', 'wire_date', null],
+    		['is not', 'socket_date', null]
+    	])->one();
+    	
+    	$modelConnection->scenario = Connection::SCENARIO_UPDATE;
+    	$modelInstallation->scenario = Installation::SCENARIO_UPDATE;
+    	
+    	$request = Yii::$app->request;
+    	
+    	if ($request->isAjax){
+    		
+    		$modelConnection->wire = 0;
+    		$modelConnection->socket = 0;
+    		
+    		$modelInstallation->status = false;
+    			
+    		try {
+    			if(!($modelInstallation->save() && $modelConnection->save()))
+    				throw new Exception('Problem z zapisem połączenia i instalacji');
+    				
+    			return 1;
+    		} catch (Exception $e) {
+    			return 0;
+    		}
+    	}
+    }
 
     /**
      * Deletes an existing Installation model.
