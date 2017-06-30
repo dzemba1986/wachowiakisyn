@@ -24,7 +24,7 @@ class ConnectionSearch extends Connection
 			[	
 				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date', 'synch_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'task',
-				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again', 'wire',
+				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again', 'wire', 'socket',
 				'port', 'device', 'mac', 'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
 				'minConfDate', 'maxConfDate'],
 				'safe'
@@ -90,8 +90,8 @@ class ConnectionSearch extends Connection
 		
         if (!($this->load($params) && $this->validate())) {
 			return $dataProvider;
-		}	
-
+		}
+			
 		$query->FilterWhere([
 			'connection.id' => $this->id,
 			'ara_id' => $this->ara_id,
@@ -106,12 +106,16 @@ class ConnectionSearch extends Connection
 			'dom' => $this->house,
 			'lokal' => $this->flat,	
             'connection.nocontract' => $this->nocontract,
-			'socket' => $this->socket,
 			'wire' => $this->wire,
             'vip' => $this->vip,
 			'again' => $this->again,	
 			'task.start_date' => $this->task,	
 		]);
+		
+		if (isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '1'){
+			$query->andFilterWhere(['>', 'socket', 0]);
+		} elseif(isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '0')
+			$query->andFilterWhere(['socket' => 0]);
 	
 		$query->andFilterWhere(['like', 'dom_szczegol', $this->house_detail])
 			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail]);

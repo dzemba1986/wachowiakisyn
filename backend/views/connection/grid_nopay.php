@@ -142,13 +142,6 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         	'falseIcon' => GridView::ICON_ACTIVE,
             'options' => ['style'=>'width:5%;'],
         ],
-//         [
-// 	        'class'=>'kartik\grid\BooleanColumn',
-// 	        'attribute'=>'poll',
-// 	        'trueLabel' => 'Tak',
-// 	        'falseLabel' => 'Nie',
-// 	        'options' => ['style'=>'width:5%;'],
-//         ],
 		[
 			'class'=>'kartik\grid\BooleanColumn',
 			'attribute' => 'wire', // it can be 'attribute' => 'tableField' to.
@@ -214,23 +207,6 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             ]),
             'options' => ['style'=>'width:7%;'],
         ],
-//         [
-//             'attribute'=>'pay_date',
-//             'value'=>'pay_date',
-//             'format'=>'raw',
-//             'filter'=>	DatePicker::widget([
-//                 'model' => $searchModel,
-//                 'attribute' => 'pay_date',
-//                 'removeButton' => FALSE,
-//                 'language'=>'pl',	
-//                 'pluginOptions' => [
-//                     'format' => 'yyyy-mm-dd',
-//                     'todayHighlight' => true,
-//                     'endDate' => '0d', //wybór daty max do dziś
-//                 ]
-//             ]),
-//             'options' => ['style'=>'width:7%;'],
-//         ],
         [   
             'header' => PageSize::widget([
                 'defaultPageSize' => 100,
