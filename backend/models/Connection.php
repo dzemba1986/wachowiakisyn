@@ -77,10 +77,10 @@ class Connection extends \yii\db\ActiveRecord
 			['soa_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],
             
             ['phone', 'trim'],
-            ['phone', 'string', 'min'=>9, 'max'=>12, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
+            ['phone', 'string', 'min'=>9, 'max'=>13, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
             
             ['phone2', 'trim'],
-            ['phone2', 'string', 'min'=>9, 'max'=>12, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
+            ['phone2', 'string', 'min'=>9, 'max'=>13, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
             
 			['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
 			['mac', 'default', 'value'=>NULL],

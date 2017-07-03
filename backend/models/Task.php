@@ -106,7 +106,7 @@ class Task extends \yii\db\ActiveRecord
         	['installer', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
             
             ['phone', 'trim'],
-            ['phone', 'string', 'min'=>9, 'max'=>12, 'tooShort'=>'Minimum 9 znaków', 'tooLong'=>'Maksimum 12 znaków'],
+            ['phone', 'string', 'min'=>9, 'max'=>13, 'tooShort'=>'Minimum 9 znaków', 'tooLong'=>'Maksimum 12 znaków'],
             
             ['description', 'string'],
             
