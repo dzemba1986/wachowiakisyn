@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Skrypt wykonuje:
+ * aktualizacja kabli/gniazd w podłaczeniach/umowach
+ * sprawdza odnosniki w tabeli "task"
+ * sprawdza które podlączenia/umowy są podłączeniami/umowami ponownymi
+ */
+
 use yii\db\Migration;
 use backend\models\Connection;
 use backend\models\Task;
@@ -46,19 +53,8 @@ class m160315_083006_check_connection extends Migration
 
     public function down()
     {
-        echo "m160308_211606_update_con_of_ins cannot be reverted.\n";
+        echo "m160315_083006_check_connection cannot be reverted.\n";
 
         return false;
     }
-
-    /*
-    // Use safeUp/safeDown to run migration code within a transaction
-    public function safeUp()
-    {
-    }
-
-    public function safeDown()
-    {
-    }
-    */
 }
