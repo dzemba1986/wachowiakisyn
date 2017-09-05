@@ -58,7 +58,15 @@
 		<table class="table table-bordered detail-view" id="w0">
 			<tbody>
 				<?php foreach ($modelIps as $modelIp) : ?>
-				<tr><th>VLAN <?= $modelIp->modelSubnet->modelVlan->id; ?></th><td><?= $modelIp->ip; ?></td></tr>
+				<tr>
+					<th>VLAN <?= $modelIp->modelSubnet->modelVlan->id; ?></th>
+					<td><?= $modelIp->ip; ?></td>
+					<?php if(get_class($modelDevice) == 'backend\models\Swith') :?>
+						<td><a href="ssh://<?= $modelIp->ip; ?>:22222">Zaloguj</a></td>
+					<?php elseif (get_class($modelDevice) == 'backend\models\GatewayVoip') :?>
+						<td><a href="http://<?= $modelIp->ip; ?>:6666">Zaloguj</a></td>
+					<?php endif;?>
+				</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
