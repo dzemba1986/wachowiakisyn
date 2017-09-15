@@ -33,7 +33,7 @@ class Address extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'address';
+		return '{{address}}';
 	}
 	
 	public function rules()

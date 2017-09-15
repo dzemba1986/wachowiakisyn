@@ -35,7 +35,7 @@ class Device extends \yii\db\ActiveRecord
 	
 	public static function tableName()
 	{
-		return 'device';
+		return '{{device}}';
 	}
 	
 	public static function instantiate($row)

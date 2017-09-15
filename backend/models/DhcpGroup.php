@@ -6,7 +6,7 @@ class DhcpGroup extends \yii\db\ActiveRecord
 {
 	public static function tableName()
 	{
-		return 'dhcp_group';
+		return '{{dhcp_group}}';
 	}
 	
 	public function rules()

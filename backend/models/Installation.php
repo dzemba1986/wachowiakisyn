@@ -29,7 +29,7 @@ class Installation extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'installation';
+        return '{{installation}}';
     }
 
     /**

@@ -22,7 +22,7 @@ class DeviceType extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'device_type';
+		return '{{device_type}}';
 	}
 
 	public function getModelDevice(){

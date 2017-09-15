@@ -61,7 +61,7 @@ class Connection extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'connection';
+        return '{{connection}}';
     }
 
     /**

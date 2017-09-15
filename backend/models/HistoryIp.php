@@ -22,7 +22,7 @@ class HistoryIp extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'history_ip';
+		return '{{history_ip}}';
 	}
 
 	/**

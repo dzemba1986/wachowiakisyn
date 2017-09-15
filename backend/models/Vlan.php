@@ -20,7 +20,7 @@ class Vlan extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'vlan';
+		return '{{vlan}}';
 	}
 
 	/**

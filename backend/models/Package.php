@@ -23,7 +23,7 @@ class Package extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'package';
+		return '{{package}}';
 	}
 
 	/**

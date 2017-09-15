@@ -23,7 +23,7 @@ class Model extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'model';
+		return '{{model}}';
 	}
 
 	public function behaviors() {

@@ -18,7 +18,7 @@ class AddressShort extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'address_short';
+		return '{{address_short}}';
 	}
 	
 	/**

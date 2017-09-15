@@ -6,7 +6,7 @@ class DhcpOption extends \yii\db\ActiveRecord
 {
 	public static function tableName()
 	{
-		return 'dhcp_option';
+		return '{{dhcp_option}}';
 	}
 	
 	public function rules()

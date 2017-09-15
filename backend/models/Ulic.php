@@ -22,7 +22,7 @@ class Ulic extends ActiveRecord
 {
 	public static function tableName()
 	{
-		return 'ulic';
+		return '{{ulic}}';
 	}
 	
 }

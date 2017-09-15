@@ -22,7 +22,7 @@ class TaskType extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'task_type';
+		return '{{task_type}}';
 	}
 
 	/**

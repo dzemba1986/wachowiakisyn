@@ -17,7 +17,7 @@ class TaskCategory extends ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'task_category';
+		return '{{task_category}}';
 	}
 
 	/**

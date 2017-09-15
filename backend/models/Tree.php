@@ -20,7 +20,7 @@ class Tree extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'agregation';
+        return '{{agregation}}';
     }
 
     public function rules()

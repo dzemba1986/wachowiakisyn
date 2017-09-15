@@ -22,7 +22,7 @@ class Type extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'connection_type';
+		return '{{connection_type}}';
 	}
 
 	public function getInstallations(){

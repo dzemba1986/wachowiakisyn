@@ -19,7 +19,7 @@ class Manufacturer extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'manufacturer';
+		return '{{manufacturer}}';
 	}
 
 	public function getDevice(){

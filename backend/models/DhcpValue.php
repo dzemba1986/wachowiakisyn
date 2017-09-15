@@ -6,7 +6,7 @@ class DhcpValue extends \yii\db\ActiveRecord
 {
 	public static function tableName()
 	{
-		return 'dhcp_value';
+		return '{{dhcp_value}}';
 	}
 	
 	public function rules()
