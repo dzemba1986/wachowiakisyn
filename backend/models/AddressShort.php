@@ -2,6 +2,8 @@
 
 namespace backend\models;
 
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "address_short".
  *
@@ -11,24 +13,24 @@ namespace backend\models;
  * @property integer $config
  */
 
-class AddressShort extends \yii\db\ActiveRecord
+class AddressShort extends ActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
-	public static function tableName()
-	{
+	public static function tableName() : string {
+		
 		return '{{address_short}}';
 	}
 	
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
-	{
-		return array(
+	public function attributeLabels() : array {
+		
+		return [
 			'id' => 'ID',
 			'name' => 'Nazwa',
-		);
+		];
 	}
 }
