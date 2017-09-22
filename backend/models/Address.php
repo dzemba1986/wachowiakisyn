@@ -2,8 +2,9 @@
 
 namespace backend\models;
 
-use Yii;
 use backend\models\Installation;
+use yii\db\ActiveQueryInterface;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "tbl_address".
  *
@@ -22,8 +23,10 @@ use backend\models\Installation;
  * @property string $lokal
  * @property string $lokal_szczegol
  * @property string $pietro
+ * @property string $shortAddress
+ * 
  */
-class Address extends \yii\db\ActiveRecord
+class Address extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
@@ -31,13 +34,13 @@ class Address extends \yii\db\ActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
-	public static function tableName()
-	{
+	public static function tableName() : string {
+		
 		return '{{address}}';
 	}
 	
-	public function rules()
-	{
+	public function rules() : array {
+		
 		return [
 			['t_woj', 'string', 'min' => 1, 'max' => 2],
 			['t_woj', 'default', 'value' => '30'],
@@ -92,16 +95,16 @@ class Address extends \yii\db\ActiveRecord
 			['pietro', 'string', 'min' => -1, 'max' => 2],
 			['pietro', 'default', 'value' => ''],
 				
-			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix',
-				'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'], 'safe'],
+			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'], 'safe'],
 		];
 	}
 	
-	public function scenarios(){
+	public function scenarios() : array {
 	
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 
-			'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'];
+			'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'
+		];
 		$scenarios[self::SCENARIO_UPDATE] = ['t_ulica', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'];
 	
 		return $scenarios;
@@ -110,17 +113,17 @@ class Address extends \yii\db\ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
-	{
-		return array(
-				'id' => 'ID',
-				'ulica_prefix' => 'Prefix',
-				'dom' => 'Blok',
-				'dom_szczegol' => 'Klatka',
-				'lokal' => 'Lokal',
-				'lokal_szczegol' => 'Lokal szczegół',
-				'pietro' => 'Piętro'
-		);
+	public function attributeLabels() : array {
+		
+		return [
+			'id' => 'ID',
+			'ulica_prefix' => 'Prefix',
+			'dom' => 'Blok',
+			'dom_szczegol' => 'Klatka',
+			'lokal' => 'Lokal',
+			'lokal_szczegol' => 'Lokal szczegół',
+			'pietro' => 'Piętro'
+		];
 	}
 	
 	public function save($runValidation = true, $attributeNames = null){
@@ -140,24 +143,44 @@ class Address extends \yii\db\ActiveRecord
 		}
 	}
 	
+	public function __toString() : string {
+		
+		if (empty($this->pietro))
+			if ($this->lokal)
+				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol;
+			else
+				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol);
+		else
+			if ($this->lokal)
+				return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
+			else
+				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . ' (piętro ' . $this->pietro . ')';
+	}
+	
 	/**
-	 * @return string full name address
+	 * @return string full name address 
 	 */
+	//TODO remove this function if not use
 	public function getFullAddress(){
 		
 		return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
 	}
 	
+	//TODO remove this function if not use
 	public function getShortAddress(){
 	
 		return $this->modelShortStreet->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
 	}
 	
-	public static function getFloor(){
+	/**
+	 * @return array of floor number
+	 */
+	public static function getFloor() : array {
 	
 		return ['-1' => '-1', '0' => '0', '1' => '1', '2' => '2', '3' => '3', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '11' => '11'];
 	}
 	
+	//TODO remove this function if not use
 	public function getFullDeviceAddress(){
 	
 		//var_dump($this->pietro); exit();
@@ -174,7 +197,8 @@ class Address extends \yii\db\ActiveRecord
 				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol);				
 	}
 	
-	public function getFullDeviceShortAddress(){
+	//TODO rename function to "getShostAddress"
+	public function getFullDeviceShortAddress() : string {
 	
 		if (!empty($this->pietro))
 			if ($this->lokal)
@@ -187,14 +211,18 @@ class Address extends \yii\db\ActiveRecord
 			else
 				return $this->modelShortStreet->name . $this->dom . strtoupper($this->dom_szczegol);
 	}
-
-	public function getInstallations(){
+	
+	/**
+	 * @return ActiceQueryInterface the relational query object
+	 */
+	public function getInstallations() : ActiveQueryInterface {
 	
 		//Wiele instalacji na danym adresie
 		return $this->hasMany(Installation::className(), ['address'=>'id']);
 	}
+	
 	/**
-	 * @return Connection object array for same address
+	 * @return ActiceQueryInterface the relational query object
 	 */
 	public function getConnections(){
 	
@@ -202,21 +230,30 @@ class Address extends \yii\db\ActiveRecord
 		return $this->hasMany(Connection::className(), ['address'=>'id']);
 	}
 	
+	/**
+	 * @return ActiceQueryInterface the relational query object
+	 */
 	public function getModelsDevice(){
 	
-		//Wiele instalacji na danym adresie
+		//Wiele urządzeń na danym adresie
 		return $this->hasMany(Device::className(), ['address'=>'id']);
 	}
 	
+	/**
+	 * @return ActiceQueryInterface the relational query object
+	 */
 	public function getModelsTask(){
 	
-		//Wiele instalacji na danym adresie
+		//Wiele zadań na danym adresie
 		return $this->hasMany(Task::className(), ['address'=>'id']);
 	}
 	
+	/**
+	 * @return ActiceQueryInterface the relational query object
+	 */
 	public function getModelShortStreet(){
 	
-		//Wiele umów na danym adresie
+		//Powiązanie dla krótkich adresów
 		return $this->hasOne(AddressShort::className(), ['t_ulica'=>'t_ulica']);
 	}
 	
