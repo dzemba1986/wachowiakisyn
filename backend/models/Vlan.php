@@ -2,7 +2,9 @@
 
 namespace backend\models;
 
-use Yii;
+use yii\db\ActiveRecord;
+use yii\db\ActiveQueryInterface;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "vlan".
@@ -10,26 +12,30 @@ use Yii;
  * The followings are the available columns in table 'vlan':
  * @property integer $id
  * @property string $desc
+ * @property ActiveQuery $modelSubnets
  */
-class Vlan extends \yii\db\ActiveRecord
+
+class Vlan extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
+	
 	/**
-	 * @return string the associated database table name
+	 * {@inheritdoc}
+	 * @return string
 	 */
-	public static function tableName()
-	{
+	public static function tableName() : string {
+		
 		return '{{vlan}}';
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
+	 * 
+	 * {@inheritDoc}
+	 * @see \yii\base\Model::rules()
 	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
+	public function rules() : array {
+		
 		return [
 			['id', 'required', 'message' => 'Wartość wymagana'],
 			['id', 'integer', 'min' => 1, 'max' => 4096, 'tooSmall' => 'Wartość za mała', 'tooBig' => 'Wartość za duża', 'message' => 'Wartość liczbowa'],	
@@ -37,13 +43,16 @@ class Vlan extends \yii\db\ActiveRecord
 			['desc', 'required', 'message' => 'Wartość wymagana'],
 			['desc', 'string'],
 
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			[['id', 'desc'], 'safe'],
 		];
 	}
 	
-	public function scenarios(){
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \yii\base\Model::scenarios()
+	 */
+	public function scenarios() : array {
 	
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['id', 'desc'];
@@ -53,18 +62,25 @@ class Vlan extends \yii\db\ActiveRecord
 	}
 	
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * 
+	 * {@inheritDoc}
+	 * @see \yii\base\Model::attributeLabels()
 	 */
 	public function attributeLabels()
 	{
-		return array(
+		return [
 			'id' => 'Vlan',
 			'desc' => 'Opis',
-		);
+		];
 	}
 	
-	public function getModelSubnets(){
+	/**
+	 * 
+	 * @return ActiveQuery
+	 */
+	public function getModelSubnets() : ActiveQueryInterface {
 	
+		//do vlanu należy wiele podsieci
 		return $this->hasMany(Subnet::className(), ['vlan'=> 'id']);
 	}
 }
