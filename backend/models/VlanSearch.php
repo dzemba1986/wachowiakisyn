@@ -5,31 +5,38 @@ namespace backend\models;
 use yii\data\ActiveDataProvider;
 
 /**
- * ModyficationSearch represents the model behind the search form about `app\models\Modyfication`.
+ * VlanSearch represents the model behind the search form about `app\models\Vlan`.
  */
 class VlanSearch extends Vlan
 {
-    public function rules()
-    {
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \backend\models\Vlan::rules()
+	 */
+    public function rules() : array {
+    	
         return [
             [['id', 'desc'], 'safe'],
         ];
     }
 
-    public function search($params)
-    {
+    /**
+     * 
+     * @param array $params
+     * @return \yii\data\ActiveDataProvider
+     */
+    public function search($params) {
+    	
         $query = Vlan::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-        	'pagination' => ['pageSize' => 100],
+        	'pagination' => ['pageSize' => 100]
         ]);
         
         $dataProvider->setSort([
-        		'defaultOrder' => ['id' => SORT_ASC],
-        		'attributes' => [
-        				//'id',
-        		]
+        	'defaultOrder' => ['id' => SORT_ASC]
         ]);
 
         if (!($this->load($params) && $this->validate())) {
@@ -37,7 +44,7 @@ class VlanSearch extends Vlan
         }
         
         $query->filterWhere([
-            'id' => $this->id,
+            'id' => $this->id
         ]);
 
         $query->andFilterWhere(['like', 'desc', $this->desc]);
