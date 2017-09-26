@@ -4,10 +4,14 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use backend\models\Address;
+use kartik\select2\Select2;
+use yii\base\Widget;
 
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\AddressSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/**
+ * @var $this yii\web\View
+ * @var $searchModel backend\models\AddressSearch
+ * @var $dataProvider yii\data\ActiveDataProvider
+ */
 
 $this->title = 'Adresy';
 $this->params['breadcrumbs'][] = $this->title;
@@ -20,7 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
             	'class' => 'yii\grid\SerialColumn',
-            	'options' => ['style'=>'width:5%;']	
             ],
             [
             	'attribute' => 'ulica_prefix',
@@ -38,32 +41,27 @@ $this->params['breadcrumbs'][] = $this->title;
     		],
         	[
         		'attribute'=>'ulica',
-        		'filter'=> Html::activeDropDownList($searchModel, 'ulica', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
-        		'options' => ['style'=>'width:15%;'],
+        		'filter'=> Select2::widget([
+        			'model' => $searchModel,
+        			'attribute' => 'ulica',
+        			'data' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+        			'options' => ['placeholder' => 'Ulica'],
+        			'pluginOptions' => [
+        				'allowClear' => true
+        			],
+        		]),
+        		'options' => ['style'=>'width:20%;']
         	],
-            [
-            	'attribute' => 'dom',
-            	'options' => ['style'=>'width:5%;']
-    		],
-        	[	
-            	'attribute' => 'dom_szczegol',
-        		'options' => ['style'=>'width:5%;']
-        	],		
-            [
-            	'attribute' => 'lokal',
-            	'options' => ['style'=>'width:5%;']
-    		],
-        	[
-        		'attribute' => 'pietro',
-        		'options' => ['style'=>'width:5%;']
-        	],        		
+            'dom',
+        	'dom_szczegol',	
+            'lokal',
+        	'pietro',        		
             'lokal_szczegol',
             [
             	'class' => 'yii\grid\ActionColumn',
             	'template' => '{view} {update}',
-            	'options' => ['style'=>'width:5%;']
-        	],
-        ],
+        	]
+        ]
     ]); ?>
 
 </div>
