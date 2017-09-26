@@ -14,6 +14,11 @@ use yii\filters\VerbFilter;
  */
 class AddressController extends Controller
 {
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \yii\base\Component::behaviors()
+	 */
     public function behaviors()
     {
         return [
@@ -38,18 +43,6 @@ class AddressController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Address model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
         ]);
     }
 
