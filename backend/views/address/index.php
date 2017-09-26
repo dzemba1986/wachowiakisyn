@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'class' => 'yii\grid\SerialColumn',
             ],
+        	'id', //TODO kolumna powinna być dostępna tylko dla administratora	
             [
             	'attribute' => 'ulica_prefix',
             	'options' => ['style'=>'width:5%'],
