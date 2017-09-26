@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
         			'data' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
         			'options' => ['placeholder' => 'Ulica'],
         			'pluginOptions' => [
-        				'allowClear' => true
+        				'allowClear' => true	//dodaje możliwość czyszczenia poprzez `x`
         			],
         		]),
         		'options' => ['style'=>'width:20%;']
