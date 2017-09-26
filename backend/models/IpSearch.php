@@ -5,17 +5,27 @@ namespace backend\models;
 use yii\data\ActiveDataProvider;
 
 /**
- * ModyficationSearch represents the model behind the search form about `app\models\Modyfication`.
+ * IpSearch represents the model behind the search form about `app\models\Ip`.
  */
 class IpSearch extends Ip
 {
-    public function rules()
-    {
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \backend\models\Ip::rules()
+	 */
+    public function rules() : array {
+    	
         return [
             [['ip', 'subnet', 'main', 'device'], 'safe'],
         ];
     }
 
+    /**
+     * 
+     * @param array $params
+     * @return \yii\data\ActiveDataProvider
+     */
     public function search($params)
     {
         $query = Ip::find();
