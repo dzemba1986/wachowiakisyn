@@ -6,17 +6,27 @@ use backend\models\Address;
 use yii\data\ActiveDataProvider;
 
 /**
- * ModyficationSearch represents the model behind the search form about `app\models\Modyfication`.
+ * AddressSearch represents the model behind the search form about `app\models\Address`.
  */
 class AddressSearch extends Address
 {
-    public function rules()
-    {
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \backend\models\Address::rules()
+	 */
+    public function rules() : array {
+    	
         return [
             [['ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol'], 'safe'],
         ];
     }
 
+    /**
+     * 
+     * @param array $params
+     * @return \yii\data\ActiveDataProvider
+     */
     public function search($params)
     {
         $query = Address::find();
