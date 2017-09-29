@@ -25,7 +25,7 @@ class AddressController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post']
                 ],
             ],
         ];
@@ -72,16 +72,30 @@ class AddressController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+    	$request = Yii::$app->request;
+    		
+    	if ($request->isAjax){
+    		$model = $this->findModel($id);
+    		
+    		try {
+    			if ($model->load($request->post())) {
+    				if ($model->save())
+    					return 1;
+    				else 
+    					return 0;
+    			} else {
+    				return $this->renderAjax('update', [
+    					'model' => $model,
+    				]);
+    			}
+    		} catch (Exception $e) {
+ 				echo $e->getMessage();   			
+    		}
+    	} else { //TODO może by trzeba było obsłużyć jakoś zapytanie nie ajax'owe?
+    		echo "Zapytanie nie ajax'owe";
+    	}
     }
+    
 
     /**
      * Deletes an existing Address model.
