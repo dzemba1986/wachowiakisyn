@@ -205,7 +205,15 @@ class SiteController extends Controller
         	|| $controler == 'raport'){
             $menu = [
             	[
-            		'html' => '<a href=' . Url::to(['address/index']) . '>Adresy</a>'
+            		'html' => 'Adresy',
+            		'items' => [
+            			[
+            				'html' => '<a href=' . Url::to(['address/index']) . '>Lista</a>'
+            			],
+            			[
+            				'html' => '<a href=' . Url::to(['address/list']) . '>Dodaj</a>'
+            			],
+            		]	
             	],
                 [   
                     'html' => 'Połączenia',
