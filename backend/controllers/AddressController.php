@@ -66,9 +66,9 @@ class AddressController extends Controller
 
     /**
      * Updates an existing Address model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * Only ajax request, if update is successful, return 1 else 0.
      * @param integer $id
-     * @return mixed
+     * @return integer|string
      */
     public function actionUpdate($id)
     {
@@ -95,7 +95,6 @@ class AddressController extends Controller
     		echo "Zapytanie nie ajax'owe";
     	}
     }
-    
 
     /**
      * Deletes an existing Address model.
