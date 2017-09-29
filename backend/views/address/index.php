@@ -51,16 +51,15 @@ require_once '_modal_update.php';
             	),	
     		],
         	[
-        		'attribute'=>'ulica',
-        		'filter'=> Select2::widget([
-        			'model' => $searchModel,
-        			'attribute' => 'ulica',
-        			'data' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
-        			'options' => ['placeholder' => 'Ulica'],
-        			'pluginOptions' => [
-        				'allowClear' => true	//dodaje możliwość czyszczenia poprzez `x`
-        			],
-        		]),
+        		'attribute' => 'ulica',
+        		'value' => 'ulica',
+        		'filterType' => GridView::FILTER_SELECT2,
+        		'filter' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+        		'filterWidgetOptions' => [
+        			'pluginOptions' => ['allowClear' => true],
+        		],
+        		'filterInputOptions' => ['placeholder' => 'ulica'],
+        		'format' => 'raw',
         		'options' => ['style'=>'width:20%;']
         	],
             'dom',
