@@ -8,6 +8,8 @@ use backend\models\AddressSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use backend\models\AddressShort;
+use backend\models\AddressShortSearch;
 
 /**
  * AddressController implements the CRUD actions for Address model.
@@ -45,6 +47,21 @@ class AddressController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    
+    /**
+     * Lista all AddressShort models
+     * @return string
+     */
+    public function actionList()
+    {
+    	$searchModel = new AddressShortSearch();
+    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    	
+    	return $this->render('list', [
+    		'searchModel' => $searchModel,
+    		'dataProvider' => $dataProvider,
+    	]);
+    }
 
     /**
      * Creates a new Address model.
@@ -53,15 +70,7 @@ class AddressController extends Controller
      */
     public function actionCreate()
     {
-        $modelAddress = new Address();
-
-        if ($modelAddress->load(Yii::$app->request->post()) && $modelAddress->save()) {
-            //return $this->redirect(['view', 'id' => $modelAddress->id]);
-        } else {
-            return $this->renderAjax('create', [
-                'modelAddress' => $modelAddress,
-            ]);
-        }
+    	//TODO dodawanie nowej ulicy do bazy
     }
 
     /**
@@ -96,6 +105,31 @@ class AddressController extends Controller
     	}
     }
     
+    public function actionUpdateShort($id)
+    {
+    	$request = Yii::$app->request;
+    	
+    	if ($request->isAjax){
+    		$model = AddressShort::findOne($id);
+    		
+    		try {
+    			if ($model->load($request->post())) {
+    				if ($model->save())
+    					return 1;
+    				else
+    					return 0;
+    			} else {
+    				return $this->renderAjax('update_short', [
+    					'model' => $model
+    				]);
+    			}
+    		} catch (Exception $e) {
+    			echo $e->getMessage();
+    		}
+    	} else { //TODO może by trzeba było obsłużyć jakoś zapytanie nie ajax'owe?
+    		echo "Zapytanie nie ajax'owe";
+    	}
+    }
 
     /**
      * Deletes an existing Address model.
