@@ -2,15 +2,15 @@
 use yii\bootstrap\Modal;
 
 /**
- * Modal dialog for update Address model
+ * Modal dialog for update
  */
 Modal::begin([
-	'id' => 'modal-update-address',
-	'header' => '<center><h4>Edycja adresu</h4></center>',
+	'id' => 'modal-update',
+	'header' => '<center><h4>Edycja</h4></center>',
 	'size' => 'modal-sm',
 ]);
 
-echo "<div id='modal-content-calendar'></div>";
+echo "<div id='modal-content'></div>";
 
 Modal::end(); 
 ?>

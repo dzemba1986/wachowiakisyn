@@ -56,7 +56,7 @@ $(function(){
 	  		form.serialize()	//dane
 	 	).done(function(result){
 	 		if(result == 1){
-				$('#modal-update-address').modal('hide');
+				$('#modal-update').modal('hide');
 	 			$.pjax.reload({container: '#address-grid-pjax'});
 	 		}
 	 		else{

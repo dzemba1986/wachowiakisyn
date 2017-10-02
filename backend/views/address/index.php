@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use backend\models\Address;
-use kartik\select2\Select2;
 use yii\base\Widget;
 use yii\helpers\Url;
 
@@ -91,8 +90,8 @@ $(document).ready(function() {
         
     $('body').on('click', '.update-button', function(event){
         
-		$('#modal-update-address').modal('show')
-			.find('#modal-content-calendar')
+		$('#modal-update').modal('show')
+			.find('#modal-content')
 			.load($(this).attr('href'));
 
         return false;
