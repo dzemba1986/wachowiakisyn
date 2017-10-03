@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
 use backend\models\Address;
 
 /**
@@ -16,27 +15,20 @@ use backend\models\Address;
 		'id'=>$model->formName()
 	]
 ); ?>
-    
-	<?= $form->field($model, 'ulica')->dropDownList(ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica')) ?>
+	<?= $form->field($model, 'ulica') ?>
 
-	<div class="row">
+    <div class="row">
     
-    <?= $form->field($model, 'dom', [
+    <?= $form->field($model, 'ulica_prefix', [
     	'options' => ['class' => 'col-md-4', 'style' => 'padding-right: 5px;']
     ]) ?>
 
-    <?= $form->field($model, 'dom_szczegol', [
+    <?= $form->field($model, 'name', [
     	'options' => ['class' => 'col-md-4', 'style' => 'padding-left: 5px; padding-right: 5px;']    		
     ]) ?>
     
-    <?= $form->field($model, 'lokal', [
-    	'options' => ['class' => 'col-md-4', 'style' => 'padding-left: 5px;']
-    ]) ?>
-	
 	</div>
-	
-	<?= $form->field($model, 'lokal_szczegol') ?>
-	
+    
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Edytuj', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

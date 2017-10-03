@@ -6,14 +6,15 @@ use kartik\grid\GridView;
 use backend\models\Address;
 use yii\base\Widget;
 use yii\helpers\Url;
+use backend\models\AddressShort;
 
 /**
  * @var $this yii\web\View
- * @var $searchModel backend\models\AddressSearch
+ * @var $searchModel backend\models\AddressShortSearch
  * @var $dataProvider yii\data\ActiveDataProvider
  */
 
-$this->title = 'Adresy';
+$this->title = 'Ulice';
 $this->params['breadcrumbs'][] = $this->title;
 
 require_once '_modal_update.php';
@@ -30,11 +31,18 @@ require_once '_modal_update.php';
     			'id' => 'address-grid-pjax'
     		]
     	],
+    	'summary' => 'Widoczne {count} z {totalCount}',
         'columns' => [
             [
             	'class' => 'yii\grid\SerialColumn',
+            	'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', Url::to(['address/create']), ['class' => 'create-button']),
             ],
-        	'id', //TODO kolumna powinna być dostępna tylko dla administratora	
+        	't_miasto',	
+        	't_woj',
+        	't_pow',
+        	't_gmi',
+        	't_rodz',
+        	't_ulica',	
             [
             	'attribute' => 'ulica_prefix',
             	'options' => ['style'=>'width:5%'],
@@ -42,7 +50,7 @@ require_once '_modal_update.php';
             		$searchModel, 
             		'ulica_prefix', 
             		ArrayHelper::map(
-            			Address::find()->select('ulica_prefix')->groupBy('ulica_prefix')->all(), 
+            			AddressShort::find()->select('ulica_prefix')->groupBy('ulica_prefix')->all(), 
             			'ulica_prefix', 
             			'ulica_prefix'
             		), 
@@ -53,7 +61,7 @@ require_once '_modal_update.php';
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::find()->select('ulica')->all(), 'ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],
@@ -61,19 +69,14 @@ require_once '_modal_update.php';
         		'format' => 'raw',
         		'options' => ['style'=>'width:20%;']
         	],
-            'dom',
-        	'dom_szczegol',	
-            'lokal',
-        	'pietro',        		
-            'lokal_szczegol',
+        	'name',	
             [
             	'class' => 'yii\grid\ActionColumn',
             	'template' => '{update}',
             	'buttons' => [
-					'update' => function ($url){
-						return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+					'update' => function ($url, $model){
+						return Html::a('<span class="glyphicon glyphicon-pencil"></span>', Url::to(['address/update-short', 'id' => trim($model->t_ulica)]), [
 							'title' => \Yii::t('yii', 'Edycja'),
-// 							'data-pjax' => '0',
 							'class' => ['update-button']	
 						]);
         			}
@@ -88,14 +91,23 @@ require_once '_modal_update.php';
 $js = <<<JS
 $(document).ready(function() {
         
-    $('body').on('click', '.update-button', function(event){
+    $('body')
+		.on('click', '.update-button', function(event){
         
-		$('#modal-update').modal('show')
-			.find('#modal-content')
-			.load($(this).attr('href'));
-
-        return false;
-	});
+			$('#modal-update').modal('show')
+				.find('#modal-content')
+				.load($(this).attr('href'));
+	
+	        return false;
+		})
+		.on('click', '.create-button', function(event){
+        
+			$('#modal-update').modal('show')
+				.find('#modal-content')
+				.load($(this).attr('href'));
+	
+	        return false;
+		})
 });
 JS;
 $this->registerJs($js);
