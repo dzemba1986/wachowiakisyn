@@ -56,8 +56,8 @@ class AddressShort extends ActiveRecord
 			['t_miasto', 'string', 'min' => 7, 'max' => 7],
 			['t_miasto', 'trim'],
 			
-			['t_ulica', 'string', 'min' => 7, 'max' => 7],
-			['t_ulica', 'unique', 'message' => 'Ulica istnieje'],
+			['t_ulica', 'string', 'min' => 5, 'max' => 7],
+			[['t_ulica', 't_miasto'], 'unique', 'targetAttribute' => ['t_ulica', 't_miasto'], 'message' => 'Ulica istnieje'],	//TODO jeżeli wyjdziemy poza Poznań należy klucz unikalny nałożyć na `t_ulica` + `t_miasto` 
 			
 			['ulica_prefix', 'string', 'min' => 1, 'max' => 3],
 			['ulica_prefix', 'trim'],
@@ -66,7 +66,7 @@ class AddressShort extends ActiveRecord
 			['ulica', 'required', 'message' => 'Wartość wymagana'],
 			['ulica', 'trim'],
 			
-			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix', 'ulica'], 'safe'],
+			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix', 'ulica', 'name'], 'safe'],
 		];
 	}
 	
@@ -82,6 +82,7 @@ class AddressShort extends ActiveRecord
 			't_pow' => 'Teryt powiat',
 			't_gmi' => 'Teryt gmina',
 			't_rodz' => 'Teryt rodzaj',
+			't_ulica' => 'Teryt ulica',	
 			'ulica_prefix' => 'prefix',	
 			'name' => 'Skrót',
 			'ulica' => 'Ulica',	

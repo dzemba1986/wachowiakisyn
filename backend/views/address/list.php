@@ -31,15 +31,18 @@ require_once '_modal_update.php';
     			'id' => 'address-grid-pjax'
     		]
     	],
+    	'summary' => 'Widoczne {count} z {totalCount}',
         'columns' => [
             [
             	'class' => 'yii\grid\SerialColumn',
+            	'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', Url::to(['address/create']), ['class' => 'create-button']),
             ],
         	't_miasto',	
         	't_woj',
         	't_pow',
         	't_gmi',
         	't_rodz',
+        	't_ulica',	
             [
             	'attribute' => 'ulica_prefix',
             	'options' => ['style'=>'width:5%'],
@@ -88,14 +91,23 @@ require_once '_modal_update.php';
 $js = <<<JS
 $(document).ready(function() {
         
-    $('body').on('click', '.update-button', function(event){
+    $('body')
+		.on('click', '.update-button', function(event){
         
-		$('#modal-update').modal('show')
-			.find('#modal-content')
-			.load($(this).attr('href'));
-
-        return false;
-	});
+			$('#modal-update').modal('show')
+				.find('#modal-content')
+				.load($(this).attr('href'));
+	
+	        return false;
+		})
+		.on('click', '.create-button', function(event){
+        
+			$('#modal-update').modal('show')
+				.find('#modal-content')
+				.load($(this).attr('href'));
+	
+	        return false;
+		})
 });
 JS;
 $this->registerJs($js);
