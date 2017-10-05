@@ -57,7 +57,7 @@ class AddressShort extends ActiveRecord
 			['t_miasto', 'trim'],
 			
 			['t_ulica', 'string', 'min' => 5, 'max' => 7],
-			[['t_ulica', 't_miasto'], 'unique', 'targetAttribute' => ['t_ulica', 't_miasto'], 'message' => 'Ulica istnieje'],	//TODO jeżeli wyjdziemy poza Poznań należy klucz unikalny nałożyć na `t_ulica` + `t_miasto` 
+			[['t_ulica', 't_miasto'], 'unique', 'targetAttribute' => ['t_ulica', 't_miasto'], 'message' => 'Ulica istnieje'], 
 			
 			['ulica_prefix', 'string', 'min' => 1, 'max' => 3],
 			['ulica_prefix', 'trim'],
@@ -65,6 +65,15 @@ class AddressShort extends ActiveRecord
 			['ulica', 'string', 'min' => 2, 'max' => 255],
 			['ulica', 'required', 'message' => 'Wartość wymagana'],
 			['ulica', 'trim'],
+			
+			['name', 'required', 'message' => 'Wartość Wymagana'],
+			['name', 'string', 'min' => 2, 'max' => 5, 'tooShort'=>'Min {min} znaki', 'tooLong'=>'Max {max} znaków'],
+			['name', 'match', 'pattern' => '/^[A-Z]{2,5}$/', 'message' => 'Tylko duże litery'],
+			['name', 'filter', 'filter' => 'strtoupper'],
+				
+			['config', 'integer'],
+			['config', 'in', 'range' => [1,2]],	
+			['config', 'required', 'message' => 'Wartość Wymagana'],
 			
 			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix', 'ulica', 'name'], 'safe'],
 		];
