@@ -107,4 +107,9 @@ class AddressShort extends ActiveRecord
 		
 		return self::find()->select('ulica')->orderBy('ulica')->all();
 	}
+	
+	public static function listByPrefix() {
+		
+		return self::find()->select('ulica_prefix')->groupBy('ulica_prefix')->all();
+	}
 }

@@ -42,11 +42,7 @@ require_once '_modal_update.php';
             	'filter' => Html::activeDropDownList(
             		$searchModel, 
             		'ulica_prefix', 
-            		ArrayHelper::map(
-            			Address::find()->select('ulica_prefix')->groupBy('ulica_prefix')->all(), 
-            			'ulica_prefix', 
-            			'ulica_prefix'
-            		), 
+            		ArrayHelper::map(AddressShort::listByPrefix(), 'ulica_prefix', 'ulica_prefix'), 
             		['prompt'=>'', 'class'=>'form-control']
             	),	
     		],
