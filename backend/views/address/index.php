@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use backend\models\Address;
 use yii\base\Widget;
 use yii\helpers\Url;
+use backend\models\AddressShort;
 
 /**
  * @var $this yii\web\View
@@ -53,7 +54,7 @@ require_once '_modal_update.php';
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::list(), 'ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],

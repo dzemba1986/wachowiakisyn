@@ -98,4 +98,13 @@ class AddressShort extends ActiveRecord
 			'config' => 'Konfiguracja'
 		];
 	}
+	
+	/**
+	 * Lists models
+	 * @return array|\yii\db\ActiveRecord[]
+	 */
+	public static function list() {
+		
+		return self::find()->select('ulica')->orderBy('ulica')->all();
+	}
 }
