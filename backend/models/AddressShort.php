@@ -103,7 +103,7 @@ class AddressShort extends ActiveRecord
 	 * Lists models
 	 * @return array|\yii\db\ActiveRecord[]
 	 */
-	public static function list() {
+	public static function listByStreetName() {
 		
 		return self::find()->select('ulica')->orderBy('ulica')->all();
 	}
