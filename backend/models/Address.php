@@ -6,10 +6,10 @@ use backend\models\Installation;
 use yii\db\ActiveQueryInterface;
 use yii\db\ActiveRecord;
 /**
- * This is the model class for table "tbl_address".
+ * This is the model class for table 'address'.
  *
- * The followings are the available columns in table 'tbl_localization':
- * @property integer $id
+ * The followings are the available columns in table 'address':
+ * @property integer $id PK
  * @property string $t_woj
  * @property string $t_pow
  * @property string $t_gmi
@@ -23,7 +23,7 @@ use yii\db\ActiveRecord;
  * @property string $lokal
  * @property string $lokal_szczegol
  * @property string $pietro
- * @property string $shortAddress
+ * @property string $shortAddress 
  * 
  */
 class Address extends ActiveRecord
@@ -42,38 +42,10 @@ class Address extends ActiveRecord
 	public function rules() : array {
 		
 		return [
-			['t_woj', 'string', 'min' => 1, 'max' => 2],
-			['t_woj', 'default', 'value' => '30'],
-			['t_woj', 'trim'],				
 				
-			['t_pow', 'string', 'min' => 1, 'max' => 2],
-			['t_pow', 'default', 'value' => '64'],
-			['t_pow', 'trim'],
-				
-			['t_gmi', 'string', 'min' => 1, 'max' => 2],
-			['t_gmi', 'default', 'value' => '05'],
-			['t_gmi', 'trim'],
-				
-			['t_rodz', 'string', 'min' => 1, 'max' => 1],
-			['t_rodz', 'default', 'value' => '9'],
-			['t_rodz', 'trim'],
-				
-			['t_miasto', 'string', 'min' => 7, 'max' => 7],
-			['t_miasto', 'default', 'value' => '0970224'],
-			['t_miasto', 'trim'],
-				
-			['t_ulica', 'string', 'min' => 7, 'max' => 7],
-			['t_ulica', 'default', 'value' => function (){ return $this->getTUlica(); }],
-			//['t_ulica', 'trim'],
+			//pola będą wypełniane automatycznie, nie są potrzebne reguły
+			//['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix', 'ulica']
 			
-			['ulica_prefix', 'string', 'min' => 1, 'max' => 3],
-			['ulica_prefix', 'default', 'value' => function (){ return $this->getUlicaPrefix(); }],
-			['ulica_prefix', 'trim'],
-				
-			['ulica', 'string', 'min' => 2, 'max' => 255],
-			['ulica', 'required', 'message' => 'Wartość wymagana'],
-			['ulica', 'trim'],	
-				
 			['dom', 'string', 'min' => 1, 'max' => 20],
 			['dom', 'required', 'message' => 'Wartość wymagana'],
 			['dom', 'trim'],				
@@ -143,6 +115,9 @@ class Address extends ActiveRecord
 		}
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function __toString() : string {
 		
 		if (empty($this->pietro))
@@ -197,7 +172,10 @@ class Address extends ActiveRecord
 				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol);				
 	}
 	
-	//TODO rename function to "getShostAddress"
+	//TODO rename function to "getShortAddress"
+	/**
+	 * @return string
+	 */
 	public function getFullDeviceShortAddress() : string {
 	
 		if (!empty($this->pietro))
