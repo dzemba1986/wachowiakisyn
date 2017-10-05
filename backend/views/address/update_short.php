@@ -15,22 +15,11 @@ use backend\models\Address;
 		'id'=>$model->formName()
 	]
 ); ?>
-	<?= $form->field($model, 'ulica') ?>
 
-    <div class="row">
-    
-    <?= $form->field($model, 'ulica_prefix', [
-    	'options' => ['class' => 'col-md-4', 'style' => 'padding-right: 5px;']
-    ]) ?>
-
-    <?= $form->field($model, 'name', [
-    	'options' => ['class' => 'col-md-4', 'style' => 'padding-left: 5px; padding-right: 5px;']    		
-    ]) ?>
-    
-	</div>
+    <?= $form->field($model, 'name') ?>
     
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Edytuj', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton('Edytuj', ['class' => 'btn btn-primary']) ?>
     </div>
 
 <?php ActiveForm::end(); ?>
