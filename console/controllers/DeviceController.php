@@ -152,7 +152,7 @@ class DeviceController extends Controller {
 		
 		//x210-172
 		$modelsDevicex210_172 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
-		where(['and', ['like', 'model.name', 'x210'],['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '172.20.'],['main' => true]])->orderBy('ip.ip')->all();
+		where(['and', ['like', 'model.name', 'x210'], ['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '172.20.'],['main' => true]])->orderBy('ip.ip')->all();
 		
 		$ipsList = '';
 		
@@ -166,7 +166,7 @@ class DeviceController extends Controller {
 		
 		//x210-10
 		$modelsDevicex210_10 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
-		where(['and', ['like', 'model.name', 'x210'],['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '10.'],['main' => true]])->orderBy('ip.ip')->all();
+		where(['and', ['like', 'model.name', 'x210'], ['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '10.'],['main' => true]])->orderBy('ip.ip')->all();
 		
 		$ipsList = '';
 		
@@ -175,6 +175,48 @@ class DeviceController extends Controller {
 		}
 		
 		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x210-10", "w");
+		fwrite($file, $ipsList);
+		fclose($file);
+		
+		//x230
+		$modelsDevicex210 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
+		where(['and', ['like', 'model.name', 'x230'],['is not', 'address', null],['main' => true]])->orderBy('ip.ip')->all();
+		
+		$ipsList = '';
+		
+		foreach ($modelsDevicex210 as $modelDevicex210){
+			$ipsList .= $modelDevicex210->modelIps[0]->ip . "\n";
+		}
+		
+		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x230", "w");
+		fwrite($file, $ipsList);
+		fclose($file);
+		
+		//x230-172
+		$modelsDevicex210_172 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
+		where(['and', ['like', 'model.name', 'x230'], ['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '172.20.'],['main' => true]])->orderBy('ip.ip')->all();
+		
+		$ipsList = '';
+		
+		foreach ($modelsDevicex210_172 as $modelDevicex210_172){
+			$ipsList .= $modelDevicex210_172->modelIps[0]->ip . "\n";
+		}
+		
+		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x230-172", "w");
+		fwrite($file, $ipsList);
+		fclose($file);
+		
+		//x230-10
+		$modelsDevicex210_10 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
+		where(['and', ['like', 'model.name', 'x230'], ['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '10.'],['main' => true]])->orderBy('ip.ip')->all();
+		
+		$ipsList = '';
+		
+		foreach ($modelsDevicex210_10 as $modelDevicex210_10){
+			$ipsList .= $modelDevicex210_10->modelIps[0]->ip . "\n";
+		}
+		
+		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x230-10", "w");
 		fwrite($file, $ipsList);
 		fclose($file);
 		
