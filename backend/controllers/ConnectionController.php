@@ -106,7 +106,7 @@ class ConnectionController extends Controller
     	if(Yii::$app->request->isAjax)
     	
             return $this->renderAjax('view', [
-                'modelConnection' => $this->findModel($id),
+                'model' => $this->findModel($id),
             ]);
     }
 
@@ -184,7 +184,7 @@ class ConnectionController extends Controller
 	        	}
 	        } else {
 	            return $this->renderAjax('update', [
-	                'modelConnection' => $modelConnection,
+	                'model' => $modelConnection,
 	            ]);
 	        }
         }

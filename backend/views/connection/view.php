@@ -1,17 +1,20 @@
-<div class="connection-view">
-    
- <?php 
- if ($modelConnection->type == 1 || $modelConnection->type == 3){
+<?php
+use backend\models\Connection;
+
+/**
+ * @var Connection $model
+ */
+ 
+ if ($model->type == 1 || $model->type == 3){
 	
 	echo $this->renderAjax('_view_net', [
-		'modelConnection' => $modelConnection,
+		'model' => $model,
 	]);
-} elseif ($modelConnection->type == 2){
+} elseif ($model->type == 2){
 	
 	echo $this->renderAjax('_view_phone', [
-			'modelConnection' => $modelConnection,
+			'model' => $model,
 	]);
 }
 ?>    
 
-</div>
