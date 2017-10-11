@@ -8,6 +8,7 @@ use backend\models\TaskCategory;
 use yii\helpers\ArrayHelper;
 use kartik\time\TimePicker;
 use backend\models\Address;
+use backend\models\AddressShort;
 /**
  * @var yii\web\View $this
  * @var app\models\Modyfication $modelTask
@@ -27,8 +28,8 @@ use backend\models\Address;
 		echo '<center><h4>'.Html::label($modelConnection->modelAddress->fullAddress).'</h4></center>';
 	} else { ?>
 		
-		<?= $form->field($modelAddress, 'ulica')->label('Adres')->dropDownList(
-				ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica')
+		<?= $form->field($modelAddress, 't_ulica')->label('Adres')->dropDownList(
+				ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica')
 			) ?>
 
 		<div class="row">

@@ -42,7 +42,7 @@ require_once '_modal_update.php';
             	'filter' => Html::activeDropDownList(
             		$searchModel, 
             		'ulica_prefix', 
-            		ArrayHelper::map(AddressShort::listByPrefix(), 'ulica_prefix', 'ulica_prefix'), 
+            		ArrayHelper::map(AddressShort::findGroupByPrefix(), 'ulica_prefix', 'ulica_prefix'), 
             		['prompt'=>'', 'class'=>'form-control']
             	),	
     		],
@@ -50,7 +50,7 @@ require_once '_modal_update.php';
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(AddressShort::listByStreetName(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 'ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],
