@@ -87,7 +87,7 @@ require_once '_modal_update.php';
 
 </div>
 
-<?php 
+<?php
 $js = <<<JS
 $(document).ready(function() {
         

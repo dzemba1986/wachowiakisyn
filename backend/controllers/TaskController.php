@@ -79,7 +79,7 @@ class TaskController extends Controller
                 'id' => $task['id'],
                 'start' => $task['start_date'].' '.$task['start_time'],
                 'end' => $task['end_date'].' '.$task['end_time'],
-                'title' => Address::findOne($task['address'])->fullAddress,
+                'title' => Address::findOne($task['address'])->toString(true),
             	'description' => $task['description']	
             );
         }, $tasks);
