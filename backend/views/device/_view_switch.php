@@ -1,6 +1,9 @@
 <?php
 use yii\widgets\DetailView;
-
+use backend\models\Swith;
+/**
+ * @var Swith $modelDevice
+ */
 echo DetailView::widget([
 	'model' => $modelDevice,
 	'options' => [
@@ -10,7 +13,7 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->fullDeviceAddress
+			'value' => $modelDevice->modelAddress->toString()
 		],
 		[
 			'label' => 'Status',

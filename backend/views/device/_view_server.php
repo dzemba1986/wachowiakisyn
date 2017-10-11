@@ -1,6 +1,9 @@
 <?php
 use yii\widgets\DetailView;
-
+use backend\models\Server;
+/**
+ * @var Server $modelDevice
+ */
 echo DetailView::widget([
 	'model' => $modelDevice,
 	'options' => [
@@ -10,7 +13,7 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->fullDeviceAddress
+			'value' => $modelDevice->modelAddress->toString()
 		],
 		[
 			'label' => 'Status',
