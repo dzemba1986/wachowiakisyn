@@ -159,7 +159,7 @@ $(function(){
 		$("#connection-device").trigger("change");
 	}
 
-	$(".modal-header h4").html("<?= $model->modelAddress->stringAddress() ?>");
+	$(".modal-header h4").html("<?= $model->modelAddress->toString() ?>");
 
 	$("#<?= $model->formName(); ?>").on('beforeSubmit', function(e){
 		
