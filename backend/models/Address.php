@@ -161,6 +161,11 @@ class Address extends ActiveRecord
 		return $array;
 	}
 	
+	public function getConfigMode(){
+		
+		return $this->getShortAddress()->config;
+	}
+	
 	public function getInstallations(){
 	
 		//Wiele instalacji na danym adresie
