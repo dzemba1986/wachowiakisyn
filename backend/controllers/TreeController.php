@@ -172,7 +172,7 @@ class TreeController extends Controller
 		
 		    			$modelDevice->address = $modelAddress->id;
 		    			$modelDevice->original_name = true;
-		    			$modelDevice->name = $modelDevice->modelAddress->fullDeviceShortAddress;
+		    			$modelDevice->name = $modelDevice->modelAddress->toString(true);
 		    			
 		    			if (!$modelDevice->save())
 		    				throw new Exception('Problem z zapisem device');
@@ -226,7 +226,7 @@ class TreeController extends Controller
     				}
     				
     				$modelDevice->original_name = true;
-    				$modelDevice->name = $modelDevice->modelAddress->fullDeviceShortAddress;
+    				$modelDevice->name = $modelDevice->modelAddress->toString(true);
     				$modelDevice->save();
     				
     				$modelTree->device = $modelDevice->id;

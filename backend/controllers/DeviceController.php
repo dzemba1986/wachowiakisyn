@@ -119,7 +119,7 @@ class DeviceController extends Controller
         			if(!empty($modelAddress->dirtyAttributes)){
         				
         				$newModelAddress = new Address();
-        				$newModelAddress->ulica = $modelAddress->ulica;
+        				$newModelAddress->t_ulica = $modelAddress->t_ulica;
         				$newModelAddress->dom = $modelAddress->dom;
         				$newModelAddress->dom_szczegol = $modelAddress->dom_szczegol;
         				$newModelAddress->lokal = $modelAddress->lokal;
@@ -155,14 +155,14 @@ class DeviceController extends Controller
 // 						$modelDevice->name = isset($newModelAddress) ? $newModelAddress->fullDeviceShortAddress : $modelDevice->modelAddress->fullDeviceShortAddress;
 						
 							$modelDevice->name = isset($newModelAddress) ?
-								$newModelAddress->fullDeviceShortAddress . ' ' . '[' . $modelDevice->name . ']' :
-								$modelDevice->modelAddress->fullDeviceShortAddress . ' ' . '[' . $modelDevice->name . ']';
+								$newModelAddress->toString(true) . ' ' . '[' . $modelDevice->name . ']' :
+								$modelDevice->modelAddress->toString(true) . ' ' . '[' . $modelDevice->name . ']';
 					}
 					
 					if (($modelDevice->isAttributeChanged('original_name') && $modelDevice->original_name) ||
 						(!$modelDevice->isAttributeChanged('original_name') && !$modelDevice->original_name)){
 					
-							$modelDevice->name = isset($newModelAddress) ? $newModelAddress->fullDeviceShortAddress : $modelDevice->modelAddress->fullDeviceShortAddress;
+							$modelDevice->name = isset($newModelAddress) ? $newModelAddress->toString(true) : $modelDevice->modelAddress->toString(true);
 							
 // 							$modelDevice->name = isset($newModelAddress) ? 
 // 								$newModelAddress->fullDeviceShortAddress . ' ' . '[' . $modelDevice->name . ']' : 

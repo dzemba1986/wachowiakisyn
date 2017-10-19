@@ -12,6 +12,7 @@ use yii\db\ActiveRecord;
  * @property string t_woj
  * @property string t_pow
  * @property string t_gmi
+ * @property string t_rodz
  * @property string t_miasto
  * @property string t_ulica
  * @property string ulica_prefix
@@ -103,12 +104,12 @@ class AddressShort extends ActiveRecord
 	 * Lists models
 	 * @return array|\yii\db\ActiveRecord[]
 	 */
-	public static function listByStreetName() {
+	public static function findOrderStreetName() {
 		
-		return self::find()->select('ulica')->orderBy('ulica')->all();
+		return self::find()->select(['t_ulica', 'ulica'])->orderBy('ulica')->all();
 	}
 	
-	public static function listByPrefix() {
+	public static function findGroupByPrefix() {
 		
 		return self::find()->select('ulica_prefix')->groupBy('ulica_prefix')->all();
 	}

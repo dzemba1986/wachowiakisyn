@@ -1,5 +1,10 @@
 <?php
 use yii\widgets\DetailView;
+use backend\models\MediaConverter;
+
+/**
+ * @var MediaConverter $modelDevice
+ */
 
 echo DetailView::widget([
 	'model' => $modelDevice,
@@ -10,7 +15,7 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->fullDeviceAddress
+			'value' => $modelDevice->modelAddress->toString()
 		],
 		[
 			'label' => 'Status',

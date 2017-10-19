@@ -1,8 +1,14 @@
 <?php
+
 use yii\widgets\DetailView;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use backend\models\Host;
+
+/**
+ * @var Host $modelDevice
+ */
 ?>
 
 <!-------------------------------------------- otwórz kalendarz okno modal -------------------------------------------->
@@ -36,7 +42,7 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->fullDeviceAddress
+			'value' => $modelDevice->modelAddress->toString()
 		],
 		[
 			'label' => 'Konfiguracja',

@@ -129,7 +129,7 @@ $(document).ready(function() {
         
 		$('#modal-connection-view').modal('show')
 			.find('#modal-content-connection-view')
-			.load($(this).attr('href') + ' .connection-view');
+			.load($(this).attr('href'));
     
         return false;
 	});

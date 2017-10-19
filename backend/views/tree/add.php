@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\DetailView;
 use backend\models\Device;
 use yii\web\JsExpression;
+use backend\models\AddressShort;
 
 echo DetailView::widget([
 	'model' => $modelDevice,
@@ -36,11 +37,11 @@ echo DetailView::widget([
     
     <div class="row">
     
-    <?= $form->field($modelAddress, 'ulica', [
+    <?= $form->field($modelAddress, 't_ulica', [
 			'options' => ['class' => 'col-md-5', 'style' => 'padding-right: 5px;'],
     		'template' => "{input}\n{hint}\n{error}",
     	])->widget(Select2::className(), [
-     		'data' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+     		'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
        		'options' => ['placeholder' => 'Ulica'],
        		'pluginOptions' => [
             	'allowClear' => true

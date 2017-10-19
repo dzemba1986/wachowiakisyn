@@ -4,8 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use backend\models\Address;
 use backend\models\Subnet;
+use backend\models\AddressShort;
 
 $form = ActiveForm::begin([
 	'id' => $modelDevice->formName(),
@@ -19,11 +19,11 @@ $form = ActiveForm::begin([
 	    
 	    <div style="display: flex">
 	    
-	    <?= $form->field($modelAddress, 'ulica', [
+	    <?= $form->field($modelAddress, 't_ulica', [
 				'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 	    		'template' => "{input}\n{hint}\n{error}",
 	    	])->widget(Select2::className(), [
-	     		'data' => ArrayHelper::map(Address::find()->select('ulica')->orderBy('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+    			'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
 	       		'options' => ['placeholder' => 'Ulica'],
 	       		'pluginOptions' => [
 	            	'allowClear' => true

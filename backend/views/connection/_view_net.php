@@ -3,16 +3,19 @@
 use yii\widgets\DetailView;
 use yii\bootstrap\Collapse;
 use yii\helpers\Html;
+use backend\models\Connection;
 
-?>
+/**
+ * @var Connection $model
+ */
 
-<?php $vip = $modelConnection->vip == true ? "(VIP)" : null; ?>
+$vip = $model->vip == true ? "(VIP)" : null; ?>
 
-<?php  echo '<center><h4>' . $modelConnection->modelAddress->fullAddress . ' ' . $vip . '</h4></center>'; ?>
+<?php  echo '<center><h4>' . $model->modelAddress->toString() . ' ' . $vip . '</h4></center>'; ?>
     
 <div style="width: 49%; display: inline-block;">
 	<?= DetailView::widget([
-    	'model' => $modelConnection,
+    	'model' => $model,
         'formatter' => [
         	'class' => 'yii\i18n\Formatter',
         	'nullDisplay' => ''
@@ -31,7 +34,7 @@ use yii\helpers\Html;
         
 <div style="width: 49%; display: inline-block; float: right">
 	<?= DetailView::widget([
-    	'model' => $modelConnection,
+    	'model' => $model,
        	'formatter' => [
         	'class' => 'yii\i18n\Formatter',
         	'nullDisplay' => ''
@@ -48,7 +51,7 @@ use yii\helpers\Html;
 </div>
    
 <?= DetailView::widget([
-	'model' => $modelConnection,
+	'model' => $model,
 	'formatter' => [
 		'class' => 'yii\i18n\Formatter',
 		'nullDisplay' => ''
@@ -64,7 +67,7 @@ use yii\helpers\Html;
     
 <div class="installation">
 	<?php 
-	$installations = $modelConnection->modelInstallations; 
+	$installations = $model->modelInstallations; 
 	$i = 0;
 	$arIns = [];
 	

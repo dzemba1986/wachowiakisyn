@@ -117,7 +117,7 @@ $(function(){
 	}
 
 	
-	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
+	$(".modal-header h4").html("<?= $modelConnection->modelAddress->toString() ?>");
 
 	$('#<?= $modelInstallation->formName(); ?>').on('beforeSubmit', function(e){
 
