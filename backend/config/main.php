@@ -21,6 +21,9 @@ return [
     			'forceTranslation' => true,
                 'sourceLanguage' => 'pl',
     		]
+    	],
+    	'task' => [
+    		'class' => 'backend\modules\task\Module'	
     	]	
     ],
     'components' => [

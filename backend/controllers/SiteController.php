@@ -245,10 +245,10 @@ class SiteController extends Controller
 	                'html' => 'Zadania',
 	                'items' => [
                 		[
-                			'html' => '<a href=' . Url::to(['task/index', 'mode' => 'todo']) . '>Do zrobienia</a>'
+                			'html' => '<a href=' . Url::to(['task/task', 'mode' => 'todo']) . '>Do zrobienia</a>'
                 		],
 	                	[
-	                		'html' => '<a href=' . Url::to(['task/index', 'mode' => 'close']) . '>Zrobione</a>'
+	                		'html' => '<a href=' . Url::to(['task/task', 'mode' => 'close']) . '>Zrobione</a>'
 	                	],
 	                ],		
                 ],
