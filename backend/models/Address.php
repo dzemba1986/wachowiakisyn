@@ -35,6 +35,8 @@ class Address extends ActiveRecord
 	public function rules() : array {
 		
 		return [
+			['t_ulica', 'required', 'message' => 'Wartość wymagana'],
+				
 			['dom', 'string', 'min' => 1, 'max' => 10],
 			['dom', 'required', 'message' => 'Wartość wymagana'],
 			['dom', 'trim'],				
@@ -110,12 +112,12 @@ class Address extends ActiveRecord
 		
 		if ($this->getIsNewRecord()) {
 			
-			if ($this->validate() && !is_object($this->exist())){
+			if ($this->validate() && !is_object($existAddress = $this->exist())){
 				return $this->insert($runValidation, $attributeNames);
 			}
 			else {
 				$this->setIsNewRecord(false);
-				$this->id = $this->exist()->id;
+				$this->id = $existAddress->id;
 				
 				return true;
 			}
