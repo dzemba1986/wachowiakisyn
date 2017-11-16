@@ -89,3 +89,15 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
+@media (min-width: 1500px) {
+  .container {
+    width: 1470px;
+  }
+}
+
+@media (min-width: 1900px) {
+  .container {
+    width: 1870px;
+  }
+}
