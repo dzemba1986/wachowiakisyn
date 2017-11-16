@@ -2,9 +2,10 @@
 
 namespace backend\models;
 
-use Yii;
-use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use app\models\Package;
+use backend\modules\task\models\InstallTask;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
+use Yii;
 
 /**
  * This is the model class for table "{{%connection}}".
@@ -36,7 +37,7 @@ use app\models\Package;
  * @property string $phone2
  * @property string $info
  * @property string $info_boa
- * @property integer $task
+ * @property integer $task_id
  * @property integer $soa_id
  * @property integer $replaced_id
  * @property date $synch_date
@@ -48,6 +49,7 @@ use app\models\Package;
  * @property Type $modelType
  * @property User $addUser
  * @property User $configureUser
+ * @property InstallTask $task
  */
 class Connection extends \yii\db\ActiveRecord
 {
@@ -197,16 +199,9 @@ class Connection extends \yii\db\ActiveRecord
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
 			'typeName' => 'Usługa',
-			'fullAddress' => 'Adres',
 		];
 	}
     
-    //relacje
-  
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	//Instalacje na tym samym adresie tego samego typu co umowa
     public function getModelInstallationsByType(){
         
         return $this->getModelInstallations()->where([Installation::tableName().'.type' => $this->getInstallationType()])->all();
@@ -236,10 +231,10 @@ class Connection extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getModelTask(){
+    public function getTask(){
     
     	//Connection ma zgłoszone zdarzenie
-    	return $this->hasOne(Task::className(), ['id'=>'task']);
+    	return $this->hasOne(InstallTask::className(), ['id'=>'task_id']);
     }
     
     /**

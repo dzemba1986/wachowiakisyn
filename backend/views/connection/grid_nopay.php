@@ -11,6 +11,11 @@ use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
 use app\models\Package;
 use backend\models\Device;
+use backend\models\Connection;
+
+/**
+ * @var Connection $model
+ */
 
 $this->params['breadcrumbs'][] = 'Niepłacący';
 ?>
@@ -159,27 +164,23 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'options' => ['style'=>'width:7%;'],
         ],            
         [
-            'attribute'=>'task',
+            'attribute'=>'task_id',
             'label' => 'Montaż',
             'format'=>'raw',
-            'value'=> function($data){
-                if (!is_null($data->task)){
-                	if (is_object($data->modelTask))
-                    	return Html::a($data->modelTask->start_date, Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
-//                     else {
-// 						return $data->task;
-						//exit();
-//                     }
+            'value'=> function($model, $key){
+                if (!is_null($model->task_id)){
+                	if (is_object($model->task))
+                    	return Html::a(date('Y-m-d', strtotime($model->task->start)), Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
                 }
-                elseif ($data->socket <> 0)
+                elseif ($model->socket > 0)
                 	return null;
                 else
-                    return Html::a('dodaj', Url::to(['task/view-calendar', 'conId' => $data->id]), ['class' => 'task']);
+                    return Html::a('dodaj', Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
             },
             
             'filter'=>	DatePicker::widget([
                 'model' => $searchModel,
-                'attribute' => 'task',
+                'attribute' => 'task_id',
                 'removeButton' => FALSE,
                 'language'=>'pl',	
                 'pluginOptions' => [

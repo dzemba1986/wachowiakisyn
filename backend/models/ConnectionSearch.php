@@ -5,11 +5,10 @@ namespace backend\models;
 use yii\data\ActiveDataProvider;
 use backend\models\Connection;
 use yii\db\Expression;
+use backend\modules\task\models\InstallTask;
 
 class ConnectionSearch extends Connection
 {	
-	// public $socketDate;
-	// public $wireDate;
 	public $street;
 	public $house;
 	public $house_detail;
@@ -22,10 +21,10 @@ class ConnectionSearch extends Connection
 	{
 		return $rules = [
 			[	
-				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date', 'synch_date',
-				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'task',
-				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again', 'wire', 'socket',
-				'port', 'device', 'mac', 'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
+				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
+				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id',
+				'socket', 'again', 'wire',
+				'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
 				'minConfDate', 'maxConfDate'],
 				'safe'
 			]		
@@ -41,7 +40,7 @@ class ConnectionSearch extends Connection
             'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],				
 		]);
 	
-		$query->joinWith(['modelAddress', 'modelType']);
+		$query->joinWith(['modelAddress', 'modelType', 'modelPackage']);
 		
 		$dataProvider->setSort([
 			'defaultOrder' => [
@@ -61,9 +60,9 @@ class ConnectionSearch extends Connection
 				'nocontract',
 				'socket',
 				'again',	
-				'task' => [
-					'asc' => ['task.start_date' => SORT_ASC],
-					'desc' => ['task.start_date' => SORT_DESC]
+				'task_id' => [
+					'asc' => ['task.start' => SORT_ASC],
+					'desc' => ['task.start' => SORT_DESC]
 				],	
 				'street' => [
 					'asc' => ['ulica' => SORT_ASC],
@@ -93,23 +92,21 @@ class ConnectionSearch extends Connection
 		}
 			
 		$query->FilterWhere([
-			'connection.id' => $this->id,
 			'ara_id' => $this->ara_id,
-			'connection.start_date' => $this->start_date,
+			'start_date' => $this->start_date,
 			'conf_date' => $this->conf_date,
 			'pay_date' => $this->pay_date,
 			'close_date' => $this->close_date,
 			'phone_date' => $this->phone_date,
-			'connection.type' => $this->type,
+			Connection::tableName().'.type' => $this->type,
 			'package' => $this->package,
 			'ulica' => $this->street,
 			'dom' => $this->house,
 			'lokal' => $this->flat,	
-            'connection.nocontract' => $this->nocontract,
+            Connection::tableName().'.nocontract' => $this->nocontract,
 			'wire' => $this->wire,
-            'vip' => $this->vip,
 			'again' => $this->again,	
-			'task.start_date' => $this->task,	
+			InstallTask::tableName().'.start' => $this->task_id,	
 		]);
 		
 		if (isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '1'){

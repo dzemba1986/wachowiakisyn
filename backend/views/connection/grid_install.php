@@ -43,7 +43,10 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
 	],
 	'resizableColumns' => FALSE,
 	'summary' => 'Widoczne {count} z {totalCount}',
-	//'showPageSummary' => TRUE,
+	'formatter' => [
+		'class' => 'yii\i18n\Formatter',
+		'nullDisplay' => ''
+	],
 	'export' => false,
 	'panel' => [
 			'before' => $this->render('_search', [
@@ -150,23 +153,16 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
 	        'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'task',
+            'attribute' => 'task_id',
             'label' => 'Montaż',
             'format'=>'raw',
-//             'value'=> function($data){
-//                 if($data->task != NULL){
-                    
-//                     //$date = new DateTime($data->modelTask->start_date);
-//                     //return $date->format('Y-m-d');
-//                     return 'modelTask.start_date';
-//                 }
-//                 else
-//                     return 'brak';
-//             },
-            'value' => 'modelTask.start_date',
+            'value' => function ($data){
+            	if ($data->task)
+					return date("Y-m-d", strtotime($data->task->start));
+			},
             'filter' =>	DatePicker::widget([
                 'model' => $searchModel,
-                'attribute' => 'task',
+                'attribute' => 'task_id',
                 'removeButton' => FALSE,
                 'language'=>'pl',	
                 'pluginOptions' => [
