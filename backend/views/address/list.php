@@ -50,7 +50,7 @@ require_once '_modal_update.php';
             		$searchModel, 
             		'ulica_prefix', 
             		ArrayHelper::map(
-            			AddressShort::listByPrefix(), 
+            			AddressShort::findGroupByPrefix(), 
             			'ulica_prefix', 
             			'ulica_prefix'
             		), 
@@ -61,7 +61,7 @@ require_once '_modal_update.php';
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(AddressShort::listByStreetName(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 'ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],
