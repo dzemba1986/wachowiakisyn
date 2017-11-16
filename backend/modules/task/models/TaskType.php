@@ -2,20 +2,14 @@
 
 namespace backend\modules\task\models;
 
-use Yii;
-use yii\data\ActiveDataProvider;
-use backend\models\Installation;
-use backend\models\Connection;
-use backend\models\Package;
+use yii\db\ActiveRecord;
 /**
- * This is the model class for table "task_type".
- *
- * The followings are the available columns in table 'task_type':
  * @property integer $id
  * @property string $name
-
+ * @property string $color
+ * @property integer $type
  */
-class TaskType extends \yii\db\ActiveRecord
+class TaskType extends ActiveRecord
 {
 	/**
 	 * @return string the associated database table name
@@ -25,27 +19,25 @@ class TaskType extends \yii\db\ActiveRecord
 		return '{{task_type}}';
 	}
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return [
 			[['name'], 'required'],
-			[['name'], 'safe'],
+				
+			[['type'], 'required'],
 		];
 	}
 	
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels()
 	{
 		return array(
 			'id' => 'ID',
 			'name' => 'Nazwa',
 		);
+	}
+	
+	public static function findWhereType($type){
+		
+		return self::find()->select(['id', 'name'])->where(['type' => $type]);
 	}
 }
