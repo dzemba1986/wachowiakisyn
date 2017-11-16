@@ -201,7 +201,7 @@ class SiteController extends Controller
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        if ($controler == 'connection' || $controler == 'installation' || $controler == 'task' || $controler == 'address'
+        if ($controler == 'connection' || $controler == 'installation' || $controler == 'address'
         	|| $controler == 'raport'){
             $menu = [
             	[
@@ -241,17 +241,6 @@ class SiteController extends Controller
                 [
                     'html' => '<a href=' . Url::toRoute('installation/index') . '>Instalacje</a>',
                 ],
-                [
-	                'html' => 'Zadania',
-	                'items' => [
-                		[
-                			'html' => '<a href=' . Url::to(['task/task', 'mode' => 'todo']) . '>Do zrobienia</a>'
-                		],
-	                	[
-	                		'html' => '<a href=' . Url::to(['task/task', 'mode' => 'close']) . '>Zrobione</a>'
-	                	],
-	                ],		
-                ],
             	[
             		'html' => 'Zestawienia',
             		'items' => [
@@ -275,8 +264,7 @@ class SiteController extends Controller
             		],
             	],
             ];
-        }
-        else{
+        } elseif ($controler == 'tree' || $controler == 'ip' || $controler == 'vlan' || $controler == 'store' || $controler == 'dhcp'){
             $menu = [
                 [   
                     'html' => '<a href=' . Url::toRoute(['tree/index']) . '>Drzewo urządzeń</a>',                 
@@ -299,6 +287,31 @@ class SiteController extends Controller
                     'html' => '<a href=' . Url::to(['store/index']) . '>Magazyn</a>',
                 ],                
             ];
+        } elseif ($controler == 'install-task' || $controler == 'device-task'){
+        	$menu = [
+	        	[
+        			'html' => 'Montaże',
+        			'items' => [
+        				[
+        					'html' => '<a href=' . Url::to(['task/install-task/', 'mode' => 'todo']) . '>Niewykonane</a>'
+        				],
+        				[
+        					'html' => '<a href=' . Url::to(['task/install-task', 'mode' => 'close']) . '>Wykonane</a>'
+        				],
+        			],
+        		],
+        		[
+        			'html' => 'Zadania',
+        			'items' => [
+        				[
+        					'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'todo']) . '>Niewykonane</a>'
+        				],
+        				[
+        					'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'close']) . '>Wykonane</a>'
+        				],
+        			],
+        		],
+        	];
         }
         
         //var_dump(Yii::$app->controller->id);
