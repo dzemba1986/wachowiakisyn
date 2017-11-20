@@ -13,7 +13,7 @@ use Yii;
 use yii\base\Exception;
 use yii\web\Controller;
 
-class DeviceTaskController extends Controller implements TaskControllerInterface
+class DeviceTaskController extends Controller
 {
     public function actionIndex($mode = 'todo')
     {
