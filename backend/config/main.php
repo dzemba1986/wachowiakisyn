@@ -33,6 +33,13 @@ return [
         		'class' => 'app\components\DeviceUrlRule'	
         	]	
         ],
+    	'assetManager' => [
+    		'bundles' => [
+    			'yii\web\JqueryAsset' => [
+    				'jsOptions' => ['position' => \yii\web\View::POS_BEGIN],
+    			],
+    		],
+    	],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
