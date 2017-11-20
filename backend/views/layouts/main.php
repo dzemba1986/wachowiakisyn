@@ -5,6 +5,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
+use yii\bootstrap\Alert;
 
 
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxcore.js');
@@ -41,6 +42,7 @@ $this->beginPage() ?>
             $menuItems = [
                 ['label' => 'LP', 'url' => ['/connection/index']],
                 ['label' => 'SEU', 'url' => ['/tree/index']],
+            	['label' => 'TASK', 'url' => ['/task/install-task/index']],
             ];
             if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
@@ -64,13 +66,14 @@ $this->beginPage() ?>
                     'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
                 ]) ?>
             </span>
+            <?= Alert::widget() ?>
             <?= $content ?>
         </div>
     </div>
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; Wachowiak&Syn <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Wachowiak&amp;Syn <?= date('Y') ?></p>
         <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
@@ -110,7 +113,7 @@ $(document).ready(function () {
 
     //pobieranie menu metodą get (json)
     $.ajax({
-        url: "<?= Url::toRoute(['site/get-menu']) ?>",
+        url: "<?= Url::toRoute(['/site/get-menu']) ?>",
         data: { controler : controler },
         success: function(source){
             $('#jqxMenu').jqxMenu({ source: source});
