@@ -149,7 +149,7 @@ require_once '_modal_comment.php';
                     'template' => '{list}',
                 ]),
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{close} {addcomment} {comments}',
+            	'template' => '{close} {addcomment} {comments}',
             	'buttons' => [
             		'close' => function ($model, $data) {
             			$url = Url::to(['device-task/close', 'id' => $data->id]);
@@ -167,13 +167,18 @@ require_once '_modal_comment.php';
             				'data-pjax' => '0',
             			]);
             		},
-            		'comments' => function ($model, $data) {
-            			$url = Url::to(['comment/index', 'taskId' => $data->id]);
+            		'comments' => function ($url, $model) {
             		
-            			return Html::a('<span class="glyphicon glyphicon-comment"></span>', $url, [
-            				'title' => \Yii::t('yii', 'Komentarze'),
-            				'data-pjax' => '0',
-            			]);
+            			if ($model->getComments()->count() == 0){
+            				return null;
+            			} else {
+	            			$url = Url::to(['comment/index', 'taskId' => $model->id]);
+	            		
+	            			return Html::a('<span class="glyphicon glyphicon-comment"></span>', $url, [
+	            				'title' => \Yii::t('yii', 'Komentarze'),
+	            				'data-pjax' => '0',
+	            			]);
+            			}
             		},
             	]
             ],     
