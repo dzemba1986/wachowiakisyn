@@ -33,13 +33,13 @@ class Comment extends ActiveRecord
             ['description', 'string'],
             
             ['task_id', 'integer'],
-            ['task_id', 'required', 'message'=>'Wartość wymagana'],
         		
             ['comment_id', 'integer'],
-            ['comment_id', 'required', 'message'=>'Wartość wymagana'],
             
+        	['user_id', 'default', 'value' => \Yii::$app->user->id],
             ['user_id', 'integer'],
             ['user_id', 'required', 'message'=>'Wartość wymagana'],
+        	
             
             [['id', 'create', 'task_id', 'comment_id', 'user_id', 'description'], 'safe'],
         ];
@@ -59,17 +59,12 @@ class Comment extends ActiveRecord
             'id' => 'ID',
         	'create' => 'Utworzono',
             'user_id' => 'Utworzył',
-            'description' => 'Opis'
+            'description' => 'Komentarz'
         ];
     }
     
     public function getUser(){
 
         return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
-    
-    public function getTask(){
-    
-    	return $this->hasOne(TaskType::className(), ['id' => 'task_id']);
     }
 }

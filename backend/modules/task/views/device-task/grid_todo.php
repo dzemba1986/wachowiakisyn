@@ -22,6 +22,7 @@ use yii\web\View;
 $this->params['breadcrumbs'][] = 'Do zrobienia';
 
 require_once '_modal_task.php';
+require_once '_modal_comment.php';
 ?>
 
 <div class="task-index">
@@ -148,13 +149,29 @@ require_once '_modal_task.php';
                     'template' => '{list}',
                 ]),
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{close}',
+                'template' => '{close} {addcomment} {comments}',
             	'buttons' => [
             		'close' => function ($model, $data) {
             			$url = Url::to(['device-task/close', 'id' => $data->id]);
             			
             			return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, [
             				'title' => \Yii::t('yii', 'Zamknij'),
+            				'data-pjax' => '0',
+            			]);
+            		},
+            		'addcomment' => function ($model, $data) {
+            			$url = Url::to(['comment/create', 'taskId' => $data->id]);
+            		
+            			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
+            				'title' => \Yii::t('yii', 'Dodaj komentarz'),
+            				'data-pjax' => '0',
+            			]);
+            		},
+            		'comments' => function ($model, $data) {
+            			$url = Url::to(['comment/index', 'taskId' => $data->id]);
+            		
+            			return Html::a('<span class="glyphicon glyphicon-comment"></span>', $url, [
+            				'title' => \Yii::t('yii', 'Komentarze'),
             				'data-pjax' => '0',
             			]);
             		},
@@ -182,6 +199,24 @@ $(function() {
         
 		$('#modal-task').modal('show')
 			.find('#modal-task-content')
+			.load($(this).attr('href'));
+    
+        return false;
+	});
+
+	$('body').on('click', 'a[title="Dodaj komentarz"]', function(event){
+        
+		$('#modal-comment').modal('show')
+			.find('#modal-comment-content')
+			.load($(this).attr('href'));
+    
+        return false;
+	});
+
+	$('body').on('click', 'a[title="Komentarze"]', function(event){
+        
+		$('#modal-comment').modal('show')
+			.find('#modal-comment-content')
 			.load($(this).attr('href'));
     
         return false;

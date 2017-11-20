@@ -146,4 +146,9 @@ class Task extends \yii\db\ActiveRecord
     
     	return $this->hasOne(User::className(), ['id' =>'close_user']);
     }
+    
+    public function getComments(){
+    	
+    	return $this->hasMany(Comment::className(), ['task_id' => 'id']);
+    }
 }
