@@ -64,13 +64,17 @@ $form = ActiveForm::begin([
 		
 		<div style="display: flex">
 		<?= $form->field($modelDevice, 'name', [
-			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
+			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;']
 		]) ?>
 		
 		<?= $form->field($modelDevice, 'original_name', [
 			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 3px; padding-right: 3px;'],
-			//'template' => "{input}\n{hint}\n{error}",
+			//'template' => "{input}\n{error}",
 		])->checkbox() ?>
+		
+		<?= $form->field($modelDevice, 'alias', [
+			'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 0px; padding-right: 3px;']
+		]) ?>
 		
 		</div>
 	

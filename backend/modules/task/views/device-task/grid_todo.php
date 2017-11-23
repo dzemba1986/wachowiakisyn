@@ -87,7 +87,9 @@ require_once '_modal_comment.php';
             ],
             [
             	'attribute' => 'device_id',
-            	'value' => 'device.name',
+            	'value' => function ($model){
+            		return $model->device->name . ' /' . $model->device->alias .  '/';
+            	},
             	'filterType' => GridView::FILTER_SELECT2,
             	'filterWidgetOptions' => [
             		'model' => $searchModel,

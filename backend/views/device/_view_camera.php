@@ -38,6 +38,10 @@ echo DetailView::widget([
 			'label' => 'Producent',
 			'value' => $modelDevice->modelManufacturer->name,
 		],
+		[
+			'label' => 'Nazwa w monitoringu',
+			'value' => $modelDevice->alias,
+		],
 	]
 ]);
 ?>
