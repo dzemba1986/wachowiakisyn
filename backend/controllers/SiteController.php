@@ -197,124 +197,117 @@ class SiteController extends Controller
         return $this->goHome();
     }
     
-    public function actionGetMenu($controler)
+    public function actionGetMenu()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-        if ($controler == 'connection' || $controler == 'installation' || $controler == 'address'
-        	|| $controler == 'raport'){
-            $menu = [
-            	[
-            		'html' => 'Adresy',
-            		'items' => [
-            			[
-            				'html' => '<a href=' . Url::to(['address/index']) . '>Lista</a>'
-            			],
-            			[
-            				'html' => '<a href=' . Url::to(['address/list']) . '>Dodaj</a>'
-            			],
-            		]	
-            	],
-                [   
-                    'html' => 'Połączenia',
-                    'items' => [
-                        [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'nopay', 'ConnectionSearch[nocontract]' => 0]) . '>Niepłacący</a>'
-                        ],
-                        [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'install']) . '>Bez kabla</a>'
-                        ],
-                        [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'conf']) . '>Do konfiguracji</a>',
-                        ],
-                        [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'off']) . '>Nieaktywne</a>',
-                        ],
-                        [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'pay']) . '>Płacący</a>'
-                        ],
-                        [
-                            'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'all']) . '>Wszystkie</a>'
-                        ],
-                    ]
-                ],
-                [
-                    'html' => '<a href=' . Url::toRoute('installation/index') . '>Instalacje</a>',
-                ],
-            	[
-            		'html' => 'Zestawienia',
-            		'items' => [
-            			[
-            				'html' => '<a href=' . Url::to(['raport/connection']) . '>Podłączenia</a>'
-            			],
-            			[
-            				'html' => '<a href=' . Url::to(['raport/installation']) . '>Instalacje</a>'
-            			],
+       	
+		$menu = [
+           	[
+            	'html' => 'Adresy',
+            	'items' => [
+            		[
+            			'html' => '<a href=' . Url::to(['address/index']) . '>Lista</a>'
+            		],
+            		[
+            			'html' => '<a href=' . Url::to(['address/list']) . '>Dodaj</a>'
+            		],
+            	]	
+            ],
+            [   
+            	'html' => 'Połączenia',
+                'items' => [
+                	[
+                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'nopay', 'ConnectionSearch[nocontract]' => 0]) . '>Niepłacący</a>'
+                    ],
+                    [
+                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'install']) . '>Bez kabla</a>'
+                    ],
+                    [
+                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'conf']) . '>Do konfiguracji</a>',
+                    ],
+                    [
+                    	'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'off']) . '>Nieaktywne</a>',
+                    ],
+                    [
+                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'pay']) . '>Płacący</a>'
+                    ],
+                    [
+                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'all']) . '>Wszystkie</a>'
+                    ],
+                ]
+            ],
+            [
+                'html' => '<a href=' . Url::toRoute('installation/index') . '>Instalacje</a>',
+            ],
+			['id' => 'menu-separator'],	
+            [
+            	'html' => 'Zestawienia',
+            	'items' => [
+            		[
+            			'html' => '<a href=' . Url::to(['raport/connection']) . '>Podłączenia</a>'
+            		],
+            		[
+            			'html' => '<a href=' . Url::to(['raport/installation']) . '>Instalacje</a>'
             		],
             	],
-            	[
-            		'html' => 'Boa',
-            		'items' => [
-            				[
-            						'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'noboa']) . '>Niezaksięgowane</a>'
-            				],
-            				[
-            						'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'boa']) . '>Zaksiegowane</a>'
-            				],
+            ],
+            [
+            	'html' => 'Boa',
+            	'items' => [
+            		[
+            			'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'noboa']) . '>Niezaksięgowane</a>'
+            		],
+            		[
+            			'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'boa']) . '>Zaksiegowane</a>'
             		],
             	],
-            ];
-        } elseif ($controler == 'tree' || $controler == 'ip' || $controler == 'vlan' || $controler == 'store' || $controler == 'dhcp'){
-            $menu = [
-                [   
-                    'html' => '<a href=' . Url::toRoute(['tree/index']) . '>Drzewo urządzeń</a>',                 
-                ],
-            	[
-            		'html' => '<a href=' . Url::toRoute(['ip/history']) . '>Historia IP</a>',
-            	],
-            	[
-            		'html' => 'Sieć',
-            		'items' => [
-            				[
-            						'html' => '<a href=' . Url::to(['vlan/grid']) . '>Adresacja</a>'
-            				],
-            				[
-            						'html' => '<a href=' . Url::to(['dhcp/index']) . '>DHCP</a>'
-            				],
-            		],
-            	],
-                [
-                    'html' => '<a href=' . Url::to(['store/index']) . '>Magazyn</a>',
-                ],                
-            ];
-        } elseif ($controler == 'install-task' || $controler == 'device-task'){
-        	$menu = [
-	        	[
-        			'html' => 'Montaże',
-        			'items' => [
-        				[
-        					'html' => '<a href=' . Url::to(['task/install-task/', 'mode' => 'todo']) . '>Niewykonane</a>'
-        				],
-        				[
-        					'html' => '<a href=' . Url::to(['task/install-task', 'mode' => 'close']) . '>Wykonane</a>'
-        				],
-        			],
-        		],
-        		[
-        			'html' => 'Zadania',
-        			'items' => [
-        				[
-        					'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'todo']) . '>Niewykonane</a>'
-        				],
-        				[
-        					'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'close']) . '>Wykonane</a>'
-        				],
-        			],
-        		],
-        	];
-        }
-        
-        //var_dump(Yii::$app->controller->id);
-    	return $menu;
+            ],
+			['id' => 'menu-separator'],	
+			[
+				'html' => '<a href=' . Url::toRoute(['tree/index']) . '>Drzewo urządzeń</a>',
+			],
+			[
+				'html' => '<a href=' . Url::toRoute(['ip/history']) . '>Historia IP</a>',
+			],
+			[
+				'html' => 'Sieć',
+				'items' => [
+					[
+						'html' => '<a href=' . Url::to(['vlan/grid']) . '>Adresacja</a>'
+					],
+					[
+						'html' => '<a href=' . Url::to(['dhcp/index']) . '>DHCP</a>'
+					],
+				],
+			],
+			[
+				'html' => '<a href=' . Url::to(['store/index']) . '>Magazyn</a>',
+			],
+			['id' => 'menu-separator'],	
+			[
+				'html' => 'Montaże',
+				'items' => [
+					[
+						'html' => '<a href=' . Url::to(['task/install-task/', 'mode' => 'todo']) . '>Niewykonane</a>'
+					],
+					[
+						'html' => '<a href=' . Url::to(['task/install-task', 'mode' => 'close']) . '>Wykonane</a>'
+					],
+				],
+			],
+			[
+				'html' => 'Zadania',
+				'items' => [
+					[
+						'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'todo']) . '>Niewykonane</a>'
+					],
+					[
+						'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'close']) . '>Wykonane</a>'
+					],
+				],
+			],
+        ];
+    	
+		return $menu;
     }
 }
