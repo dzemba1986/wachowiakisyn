@@ -6,6 +6,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use yii\bootstrap\Alert;
+use backend\modules\task\models\DeviceTask;
 
 
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxcore.js');
@@ -42,7 +43,7 @@ $this->beginPage() ?>
             $menuItems = [
                 ['label' => 'LP', 'url' => ['/connection/index']],
                 ['label' => 'SEU', 'url' => ['/tree/index']],
-            	['label' => 'TASK', 'url' => ['/task/install-task/index']],
+            	['label' => 'TASK' . '(' . DeviceTask::getCountOpenTask() . ')', 'url' => ['/task/device-task/index']],
             ];
             if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
@@ -87,10 +88,55 @@ $this->beginPage() ?>
     
 $(document).ready(function () {
     
-    //utworzenie menu kontekstowego
-    var contextMenu = $("#jqxMenu").jqxMenu({ width: '150px', autoOpenPopup: false, mode: 'popup'});
+    var source = [
+        {"html":"Adresy","items":[
+            {"html":"<a href=/backend/index.php?r=address%2Findex>Lista</a>"},
+            {"html":"<a href=/backend/index.php?r=address%2Flist>Dodaj</a>"}
+        ]},
+        {"html":"Połączenia","items":[
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=nopay&ConnectionSearch%5Bnocontract%5D=0>Niepłacący</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=install>Bez kabla</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=conf>Do konfiguracji</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=off>Nieaktywne</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=pay>Płacący</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=all>Wszystkie</a>"}
+        ]},
+        {"html":"<a href=/backend/index.php?r=installation%2Findex>Instalacje</a>"},
+        {"id":"menu-separator"},
+        {"html":"Montaże","items":[
+            {"html":"<a href=/backend/index.php?r=task%2Finstall-task&mode=todo>Niewykonane</a>"},
+            {"html":"<a href=/backend/index.php?r=task%2Finstall-task&mode=close>Wykonane</a>"}
+        ]},
+        {"html":"Zadania","items":[
+            {"html":"<a href=/backend/index.php?r=task%2Fdevice-task&mode=todo>Niewykonane</a>"},
+            {"html":"<a href=/backend/index.php?r=task%2Fdevice-task&mode=close>Wykonane</a>"}
+        ]},
+        {"id":"menu-separator"},
+        {"html":"Zestawienia","items":[
+            {"html":"<a href=/backend/index.php?r=raport%2Fconnection>Podłączenia</a>"},
+            {"html":"<a href=/backend/index.php?r=raport%2Finstallation>Instalacje</a>"},
+            {"html":"<a href=/backend/index.php?r=raport%2Ftask>Montaże</a>"}
+        ]},
+        {"html":"Boa","items":[
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=noboa>Niezaksięgowane</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=boa>Zaksiegowane</a>"}
+        ]},
+        {"id":"menu-separator"},
+        {"html":"<a href=/backend/index.php?r=tree%2Findex>Drzewo urządzeń</a>"},
+        {"html":"<a href=/backend/index.php?r=ip%2Fhistory>Historia IP</a>"},
+        {"html":"Sieć","items":[
+            {"html":"<a href=/backend/index.php?r=vlan%2Fgrid>Adresacja</a>"},
+            {"html":"<a href=/backend/index.php?r=dhcp%2Findex>DHCP</a>"}
+        ]},
+        {"html":"<a href=/backend/index.php?r=store%2Findex>Magazyn</a>"},
+        
+    ]
+
+  //utworzenie menu kontekstowego
+    var contextMenu = $("#jqxMenu").jqxMenu({source: source, width: '150px', autoOpenPopup: false, mode: 'popup'});
+	
     
-    var controler = '<?= Yii::$app->controller->id ?>';
+    //var controler = '<?= Yii::$app->controller->id ?>';
     
     // open the context menu when the user presses the mouse right button.
     $("#jqxWidget").on('mousedown', function (event) {
@@ -111,15 +157,8 @@ $(document).ready(function () {
         return leftclick;
     }
 
-    //pobieranie menu metodą get (json)
-    $.ajax({
-        url: "<?= Url::toRoute(['/site/get-menu']) ?>",
-        data: { controler : controler },
-        success: function(source){
-            $('#jqxMenu').jqxMenu({ source: source});
-        },
-        dataType: "JSON"
-    });
-    
+    $("body").bind("DOMNodeInserted", function() {
+	    $(this).find("li[id='menu-separator']").attr("class","jqx-menu-item-separator jqx-rc-all");
+	});
 });
 </script>

@@ -88,6 +88,11 @@ class DeviceTask extends Task
         );
     }
     
+    public static function getCountOpenTask(){
+    	
+    	return self::find()->where(['and', ['status' => null], ['is not', 'device_id', null]])->count();
+    }
+    
     public function getDevice(){
     	
     	return $this->hasOne(Device::className(), ['id' => 'device_id']);
