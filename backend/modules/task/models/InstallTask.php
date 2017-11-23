@@ -30,6 +30,8 @@ class InstallTask extends Task
 	public $start_date;
 	public $start_time;
 	public $end_time;
+	public $minClose;
+	public $maxClose;
 	
     public function attributes(){
     	

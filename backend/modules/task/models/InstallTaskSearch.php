@@ -9,7 +9,7 @@ class InstallTaskSearch extends InstallTask
     public function rules()
     {
         return [
-            [['start', 'end', 'color', 'description', 'installer', 'street', 'house', 'house_detail', 
+        		[['start', 'end', 'color', 'description', 'installer', 'street', 'house', 'house_detail', 'minClose', 'maxClose',
               'flat', 'flat_detail', 'type_id', 'cost', 'status', 'category_id', 'add_user', 'close_user'], 'safe']
         ];
     }
@@ -82,7 +82,9 @@ class InstallTaskSearch extends InstallTask
 
         $query->andFilterWhere(['like', 'installer', $this->installer])
         	->andFilterWhere(['like', '("start")::text', $this->start.'%', false])
-        	->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail]);
+        	->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail])
+        	->andFilterWhere(['>=', 'close', $this->minClose])
+        	->andFilterWhere(['<=', 'close', $this->maxClose . ' 23:59:59']);
 
         return $dataProvider;
     }

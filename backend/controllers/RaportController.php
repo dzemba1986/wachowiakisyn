@@ -5,6 +5,7 @@ namespace backend\controllers;
 use yii\web\Controller;
 use backend\models\ConnectionSearch;
 use backend\models\InstallationSearch;
+use backend\modules\task\models\InstallTaskSearch;
 
 class RaportController extends Controller
 {
@@ -62,6 +63,24 @@ class RaportController extends Controller
     	]);
     	 
     	return $this->render('grid_installation', [
+    		'searchModel' => $searchModel,
+    		'dataProvider' => $dataProvider,
+    	]);
+    }
+    
+    public function actionTask()
+    {
+    	$searchModel = new InstallTaskSearch();
+    	$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+    	
+    	$dataProvider->query->andWhere([
+    		'and',
+    		['paid_psm' => true],
+    		['task.status' => true],
+    		['is not', 'close', null]	
+    	]);
+    	
+    	return $this->render('grid_task', [
     		'searchModel' => $searchModel,
     		'dataProvider' => $dataProvider,
     	]);
