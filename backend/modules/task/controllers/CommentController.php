@@ -10,7 +10,7 @@ class CommentController extends Controller{
 	
     public function actionIndex($taskId){
         
-    	$comments = Comment::find()->where(['task_id' => $taskId])->all();
+    	$comments = Comment::find()->where(['task_id' => $taskId])->orderBy('create')->all();
     	
     	return $this->renderAjax('index', [
     		'comments' => $comments
