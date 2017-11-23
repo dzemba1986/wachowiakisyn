@@ -79,7 +79,7 @@ require_once '_modal_task.php';
             ],
             [
             	'attribute' => 'device_id',
-            	'value' => 'device.name',
+            	'value' => 'device.alias',
             	'filterType' => GridView::FILTER_SELECT2,
             	'filterWidgetOptions' => [
             		'model' => $searchModel,
@@ -88,12 +88,11 @@ require_once '_modal_task.php';
             			'allowClear' => true,
             			'minimumInputLength' => 2,
             			'ajax' => [
-            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=device%2Flist',	//http://localhost/backend/index.php?r=device/list
+            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch',	//http://localhost/backend/index.php?r=device/list
             				'dataType' => 'json',
             				'data' => new JsExpression("function(params) {
 			    				return {
 			    					q : params.term,
-			    					type : [6]
 								};
 							}"),
             			],

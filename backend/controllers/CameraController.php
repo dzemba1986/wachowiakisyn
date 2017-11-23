@@ -5,6 +5,8 @@ namespace backend\controllers;
 use Yii;
 use yii\widgets\ActiveForm;
 use backend\models\Camera;
+use yii\db\Query;
+use yii\db\Expression;
 
 class CameraController extends DeviceController
 {	
@@ -19,6 +21,32 @@ class CameraController extends DeviceController
               	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return ActiveForm::validate($modelDevice, 'serial');
 		}
+	}
+	
+	public function actionSearch($q = null) {
+		
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		
+		$out = ['results' => ['id' => '', 'concat' => '']];
+		
+		if (!is_null($q)) {
+				
+			$query = new Query();
+			$query->select(['d.id', new Expression("
+	    		CONCAT(d.alias, ' - ', '[', ip, ']', ' - ', m.name)
+	    	")])
+	    	->from('device d')
+	    	->join('INNER JOIN', 'model m', 'm.id = d.model')
+	    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
+	    	->where(['and', ['like', 'd.alias', strtoupper($q) . '%', false], ['is not', 'address', null], ['is not', 'status', null], ['d.type' => Camera::TYPE]])
+	    	->limit(50)->orderBy('d.alias');
+	    	
+    		$command = $query->createCommand();
+    		$data = $command->queryAll();
+    		$out['results'] = array_values($data);
+		}
+		
+		return $out;
 	}
     
     protected function findModel($id)

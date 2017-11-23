@@ -25,7 +25,7 @@ use yii\helpers\Url;
 			    				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
 			    			],
 			    			'ajax' => [
-			    					'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=device%2Flist',	//http://localhost/backend/index.php?r=device/list
+			    					'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch',	//http://localhost/backend/index.php?r=device/list
 			    				'dataType' => 'json',
 			    				'data' => new JsExpression("function(params) {
 			    					return {
