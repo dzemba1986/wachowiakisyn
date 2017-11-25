@@ -43,11 +43,11 @@ class TaskController extends Controller
     		'and',
     		['is not', 'device_id', null],
     		['device_type' => 6],
-    	])->orderBy('create');
+    	])->orderBy('create DESC');
     				
     	return $this->render('index', [
-    			'dataProvider' => $dataProvider,
-    			'searchModel' => $searchModel,
+    		'dataProvider' => $dataProvider,
+    		'searchModel' => $searchModel,
     	]);
     }
     
