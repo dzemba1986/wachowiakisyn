@@ -23,21 +23,17 @@ class CameraController extends DeviceController
 		}
 	}
 	
-	public function actionSearch($q = null) {
+	public function actionSearchForMonitoring($q = null) {
 		
 		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		
-		$out = ['results' => ['id' => '', 'concat' => '']];
+		$out = ['results' => ['id' => '', 'alias' => '']];
 		
 		if (!is_null($q)) {
 				
 			$query = new Query();
-			$query->select(['d.id', new Expression("
-	    		CONCAT(d.alias, ' - ', '[', ip, ']', ' - ', m.name)
-	    	")])
+			$query->select(['d.id', 'd.alias'])
 	    	->from('device d')
-	    	->join('INNER JOIN', 'model m', 'm.id = d.model')
-	    	->join('LEFT JOIN', 'ip', 'ip.device = d.id AND ip.main = true')
 	    	->where(['and', ['like', 'd.alias', strtoupper($q) . '%', false], ['is not', 'address', null], ['is not', 'status', null], ['d.type' => Camera::TYPE]])
 	    	->limit(50)->orderBy('d.alias');
 	    	

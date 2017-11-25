@@ -58,24 +58,26 @@ require_once '_modal_task.php';
                 'detail' => function ($model){
                     return $model->description;
                 },
-            ],  
+            ],
             [
-                'attribute'=>'create',
-                'value'=> function ($model){
-                	return $model->create ? date("Y-m-d", strtotime($model->create)) : null;
-                },
-                'format'=>'raw',
-                'filter'=>	DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'create',
-                    'removeButton' => FALSE,
-                    'language'=>'pl',	
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true,
-                        'endDate' => '0d', //wybór daty max do dziś
-                    ]
-                ]),
+            	'attribute' => 'create',
+            	'value'=> function ($model){
+            		return date("Y-m-d", strtotime($model->create));
+            	},
+            	'filterType' => GridView::FILTER_DATE,
+            	'filterWidgetOptions' => [
+            		'model' => $searchModel,
+            		'attribute' => 'create',
+            		'pickerButton' => false,
+            		//'removeButton' => false,
+            		'language' => 'pl',
+            		'pluginOptions' => [
+            			'format' => 'yyyy-mm-dd',
+            			'todayHighlight' => true,
+            			'endDate' => '0d'
+            		]
+            	],
+            'options' => ['id'=>'start', 'style'=>'width:10%;'],
             ],
             [
             	'attribute' => 'device_id',
@@ -88,7 +90,7 @@ require_once '_modal_task.php';
             			'allowClear' => true,
             			'minimumInputLength' => 2,
             			'ajax' => [
-            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch',	//http://localhost/backend/index.php?r=device/list
+            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch-for-monitoring',	//http://localhost/backend/index.php?r=device/list
             				'dataType' => 'json',
             				'data' => new JsExpression("function(params) {
 			    				return {
@@ -97,8 +99,8 @@ require_once '_modal_task.php';
 							}"),
             			],
             			'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-            			'templateResult' => new JsExpression('function(device) { return device.concat; }'),
-            			'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
+            			'templateResult' => new JsExpression('function(results) { return results.alias; }'),
+            			'templateSelection' => new JsExpression('function (results) { return results.alias; }'),
             		],
             	],
             	'filterInputOptions' => ['placeholder' => 'Kamera'],
@@ -146,18 +148,20 @@ require_once '_modal_task.php';
             	'value'=> function ($model){
             		return $model->close ? date("Y-m-d", strtotime($model->close)) : null;
             	},
-            	'format'=>'raw',
-            	'filter'=>	DatePicker::widget([
+            	'filterType' => GridView::FILTER_DATE,
+            	'filterWidgetOptions' => [
             		'model' => $searchModel,
             		'attribute' => 'close',
-            		'removeButton' => FALSE,
-            		'language'=>'pl',
+            		'pickerButton' => false,
+            		//'removeButton' => false,
+            		'language' => 'pl',
             		'pluginOptions' => [
             			'format' => 'yyyy-mm-dd',
             			'todayHighlight' => true,
-            			'endDate' => '0d', //wybór daty max do dziś
+            			'endDate' => '0d'
             		]
-            	]),
+            	],
+            'options' => ['id'=>'start', 'style'=>'width:10%;'],
             ],
             [
             	'attribute' => 'status',
@@ -200,23 +204,6 @@ $(function() {
     
         return false;
 	});
-
-
-    //reinicjalizacja filtrów po użyciu pjax'a
-    $("#task-grid-pjax").on("pjax:complete", function() {
-        
-        if (jQuery('#devicetasksearch-create').data('kvDatepicker')) { 
-            jQuery('#devicetasksearch-create').kvDatepicker('destroy'); 
-        }
-        jQuery('#devicetasksearch-create-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-        initDPAddon('devicetasksearch-create');
-
-		if (jQuery('#devicetasksearch-close').data('kvDatepicker')) { 
-			jQuery('#devicetasksearch-close').kvDatepicker('destroy'); 
-		}
-		jQuery('#devicetasksearch-close-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-		initDPAddon('devicetasksearch-close');
-    });
 });
 JS;
 
