@@ -1,3 +1,6 @@
+<?php
+use backend\models\Device;
+?>
 <div class="col-md-10">
 
 
@@ -17,7 +20,10 @@
 // 			break;
 		case 'backend\models\Swith':
 	
+			$arHosts = Device::find()->joinWith('modelTree')->where(['parent_device' => $modelDevice->id])->andWhere(['type' => [5]])->orderBy('parent_port')->all();
+			
 			echo $this->render('_script_switch', [
+				'arHosts' => $arHosts,
 				'modelDevice' => $modelDevice,
 			]);
 			break;
