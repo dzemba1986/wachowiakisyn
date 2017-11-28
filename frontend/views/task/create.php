@@ -25,18 +25,17 @@ use yii\helpers\Url;
 			    				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
 			    			],
 			    			'ajax' => [
-			    					'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch',	//http://localhost/backend/index.php?r=device/list
+			    					'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch-for-monitoring',	//http://localhost/backend/index.php?r=device/list
 			    				'dataType' => 'json',
 			    				'data' => new JsExpression("function(params) {
 			    					return {
-			    						q : params.term,
-			    						type : [6]
+			    						q : params.term
 									}; 
 								}")
 				    		],
-				    		'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-				    		'templateResult' => new JsExpression('function(device) { return device.concat; }'),
-				    		'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
+		    				'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+		    				'templateResult' => new JsExpression('function(results) { return results.alias; }'),
+		    				'templateSelection' => new JsExpression('function (results) { return results.alias; }'),
 			    		]
     				])     
     			?>
