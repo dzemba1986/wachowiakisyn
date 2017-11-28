@@ -94,11 +94,11 @@ use backend\models\Connection;
 	
 	<?= $form->field($task, 'type_id',[
 			'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']
-		])->dropDownList(ArrayHelper::map(TaskType::find()->all(), 'id', 'name'), ['prompt' => 'Wybierz...']) ?>
+		])->dropDownList(ArrayHelper::map(TaskType::findWhereType(1)->all(), 'id', 'name'), ['prompt' => 'Wybierz...']) ?>
 	
 	<?= $form->field($task, 'category_id', [
 			'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-		])->dropDownList(ArrayHelper::map(TaskCategory::find()->all(), 'id', 'name'), ['prompt' => 'Wybierz...']) ?>
+		])->dropDownList(ArrayHelper::map(TaskCategory::findWhereType(1)->all(), 'id', 'name'), ['prompt' => 'Wybierz...']) ?>
 	
 	</div>
 	
