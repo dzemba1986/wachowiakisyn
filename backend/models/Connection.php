@@ -127,13 +127,13 @@ class Connection extends \yii\db\ActiveRecord
             ['close_user', 'integer'],
 			['close_user', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],
             
-            ['task', 'integer'],
+            ['task_id', 'integer'],
 
 			[
 				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'again',
 				'address', 'phone', 'phone2', 'info', 'info_boa',
-				'port', 'device', 'mac', 'type', 'package', 'task'],
+				'port', 'device', 'mac', 'type', 'package', 'task_id'],
 				'safe'
 			],	
 		];
@@ -150,7 +150,7 @@ class Connection extends \yii\db\ActiveRecord
 		];
 		$scenarios[self::SCENARIO_CLOSE] = ['close_date', 'close_user'];
 		$scenarios[self::SCENARIO_CREATE_INSTALLATION] = ['port', 'device', 'info'];
-		$scenarios[self::SCENARIO_TASK] = ['task', 'mac'];
+		$scenarios[self::SCENARIO_TASK] = ['task_id', 'mac'];
 		 
 		return $scenarios;
 	}
@@ -188,7 +188,7 @@ class Connection extends \yii\db\ActiveRecord
 			'info' => 'Info',
 			'info_boa' => 'Info Boa',
 			'again'	=> 'Ponowne',
-			'task' => 'Zadania',
+			'task_id' => 'Zadania',
 			'nocontract' => 'Bez umowy',
 			'vip' => 'Vip',
 			'socket' => 'Gniazdo',

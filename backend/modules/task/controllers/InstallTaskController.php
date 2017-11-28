@@ -128,7 +128,7 @@ class InstallTaskController extends Controller
     					$task->address_id = $connection->address;
     					
     					if ($task->save()){
-    						$connection->task = $task->id;
+    						$connection->task_id = $task->id;
     						if (!$connection->save())
     							throw new Exception('Problem z zapisem połączenia');
     					} else
