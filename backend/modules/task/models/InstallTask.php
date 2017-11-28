@@ -57,10 +57,10 @@ class InstallTask extends Task
         return ArrayHelper::merge(
         	parent::rules(),	
         	[	
-        		['start', 'date', 'format' => 'yyyy-MM-dd H:i:s', 'message'=>'Zły format'],
+        		['start', 'date', 'format' => 'php:Y-m-d H:i:s', 'message'=>'Zły format'],
 	            ['start', 'required', 'message'=>'Wartość wymagana'],
 	            
-        		['end', 'date', 'format' => 'yyyy-MM-dd H:i:s', 'message'=>'Zły format'],
+        		['end', 'date', 'format' => 'php:Y-m-d H:i:s', 'message'=>'Zły format'],
 	            ['end', 'required', 'message'=>'Wartość wymagana'],
 	            
         		['start_date', 'date', 'format' => 'yyyy-MM-dd', 'message'=>'Zły format'],
