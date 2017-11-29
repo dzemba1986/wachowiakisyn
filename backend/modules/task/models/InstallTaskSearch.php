@@ -83,8 +83,9 @@ class InstallTaskSearch extends InstallTask
         $query->andFilterWhere(['like', 'installer', $this->installer])
         	->andFilterWhere(['like', '("start")::text', $this->start.'%', false])
         	->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail])
-        	->andFilterWhere(['>=', 'close', $this->minClose])
-        	->andFilterWhere(['<=', 'close', $this->maxClose . ' 23:59:59']);
+        	->andFilterWhere(['>=', 'close', $this->minClose]);
+        
+        if (!empty($this->maxClose)) $query->andFilterWhere(['<=', 'close', $this->maxClose . ' 23:59:59']);
 
         return $dataProvider;
     }
