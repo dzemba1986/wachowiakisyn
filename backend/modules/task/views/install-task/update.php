@@ -23,6 +23,7 @@ use backend\modules\task\models\TaskCategory;
 	<?= $form->field($task, 'start_date')->label('Data i czas')->textInput()->widget(DatePicker::className(), [
 			'type' => DatePicker::TYPE_COMPONENT_APPEND,
 			'pluginOptions' => [
+				'language' => 'pl',
 	        	'format' => 'yyyy-mm-dd',
 	            'todayHighlight' => true,
 	        ]

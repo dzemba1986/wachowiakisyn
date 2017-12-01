@@ -70,9 +70,8 @@ require_once '_modal_comment.php';
             		'model' => $searchModel,
             		'attribute' => 'create',
             		'pickerButton' => false,
-            		//'removeButton' => false,
-            		'language' => 'pl',
             		'pluginOptions' => [
+            			'language' => 'pl',
             			'format' => 'yyyy-mm-dd',
             			'todayHighlight' => true,
             		]
