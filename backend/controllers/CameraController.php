@@ -2,11 +2,10 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\widgets\ActiveForm;
 use backend\models\Camera;
+use Yii;
 use yii\db\Query;
-use yii\db\Expression;
+use yii\widgets\ActiveForm;
 
 class CameraController extends DeviceController
 {	
@@ -34,7 +33,7 @@ class CameraController extends DeviceController
 			$query = new Query();
 			$query->select(['d.id', 'd.alias'])
 	    	->from('device d')
-	    	->where(['and', ['like', 'd.alias', strtoupper($q) . '%', false], ['is not', 'address', null], ['is not', 'status', null], ['d.type' => Camera::TYPE]])
+	    	->where(['and', ['like', 'd.alias', $q . '%', false], ['is not', 'address', null], ['is not', 'status', null], ['d.type' => Camera::TYPE]])
 	    	->limit(50)->orderBy('d.alias');
 	    	
     		$command = $query->createCommand();
