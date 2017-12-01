@@ -39,7 +39,7 @@ $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jquery-ui.min.js', ['po
 	echo '<div id="source" class="dropzones col-sm-4">';
 	foreach ($modelsTree as $modelTree){
 	
-		echo '<div class="dragzones" id="' . ($modelTree['port']) . '">' . $modelDeviceSource->modelModel->port[$modelTree['port']] . ' - ' . Device::findOne($modelTree['device'])->modelAddress->fullDeviceAddress . '</div>';
+		echo '<div class="dragzones" id="' . ($modelTree['port']) . '">' . $modelDeviceSource->modelModel->port[$modelTree['port']] . ' - ' . Device::findOne($modelTree['device'])->modelAddress->toString(true) . '</div>';
 		//var_dump($modelTree['port']);
 	}
 	
