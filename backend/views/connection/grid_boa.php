@@ -1,13 +1,12 @@
 <?php 
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use backend\models\Address;
-use backend\models\Type;
 use backend\models\Task;
+use backend\models\Type;
+use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 $this->params['breadcrumbs'][] = 'Zaksięgowane';
 ?>
@@ -74,23 +73,22 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
             },
         ],          
         [
-            'attribute'=>'start_date',
-            'value'=>'start_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'start_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['id'=>'start', 'style'=>'width:10%;'],
-            
-        ],	
+        	'attribute' => 'start_date',
+        	'value'=> 'start_date',
+        	'filterType' => GridView::FILTER_DATE,
+        	'filterWidgetOptions' => [
+        		'model' => $searchModel,
+        		'attribute' => 'start_date',
+        		'pickerButton' => false,
+        		'pluginOptions' => [
+        			'language' => 'pl',
+        			'format' => 'yyyy-mm-dd',
+        			'todayHighlight' => true,
+        			'endDate' => '0d',
+        		]
+        	],
+        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        ],
         [	
             'attribute'=>'street',
             'value'=>'modelAddress.ulica',
@@ -112,11 +110,6 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
             'value'=>'modelAddress.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
-//        [
-//            'attribute'=>'flat_detail',
-//            'value'=>'modelAddress.lokal_szczegol',
-//            'options' => ['style'=>'width:10%;'],
-//        ],
         [
             'attribute'=>'type',
             'value'=>'modelType.name',
@@ -125,47 +118,47 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
         ],
         [
             'class'=>'kartik\grid\BooleanColumn',
-            'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
+            'attribute' => 'socket',
             'header' => 'Gniazdo',
         	'trueLabel' => 'Tak',
         	'falseLabel' => 'Nie',
             'options' => ['style'=>'width:7%;'],
         ],            
         [
-            'attribute'=>'pay_date',
-            'value'=>'pay_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'pay_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['style'=>'width:7%;'],
+        	'attribute' => 'pay_date',
+        	'value'=> 'pay_date',
+        	'filterType' => GridView::FILTER_DATE,
+        	'filterWidgetOptions' => [
+        		'model' => $searchModel,
+        		'attribute' => 'pay_date',
+        		'pickerButton' => false,
+        		'pluginOptions' => [
+        			'language' => 'pl',
+        			'format' => 'yyyy-mm-dd',
+        			'todayHighlight' => true,
+        			'endDate' => '0d',
+        		]
+        	],
+        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
         ],
         [
-	        'attribute'=>'synch_date',
-	        'value'=> function ($model){
-				return $new_date = date('Y-m-d', strtotime($model->synch_date));	        	
+        	'attribute' => 'synch_date',
+        	'value'=> function ($model){
+        		return date("Y-m-d", strtotime($model->synch_date));
         	},
-	        'format'=>'raw',
-	        'filter'=>	DatePicker::widget([
-	        		'model' => $searchModel,
-	        		'attribute' => 'synch_date',
-	        		'removeButton' => FALSE,
-	        		'language'=>'pl',
-	        		'pluginOptions' => [
-	        				'format' => 'yyyy-mm-dd',
-	        				'todayHighlight' => true,
-	        				'endDate' => '0d', //wybór daty max do dziś
-	        		]
-	        ]),
-	        'options' => ['style'=>'width:7%;'],
+        	'filterType' => GridView::FILTER_DATE,
+        	'filterWidgetOptions' => [
+        		'model' => $searchModel,
+        		'attribute' => 'synch_date',
+        		'pickerButton' => false,
+        		'pluginOptions' => [
+        			'language' => 'pl',
+        			'format' => 'yyyy-mm-dd',
+        			'todayHighlight' => true,
+        			'endDate' => '0d',
+        		]
+        	],
+        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
         ],
         [   
             'header' => PageSize::widget([
