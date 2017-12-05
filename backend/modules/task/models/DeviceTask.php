@@ -59,7 +59,7 @@ class DeviceTask extends Task
 	            ['editable', 'boolean'],
 	        	['editable', 'default', 'value' => true],
 	            
-        		[['editable', 'when', 'close_description', 'device_id', 'device_type'], 'safe']
+        		[['editable', 'when', 'close_description', 'device_id', 'device_type', 'status'], 'safe']
         	],
         	parent::rules()
         );
@@ -69,7 +69,7 @@ class DeviceTask extends Task
     {
     	$scenarios = parent::scenarios();
     	array_push($scenarios[self::SCENARIO_CREATE], 'when', 'device_id', 'device_type');
-    	array_push($scenarios[self::SCENARIO_UPDATE], 'when');
+    	array_push($scenarios[self::SCENARIO_UPDATE], 'when', 'status');
     	array_push($scenarios[self::SCENARIO_CLOSE], 'editable', 'close_description');
     	
     	return $scenarios;

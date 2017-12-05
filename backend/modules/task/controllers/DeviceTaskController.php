@@ -25,9 +25,9 @@ class DeviceTaskController extends Controller
         	$dataProvider->query->andWhere([
         		'and',
         		['close' => null],	
-        		['is', "{$searchModel->tableName()}.status", null],
+        		['or', ['task.status' => false], ['task.status' => null]],
         		['is not', 'device_id', null]
-        	])->orderBy('create');
+        	])->orderBy('status DESC, create DESC');
         	
         } elseif ($mode == 'close') {
         	$dataProvider->query->joinWith([
@@ -36,7 +36,7 @@ class DeviceTaskController extends Controller
     			}
         	])->andWhere([
         		'and',	
-        		['is not', 'close', null],
+        		['task.status' => true],
         		['is not', 'device_id', null]
         		//'is not', 'close_user', null,
         	]);
@@ -131,7 +131,7 @@ class DeviceTaskController extends Controller
     	
     	if ($request->isAjax){
     		$task = $this->findModel($id);
-    		$task->scenario = InstallTask::SCENARIO_UPDATE;
+    		$task->scenario = DeviceTask::SCENARIO_UPDATE;
     		
     		if ($task->load(Yii::$app->request->post())){
     			
@@ -165,6 +165,7 @@ class DeviceTaskController extends Controller
     		
     		if ($task->load($request->post())){
     			try {
+    				$task->status = true;
     				if (!$task->save())
     					throw new Exception('Problem z zamknięciem zadania');
     			} catch (Exception $e) {

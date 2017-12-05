@@ -1,13 +1,8 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
-use kartik\date\DatePicker;
-use kartik\time\TimePicker;
 use backend\modules\task\models\InstallTask;
-use backend\modules\task\models\TaskType;
-use backend\modules\task\models\TaskCategory;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
@@ -18,60 +13,8 @@ use backend\modules\task\models\TaskCategory;
 	
 <?php $form = ActiveForm::begin(['id'=>$task->formName()]); ?>
 
-	<?= '<center><h4>'.Html::label($task->address->toString()).'</h4></center>'; ?>
-   
-	<?= $form->field($task, 'start_date')->label('Data i czas')->textInput()->widget(DatePicker::className(), [
-			'type' => DatePicker::TYPE_COMPONENT_APPEND,
-			'pluginOptions' => [
-	        	'format' => 'yyyy-mm-dd',
-	            'todayHighlight' => true,
-	        ]
-		]) ?>
-
-    <div class="row">
 	
-	<?= $form->field($task, 'start_time', [
-			'template' => "{input}\n{hint}\n{error}",
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']
-		])->widget(TimePicker::className(), [
-			'pluginOptions' => [
-				'minuteStep' => 60,
-				'showMeridian' => false
-			]		
-		]) ?>
-	
-	<?= $form->field($task, 'end_time', [
-			'template' => "{input}\n{hint}\n{error}",
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-		])->widget(TimePicker::className(), [
-			'pluginOptions' => [
-				'minuteStep' => 60,
-				'showMeridian' => false
-			]		
-		]) ?>
-		
-	</div>	   
-	
-	<div class="row">
-	
-	<?= $form->field($task, 'type_id',[
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']
-		])->dropDownList(ArrayHelper::map(TaskType::find()->all(), 'id', 'name')) ?>
-	
-	<?= $form->field($task, 'category_id', [
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-		])->dropDownList(ArrayHelper::map(TaskCategory::find()->all(), 'id', 'name')) ?>
-	</div>
-	
-	<div class="row">
-	
-	<?= $form->field($task, 'phone', ['options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']]) ?>
-	
-	<?= $form->field($task, 'paid_psm')->checkbox() ?>
-	
-	</div>
-	
-	<?= $form->field($task, 'description')->textarea(['rows' => '4', 'style' => 'resize: vertical', 'maxlength' => 1000]) ?>
+	<?= $form->field($task, 'status')->dropDownList([false => 'do wymiany']) ?>
 	
 	<div class="form-group">
         <?= Html::submitButton('Edytuj', ['class' => 'btn btn-primary']) ?>
@@ -92,7 +35,6 @@ $(function(){
 	 		if(result == 1){
 	 			$(this).trigger('reset');
 				$('#modal-task').modal('hide');
-				$('#calendar').fullCalendar('refetchEvents');
 	 			$.pjax.reload({container:'#task-grid-pjax'});
 	 		}
 	 		else{
