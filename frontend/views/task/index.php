@@ -141,38 +141,6 @@ require_once '_modal_task.php';
             	'options' => ['style'=>'width:10%;']
             ],
             [
-            	'attribute' => 'close_user',
-            	'value' => 'closeUser.last_name',
-            	'filterType' => GridView::FILTER_SELECT2,
-            	'filter' => ArrayHelper::map(User::findOrderByLastName()->all(), 'id', 'last_name'),
-            	'filterWidgetOptions' => [
-            		'pluginOptions' => ['allowClear' => true],
-            	],
-            	'filterInputOptions' => ['placeholder' => ''],
-            	'format' => 'raw',
-            	'options' => ['style'=>'width:10%;']
-            ],
-            [
-            	'attribute' => 'close',
-            	'value'=> function ($model){
-            		return $model->close ? date("Y-m-d", strtotime($model->close)) : null;
-            	},
-            	'filterType' => GridView::FILTER_DATE,
-            	'filterWidgetOptions' => [
-            		'model' => $searchModel,
-            		'attribute' => 'close',
-            		'pickerButton' => false,
-            		//'removeButton' => false,
-            		'language' => 'pl',
-            		'pluginOptions' => [
-            			'format' => 'yyyy-mm-dd',
-            			'todayHighlight' => true,
-            			'endDate' => '0d'
-            		]
-            	],
-            'options' => ['id'=>'start', 'style'=>'width:10%;'],
-            ],
-            [
             	'attribute' => 'status',
             	'format' => 'raw',
             	'filter' => ['null' => 'W trakcie', false => 'Do wymiany'],	
