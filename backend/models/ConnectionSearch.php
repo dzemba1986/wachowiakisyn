@@ -116,8 +116,10 @@ class ConnectionSearch extends Connection
 			$query->andFilterWhere(['socket' => 0]);
 	
 		$query->andFilterWhere(['like', 'dom_szczegol', $this->house_detail])
-			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail])
-			->andFilterWhere(['like', '{{synch_date}}::text', $this->synch_date.'%', false]);
+			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail]);
+		
+		//gdy filtr jest pusty bez if'a zapytanie daje zerowy wynik
+		if (!empty($this->synch_date)) $query->andFilterWhere(['like', '{{synch_date}}::text', $this->synch_date.'%', false]);
 
 		
 		return $dataProvider;
