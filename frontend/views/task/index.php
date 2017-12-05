@@ -2,7 +2,6 @@
 
 use backend\modules\task\models\DeviceTaskSearch;
 use common\models\User;
-use kartik\date\DatePicker;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
@@ -61,6 +60,7 @@ require_once '_modal_task.php';
             ],
             [
             	'attribute' => 'create',
+            	'label' => 'Dzień',	
             	'value'=> function ($model){
             		return date("Y-m-d", strtotime($model->create));
             	},
@@ -78,6 +78,15 @@ require_once '_modal_task.php';
             		]
             	],
             'options' => ['id'=>'start', 'style'=>'width:10%;'],
+            ],
+            [
+            	'attribute' => 'create',
+            	'label' => 'Godzina',	
+            	'value'=> function ($model){
+            		return date("H:i", strtotime($model->create));
+            	},
+            	'filter' => false,
+            	'options' => ['id'=>'start', 'style'=>'width:10%;'],
             ],
             [
             	'attribute' => 'device_id',
@@ -165,10 +174,9 @@ require_once '_modal_task.php';
             ],
             [
             	'attribute' => 'status',
-            	'format'=>'raw',
-            	'filter' => ['null' => 'W trakcie', true => 'Zrobione', false => 'Niezrobione'],	
+            	'format' => 'raw',
+            	'filter' => ['null' => 'W trakcie', false => 'Do wymiany'],	
             	'filterOptions' => ['prompt' => ''],
-            	//'filterInputOptions' => ['prompt' => ''],
             	'value' => function ($model){
             		if ($model->status) return '<span class="glyphicon glyphicon-ok text-success"></span>';
             		elseif (is_null($model->status)) return '<span class="glyphicon glyphicon-refresh"></span>';
