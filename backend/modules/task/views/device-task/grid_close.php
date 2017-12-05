@@ -73,6 +73,26 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             	'options' => ['id'=>'start', 'style'=>'width:10%;'],
             ],
             [
+            	'attribute' => 'create',
+            	'label' => 'Godzina',
+            	'value'=> function ($model){
+            		return date("H:i", strtotime($model->create));
+            	},
+            	'filter' => false,
+            	'options' => ['style' => 'width:5%;'],
+            ],
+            [
+            	'attribute' => 'add_user',
+            	'value' => 'addUser.last_name',
+            	'filterType' => GridView::FILTER_SELECT2,
+            	'filter' => ArrayHelper::map(User::findOrderByLastName()->all(), 'id', 'last_name'),
+            		'filterWidgetOptions' => [
+            			'pluginOptions' => ['allowClear' => true],
+            	],
+            	'filterInputOptions' => ['placeholder' => ''],
+            	'options' => ['style'=>'width:10%;']
+            ],
+            [
             	'attribute' => 'device_type',
             	'value' => 'deviceType.name',
             	'filter' => ArrayHelper::map(DeviceType::findOrderName()->all(), 'id', 'name'),
@@ -80,7 +100,9 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             ],
             [
             	'attribute' => 'device_id',
-            	'value' => 'device.name',
+            	'value' => function ($model){
+            		return $model->device->name . ' /' . $model->device->alias .  '/';
+            	},
             	'filterType' => GridView::FILTER_SELECT2,
             	'filterWidgetOptions' => [
             		'model' => $searchModel,
@@ -119,23 +141,6 @@ $this->params['breadcrumbs'][] = 'Zrobione';
 //                 'options' => ['style'=>'width:5%;'],
 //             ],
             [
-            	'class'=>'kartik\grid\BooleanColumn',
-            	'attribute'=>'status',
-            	'trueLabel' => 'Tak',
-            	'falseLabel' => 'Nie',
-            ],
-            [
-            	'attribute' => 'add_user',
-            	'value' => 'addUser.last_name',
-            	'filterType' => GridView::FILTER_SELECT2,
-            	'filter' => ArrayHelper::map(User::findOrderByLastName()->all(), 'id', 'last_name'),
-            	'filterWidgetOptions' => [
-            		'pluginOptions' => ['allowClear' => true],
-            	],
-            	'filterInputOptions' => ['placeholder' => ''],
-            	'options' => ['style'=>'width:10%;']
-            ],
-            [
             	'attribute' => 'close_user',
             	'value' => 'closeUser.last_name',
             	'filterType' => GridView::FILTER_SELECT2,
@@ -164,6 +169,15 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             		]
             	],
             	'options' => ['id'=>'start', 'style'=>'width:10%;'],
+            ],
+            [
+            	'attribute' => 'close',
+            	'label' => 'Godzina',
+            	'value'=> function ($model){
+            		return date("H:i", strtotime($model->close));
+            	},
+            	'filter' => false,
+            	'options' => ['style' => 'width:5%;'],
             ],
             [   
                 'header' => PageSize::widget([

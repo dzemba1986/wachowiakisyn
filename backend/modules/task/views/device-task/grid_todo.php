@@ -62,6 +62,7 @@ require_once '_modal_comment.php';
             ],
             [
             	'attribute' => 'create',
+            	'label' => 'Dzień',	
             	'value'=> function ($model){
             		return date("Y-m-d", strtotime($model->create));
             	},
@@ -78,6 +79,15 @@ require_once '_modal_comment.php';
             		]
             	],
             	'options' => ['id'=>'start', 'style'=>'width:10%;'],
+            ],
+            [
+            	'attribute' => 'create',
+            	'label' => 'Godzina',	
+            	'value'=> function ($model){
+            		return date("H:i", strtotime($model->create));
+            	},
+            	'filter' => false,
+            	'options' => ['style' => 'width:5%;'],
             ],
             [
             	'attribute' => 'device_type',
@@ -115,6 +125,17 @@ require_once '_modal_comment.php';
             	'format' => 'raw',
             	'options' => ['style'=>'width:30%;']
             ],
+            [
+            	'attribute' => 'status',
+            	'format' => 'raw',
+            	'filter' => ['null' => 'W trakcie', false => 'Do wymiany'],
+            	'filterOptions' => ['prompt' => ''],
+            	'value' => function ($model){
+            		if ($model->status) return '<span class="glyphicon glyphicon-ok text-success"></span>';
+            		elseif (is_null($model->status)) return '<span class="glyphicon glyphicon-refresh"></span>';
+            		else return '<span class="glyphicon glyphicon-remove text-danger"></span>';
+            	}
+            ],
 //             [
 //                 'attribute' => 'type_id',
 //                 'value' => 'type.name',
@@ -151,7 +172,7 @@ require_once '_modal_comment.php';
                     'template' => '{list}',
                 ]),
                 'class' => 'yii\grid\ActionColumn',
-            	'template' => '{close} {addcomment} {comments}',
+            	'template' => '{close} {addcomment} {comments} {update}',
             	'buttons' => [
             		'close' => function ($model, $data) {
             			$url = Url::to(['device-task/close', 'id' => $data->id]);
@@ -224,6 +245,15 @@ $(function() {
         
 		$('#modal-comment').modal('show')
 			.find('#modal-comment-content')
+			.load($(this).attr('href'));
+    
+        return false;
+	});
+
+	$('body').on('click', 'a[title="Update"]', function(event){
+        
+		$('#modal-task').modal('show')
+			.find('#modal-task-content')
 			.load($(this).attr('href'));
     
         return false;
