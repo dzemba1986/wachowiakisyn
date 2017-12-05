@@ -133,6 +133,7 @@ require_once '_modal_task.php';
                 'value' => 'address.lokal',
                 'options' => ['style'=>'width:5%;'],
             ],
+            'phone',
             [
                 'attribute' => 'type_id',
                 'value' => 'type.name',
