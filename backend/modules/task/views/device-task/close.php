@@ -13,8 +13,6 @@ use yii\widgets\ActiveForm;
 	'id' => $task->formName()
 ]); ?>
 
-    <?= $form->field($task, 'status')->dropDownList([1 => 'Wykonane', 0 => 'Niewykonane'], ['prompt' => 'Status']) ?>
-    
     <?= $form->field($task, 'close_description')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical']) ?>
     
     <div class="form-group">
