@@ -1,13 +1,12 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
 use backend\models\Address;
 use backend\models\Type;
+use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\InstallationSearch */
@@ -24,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'header' => '<center><h4>Edycja instalacji</h4></center>',
 		'size' => 'modal-sm',
 		'options' => [
-				'tabindex' => false // important for Select2 to work properly
+				'tabindex' => false
 		],
 	]);
 	
@@ -90,41 +89,40 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
                 'options' => ['style'=>'width:5%;'],
             ],
-            [
-                'attribute'=>'wire_date',
-                'value'=>'wire_date',
-                'format'=>'raw',
-                'filter'=>	DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'wire_date',
-                    'removeButton' => FALSE,
-                    'language'=>'pl',	
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true,
-                        'endDate' => '0d', //wybór daty max do dziś
-                    ]
-                ]),
-                'options' => ['id'=>'start', 'style'=>'width:8%;'],
-            
-            ],
-            [
-                'attribute'=>'socket_date',
-                'value'=>'socket_date',
-                'format'=>'raw',
-                'filter'=>	DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'socket_date',
-                    'removeButton' => FALSE,
-                    'language'=>'pl',	
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true,
-                        'endDate' => '0d', //wybór daty max do dziś
-                    ]
-                ]),
-                'options' => ['id'=>'start', 'style'=>'width:8%;'],
-            ],
+        	[
+        		'attribute' => 'wire_date',
+        		'value'=> 'wire_date',
+        		'filterType' => GridView::FILTER_DATE,
+        		'filterWidgetOptions' => [
+        			'model' => $searchModel,
+        			'attribute' => 'wire_date',
+        			'pickerButton' => false,
+        			'pluginOptions' => [
+        				'language' => 'pl',
+        				'format' => 'yyyy-mm-dd',
+        				'todayHighlight' => true,
+        				'endDate' => '0d',
+        			]
+        		],
+        		'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        	],
+        	[
+        		'attribute' => 'socket_date',
+        		'value'=> 'socket_date',
+        		'filterType' => GridView::FILTER_DATE,
+        		'filterWidgetOptions' => [
+        			'model' => $searchModel,
+        			'attribute' => 'socket_date',
+        			'pickerButton' => false,
+        			'pluginOptions' => [
+        				'language' => 'pl',
+        				'format' => 'yyyy-mm-dd',
+        				'todayHighlight' => true,
+        				'endDate' => '0d',
+        			]
+        		],
+        		'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        	],
             [
                 'attribute' => 'wire_length',
                 'options' => ['style'=>'width:5%;'],
@@ -136,8 +134,6 @@ $this->params['breadcrumbs'][] = $this->title;
         		'attribute' => 'status',
         		'trueLabel' => 'Istnieje',
         		'falseLabel' => 'Brak',
-//         		'trueIcon' => GridView::ICON_INACTIVE,
-//         		'falseIcon' => GridView::ICON_ACTIVE,
         		'options' => ['style'=>'width:5%;'],
         	],
             [   
@@ -148,7 +144,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
                 ],
                 'template' => '{list}',
             ]),
@@ -174,19 +169,6 @@ $(document).ready(function() {
 	        return false;
 		});
 	});
-
-    //reinicjalizacja kalendarza z datami po użyciu pjax'a
-    $("#installation-grid-pjax").on("pjax:complete", function() {
-        
-        if ($('#installationsearch-wire_date').data('kvDatepicker')) { $('#installationsearch-wire_date').kvDatepicker('destroy'); }
-        $('#installationsearch-wire_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-        initDPAddon('installationsearch-wire_date');
-        if ($('#installationsearch-socket_date').data('kvDatepicker')) { $('#installationsearch-socket_date').kvDatepicker('destroy'); }
-        $('#installationsearch-socket_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-        initDPAddon('task-start');
-    });
 });
 
 </script>
