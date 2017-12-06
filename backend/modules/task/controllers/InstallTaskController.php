@@ -258,6 +258,7 @@ class InstallTaskController extends Controller
     				$task->installer = implode(",", $task->installer);
     				$task->close_user = Yii::$app->user->id;
     				$task->editable = false;
+    				$task->color = '#909090';
     				
     				if (!$task->save())
     					throw new Exception('Problem z zapisem montażu');
