@@ -133,7 +133,7 @@ require_once '_modal_comment.php';
             	'value' => function ($model){
             		if ($model->status) return '<span class="glyphicon glyphicon-ok text-success"></span>';
             		elseif (is_null($model->status)) return '<span class="glyphicon glyphicon-refresh"></span>';
-            		else return '<span class="glyphicon glyphicon-remove text-danger"></span>';
+            		else return 'do wymiany';
             	}
             ],
 //             [

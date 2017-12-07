@@ -44,7 +44,7 @@ class TaskController extends Controller
     		['is not', 'device_id', null],
     		['device_type' => 6],
     		['or', ['task.status' => false], ['task.status' => null]]	
-    	])->orderBy('create DESC');
+    	])->orderBy('status DESC, create DESC');
     				
     	return $this->render('index', [
     		'dataProvider' => $dataProvider,
