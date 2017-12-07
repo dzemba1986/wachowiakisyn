@@ -79,11 +79,11 @@ ADD;
 $delete = <<<DELETE
 interface {$arPortsParent[$parentPortIndex]}
 shutdown
-no access-group voip{$portNumber}		
+no access-group voip{$portNumber}
 switchport access vlan 555
 no shutdown
 exit
-no access-list hardware voip{$portNumber}		
+no access-list hardware voip{$portNumber}
 exit
 wr
 
