@@ -21,7 +21,7 @@ class ConnectionSearch extends Connection
 	{
 		return $rules = [
 			[	
-				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date', 'synch_date',
+				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id',
 				'socket', 'again', 'wire',
 				'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
@@ -94,6 +94,7 @@ class ConnectionSearch extends Connection
 			
 		$query->FilterWhere([
 			'ara_id' => $this->ara_id,
+			'soa_id' => $this->soa_id,	
 			'start_date' => $this->start_date,
 			'conf_date' => $this->conf_date,
 			'pay_date' => $this->pay_date,

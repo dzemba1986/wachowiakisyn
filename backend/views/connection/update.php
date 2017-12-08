@@ -15,43 +15,34 @@ use yii\web\View;
  * @var View $this
  * @var $model backend\models\Connection
  */
-
-//echo '<center><h4>'.$model->modelAddress->fullAddress.'</h4></center>';
 ?>
 <div class="connection-update">
 
-    	<?php $form = ActiveForm::begin([
-            'id'=>$model->formName(),
-    	])?>
+    <?php $form = ActiveForm::begin([
+		'id'=>$model->formName(),
+    ])?>
         
-        <div style="display: flex">
-		    
+    <div class="col-sm-6">
+    	<div class="row">
 		    <?= $form->field($model, 'phone', [
-		    	'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-		    ]) ?>
-		    
+	    		'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 1px;'],
+	    	]) ?>
+	    
 		    <?= $form->field($model, 'phone2', [
-		    	'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
+		    	'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 1px; padding-right: 2px;'],
 		    ]) ?>
-		    
-		    <?php if(!$model->host && $model->wire >= 1 && $model->socket >= 1) :?>
-		    
-		    <?= Html::a('Czysc instalacje', Url::to(['installation/crash', 'connectionId' => $model->id]), ['class' => 'crash-installation']); ?>
-		
-			<?php endif; ?>
 		</div>
-		
-		<div style="display: flex">
-            
-            <?= $form->field($model, 'pay_date', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+			
+		<div class="row">
+	    	<?= $form->field($model, 'pay_date', [
+				'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 1px;'],
 			])->widget(DatePicker::className(), [
             	'model' => $model,
                 'attribute' => 'pay_date',
-                'language'=>'pl',
-				'removeButton' => FALSE,
+				'pickerButton' => FALSE,
 				'disabled' => $model->socket > 0 ? false : true,
                 'pluginOptions' => [
+                	'language'=>'pl',
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                     'endDate' => '0d', //wybór daty max do dziś
@@ -59,90 +50,86 @@ use yii\web\View;
             ])?>
             
             <?= $form->field($model, 'close_date', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'color : red; padding-left: 3px; padding-right: 0px;'],
+				'options' => ['class' => 'col-sm-6', 'style' => 'color : red; padding-left: 1px; padding-right: 2px;'],
 			])->widget(DatePicker::className(), [
             	'model' => $model,
                 'attribute' => 'close_date',
-                'language'=>'pl',
-				'removeButton' => FALSE,
+				'pickerButton' => FALSE,
                 'pluginOptions' => [
+                	'language'=>'pl',
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                     'endDate' => '0d', //wybór daty max do dziś
                 ]
             ])?>
-		
 		</div>
 		
-		<div style="display: flex">
-		
-			<?= $form->field($model, 'device', [
-    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-    		])->widget(Select2::classname(), [
-    			//'initValueText' => 'OP 120/ - OP120 - [172.20.4.44]', //$concatInit,
-    			'language' => 'pl',
-            	'options' => [
-            		//'id' => 'select2-connection-update',	
-            		
-            		'onchange' => new JsExpression("
-
-						$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $(this).val() + '&mode=free', function(data){
-							$('#connection-port').html(data).val('" . $model->port . "');
-						});
-					")
-            	],
-	    		'pluginOptions' => [
-	    			'placeholder' => 'Urządzenie nadrzędne',
-	    			'allowClear' => true,
-	    			'minimumInputLength' => 1,
-	    			'language' => [
-	    				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
-	    			],
-	    			'ajax' => [
-	    				'url' => Url::toRoute('device/list'),
-	    				'dataType' => 'json',
-	    				'data' => new JsExpression("function(params) { return {
-	    					q : params.term, 
-	    					type : $model->type == 1 || $model->type == 3 ? [2] : [3],
-    						distribution : $model->type == 1 ? false : null
-						}; 
-					}")
-		    		],
-		    		'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-		    		'templateResult' => new JsExpression('function(device) { return device.concat; }'),
-		    		'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
-	    		]
-    		]) ?>
-    		
+		<div class="row">
+			<?= $form->field($model, 'info', [
+				'options' => ['class' => 'col-sm-12', 'style' => 'padding-left: 0px; padding-right: 2px;'],
+			])->textarea(['rows' => "5", 'style' => 'resize: vertical']) ?>
+		</div>
+    </div>
+    
+    <div class="col-md-6">
+    	<div class="row">
+		<?= $form->field($model, 'device', [
+			'options' => ['class' => 'col-sm-12', 'style' => 'padding-left: 2px; padding-right: 0px;'],
+    	])->widget(Select2::classname(), [
+    		'language' => 'pl',
+           	'options' => [
+           		'onchange' => new JsExpression("
+					$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $(this).val() + '&mode=free', function(data){
+						$('#connection-port').html(data).val('" . $model->port . "');
+					});
+				")
+            ],
+	    	'pluginOptions' => [
+	    		'placeholder' => 'Urządzenie nadrzędne',
+	    		'allowClear' => true,
+	    		'minimumInputLength' => 1,
+	    		'language' => [
+	    			'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
+	    		],
+	    		'ajax' => [
+	    			'url' => Url::toRoute('device/list'),
+	    			'dataType' => 'json',
+	    			'data' => new JsExpression("function(params) { return {
+	    				q : params.term, 
+	    				type : $model->type == 1 || $model->type == 3 ? [2] : [3],
+    					distribution : $model->type == 1 ? false : null
+					};}")
+		    	],
+		    	'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+		    	'templateResult' => new JsExpression('function(device) { return device.concat; }'),
+		    	'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
+	    	]
+    	]) ?>
+    	</div>	
+    	<div class="row">
     		<?php $port = isset($model->port) ? $model->port : null?>
-    		
+	    		
 			<?= $form->field($model, 'port', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
+				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 2px; padding-right: 1px;'],
 			])->dropDownList([$port], ['prompt'=>'port']) ?>
-			
+    	
+    		<?php if($model->type == 1 || $model->type == 3) :?>
+				<?= $form->field($model, 'mac', [
+					'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 1px; padding-right: 0px;'],
+				]) ?>
+			<?php endif; ?>
 		</div>
-		
-		<?php if($model->type == 1 || $model->type == 3) :?>
-		
-		<div style="display: flex">
-		
-		<?= $form->field($model, 'mac', [
-				'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-			]) ?>
-			
-		</div>
-		
-		<?php endif; ?>	
         
-		<?= $form->field($model, 'info')->textarea(['style' => 'resize: vertical']) ?>
-        
-        <?= $form->field($model, 'info_boa')->textarea(['style' => 'resize: vertical']) ?>
-        
-        <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
-        
-        <?php ActiveForm::end() ?>
-        
-	
+        <div class="row">
+	        <?= $form->field($model, 'info_boa', [
+	        	'options' => ['class' => 'col-sm-12', 'style' => 'padding-left: 2px; padding-right: 0px;'],
+	        ])->textarea(['rows' => "5", 'style' => 'resize: vertical']) ?>
+    	</div>
+    </div>
+    
+    <?= Html::submitButton($model->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
+    
+    <?php ActiveForm::end() ?>
 </div>
 
 <script>

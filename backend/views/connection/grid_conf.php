@@ -1,13 +1,12 @@
 <?php 
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use backend\models\Address;
-use backend\models\Type;
-use nterms\pagesize\PageSize;
-use yii\helpers\Url;
 use backend\models\Device;
+use backend\models\Type;
+use kartik\grid\GridView;
+use nterms\pagesize\PageSize;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->params['breadcrumbs'][] = 'Do konfiguracji';
 ?>
@@ -64,22 +63,22 @@ $this->params['breadcrumbs'][] = 'Do konfiguracji';
            	},
        	],          
        	[
-            'attribute'=>'start_date',
-            'value'=>'start_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'start_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['id'=>'start', 'style'=>'width:8%;'],           
-        ],	
+       		'attribute' => 'start_date',
+       		'value'=> 'start_date',
+       		'filterType' => GridView::FILTER_DATE,
+       		'filterWidgetOptions' => [
+       			'model' => $searchModel,
+       			'attribute' => 'start_date',
+       			'pickerButton' => false,
+       			'pluginOptions' => [
+       				'language' => 'pl',
+       				'format' => 'yyyy-mm-dd',
+       				'todayHighlight' => true,
+       				'endDate' => '0d',
+       			]
+       		],
+       		'options' => ['id'=>'start', 'style'=>'width:10%;'],
+       	],
        	[	
            	'attribute'=>'street',
            	'value'=>'modelAddress.ulica',

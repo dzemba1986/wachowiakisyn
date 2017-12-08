@@ -1,12 +1,10 @@
 <?php 
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 use backend\models\Address;
 use backend\models\Type;
+use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 $this->params['breadcrumbs'][] = 'Odłączone';
 ?>
@@ -40,24 +38,25 @@ $this->params['breadcrumbs'][] = 'Odłączone';
 			'class'=>'yii\grid\SerialColumn',
            	'options'=>['style'=>'width: 4%;'],
 		],        
-        [
-            'attribute'=>'start_date',
-            'value'=>'start_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'start_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['id'=>'start', 'style'=>'width:8%;'],
-            
-        ],	
+		[
+			'attribute' => 'start_date',
+			'value'=> function ($model){
+				return date("Y-m-d", strtotime($model->start_date));
+			},
+			'filterType' => GridView::FILTER_DATE,
+			'filterWidgetOptions' => [
+				'model' => $searchModel,
+				'attribute' => 'start_date',
+				'pickerButton' => false,
+				'pluginOptions' => [
+					'language' => 'pl',
+					'format' => 'yyyy-mm-dd',
+					'todayHighlight' => true,
+					'endDate' => '0d'
+				]
+			],
+			'options' => ['id'=>'start', 'style'=>'width:10%;'],
+		],
         [	
             'attribute'=>'street',
             'value'=>'modelAddress.ulica',
@@ -79,11 +78,6 @@ $this->params['breadcrumbs'][] = 'Odłączone';
             'value'=>'modelAddress.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
-      	[
-           	'attribute'=>'flat_detail',
-           	'value'=>'modelAddress.lokal_szczegol',
-           	'options' => ['style'=>'width:10%;'],
-       	],
         [
             'attribute'=>'type',
             'value'=>'modelType.name',
@@ -91,146 +85,73 @@ $this->params['breadcrumbs'][] = 'Odłączone';
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'class'=>'kartik\grid\BooleanColumn',
-            'attribute'=>'nocontract',
-            'trueLabel' => 'Tak', 
-            'falseLabel' => 'Nie',
-            //'value'=>'modelType.name',
-            //'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
-            'options' => ['style'=>'width:5%;'],
-        ],            
-//        [
-//            'header' => 'Kabel',
-//            'format' => 'raw',
-//            'value' => function($data){
-//                if (sizeof($data->modelInstallationByType)  == 1)
-//                    return ArrayHelper::getValue($data->modelInstallationByType, '0.attributes.wire_date');
-//                elseif (sizeof($data->modelInstallationByType)  > 1){
-//                    $i = 0;
-//                    foreach ($data->modelInstallationByType as $objInstallation){
-//                        $arInstallation[$i] = ArrayHelper::getValue($data->modelInstallationByType, $i.'.attributes.wire_date');
-//                        $i++;
-//                    }
-//                    return Html::dropDownList('installation', 'id', $arInstallation, ['class'=>'form-control']);
-//                }	
-//                else 
-//                    //return Html::a('dodaj', '', ['id'=>'link_create_installation',]);
-//            return Html::a('dodaj', Url::to(['installation/wire-create', 'connectionId' => $data->id]), ['class'=>'button_create_installation']);
-//            },
-//            'options' => ['style'=>'width:7%;'],
-//        ],
-//        [
-//            'header' => 'Kabel',
-//            'format' => 'raw',
-//            'value' => function($data){
-//                if ($data->modelInstallationByType)
-//                    return 'OK';
-//                else 
-//                    //return Html::a('dodaj', '', ['id'=>'link_create_installation',]);
-//            return Html::a('dodaj', Url::to(['installation/wire-create', 'connectionId' => $data->id]), ['class'=>'button_create_installation']);
-//            },
-//            'options' => ['style'=>'width:7%;'],
-//        ],            
-//        [
-//            'attribute' => 'socketDate', // it can be 'attribute' => 'tableField' to.
-//            'header' => 'Gniazdo',
-//            'format' => 'raw',
-//            'value' => function($data) {
-//                if(sizeof($data->modelInstallationByType) > 0){
-//                    $i=0;
-//                    $noSocket = 0;
-//                    foreach ($data->modelInstallationByType as $installation){
-//                        $arInstallation[$i] = $installation->attributes;
-//
-//                        if($arInstallation[$i]['socket_date'] == null)
-//                            $noSocket++;
-//                            $i++;
-//                    }
-//                    if(sizeof($data->modelInstallationByType) == $noSocket)
-//                        return 'brak';
-//                    elseif(sizeof($data->modelInstallationByType) == 1)
-//                        return $arInstallation[0]['socket_date'];
-//                    else
-//                        return Html::dropDownList('ins', 'id', ArrayHelper::map($arInstallation, 'id', 'socket_date'), ['class'=>'form-control']);
-//                }
-//                else
-//                    return 'brak';
-//            },
-//            'options' => ['style'=>'width:7%;'],
-//        ],
+        	'class'=>'kartik\grid\BooleanColumn',
+        	'header'=>'Umowa',
+        	'attribute'=>'nocontract',
+        	'trueLabel' => 'Nie',
+        	'falseLabel' => 'Tak',
+        	'trueIcon' => GridView::ICON_INACTIVE,
+        	'falseIcon' => GridView::ICON_ACTIVE,
+        	'options' => ['style'=>'width:5%;'],
+        ],
         [
             'class'=>'kartik\grid\BooleanColumn',
-            'attribute' => 'socketDate', // it can be 'attribute' => 'tableField' to.
+            'attribute' => 'socketDate',
             'header' => 'Gniazdo',
-            //'format' => 'raw',
             'value' => 'socket',
-//            'value' => function($data) {
-//                if($data->modelInstallationByType <> NULL){
-//                    
-//                    foreach ($data->modelInstallationByType as $installation){
-//                        
-//                        if (isset($installation->socket_date))
-//                            return TRUE;
-//                        else
-//                            return FALSE;
-//                    }
-//                }    
-//                else
-//                    return FALSE;
-//            },
             'options' => ['style'=>'width:7%;'],
         ],                       
         [
-            'attribute'=>'conf_date',
-            'value'=>'conf_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'conf_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['style'=>'width:7%;'],
+        	'attribute' => 'conf_date',
+        	'value'=> 'conf_date',
+        	'filterType' => GridView::FILTER_DATE,
+        	'filterWidgetOptions' => [
+        		'model' => $searchModel,
+        		'attribute' => 'conf_date',
+        		'pickerButton' => false,
+        		'pluginOptions' => [
+        			'language' => 'pl',
+        			'format' => 'yyyy-mm-dd',
+        			'todayHighlight' => true,
+        			'endDate' => '0d',
+        		]
+        	],
+        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
         ],
         [
-            'attribute'=>'pay_date',
-            'value'=>'pay_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'pay_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['style'=>'width:7%;'],
+        	'attribute' => 'pay_date',
+        	'value'=> 'pay_date',
+        	'filterType' => GridView::FILTER_DATE,
+        	'filterWidgetOptions' => [
+        		'model' => $searchModel,
+        		'attribute' => 'pay_date',
+        		'pickerButton' => false,
+        		'pluginOptions' => [
+        			'language' => 'pl',
+        			'format' => 'yyyy-mm-dd',
+        			'todayHighlight' => true,
+        			'endDate' => '0d',
+        		]
+        	],
+        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
         ],
-		[
-		'attribute'=>'close_date',
-		'value'=>'close_date',
-		'format'=>'raw',
-		'filter'=>	DatePicker::widget([
-				'model' => $searchModel,
-				'attribute' => 'pay_date',
-				'removeButton' => FALSE,
-				'language'=>'pl',
-				'pluginOptions' => [
-						'format' => 'yyyy-mm-dd',
-						'todayHighlight' => true,
-						'endDate' => '0d', //wybór daty max do dziś
-				]
-		]),
-		'options' => ['style'=>'width:7%;'],
-		],
+        [
+        	'attribute' => 'close_date',
+        	'value'=> 'close_date',
+        	'filterType' => GridView::FILTER_DATE,
+        	'filterWidgetOptions' => [
+        		'model' => $searchModel,
+        		'attribute' => 'close_date',
+        		'pickerButton' => false,
+        		'pluginOptions' => [
+        			'language' => 'pl',
+        			'format' => 'yyyy-mm-dd',
+        			'todayHighlight' => true,
+        			'endDate' => '0d',
+        		]
+        	],
+        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        ],
         [   
             'header' => PageSize::widget([
                 'defaultPageSize' => 100,

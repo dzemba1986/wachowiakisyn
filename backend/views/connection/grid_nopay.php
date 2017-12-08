@@ -1,17 +1,16 @@
 <?php 
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use app\models\Package;
 use backend\models\Address;
-use backend\models\Type;
+use backend\models\Connection;
+use backend\models\Device;
 use backend\models\Task;
+use backend\models\Type;
+use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
-use app\models\Package;
-use backend\models\Device;
-use backend\models\Connection;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * @var Connection $model
@@ -51,12 +50,11 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 		'nullDisplay' => ''
 	],
 	'summary' => 'Widoczne {count} z {totalCount}',
-	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [
-			'before' => $this->render('_search', [
-					'searchModel' => $searchModel,
-			]),
+		'before' => $this->render('_search', [
+			'searchModel' => $searchModel,
+		]),
 	],
 	'rowOptions' => function($model){
 		if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
@@ -80,25 +78,26 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 
                 return 'Info: '.$data->info.'<br>Info Boa: '.$data->info_boa;
             },
-        ],          
+        ],
         [
-            'attribute'=>'start_date',
-            'value'=>'start_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'start_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
+        	'attribute' => 'start_date',
+        	'value'=> function ($model){
+        		return date("Y-m-d", strtotime($model->start_date));
+            },
+            'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+            	'model' => $searchModel,
+            	'attribute' => 'start_date',
+            	'pickerButton' => false,
+            	'pluginOptions' => [
+            		'language' => 'pl',
+            		'format' => 'yyyy-mm-dd',
+            		'todayHighlight' => true,
+            		'endDate' => '0d'	
+            	]
+            ],
             'options' => ['id'=>'start', 'style'=>'width:10%;'],
-            
-        ],	
+        ],
         [	
             'attribute'=>'street',
             'value'=>'modelAddress.ulica',
@@ -120,11 +119,6 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'value'=>'modelAddress.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
-//        [
-//            'attribute'=>'flat_detail',
-//            'value'=>'modelAddress.lokal_szczegol',
-//            'options' => ['style'=>'width:10%;'],
-//        ],
         [
             'attribute'=>'type',
             'value'=>'modelType.name',
@@ -162,52 +156,40 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         	'trueLabel' => 'Tak',
         	'falseLabel' => 'Nie',
             'options' => ['style'=>'width:7%;'],
-        ],            
-        [
-            'attribute'=>'task_id',
-            'label' => 'Montaż',
-            'format'=>'raw',
-            'value'=> function($model, $key){
-                if (!is_null($model->task_id)){
-                	if (is_object($model->task))
-                    	return Html::a(date('Y-m-d', strtotime($model->task->start)), Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
-                }
-                elseif ($model->socket > 0)
-                	return null;
-                else
-                    return Html::a('dodaj', Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
-            },
-            
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'task_id',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['style'=>'width:7%;'],
-        ],            
-        [
-            'attribute'=>'conf_date',
-            'value'=>'conf_date',
-            'format'=>'raw',
-            'filter'=>	DatePicker::widget([
-                'model' => $searchModel,
-                'attribute' => 'conf_date',
-                'removeButton' => FALSE,
-                'language'=>'pl',	
-                'pluginOptions' => [
-                    'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ]),
-            'options' => ['style'=>'width:7%;'],
         ],
+        [
+        	'attribute' => 'task_id',
+        	'label' => 'Montaż',
+        	'format' => 'raw',	
+        	'value'=> function($model, $key){
+        		if (!is_null($model->task_id)){
+        			if (is_object($model->task))
+        				return Html::a(date('Y-m-d', strtotime($model->task->start)), Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
+        		}
+        		elseif ($model->socket > 0)
+        			return null;
+        		else
+        			return Html::a('dodaj', Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
+			},
+			'filter' => false,
+        ],
+        [
+        	'attribute' => 'conf_date',
+        	'value'=> 'conf_date',
+			'filterType' => GridView::FILTER_DATE,
+			'filterWidgetOptions' => [
+				'model' => $searchModel,
+				'attribute' => 'conf_date',
+				'pickerButton' => false,
+				'pluginOptions' => [
+					'language' => 'pl',
+					'format' => 'yyyy-mm-dd',
+					'todayHighlight' => true,
+					'endDate' => '0d',
+				]
+			],
+			'options' => ['id'=>'start', 'style'=>'width:10%;'],
+		],
         [   
             'header' => PageSize::widget([
                 'defaultPageSize' => 100,
@@ -217,7 +199,6 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
                 ],
                 'template' => '{list}',
             ]),

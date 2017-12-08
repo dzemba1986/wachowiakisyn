@@ -1,16 +1,15 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
-use backend\models\Address;
-use backend\models\Type;
-use kartik\select2\Select2;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use backend\modules\task\models\InstallTaskSearch;
 
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\ConnectionSearch */
-/* @var $form yii\widgets\ActiveForm */
+/**
+ * @var View $this
+ * @var InstallTaskSearch $searchModel 
+ * @var ActiveForm $form
+ */
 ?>
 
 <div class="connection-search">
@@ -27,13 +26,13 @@ use kartik\select2\Select2;
     ])->widget(DatePicker::className(), [
             'model' => $searchModel,                    
             'attribute' => 'minClose',
-            //'removeButton' => FALSE,
-            'language'=>'pl',
+            'pickerButton' => false,
             'options' => ['placeholder' => 'Od'],
             'pluginOptions' => [
+            	'language'=>'pl',
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true,
-                'endDate' => '0d', //wybór daty max do dziś
+                'endDate' => '0d',
             ]
     ]) ?>
 
@@ -43,13 +42,13 @@ use kartik\select2\Select2;
     ])->widget(DatePicker::className(), [
             'model' => $searchModel,
             'attribute' => 'maxClose',
-            //'removeButton' => FALSE,
-            'language'=>'pl',
+            'pickerButton' => false,
             'options' => ['placeholder' => 'Do'],
             'pluginOptions' => [
+            	'language'=>'pl',
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true,
-                'endDate' => '0d', //wybór daty max do dziś
+                'endDate' => '0d',
             ]
     ]) ?>
     
