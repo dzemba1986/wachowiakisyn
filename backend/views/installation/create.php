@@ -77,7 +77,7 @@ use common\models\User;
     	'model' => $modelInstallation,
     	'attribute' => 'wire_date',
         'language'=>'pl',
-    	'removeButton' => false,
+    	'pickerButton' => false,
         'pluginOptions' => [
         	'format' => 'yyyy-mm-dd',
             'todayHighlight' => true,

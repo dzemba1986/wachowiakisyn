@@ -41,8 +41,8 @@ use yii\web\View;
                 'attribute' => 'pay_date',
 				'pickerButton' => FALSE,
 				'disabled' => $model->socket > 0 ? false : true,
+				'language' => 'pl',
                 'pluginOptions' => [
-                	'language'=>'pl',
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                     'endDate' => '0d', //wybór daty max do dziś
@@ -54,9 +54,9 @@ use yii\web\View;
 			])->widget(DatePicker::className(), [
             	'model' => $model,
                 'attribute' => 'close_date',
-				'pickerButton' => FALSE,
+				'pickerButton' => false,
+				'language' => 'pl',
                 'pluginOptions' => [
-                	'language'=>'pl',
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                     'endDate' => '0d', //wybór daty max do dziś

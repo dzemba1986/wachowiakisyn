@@ -24,8 +24,8 @@ use backend\models\Connection;
             	'model' => $modelInstallation,
                 'attribute' => 'wire_date',
 				'pickerButton' => false,
+				'language' => 'pl',
                 'pluginOptions' => [
-                	'language'=>'pl',
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                     'endDate' => '0d',
@@ -53,9 +53,9 @@ use backend\models\Connection;
 			])->widget(DatePicker::className(), [
             	'model' => $modelInstallation,
                 'attribute' => 'socket_date',
-				'pickerButton' => FALSE,
+				'pickerButton' => false,
+				'language' => 'pl',
                 'pluginOptions' => [
-                	'language'=>'pl',
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                     'endDate' => '0d',
