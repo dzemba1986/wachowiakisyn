@@ -63,10 +63,11 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             		'model' => $searchModel,
             		'attribute' => 'create',
             		'pickerButton' => false,
+            		'language' => 'pl',
             		'pluginOptions' => [
-            			'language' => 'pl',
             			'format' => 'yyyy-mm-dd',
             			'todayHighlight' => true,
+            			'endDate' => '0d',
             		]
             	],
             	'options' => ['id'=>'start', 'style'=>'width:10%;'],
@@ -160,11 +161,11 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             		'model' => $searchModel,
             		'attribute' => 'close',
             		'pickerButton' => false,
-            		//'removeButton' => false,
             		'language' => 'pl',
             		'pluginOptions' => [
             			'format' => 'yyyy-mm-dd',
             			'todayHighlight' => true,
+            			'endDate' => '0d',
             		]
             	],
             	'options' => ['id'=>'start', 'style'=>'width:10%;'],

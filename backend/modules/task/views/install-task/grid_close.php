@@ -71,7 +71,6 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             		'model' => $searchModel,
             		'attribute' => 'start',
             		'pickerButton' => false,
-            		//'removeButton' => false,
             		'language' => 'pl',
             		'pluginOptions' => [
             			'format' => 'yyyy-mm-dd',

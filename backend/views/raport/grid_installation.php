@@ -1,12 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
 use backend\models\Address;
 use backend\models\Type;
+use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\InstallationSearch */
@@ -100,8 +99,8 @@ $this->params['breadcrumbs'][] = 'Instalacje';
         			'model' => $searchModel,
         			'attribute' => 'wire_date',
         			'pickerButton' => false,
+        			'language'=>'pl',
         			'pluginOptions' => [
-        				'language' => 'pl',
         				'format' => 'yyyy-mm-dd',
         				'todayHighlight' => true,
         				'endDate' => '0d',
@@ -117,8 +116,8 @@ $this->params['breadcrumbs'][] = 'Instalacje';
         			'model' => $searchModel,
         			'attribute' => 'socket_date',
         			'pickerButton' => false,
+        			'language'=>'pl',
         			'pluginOptions' => [
-        				'language' => 'pl',
         				'format' => 'yyyy-mm-dd',
         				'todayHighlight' => true,
         				'endDate' => '0d',

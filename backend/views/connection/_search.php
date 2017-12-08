@@ -87,9 +87,9 @@ use kartik\select2\Select2;
 	            'model' => $searchModel,                    
 	            'attribute' => 'start_date',
 	            'pickerButton' => false,
+	    		'language'=>'pl',
 	            'options' => ['id' => 'start', 'placeholder' => $searchModel->getAttributeLabel('start_date')],
 	            'pluginOptions' => [
-	            	'language'=>'pl',
 	            	'format' => 'yyyy-mm-dd',
 	                'todayHighlight' => true,
 	                'endDate' => '0d',
@@ -103,9 +103,9 @@ use kartik\select2\Select2;
 	            'model' => $searchModel,
 	            'attribute' => 'conf_date',
 	            'pickerButton' => false,
+	    		'language'=>'pl',
 	            'options' => ['id' => 'conf', 'placeholder' => $searchModel->getAttributeLabel('conf_date')],
 	            'pluginOptions' => [
-	            	'language'=>'pl',
 	                'format' => 'yyyy-mm-dd',
 	                'todayHighlight' => true,
 	                'endDate' => '0d',
@@ -119,9 +119,9 @@ use kartik\select2\Select2;
 	            'model' => $searchModel,
 	            'attribute' => 'pay_date',
 	            'pickerButton' => false,
+	    		'language'=>'pl',
 	            'options' => ['id' => 'pay', 'placeholder' => $searchModel->getAttributeLabel('pay_date')],
 	            'pluginOptions' => [
-	            	'language'=>'pl',
 	                'format' => 'yyyy-mm-dd',
 	                'todayHighlight' => true,
 	                'endDate' => '0d',
@@ -135,9 +135,9 @@ use kartik\select2\Select2;
 	            'model' => $searchModel,
 	            'attribute' => 'phone_date',
 	            'pickerButton' => false,
+	    		'language'=>'pl',
 	            'options' => ['id' => 'move_phone', 'placeholder' => $searchModel->getAttributeLabel('phone_date')],
 	            'pluginOptions' => [
-	            	'language'=>'pl',
 	                'format' => 'yyyy-mm-dd',
 	                'todayHighlight' => true,
 	            ]

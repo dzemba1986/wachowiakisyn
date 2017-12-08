@@ -25,8 +25,8 @@ use yii\widgets\ActiveForm;
 	            'attribute' => 'minConfDate',
 	            'pickerButton' => false,
 	            'options' => ['placeholder' => 'Od'],
+	    		'language'=>'pl',
 	            'pluginOptions' => [
-	            	'language'=>'pl',
 	                'format' => 'yyyy-mm-dd',
 	                'todayHighlight' => true,
 	                'endDate' => '0d',
@@ -41,8 +41,8 @@ use yii\widgets\ActiveForm;
 	            'attribute' => 'maxConfDate',
 	            'pickerButton' => FALSE,
 	            'options' => ['placeholder' => 'Do'],
+	    		'language'=>'pl',
 	            'pluginOptions' => [
-	            	'language'=>'pl',
 	                'format' => 'yyyy-mm-dd',
 	                'todayHighlight' => true,
 	                'endDate' => '0d',

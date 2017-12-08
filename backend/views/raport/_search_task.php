@@ -28,8 +28,8 @@ use backend\modules\task\models\InstallTaskSearch;
             'attribute' => 'minClose',
             'pickerButton' => false,
             'options' => ['placeholder' => 'Od'],
+    		'language'=>'pl',
             'pluginOptions' => [
-            	'language'=>'pl',
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true,
                 'endDate' => '0d',
@@ -44,8 +44,8 @@ use backend\modules\task\models\InstallTaskSearch;
             'attribute' => 'maxClose',
             'pickerButton' => false,
             'options' => ['placeholder' => 'Do'],
+    		'language'=>'pl',
             'pluginOptions' => [
-            	'language'=>'pl',
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true,
                 'endDate' => '0d',

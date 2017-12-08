@@ -29,8 +29,8 @@ use yii\widgets\ActiveForm;
             'attribute' => 'minSocketDate',
             'pickerButton' => false,
             'options' => ['placeholder' => 'Od'],
+    		'language'=>'pl',
             'pluginOptions' => [
-            	'language'=>'pl',
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true,
                 'endDate' => '0d',
@@ -45,8 +45,8 @@ use yii\widgets\ActiveForm;
             'attribute' => 'maxSocketDate',
             'pickerButton' => false,
             'options' => ['placeholder' => 'Do'],
+    		'language'=>'pl',
             'pluginOptions' => [
-            	'language'=>'pl',
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true,
                 'endDate' => '0d',

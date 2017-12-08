@@ -80,8 +80,8 @@ require_once '_modal_task.php';
                 	'model' => $searchModel,
                 	'attribute' => 'start',
                 	'pickerButton' => false,
+                	'language' => 'pl',
                 	'pluginOptions' => [
-                		'language' => 'pl',
                 		'format' => 'yyyy-mm-dd',
                 		'todayHighlight' => true,
                 	]

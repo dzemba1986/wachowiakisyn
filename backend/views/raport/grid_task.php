@@ -1,12 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use kartik\grid\GridView;
-use kartik\date\DatePicker;
 use backend\models\Address;
 use backend\models\Type;
+use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\InstallationSearch */
@@ -74,8 +73,8 @@ $this->params['breadcrumbs'][] = 'Montaże';
         			'model' => $searchModel,
         			'attribute' => 'create',
         			'pickerButton' => false,
+        			'language'=>'pl',
         			'pluginOptions' => [
-        				'language' => 'pl',
  	       				'format' => 'yyyy-mm-dd',
         				'todayHighlight' => true,
         			]
@@ -119,8 +118,8 @@ $this->params['breadcrumbs'][] = 'Montaże';
             		'model' => $searchModel,
             		'attribute' => 'close',
             		'pickerButton' => false,
+            		'language'=>'pl',
             		'pluginOptions' => [
-            			'language' => 'pl',
             			'format' => 'yyyy-mm-dd',
             			'todayHighlight' => true,
             		]
