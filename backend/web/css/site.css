@@ -100,18 +100,6 @@ a[title="Show all data"] {
 	display: none;
 }
 
-@media (min-width: 1500px) {
-  .container {
-    width: 1470px;
-  }
-}
-
-@media (min-width: 1900px) {
-  .container {
-    width: 1870px;
-  }
-}
-
 /* grid view */
 
 #connection-grid .pay:nth-child(odd) {
