@@ -13,7 +13,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
- * @var Connection $model
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
  */
 
 $this->params['breadcrumbs'][] = 'Niepłacący';
@@ -52,7 +53,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 	'summary' => 'Widoczne {count} z {totalCount}',
 	'export' => false,
 	'panel' => [
-		'before' => $this->render('_search', [
+		'before' => $this->renderAjax('_search', [
 			'searchModel' => $searchModel,
 		]),
 	],
@@ -225,19 +226,16 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         ],            
     ]
 ]); 
-?>
-
-<script>
-
-$(function(){
-	$('body').on('click', '.task', function(event){
-        
-		$('#modal-open-calendar').modal('show')
-			.find('#modal-content-calendar')
-			.load($(this).attr('href'));
-    
-        return false;
+ 
+$this->registerJs(
+'$(function(){
+	$("body").on("click", ".task", function(event){
+		$("#modal-open-calendar").modal("show")
+			.find("#modal-content-calendar")
+			.load($(this).attr("href"));
+   
+       	return false;
 	});
-});
-
-</script>
+});'
+);
+?>

@@ -6,6 +6,11 @@ use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
+
 $this->params['breadcrumbs'][] = 'Odłączone';
 ?>
 
@@ -25,7 +30,7 @@ $this->params['breadcrumbs'][] = 'Odłączone';
 	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [
-			'before' => $this->render('_search', [
+			'before' => $this->renderAjax('_search', [
 					'searchModel' => $searchModel,
 			]),
 	],
@@ -161,7 +166,6 @@ $this->params['breadcrumbs'][] = 'Odłączone';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
                 ],
                 'template' => '{list}',
             ]),

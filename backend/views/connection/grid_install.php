@@ -9,6 +9,11 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
+
 $this->params['breadcrumbs'][] = 'Bez kabla';
 ?>
 
@@ -48,7 +53,7 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
 	],
 	'export' => false,
 	'panel' => [
-			'before' => $this->render('_search', [
+			'before' => $this->renderAjax('_search', [
 					'searchModel' => $searchModel,
 			]),
 	],
@@ -179,7 +184,6 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
                 ],
                 'template' => '{list}',
             ]),
@@ -188,19 +192,17 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
         ],              
     ]
 ]); 
-?>
 
-<script>
-$(function(){
-
-	$("body").on('click', '.create-installation', function(event){
-        
-		$('#modal-create-installation').modal('show')
-			.find('#modal-create-installation-content')
-			.load($(this).attr('href'));
-    
-        return false;
+$this->registerJs(
+'$(function(){
+	$("body").on("click", ".create-installation", function(event){
+       
+		$("#modal-create-installation").modal("show")
+		.find("#modal-create-installation-content")
+		.load($(this).attr("href"));
+   
+    	return false;
 	});
-	
-});
-</script>
+});'
+);
+?>

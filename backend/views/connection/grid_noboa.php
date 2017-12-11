@@ -8,6 +8,11 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
+
 $this->params['breadcrumbs'][] = 'Niezaksięgowane';
 ?>
 
@@ -24,10 +29,9 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
 	],
 	'resizableColumns' => FALSE,
 	'summary' => 'Widoczne {count} z {totalCount}',
-	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [
-			'before' => $this->render('_search', [
+			'before' => $this->renderAjax('_search', [
 					'searchModel' => $searchModel,
 			]),
 	],
@@ -203,31 +207,16 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
         ],            
     ]
 ]); 
-?>
 
-<script>
-
-$(document).ready(function() {
-
-	$('body').on('click', 'a[title="Synchronizacja"]', function(event){
-        
-        //event.preventDefault();
-        
-        $.get($(this).attr('href'), function(data) {
-
-        	$.pjax.reload({container: '#connection-grid-pjax'});
-//   			alert( "Aktywowano" );
+$this->registerJs(
+'$(function(){
+	$("body").on("click", "a[title="Synchronizacja"]", function(event){
+        $.get($(this).attr("href"), function(data) {
+        	$.pjax.reload({container: "#connection-grid-pjax"});
 		});
-        
-// 		$('#modal-connection-update').modal('show')
-// 			.find('#modal-content-connection-update')
-// 			.load($(this).attr('href'));
-    
-        return false;
+       
+       	return false;
 	});
-
-    
-
-});
-
-</script>
+});'
+);
+?>

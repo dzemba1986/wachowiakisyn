@@ -6,6 +6,11 @@ use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
+
 $this->params['breadcrumbs'][] = 'Aktywne';
 ?>
 
@@ -26,10 +31,9 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 		'nullDisplay' => ''
 	],
 	'summary' => 'Widoczne {count} z {totalCount}',
-	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [
-			'before' => $this->render('_search', [
+			'before' => $this->renderAjax('_search', [
 					'searchModel' => $searchModel,
 			]),
 	],
@@ -155,7 +159,6 @@ $this->params['breadcrumbs'][] = 'Aktywne';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
                 ],
                 'template' => '{list}',
             ]),

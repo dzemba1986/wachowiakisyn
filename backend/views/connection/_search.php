@@ -1,23 +1,25 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
-use kartik\date\DatePicker;
 use backend\models\Address;
 use backend\models\Type;
+use kartik\date\DatePicker;
 use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\ConnectionSearch */
-/* @var $form yii\widgets\ActiveForm */
+/** 
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $searchModel
+ * @var yii\widgets\ActiveForm $form
+ */ 
 ?>
 
-<div class="connection-search">
+
     <?php $form = ActiveForm::begin([
         'action' => ['connection/index', 'mode' => 'all'],
         'method' => 'get',
-    	'id' => 'global-search',
+    	'id' => 'global-search-form',
     ]); ?>    
 
     <div class="row">
@@ -174,5 +176,3 @@ use kartik\select2\Select2;
     </div>
         
     <?php ActiveForm::end(); ?>
-        
-</div>

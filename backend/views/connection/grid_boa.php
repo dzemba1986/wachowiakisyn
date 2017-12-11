@@ -1,12 +1,16 @@
 <?php 
 use backend\models\Address;
-use backend\models\Task;
 use backend\models\Type;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
 
 $this->params['breadcrumbs'][] = 'Zaksięgowane';
 ?>
@@ -42,10 +46,9 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
 		'nullDisplay' => ''
 	],
 	'summary' => 'Widoczne {count} z {totalCount}',
-	//'showPageSummary' => TRUE,
 	'export' => false,
 	'panel' => [
-			'before' => $this->render('_search', [
+			'before' => $this->renderAjax('_search', [
 					'searchModel' => $searchModel,
 			]),
 	],
@@ -169,7 +172,6 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
                 ],
                 'template' => '{list}',
             ]),
@@ -179,18 +181,3 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
     ]
 ]); 
 ?>
-
-<script>
-
-$(function(){
-	$('body').on('click', '.task', function(event){
-        
-		$('#modal-open-calendar').modal('show')
-			.find('#modal-content-calendar')
-			.load($(this).attr('href'));
-    
-        return false;
-	});
-});
-
-</script>

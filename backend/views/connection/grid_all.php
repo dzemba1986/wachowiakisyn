@@ -9,6 +9,11 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
+
 $this->params['breadcrumbs'][] = 'Wszystkie';
 ?>
 
@@ -24,11 +29,10 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
 		]
 	],
 	'resizableColumns' => FALSE,
-	//'showPageSummary' => TRUE,
 	'export' => false,
 	'summary' => 'Widoczne {count} z {totalCount}',
 	'panel' => [
-			'before' => $this->render('_search', [
+			'before' => $this->renderAjax('_search', [
 					'searchModel' => $searchModel,
 			]),
 	],
