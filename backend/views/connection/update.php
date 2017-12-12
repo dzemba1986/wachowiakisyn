@@ -6,16 +6,13 @@ use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use yii\helpers\Url;
 use yii\web\JsExpression;
-use yii\bootstrap\Modal;
-use backend\models\Connection;
-use backend\models\Device;
-use yii\web\View;
 
 /**
- * @var View $this
- * @var $model backend\models\Connection
+ * @var yii\web\View $this
+ * @var backend\models\Connection $model 
  */
 ?>
+
 <div class="connection-update">
 
     <?php $form = ActiveForm::begin([
@@ -45,7 +42,7 @@ use yii\web\View;
                 'pluginOptions' => [
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
+                    'endDate' => '0d',
                 ]
             ])?>
             
@@ -59,7 +56,7 @@ use yii\web\View;
                 'pluginOptions' => [
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
+                    'endDate' => '0d',
                 ]
             ])?>
 		</div>
@@ -67,7 +64,7 @@ use yii\web\View;
 		<div class="row">
 			<?= $form->field($model, 'info', [
 				'options' => ['class' => 'col-sm-12', 'style' => 'padding-left: 0px; padding-right: 2px;'],
-			])->textarea(['rows' => "5", 'style' => 'resize: vertical']) ?>
+			])->textarea(['rows' => "7", 'style' => 'resize: vertical']) ?>
 		</div>
     </div>
     
@@ -110,12 +107,12 @@ use yii\web\View;
     		<?php $port = isset($model->port) ? $model->port : null?>
 	    		
 			<?= $form->field($model, 'port', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 2px; padding-right: 1px;'],
+				'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 2px; padding-right: 1px;'],
 			])->dropDownList([$port], ['prompt'=>'port']) ?>
     	
     		<?php if($model->type == 1 || $model->type == 3) :?>
 				<?= $form->field($model, 'mac', [
-					'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 1px; padding-right: 0px;'],
+					'options' => ['class' => 'col-sm-7', 'style' => 'padding-left: 1px; padding-right: 0px;'],
 				]) ?>
 			<?php endif; ?>
 		</div>
@@ -123,7 +120,7 @@ use yii\web\View;
         <div class="row">
 	        <?= $form->field($model, 'info_boa', [
 	        	'options' => ['class' => 'col-sm-12', 'style' => 'padding-left: 2px; padding-right: 0px;'],
-	        ])->textarea(['rows' => "5", 'style' => 'resize: vertical']) ?>
+	        ])->textarea(['rows' => "7", 'style' => 'resize: vertical']) ?>
     	</div>
     </div>
     
@@ -132,59 +129,44 @@ use yii\web\View;
     <?php ActiveForm::end() ?>
 </div>
 
-<script>
+<?php 
+$deviceListUrl = Url::to(['device/list', 'id' => $model->device]);
 
-$(function(){
-	
-	var device = <?= json_encode($model->device); ?>
+$this->registerJs(
+"$(function(){
+	$('.modal-header h4').html('{$model->modelAddress->toString()}');
 
-	if (device){
-		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $model->device])?>", function(data){
-			$('#select2-connection-device-container').html(data.results.concat);
-		});
-	
-		$("#connection-device").trigger("change");
-	}
-
-	$(".modal-header h4").html("<?= $model->modelAddress->toString() ?>");
-
-	$("#<?= $model->formName(); ?>").on('beforeSubmit', function(e){
+	$('#{$model->formName()}').on('beforeSubmit', function(e){
 		
 		var form = $(this);
 	 	$.post(
-	  		form.attr("action"), // serialize Yii2 form
+	  		form.attr('action'),
 	  		form.serialize()
 	 	).done(function(result){
-			
-//	 		console.log(result);
 	 		if(result == 1){
 	 			//$(form).trigger('reset');
 				$('#modal-connection-update').modal('hide');
 	 			$.pjax.reload({container: '#connection-grid-pjax'});
 	 		}
 	 		else{
-			
 	 			$('#message').html(result);
 	 		}
 	 	}).fail(function(){
 	 		console.log('server error');
 	 	});
 		return false;				
-	});
+	});	
 
-	$("body").on('click', '.crash-installation', function(event){
-        
-		$.get($(this).attr('href'), function(data) {
+	//wyświetlanie wybranego urzadzenia i portu
+	var device = {$model->device}
 
-        	alert('Wyczyszczono !');
+	if (device){
+		$.getJSON('{$deviceListUrl}', function(data){
+			$('#select2-connection-device-container').html(data.results.concat);
 		});
-    
-        return false;
-	});
-
-// 	if (!($("#connection-device").val()) && !($("#connection-mac").val())){
-// 		$(".add-to-tree").hide();
-// 	}	
-})
-
-</script>
+	
+		$('#connection-device').trigger('change');
+	}
+});"
+);
+?>
