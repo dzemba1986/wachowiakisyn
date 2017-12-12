@@ -18,13 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php 
 if ($mode == 'todo'){
 
-	echo $this->render('grid_todo', [
+	echo $this->renderAjax('grid_todo', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider
 	]);
 } elseif ($mode == 'close'){
 
-	echo $this->render('grid_close', [
+	echo $this->renderAjax('grid_close', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider
 	]);
