@@ -6,13 +6,11 @@ use yii\helpers\Html;
 use backend\models\Connection;
 
 /**
- * @var Connection $model
+ * @var yii\web\View $this
+ * @var backend\models\Connection $model 
  */
+?>
 
-$vip = $model->vip == true ? "(VIP)" : null; ?>
-
-<?php  echo '<center><h4>' . $model->modelAddress->toString() . ' ' . $vip . '</h4></center>'; ?>
-    
 <div style="width: 49%; display: inline-block;">
 	<?= DetailView::widget([
     	'model' => $model,
@@ -25,7 +23,7 @@ $vip = $model->vip == true ? "(VIP)" : null; ?>
 	        'soa_id',
             'phone',
             'phone2',
-            //'port',
+            'vip',
         ],
 	]);
 	?>
@@ -73,8 +71,6 @@ $vip = $model->vip == true ? "(VIP)" : null; ?>
 	foreach ($installations as $installation){
 		$arInstallations[$i]['label'] = $installation->modelType->name;
 	    $arInstallations[$i]['content'] = $this->render('@app/views/installation/_view', ['model' => $installation]);
-	    //var_dump($arInstallations);
-	    //exit;
 	    $i++;
 	}
 	 

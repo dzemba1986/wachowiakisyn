@@ -2,7 +2,8 @@
 use backend\models\Connection;
 
 /**
- * @var Connection $model
+ * @var yii\web\View $this
+ * @var backend\models\Connection $model 
  */
  
  if ($model->type == 1 || $model->type == 3){
@@ -16,5 +17,11 @@ use backend\models\Connection;
 			'model' => $model,
 	]);
 }
-?>    
+ 
+$this->registerJs(
+"$(function(){
+	$('.modal-header h4').html('{$model->modelAddress->toString()}');
+});"
+);
+?>   
 
