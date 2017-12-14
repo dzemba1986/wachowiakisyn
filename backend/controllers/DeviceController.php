@@ -2,17 +2,17 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\web\Controller;
-use backend\models\Device;
-use backend\models\DeviceSearch;
-use yii\db\Query;
-use backend\models\DeviceFactory;
-use yii\widgets\ActiveForm;
 use backend\models\Address;
-use backend\models\Ip;
+use backend\models\Device;
+use backend\models\DeviceFactory;
+use backend\models\DeviceSearch;
 use backend\models\Dhcp;
 use backend\models\Host;
+use Yii;
+use yii\db\Query;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\widgets\ActiveForm;
 
 class DeviceController extends Controller
 {
@@ -58,10 +58,10 @@ class DeviceController extends Controller
     			if($modelDevice->validate()){
     				try {
     					if(!$modelDevice->save())
-    						throw new Exception('Problem z zapisem urządzenia');
+    						throw new \Exception('Problem z zapisem urządzenia');
     					Dhcp::generateFile([$modelDevice->modelIps[0]->modelSubnet->id]);
     					return 1;
-    				} catch (Exception $e) {
+    				} catch (\Exception $e) {
     					var_dump($modelDevice->errors);
     					var_dump($e->getMessage());
     					exit();
@@ -128,11 +128,11 @@ class DeviceController extends Controller
         				
 	        			try {
 							if(!$newModelAddress->save())
-								throw new Exception('Problem z zapisem adresu');
+								throw new \Exception('Problem z zapisem adresu');
 							
 							$modelDevice->address = $newModelAddress->id;	
 							//return 1;
-						} catch (Exception $e) {
+						} catch (\Exception $e) {
 							var_dump($newModelAddress->errors);
 							var_dump($e->getMessage());
 							exit();
@@ -171,9 +171,9 @@ class DeviceController extends Controller
 					
         			try {
         				if(!$modelDevice->save())
-        					throw new Exception('Problem z zapisem urządzenia');
+        					throw new \Exception('Problem z zapisem urządzenia');
         				return 1;
-        			} catch (Exception $e) {
+        			} catch (\Exception $e) {
         				var_dump($modelDevice->errors);
         				var_dump($e->getMessage());
         				exit();
@@ -311,14 +311,6 @@ class DeviceController extends Controller
 		return $out;
 	}
 
-    /**
-     * Finds the Modyfication model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Modyfication the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-	
 	public function actionValidation($type){
 		 
 		$modelDevice = DeviceFactory::create($type);
