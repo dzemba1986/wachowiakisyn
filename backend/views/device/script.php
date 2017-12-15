@@ -33,12 +33,13 @@ use backend\models\Device;
 				'modelDevice' => $modelDevice,
 			]);
 			break;
-// 		case 'backend\models\Camera':
+		case 'backend\models\Camera':
 		
-// 			echo $this->render('_script_camera', [
-// 				'modelDevice' => $modelDevice,
-// 			]);
-// 			break;
+			echo $this->render('_script_camera', [
+				'modelDevice' => $modelDevice,
+				'modelIps' => $modelIps
+			]);
+			break;
 // 		case 'backend\models\Server':
 		
 // 			echo $this->render('_script_server', [
