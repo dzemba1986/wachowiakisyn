@@ -129,44 +129,59 @@ use yii\web\JsExpression;
     <?php ActiveForm::end() ?>
 </div>
 
-<?php 
-$deviceListUrl = Url::to(['device/list', 'id' => $model->device]);
+<script>
 
-$this->registerJs(
-"$(function(){
-	$('.modal-header h4').html('{$model->modelAddress->toString()}');
+$(function(){
+	
+	var device = <?= json_encode($model->device); ?>
 
-	$('#{$model->formName()}').on('beforeSubmit', function(e){
+	if (device){
+		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $model->device])?>", function(data){
+			$('#select2-connection-device-container').html(data.results.concat);
+		});
+	
+		$("#connection-device").trigger("change");
+	}
+
+	$(".modal-header h4").html("<?= $model->modelAddress->toString() ?>");
+
+	$("#<?= $model->formName(); ?>").on('beforeSubmit', function(e){
 		
 		var form = $(this);
 	 	$.post(
-	  		form.attr('action'),
+	  		form.attr("action"), // serialize Yii2 form
 	  		form.serialize()
 	 	).done(function(result){
+			
+//	 		console.log(result);
 	 		if(result == 1){
 	 			//$(form).trigger('reset');
 				$('#modal-connection-update').modal('hide');
 	 			$.pjax.reload({container: '#connection-grid-pjax'});
 	 		}
 	 		else{
+			
 	 			$('#message').html(result);
 	 		}
 	 	}).fail(function(){
 	 		console.log('server error');
 	 	});
 		return false;				
-	});	
+	});
 
-	//wyświetlanie wybranego urzadzenia i portu
-	var device = {$model->device}
+	$("body").on('click', '.crash-installation', function(event){
+        
+		$.get($(this).attr('href'), function(data) {
 
-	if (device){
-		$.getJSON('{$deviceListUrl}', function(data){
-			$('#select2-connection-device-container').html(data.results.concat);
+        	alert('Wyczyszczono !');
 		});
-	
-		$('#connection-device').trigger('change');
-	}
-});"
-);
-?>
+    
+        return false;
+	});
+
+// 	if (!($("#connection-device").val()) && !($("#connection-mac").val())){
+// 		$(".add-to-tree").hide();
+// 	}	
+})
+
+</script>
