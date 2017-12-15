@@ -35,7 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
         	],  
         	[
         		'attribute' => 'address',
-        		'value' => 'modelAddress.fullAddress',
+        		'value' => function ($model) {
+        		    return $model->modelAddress->toString();
+        		},
         	]
         ]                
     ]); ?>
