@@ -2,25 +2,19 @@
 
 namespace backend\models;
 
-use backend\models\Address;
-use backend\models\DeviceType;
-use backend\models\Model;
-use backend\models\Manufacturer;
-use backend\models\Tree;
 use yii\db\Query;
+use yii\db\ActiveRecord;
 /**
- * This is the model class for table "device".
- *
- * The followings are the available columns in table 'device':
  * @property integer $id
- * @property integer $status
+ * @property boolean $status
  * @property string $name
+ * @property string $proper_name
  * @property string $desc
- * @property integer $address
- * @property date $start_date
+ * @property integer $address_id
+ * @property integer $type_id
  */
 
-class Device extends \yii\db\ActiveRecord
+class Device extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
@@ -28,14 +22,21 @@ class Device extends \yii\db\ActiveRecord
 	const SCENARIO_TOSTORE = 'toStore';
 	const SCENARIO_TOTREE = 'toTree';
 	
-	
-	/**
-	 * @return string the associated database table name
-	 */
-	
 	public static function tableName()
 	{
 		return '{{device}}';
+	}
+	
+	public function attributes(){
+	    
+	    return [
+	        'id',
+	        'status',
+	        'name',
+	        'desc',
+	        'address_id',
+	        'type_id'
+	    ];
 	}
 	
 	public static function instantiate($row)
@@ -65,31 +66,26 @@ class Device extends \yii\db\ActiveRecord
 				return new self;
 		}
 	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
+	
 	public function rules(){
 		
 		return [
             
             ['status', 'boolean'],
 			['status', 'default', 'value' => null],
-            ['status', 'required', 'message'=>'Pole jest wymagane', 'on' => self::SCENARIO_TOSTORE],
+            ['status', 'required', 'message' => '{attribute} jest wymagany', 'on' => [self::SCENARIO_TOSTORE, self::SCENARIO_TOTREE]],
                       
-            ['name', 'string', 'min' => 2, 'max' => 50],
+            ['name', 'string', 'min' => 3, 'max' => 20],
 				
-			['original_name', 'boolean'],	
-            
             ['desc', 'string'],
             
-            ['address', 'integer'],
-            ['address', 'required', 'on' => self::SCENARIO_TOTREE],
+            ['address_id', 'integer'],
+            ['address_id', 'required', 'on' => self::SCENARIO_TOTREE],
             
-            ['type', 'integer'],
-            ['type', 'required', 'message'=>'Wartość wymagana'],           
+            ['type_id', 'integer'],
+            ['type_id', 'required', 'message' => 'Wartość wymagana'],           
 				
-			[['status', 'desc', 'address', 'type', 'name', 'original_name'],'safe'],
+			[['status', 'desc', 'address_id', 'type_id', 'name'], 'safe'],
 		];
 	}
     
@@ -100,7 +96,6 @@ class Device extends \yii\db\ActiveRecord
 		$scenarios[self::SCENARIO_UPDATE] = ['status', 'name', 'desc', 'original_name'];
 		$scenarios[self::SCENARIO_TOSTORE] = ['address', 'status'];
 		$scenarios[self::SCENARIO_TOTREE] = ['address', 'status'];
-		//$scenarios[self::SCENARIO_DELETE] = ['close_date', 'close_user'];
 			
 		return $scenarios;
 	}
