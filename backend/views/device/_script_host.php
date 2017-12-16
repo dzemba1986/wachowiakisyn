@@ -245,6 +245,43 @@ end
 cop r s
 
 ADD;
+
+$add = <<<ADD
+mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} interface ethernet {$arPortsParent[$parentPortIndex]} vlan {$modelIps[0]->modelSubnet->modelVlan->id} permanent
+access-list IP extended internet-user{$portNumber}
+deny TCP any any destination-port 25
+permit host {$modelIps[0]->ip} any
+deny any any
+interface ethernet {$arPortsParent[$parentPortIndex]}
+shutdown
+description {$modelDevice->modelAddress->toString(true)}
+ip igmp filter 7
+port security
+rate-limit input 812000
+rate-limit output 560000
+switchport allowed vlan add {$modelIps[0]->modelSubnet->modelVlan->id} untagged
+switchport ingress-filtering
+switchport mode access
+switchport native vlan {$modelIps[0]->modelSubnet->modelVlan->id}
+switchport allowed vlan remove 1
+spanning-tree edge-port
+spanning-tree bpdu-filter
+no spanning-tree bpdu-guard
+queue mode strict
+ip access-group internet-user{$portNumber} in
+service-policy input internet-user-501M
+ip dhcp snooping max-number 1
+ip igmp query-drop
+ip multicast-data-drop
+loopback-detection
+discard cdp
+discard pvs
+no shutdown
+end
+cop r s
+
+ADD;
+
 		
 $addiptv = <<<ADDIPTV
 mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} interface ethernet {$arPortsParent[$parentPortIndex]} vlan {$modelIps[0]->modelSubnet->modelVlan->id} permanent
@@ -269,6 +306,42 @@ service-policy input iptv-user-501M
 ip dhcp snooping max-number 1
 ip source-guard sip-mac
 ip source-guard mode mac
+ip igmp query-drop
+ip multicast-data-drop
+loopback-detection
+discard cdp
+discard pvs
+no shutdown
+end
+cop r s
+
+ADDIPTV;
+
+$addiptv = <<<ADDIPTV
+mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} interface ethernet {$arPortsParent[$parentPortIndex]} vlan {$modelIps[0]->modelSubnet->modelVlan->id} permanent
+access-list IP extended iptv-user{$portNumber}
+deny TCP any any destination-port 25
+permit host {$modelIps[0]->ip} any
+deny any any
+interface ethernet {$arPortsParent[$parentPortIndex]}
+shutdown
+description {$modelDevice->modelAddress->toString(true)}
+ip igmp filter 8
+port security
+rate-limit input 812000
+rate-limit output 560000
+switchport allowed vlan add {$modelIps[0]->modelSubnet->modelVlan->id} untagged
+switchport ingress-filtering
+switchport mode access
+switchport native vlan {$modelIps[0]->modelSubnet->modelVlan->id}
+switchport allowed vlan remove 1
+spanning-tree edge-port
+spanning-tree bpdu-filter
+no spanning-tree bpdu-guard
+queue mode strict
+ip access-group iptv-user{$portNumber} in
+service-policy input iptv-user-501M
+ip dhcp snooping max-number 1
 ip igmp query-drop
 ip multicast-data-drop
 loopback-detection
@@ -314,6 +387,40 @@ cop r s
 
 ONLYIPTV;
 		
+$onlyiptv = <<<ONLYIPTV
+mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} interface ethernet {$arPortsParent[$parentPortIndex]} vlan {$modelIps[0]->modelSubnet->modelVlan->id} permanent
+access-list IP extended iptv-only{$portNumber}
+deny any any
+interface ethernet {$arPortsParent[$parentPortIndex]}
+shutdown
+description {$modelDevice->modelAddress->toString(true)}
+ip igmp filter 8
+port security
+rate-limit input 812000
+rate-limit output 560000
+switchport allowed vlan add {$modelIps[0]->modelSubnet->modelVlan->id} untagged
+switchport ingress-filtering
+switchport mode access
+switchport native vlan {$modelIps[0]->modelSubnet->modelVlan->id}
+switchport allowed vlan remove 1
+spanning-tree edge-port
+spanning-tree bpdu-filter
+no spanning-tree bpdu-guard
+queue mode strict
+ip access-group iptv-only{$portNumber} in
+service-policy input iptv-user-501M
+ip dhcp snooping max-number 1
+ip igmp query-drop
+ip multicast-data-drop
+loopback-detection
+discard cdp
+discard pvs
+no shutdown
+end
+cop r s
+
+ONLYIPTV;
+
 $delete = <<<DELETE
 no mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} vlan {$modelIps[0]->modelSubnet->modelVlan->id}
 interface ethernet {$arPortsParent[$parentPortIndex]}
@@ -338,6 +445,46 @@ no ip access-group iptv-user-smtp in
 no ip access-group internet-user in
 no ip access-group internet-user-smtp in
 no ip access-group iptv-only in
+no service-policy input iptv-user-501M
+no service-policy input internet-user-501M
+no ip dhcp snooping max-number
+no ip source-guard
+ip source-guard mode acl
+ip igmp query-drop
+ip multicast-data-drop
+loopback-detection
+discard cdp
+discard pvs
+no shutdown
+end
+cop r s
+
+DELETE;
+
+$delete = <<<DELETE
+no mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} vlan {$modelIps[0]->modelSubnet->modelVlan->id}
+interface ethernet {$arPortsParent[$parentPortIndex]}
+shutdown
+ip igmp filter 7
+no port security
+rate-limit input 1000000
+no rate-limit input
+rate-limit output 1000000
+no rate-limit output
+switchport allowed vlan add 555 untagged
+switchport ingress-filtering
+switchport mode access
+switchport native vlan 555
+switchport allowed vlan remove 1
+spanning-tree edge-port
+spanning-tree bpdu-filter
+spanning-tree bpdu-guard
+queue mode strict
+no ip access-group iptv-user{$portNumber} in
+no ip access-group iptv-user-smtp{$portNumber} in
+no ip access-group internet-user{$portNumber} in
+no ip access-group internet-user-smtp{$portNumber} in
+no ip access-group iptv-only{$portNumber} in
 no service-policy input iptv-user-501M
 no service-policy input internet-user-501M
 no ip dhcp snooping max-number
