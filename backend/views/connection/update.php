@@ -129,33 +129,22 @@ use yii\web\JsExpression;
     <?php ActiveForm::end() ?>
 </div>
 
-<script>
+<?php 
+$url = Url::toRoute(['device/list', 'id' => $model->device]);
+$device = json_encode($model->device);
 
+$this->registerJs("
 $(function(){
-	
-	var device = <?= json_encode($model->device); ?>
+    $('.modal-header h4').html('{$model->modelAddress->toString()}');
 
-	if (device){
-		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $model->device])?>", function(data){
-			$('#select2-connection-device-container').html(data.results.concat);
-		});
-	
-		$("#connection-device").trigger("change");
-	}
-
-	$(".modal-header h4").html("<?= $model->modelAddress->toString() ?>");
-
-	$("#<?= $model->formName(); ?>").on('beforeSubmit', function(e){
+    $('#{$model->formName()}').on('beforeSubmit', function(e){
 		
 		var form = $(this);
 	 	$.post(
-	  		form.attr("action"), // serialize Yii2 form
+	  		form.attr('action'), // serialize Yii2 form
 	  		form.serialize()
 	 	).done(function(result){
-			
-//	 		console.log(result);
 	 		if(result == 1){
-	 			//$(form).trigger('reset');
 				$('#modal-connection-update').modal('hide');
 	 			$.pjax.reload({container: '#connection-grid-pjax'});
 	 		}
@@ -168,20 +157,16 @@ $(function(){
 	 	});
 		return false;				
 	});
-
-	$("body").on('click', '.crash-installation', function(event){
-        
-		$.get($(this).attr('href'), function(data) {
-
-        	alert('Wyczyszczono !');
-		});
     
-        return false;
-	});
+    var device = {$device};
 
-// 	if (!($("#connection-device").val()) && !($("#connection-mac").val())){
-// 		$(".add-to-tree").hide();
-// 	}	
-})
-
-</script>
+	if (device){
+		$.getJSON('{$url}', function(data){
+			$('#select2-connection-device-container').html(data.results.concat);
+		});
+	
+		$('#connection-device').trigger('change');
+	}
+});
+");
+?>
