@@ -252,6 +252,7 @@ access-list IP extended internet-user{$portNumber}
 deny TCP any any destination-port 25
 permit host {$modelIps[0]->ip} any
 deny any any
+exit
 interface ethernet {$arPortsParent[$parentPortIndex]}
 shutdown
 description {$modelDevice->modelAddress->toString(true)}
@@ -279,6 +280,7 @@ discard pvs
 no shutdown
 end
 cop r s
+
 
 ADD;
 
@@ -323,6 +325,7 @@ access-list IP extended iptv-user{$portNumber}
 deny TCP any any destination-port 25
 permit host {$modelIps[0]->ip} any
 deny any any
+exit
 interface ethernet {$arPortsParent[$parentPortIndex]}
 shutdown
 description {$modelDevice->modelAddress->toString(true)}
@@ -350,6 +353,7 @@ discard pvs
 no shutdown
 end
 cop r s
+
 
 ADDIPTV;
 		
@@ -391,6 +395,7 @@ $onlyiptv = <<<ONLYIPTV
 mac-address-table static {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} interface ethernet {$arPortsParent[$parentPortIndex]} vlan {$modelIps[0]->modelSubnet->modelVlan->id} permanent
 access-list IP extended iptv-only{$portNumber}
 deny any any
+exit
 interface ethernet {$arPortsParent[$parentPortIndex]}
 shutdown
 description {$modelDevice->modelAddress->toString(true)}
@@ -418,6 +423,7 @@ discard pvs
 no shutdown
 end
 cop r s
+
 
 ONLYIPTV;
 
@@ -496,8 +502,16 @@ loopback-detection
 discard cdp
 discard pvs
 no shutdown
-end
+exit
+no access-list IP extended iptv-user{$portNumber}
+no access-list IP extended iptv-user-smtp{$portNumber}
+no access-list IP extended internet-user{$portNumber}
+no access-list IP extended internet-user-smtp{$portNumber}
+no access-list IP extended iptv-only{$portNumber}
+
+exit
 cop r s
+
 
 DELETE;
 }
