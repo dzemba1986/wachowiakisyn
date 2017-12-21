@@ -2,26 +2,20 @@
 
 namespace backend\models;
 
-use backend\models\Address;
-use backend\models\Model;
-use backend\models\Manufacturer;
 use yii\helpers\ArrayHelper;
-use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 
 /**
- * This is the model class for table "device".
- *
- * The followings are the available columns in table 'device':
  * @property integer $id
- * @property integer $status
- * @property integer $virtual
+ * @property boolean $status
  * @property string $name
+ * @property string $proper_name
+ * @property string $desc
+ * @property integer $address_id
+ * @property integer $type_id
  * @property integer $mac
  * @property string $serial
- * @property string $desc
- * @property integer $address
- * @property integer $type
-
+ * @property integer $model_id
+ * @property integer $manufacturer_id
  */
 
 class Virtual extends Device
@@ -47,53 +41,17 @@ class Virtual extends Device
 	}
 	
 	public function rules(){
-		
-        return ArrayHelper::merge(
-            parent::rules(),
-            [
-            	['mac', 'filter', 'filter' => function($value) { return strtolower($value); }],
-            	['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
-            	['mac', 'default', 'value' => null],
-            	['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
-            	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-            	}],
-            	['mac', 'trim', 'skipOnEmpty' => true],
-            	
-            	['serial', 'default', 'value' => NULL],
-            		
-            	['manufacturer', 'default', 'value' => 10],
-
-            	['model', 'default', 'value' => 14],           		
-                
-                [['mac'], 'safe'],
+	    
+	    return ArrayHelper::merge(
+	        parent::rules(),
+	        [
+	            [['mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
             ]
-        );       
+        );
 	}
-
-	public function scenarios()
-	{
-		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'manufacturer', 'model']);
-		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac']);
-		$scenarios[self::SCENARIO_TOSTORE] = ArrayHelper::merge($scenarios[self::SCENARIO_TOSTORE], ['address', 'status']);
-		$scenarios[self::SCENARIO_TOTREE] = ArrayHelper::merge($scenarios[self::SCENARIO_TOTREE], ['address', 'status']);
-		//$scenarios[self::SCENARIO_DELETE] = ['close_date', 'close_user'];
-			
-		return $scenarios;
-	}
-    
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-    
-	public function attributeLabels()
-	{
-        return ArrayHelper::merge(
-            parent::attributeLabels(),
-            [
-                'distribution' => 'Rodzaj',
-            ]
-        ); 
+	
+	public function getIps(){
+	    
+	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
 	}
 }

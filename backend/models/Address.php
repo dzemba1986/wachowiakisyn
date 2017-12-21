@@ -2,7 +2,7 @@
 
 namespace backend\models;
 
-use backend\models\Installation;
+use backend\modules\task\models\InstallTask;
 use yii\db\ActiveRecord;
 /**
  * This is the model class for table 'address'.
@@ -189,7 +189,7 @@ class Address extends ActiveRecord
 	public function getModelsTask(){
 	
 		//Wiele zadań na danym adresie
-		return $this->hasMany(Task::className(), ['address'=>'id']);
+		return $this->hasMany(InstallTask::className(), ['address'=>'id']);
 	}
 	
 	private function getShortAddress(){

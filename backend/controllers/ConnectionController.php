@@ -2,17 +2,18 @@
 
 namespace backend\controllers;
 
-use Yii;
 use backend\models\Connection;
 use backend\models\ConnectionSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use backend\models\Device;
 use backend\models\Dhcp;
-use yii\widgets\ActiveForm;
 use backend\models\HistoryIp;
+use Exception;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\widgets\ActiveForm;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */

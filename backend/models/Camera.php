@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -30,6 +29,16 @@ class Camera extends Device
 		parent::init();
 	}
 	
+	public function attributes(){
+	    
+	    return ArrayHelper::merge(
+	        parent::attributes(),
+	        [
+	            'alias',
+	        ]
+	        );
+	}
+	
 	public static function find()
 	{
 		return new DeviceQuery(get_called_class(), ['type' => self::TYPE]);
@@ -47,40 +56,26 @@ class Camera extends Device
         return ArrayHelper::merge(
             parent::rules(),
             [
+                ['mac', 'required', 'message' => 'Wartość wymagana'],
+                
+                ['serial', 'required', 'message' => 'Wartość wymagana'],
+                
+                ['manufacturer_id', 'required', 'message' => 'Wartość wymagana'],
+                
+                ['model_id', 'required', 'message' => 'Wartość wymagana'],
+                
             	['alias', 'string', 'min' => 2, 'max' => 30],
                 ['alias', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model){ isset($model->status); }],
             		
-            	['mac', 'filter', 'filter' => 'strtolower'],
-            	['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
-            	['mac', 'required', 'message' => 'Wartość wymagana'],
-            	['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
-            	['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-            	}],
-            	['mac', 'trim', 'skipOnEmpty' => true],
-            	
-            	['serial', 'filter', 'filter' => 'strtoupper'],
-            	['serial', 'string', 'max' => 30],
-            	['serial', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Serial zajęty', 'when' => function ($model, $attribute) {
-            		return $model->{$attribute} !== $model->getOldAttribute($attribute);
-            	}],
-            	['serial', 'required', 'message' => 'Wartość wymagana'],
-            		
-            	['manufacturer_id', 'integer'],
-            	['manufacturer_id', 'required', 'message' => 'Wartość wymagana'],
-            		
-            	['model_id', 'integer'],
-            	['model_id', 'required', 'message' => 'Wartość wymagana'],
-                
-                [['alias', 'mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
+                [['mac', 'serial', 'manufacturer_id', 'model_id', 'alias'], 'safe'],
             ]
         );       
 	}
 
-	public function scenarios()
-	{
+	public function scenarios(){
+	    
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'serial', 'manufacturer_id', 'model_id']);
+		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
 		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'alias']);
 			
 		return $scenarios;
@@ -91,11 +86,7 @@ class Camera extends Device
         return ArrayHelper::merge(
             parent::attributeLabels(),
             [
-                'mac' => 'Mac',
             	'alias' => 'Nazwa w monitoringu',
-                'selial' => 'Serial',
-                'manufacturer_id' => 'Producent',
-                'model_id' => 'Model',
             ]
         ); 
 	}
@@ -103,15 +94,5 @@ class Camera extends Device
     public function getIps(){
 
 		return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
-	}
-	
-    public function getModel(){
-
-		return $this->hasOne(Model::className(), ['id' => 'model_id']);
-	}
-
-    public function getManufacturer(){
-
-		return $this->hasOne(Manufacturer::className(), ['id' => 'manufacturer_id']);
 	}
 }
