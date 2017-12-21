@@ -208,15 +208,17 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
     ]
 ]); 
 
-$this->registerJs(
-'$(function(){
-	$("body").on("click", "a[title="Synchronizacja"]", function(event){
-        $.get($(this).attr("href"), function(data) {
-        	$.pjax.reload({container: "#connection-grid-pjax"});
+$js = <<<JS
+$(function(){
+	$('body').on('click', 'a[title="Synchronizacja"]', function(event){
+        $.get($(this).attr('href'), function(data) {
+        	$.pjax.reload({container: '#connection-grid-pjax'});
 		});
        
        	return false;
 	});
-});'
-);
+});
+JS;
+
+$this->registerJs($js);
 ?>
