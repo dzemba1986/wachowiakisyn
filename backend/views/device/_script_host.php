@@ -510,6 +510,7 @@ no access-list IP extended internet-user-smtp{$portNumber}
 no access-list IP extended iptv-only{$portNumber}
 
 exit
+clear ip dhcp snooping binding {$preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace(':', '', $modelDevice->mac))} {$modelIps[0]->ip}
 cop r s
 
 
