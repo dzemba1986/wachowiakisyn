@@ -25,7 +25,7 @@ class Swith extends Device
 	
 	public function init()
 	{
-		$this->type = self::TYPE;
+		$this->type_id = self::TYPE;
 		parent::init();
 	}
 	
@@ -41,13 +41,13 @@ class Swith extends Device
 	
 	public static function find()
 	{
-		return new DeviceQuery(get_called_class(), ['type' => self::TYPE]);
+		return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
 	}
 	
 	public function beforeSave($insert)
 	{
 		if(!$insert) 
-			$this->type = self::TYPE;
+			$this->type_id = self::TYPE;
 		return parent::beforeSave($insert);
 	}
 	

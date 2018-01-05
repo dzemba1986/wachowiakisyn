@@ -49,7 +49,7 @@ class Device extends ActiveRecord
 	
 	public static function instantiate($row){
 	    
-		switch ($row['type']) {
+		switch ($row['type_id']) {
 			case Host::TYPE:
 				return new Host() ;
 			case Swith::TYPE:
@@ -161,5 +161,10 @@ class Device extends ActiveRecord
 	public function getManufacturer(){
 	    
 	    return $this->hasOne(Manufacturer::className(), ['id' => 'manufacturer_id']);
+	}
+	
+	public function getLink(){
+	    
+	    return $this->hasMany(Tree::className(), ['device' => 'id']);
 	}
 }
