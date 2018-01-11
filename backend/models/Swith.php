@@ -36,7 +36,7 @@ class Swith extends Device
 	        [
 	            'distribution',
 	        ]
-	        );
+	    );
 	}
 	
 	public static function find()
@@ -75,7 +75,7 @@ class Swith extends Device
 	public function scenarios(){
 	    
 	    $scenarios = parent::scenarios();
-	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
 	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'distribution']);
 	    
 	    return $scenarios;
