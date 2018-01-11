@@ -1,10 +1,9 @@
 <?php
 
-use yii\widgets\DetailView;
-use yii\helpers\Html;
 use yii\bootstrap\Modal;
+use yii\helpers\Html;
 use yii\helpers\Url;
-use backend\models\Host;
+use yii\widgets\DetailView;
 
 /**
  * @var Host $modelDevice
@@ -34,7 +33,7 @@ use backend\models\Host;
 
 <?php 
 echo DetailView::widget([
-	'model' => $modelDevice,
+	'model' => $device,
 	'options' => [
 			'class' => 'table table-bordered detail-view',
 	],
@@ -42,24 +41,24 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->toString()
+			'value' => $device->address->toString()
 		],
 		[
 			'label' => 'Konfiguracja',
-			'value' => $modelDevice->start_date
+			'value' => $device->start_date
 		],
 		[
 			'label' => 'Status',
-			'value' => $modelDevice->status ? 'Aktywny' : 'Nieaktywny'
+			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
 		],
 		[
 			'label' => 'Typ',
-			'value' => $modelDevice->modelType->name
+			'value' => $device->type->name
 		],
 		[
 			'label' => 'Mac',
 			'format' => 'raw',	
-			'value' => Html::a($modelDevice->mac, Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $modelDevice->mac), 16, 10) . "&search=Search"), ['target'=>'_blank']) . ' ' . Html::a('Zmień', Url::toRoute(['device/change-mac', 'id' => $modelDevice->id]),['class' => 'change-mac'])
+			'value' => Html::a($device->mac, Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['target'=>'_blank']) . ' ' . Html::a('Zmień', Url::toRoute(['device/change-mac', 'id' => $device->id]),['class' => 'change-mac'])
 		],
 	]
 ]);
@@ -71,7 +70,7 @@ $(function(){
 	$('.change-mac').on('click', function(event){
         
 		$('#modal-change-mac').modal('show')
-			.data('mac', '<?= $modelDevice->mac ?>')
+			.data('mac', '<?= $device->mac ?>')
 			.find('#modal-content-change-mac')
 			.load($(this).attr('href'));
 

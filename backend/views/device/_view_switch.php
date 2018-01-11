@@ -1,11 +1,10 @@
 <?php
 use yii\widgets\DetailView;
-use backend\models\Swith;
 /**
- * @var Swith $modelDevice
+ * @var Swith $device
  */
 echo DetailView::widget([
-	'model' => $modelDevice,
+	'model' => $device,
 	'options' => [
 			'class' => 'table table-bordered detail-view',
 	],
@@ -13,32 +12,32 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->toString()
+			'value' => $device->address->toString()
 		],
 		[
 			'label' => 'Status',
-			'value' => $modelDevice->status ? 'Aktywny' : 'Nieaktywny'
+			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
 		],
 		[
 			'label' => 'Typ',
-			'value' => $modelDevice->modelType->name
+			'value' => $device->type->name
 		],
 		[
 			'label' => 'Mac',
-			'value' => $modelDevice->mac,
+			'value' => $device->mac,
 		],
 		'serial',
 		[
 			'label' => 'Rodzaj',
-			'value' => $modelDevice->distribution ? 'szkieletowy' : 'dostępowy',
+			'value' => $device->distribution ? 'szkieletowy' : 'dostępowy',
 		],
 		[
 			'label' => 'Model',
-			'value' => $modelDevice->modelModel->name,
+			'value' => $device->model->name,
 		],
 		[
 			'label' => 'Producent',
-			'value' => $modelDevice->modelManufacturer->name,
+			'value' => $device->manufacturer->name,
 		],
 	]
 ]);

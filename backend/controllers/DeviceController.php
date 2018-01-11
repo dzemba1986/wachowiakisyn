@@ -33,8 +33,8 @@ class DeviceController extends Controller
 	public function actionView($id)
     { 	
         return $this->renderPartial('view', [
-            'modelDevice' => $this->findModel($id),
-        	'modelIps' => $this->findModel($id)->modelIps	
+            'device' => $this->findModel($id),
+        	'ips' => $this->findModel($id)->ips	
         ]);
     }
     

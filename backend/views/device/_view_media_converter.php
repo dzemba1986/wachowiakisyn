@@ -1,13 +1,12 @@
 <?php
 use yii\widgets\DetailView;
-use backend\models\MediaConverter;
 
 /**
  * @var MediaConverter $modelDevice
  */
 
 echo DetailView::widget([
-	'model' => $modelDevice,
+	'model' => $device,
 	'options' => [
 			'class' => 'table table-bordered detail-view',
 	],
@@ -15,24 +14,24 @@ echo DetailView::widget([
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->toString()
+			'value' => $device->address->toString()
 		],
 		[
 			'label' => 'Status',
-			'value' => $modelDevice->status ? 'Aktywny' : 'Nieaktywny'
+			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
 		],
 		[
 			'label' => 'Typ',
-			'value' => $modelDevice->modelType->name
+			'value' => $device->type->name
 		],
 		'serial',
 		[
 			'label' => 'Model',
-			'value' => $modelDevice->modelModel->name,
+			'value' => $device->model->name,
 		],
 		[
 			'label' => 'Producent',
-			'value' => $modelDevice->modelManufacturer->name,
+			'value' => $device->manufacturer->name,
 		],
 	]
 ]);

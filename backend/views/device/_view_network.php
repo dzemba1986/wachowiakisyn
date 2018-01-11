@@ -8,14 +8,14 @@ use yii\widgets\DetailView;
 $attributes = [];
 $index = 0;
 
-foreach ($modelIps as $modelIp){
+foreach ($ips as $ip){
 	$attributes[$index] = [
-		'label' => $modelIp->modelSubnet->modelVlan->id,
-		'value' => $modelIp->ip	
+		'label' => $ip->modelSubnet->modelVlan->id,
+		'value' => $ip->ip	
 	];
 	
 	echo DetailView::widget([
-			'model' => $modelIp,
+			'model' => $ip,
 			'options' => [
 					'class' => 'col-md-6 table table-striped table-bordered detail-view',
 			],

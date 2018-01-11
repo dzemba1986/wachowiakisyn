@@ -1,31 +1,34 @@
 <?php
 use yii\widgets\DetailView;
-use backend\models\Virtual;
 /**
  * @var Virtual $modelDevice
  */
 echo DetailView::widget([
-	'model' => $modelDevice,
+	'model' => $device,
 	'options' => [
 			'class' => 'table table-bordered detail-view',
 	],
+    'formatter' => [
+        'class' => 'yii\i18n\Formatter',
+        'nullDisplay' => ''
+    ],
 	'attributes' => [
 		'id',	
 		[
 			'label' => 'Adres',
-			'value' => $modelDevice->modelAddress->toString()
+			'value' => $device->address->toString()
 		],
 		[
 			'label' => 'Status',
-			'value' => $modelDevice->status ? 'Aktywny' : 'Nieaktywny'
+			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
 		],
 		[
 			'label' => 'Typ',
-			'value' => $modelDevice->modelType->name
+			'value' => $device->type->name
 		],
 		[
 			'label' => 'Mac',
-			'value' => $modelDevice->mac,
+			'value' => $device->mac,
 		]
 	]
 ]);
