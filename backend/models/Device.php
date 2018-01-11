@@ -27,7 +27,6 @@ class Device extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
-	const SCENARIO_DELETE = 'delete';
 	
 	public static function tableName(){
 	    
@@ -79,7 +78,7 @@ class Device extends ActiveRecord
 		}
 	}
 	
-	public function rules(){
+	public function rules() {
 		
 		return [
             
