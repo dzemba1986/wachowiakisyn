@@ -17,6 +17,10 @@ use yii\db\ActiveRecord;
  * @property string $serial
  * @property integer $model_id
  * @property integer $manufacturer_id
+ * @property Address $address
+ * @property Type $type
+ * @property Manufacturer $manufacturer
+ * @property Model $model
  */
 
 class Device extends ActiveRecord
