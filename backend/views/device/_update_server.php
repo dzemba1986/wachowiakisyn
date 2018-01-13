@@ -90,16 +90,6 @@ $form = ActiveForm::begin([
 	
 	</div>
 	
-	<div class="col-md-2">
-		
-		<?= Html::label('Opcje :') ?>
-	
-		<?= $form->field($device, 'distribution', [
-			'template' => "{label}{input}\n{hint}\n{error}",
-		])->checkbox(['label' => 'Szkieletowy']) ?>
-		
-	</div>
-	
 <?php ActiveForm::end() ?>
 
 <?php
