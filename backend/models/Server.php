@@ -24,19 +24,19 @@ class Server extends Device
 	
 	public function init()
 	{
-		$this->type = self::TYPE;
+		$this->type_id = self::TYPE;
 		parent::init();
 	}
 	
 	public static function find()
 	{
-		return new DeviceQuery(get_called_class(), ['type' => self::TYPE]);
+		return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
 	}
 	
 	public function beforeSave($insert)
 	{
 		if(!$insert) 
-			$this->type = self::TYPE;
+			$this->type_id = self::TYPE;
 		return parent::beforeSave($insert);
 	}
 	
@@ -48,8 +48,19 @@ class Server extends Device
 	            ['mac', 'required', 'message' => 'Wartość wymagana'],
 	            
 	            ['serial', 'required', 'message' => 'Wartość wymagana'],
+	            
+	            [['mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
 	        ]
-	        );
+        );
+	}
+	
+	public function scenarios(){
+	    
+	    $scenarios = parent::scenarios();
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
+	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial']);
+	    
+	    return $scenarios;
 	}
 	
 	public function getIps(){

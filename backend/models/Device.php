@@ -89,6 +89,8 @@ class Device extends ActiveRecord
             ['name', 'string', 'min' => 3, 'max' => 20],
 		    
 		    ['proper_name', 'string', 'min' => 3, 'max' => 30],
+		    ['proper_name', 'match', 'pattern' => '/^([a-zA-Z]|\d){1}([a-zA-Z]|\d|\.)+[a-zA-Z|\d]{1}$/', 'message' => 'Niewłaściwy format'],
+		    ['proper_name', 'trim'],
 				
 		    ['desc', 'string', 'max' => 1000],
 		    
@@ -105,13 +107,14 @@ class Device extends ActiveRecord
 		    ['serial', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Serial zajęty', 'when' => function ($model, $attribute) {
 		        return $model->{$attribute} !== $model->getOldAttribute($attribute);
 		    }],
+		    ['serial', 'trim'],
 		    
 		    ['manufacturer_id', 'integer'],
 		    
 		    ['model_id', 'integer'],
             
             ['address_id', 'integer'],
-            ['address_id', 'required'], //TODO adres nie jest wymagany w magazynie
+            ['address_id', 'required'], //TODO adres musi być też wymagany w magazynie
             
             ['type_id', 'integer'],
             ['type_id', 'required', 'message' => 'Wartość wymagana'],           
