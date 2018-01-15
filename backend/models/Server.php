@@ -22,25 +22,25 @@ class Server extends Device
 {
 	const TYPE = 4;
 	
-	public function init()
-	{
+	public function init() {
+	    
 		$this->type_id = self::TYPE;
 		parent::init();
 	}
 	
-	public static function find()
-	{
+	public static function find() {
+	    
 		return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
 	}
 	
-	public function beforeSave($insert)
-	{
+	public function beforeSave($insert) {
+	    
 		if(!$insert) 
 			$this->type_id = self::TYPE;
 		return parent::beforeSave($insert);
 	}
 	
-	public function rules(){
+	public function rules() {
 	    
 	    return ArrayHelper::merge(
 	        parent::rules(),
@@ -54,17 +54,12 @@ class Server extends Device
         );
 	}
 	
-	public function scenarios(){
+	public function scenarios() {
 	    
 	    $scenarios = parent::scenarios();
-	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
 	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial']);
 	    
 	    return $scenarios;
-	}
-	
-	public function getIps(){
-	    
-	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
 	}
 }

@@ -10,6 +10,8 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property string $proper_name
  * @property string $desc
+ * @property boolean $dhcp
+ * @property boolean $smtp
  * @property integer $address_id
  * @property integer $type_id
  * @property integer $mac
@@ -18,40 +20,74 @@ use yii\helpers\ArrayHelper;
  * @property integer $manufacturer_id
  */
 
-class Virtual extends Device
-{
+class Virtual extends Device {
+    
 	const TYPE = 7;
 	
-	public function init()
-	{
+	public function init() {
+	    
 		$this->type_id = self::TYPE;
 		parent::init();
 	}
 	
-	public static function find()
-	{
+	public function attributes() {
+	    
+	    return ArrayHelper::merge(
+	        parent::attributes(),
+	        [
+	            'dhcp',
+	            'smtp'
+	        ]
+		);
+	}
+	
+	public static function find() {
+	    
 		return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
 	}
 	
-	public function beforeSave($insert)
-	{
+	public function beforeSave($insert) {
+	    
 		if(!$insert) 
 			$this->type_id = self::TYPE;
 		return parent::beforeSave($insert);
 	}
 	
-	public function rules(){
+	public function rules() {
 	    
 	    return ArrayHelper::merge(
 	        parent::rules(),
 	        [
-	            [['mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
+	            ['dhcp', 'boolean'],
+	            ['dhcp', 'default', 'value' => false],
+	            ['dhcp', 'required', 'message' => 'Wartość wymagana'],
+	            
+	            ['smtp', 'boolean'],
+	            ['smtp', 'default', 'value' => false],
+	            ['smtp', 'required', 'message' => 'Wartość wymagana'],
+	            
+	            [['mac', 'dhcp', 'smtp'], 'safe'],
             ]
         );
 	}
 	
-	public function getIps(){
+	public function scenarios() {
 	    
-	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
+	    $scenarios = parent::scenarios();
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'dhcp', 'smtp']);
+	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'dhcp', 'smtp']);
+	    
+	    return $scenarios;
+	}
+	
+	public function attributeLabels() {
+	    
+	    return ArrayHelper::merge(
+	        parent::attributeLabels(),
+	        [
+	            'dhcp' => 'DHCP',
+	            'smtp' => 'SMTP',
+	        ]
+        );
 	}
 }

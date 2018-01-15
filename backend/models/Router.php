@@ -55,20 +55,15 @@ class Router extends Device
 	            
 	            [['mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
 	        ]
-	        );
+		);
 	}
 	
 	public function scenarios(){
 	    
 	    $scenarios = parent::scenarios();
-	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
 	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial']);
 	    
 	    return $scenarios;
-	}
-	
-	public function getIps(){
-	    
-	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
 	}
 }

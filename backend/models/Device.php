@@ -169,6 +169,11 @@ class Device extends ActiveRecord
 	    return $this->hasOne(Manufacturer::className(), ['id' => 'manufacturer_id']);
 	}
 	
+	public function getIps(){
+	    
+	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
+	}
+	
 	public function getLink(){
 	    
 	    return $this->hasMany(Tree::className(), ['device' => 'id']);

@@ -66,9 +66,4 @@ class GatewayVoip extends Device
 	    
 	    return $scenarios;
 	}
-	
-	public function getIps(){
-	    
-	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
-	}
 }

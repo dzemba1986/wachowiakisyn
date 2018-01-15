@@ -55,7 +55,7 @@ class MediaConverter extends Device
 	            
 	            [['mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
 	        ]
-	        );
+		);
 	}
 	
 	public function scenarios(){
@@ -66,5 +66,4 @@ class MediaConverter extends Device
 	    
 	    return $scenarios;
 	}
-	
 }
