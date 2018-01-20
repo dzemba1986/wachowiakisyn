@@ -2,19 +2,10 @@
 
 namespace backend\models;
 
-use backend\models\Address;
 use yii\data\ActiveDataProvider;
 
-/**
- * AddressSearch represents the model behind the search form about `app\models\Address`.
- */
 class AddressSearch extends Address
 {
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see \backend\models\Address::rules()
-	 */
     public function rules() : array {
     	
         return [
@@ -22,11 +13,6 @@ class AddressSearch extends Address
         ];
     }
 
-    /**
-     * 
-     * @param array $params
-     * @return \yii\data\ActiveDataProvider
-     */
     public function search($params)
     {
         $query = Address::find();
@@ -48,7 +34,7 @@ class AddressSearch extends Address
         		'lokal',
         		'lokal_szczegol',
         		'pietro'
-        			]	
+        	]	
         ]);
         
         $query->andFilterWhere([

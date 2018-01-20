@@ -22,6 +22,10 @@ use yii\db\ActiveRecord;
  * @property string $lokal
  * @property string $lokal_szczegol
  * @property string $pietro
+ * @property array $installations
+ * @property array $devices
+ * @property array $tasks
+ * @property array $connections
  */
 class Address extends ActiveRecord
 {
@@ -170,25 +174,21 @@ class Address extends ActiveRecord
 	
 	public function getInstallations(){
 	
-		//Wiele instalacji na danym adresie
 		return $this->hasMany(Installation::className(), ['address'=>'id']);
 	}
 	
 	public function getConnections(){
 	
-		//Wiele umów na danym adresie
 		return $this->hasMany(Connection::className(), ['address'=>'id']);
 	}
 	
-	public function getModelsDevice(){
+	public function getDevices(){
 	
-		//Wiele urządzeń na danym adresie
 		return $this->hasMany(Device::className(), ['address'=>'id']);
 	}
 	
-	public function getModelsTask(){
+	public function getTasks(){
 	
-		//Wiele zadań na danym adresie
 		return $this->hasMany(InstallTask::className(), ['address'=>'id']);
 	}
 	
