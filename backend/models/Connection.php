@@ -224,7 +224,7 @@ class Connection extends ActiveRecord
     
     public function getType(){
     
-    	return $this->hasOne(Type::className(), ['id' => 'type_id']);
+    	return $this->hasOne(ConnectionType::className(), ['id' => 'type_id']);
     }
     
     public function getPackage(){
