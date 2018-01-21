@@ -2,8 +2,6 @@
 
 namespace backend\models;
 
-use Yii;
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 class DeviceSearch extends Device
@@ -11,10 +9,8 @@ class DeviceSearch extends Device
 	public function rules()
 	{
 		return [
-		// The following rule is used by search().
-		// @todo Please remove those attributes that should not be searched.
 		[
-            ['id', 'status', 'address', 'mac', 'name', 'type', 'desc', 'model', 'manufacturer', 'serial'],
+            ['id', 'status', 'address_id', 'mac', 'name', 'type_id', 'desc', 'model_id', 'manufacturer_id', 'serial'],
             'safe'],
 		];
 	}
@@ -33,11 +29,11 @@ class DeviceSearch extends Device
 				'status',
 				'name',
 				'mac',
-				'address',
-				'type',
+				'address_id',
+				'type_id',
                 'serial',
-                'model',
-                'manufacturer',
+                'model_id',
+                'manufacturer_id',
 			]
 		]);
 		
@@ -48,11 +44,10 @@ class DeviceSearch extends Device
 		$query->andFilterWhere([
 				'id' => $this->id,
 				'status' => $this->status,
-				//'mac' => $this->mac,
-				'address' => $this->address,
-                'type' => $this->type,
-                'manufacturer' => $this->manufacturer,
-                'model' => $this->model,
+				'address_id' => $this->address_id,
+                'type_id' => $this->type_id,
+                'manufacturer_id' => $this->manufacturer_id,
+                'model_id' => $this->model_id,
 				]);
 		
 		

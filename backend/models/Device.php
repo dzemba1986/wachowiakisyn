@@ -17,10 +17,11 @@ use yii\db\ActiveRecord;
  * @property string $serial
  * @property integer $model_id
  * @property integer $manufacturer_id
- * @property Address $address
- * @property Type $type
- * @property Manufacturer $manufacturer
- * @property Model $model
+ * @property backend\models\Address $address
+ * @property backend\models\Type $type
+ * @property backend\models\Manufacturer $manufacturer
+ * @property backend\models\Model $model
+ * @property array $ips
  */
 
 class Device extends ActiveRecord
@@ -171,7 +172,7 @@ class Device extends ActiveRecord
 	
 	public function getIps(){
 	    
-	    return $this->hasMany(Ip::className(), ['device' => 'id'])->orderBy(['main' => SORT_DESC]);
+	    return $this->hasMany(Ip::className(), ['device_id' => 'id'])->orderBy(['main' => SORT_DESC]);
 	}
 	
 	public function getLink(){
