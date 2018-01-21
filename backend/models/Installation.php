@@ -73,9 +73,6 @@ class Installation extends \yii\db\ActiveRecord
 		return $scenarios;
 	}
 
-    /**
-     * @inheritdoc
-     */
 	public function attributeLabels()
 	{
 		return array(
@@ -104,6 +101,6 @@ class Installation extends \yii\db\ActiveRecord
     
     public function getType(){
     
-    	return $this->hasOne(Type::className(), ['id' => 'type_id']);
+    	return $this->hasOne(InstallationType::className(), ['id' => 'type_id']);
     }
 }
