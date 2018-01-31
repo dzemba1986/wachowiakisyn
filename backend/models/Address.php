@@ -4,6 +4,7 @@ namespace backend\models;
 
 use backend\modules\task\models\InstallTask;
 use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table 'address'.
  *
@@ -22,11 +23,12 @@ use yii\db\ActiveRecord;
  * @property string $lokal
  * @property string $lokal_szczegol
  * @property string $pietro
- * @property array $installations
- * @property array $devices
- * @property array $tasks
- * @property array $connections
+ * @property Installation[] $installations
+ * @property Device[] $devices
+ * @property InstallTask[] $tasks
+ * @property Connection[] $connections
  */
+
 class Address extends ActiveRecord
 {
 	const SCENARIO_UPDATE = 'update';
@@ -37,8 +39,8 @@ class Address extends ActiveRecord
 	}
 	
 	public function rules() : array {
-		
-		return [
+
+	    return [
 			['t_ulica', 'required', 'message' => 'Wartość wymagana'],
 				
 			['dom', 'string', 'min' => 1, 'max' => 10],
