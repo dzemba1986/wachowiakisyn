@@ -4,9 +4,9 @@ namespace backend\models;
 
 use app\models\Package;
 use backend\modules\task\models\InstallTask;
+use common\models\User;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\db\ActiveRecord;
-use common\models\User;
 
 /**
  * @property integer $id
@@ -21,9 +21,9 @@ use common\models\User;
  * @property integer $add_user
  * @property integer $conf_user
  * @property integer $close_user
- * @property integer $nocontract
- * @property integer $vip
- * @property integer $again
+ * @property boolean $nocontract
+ * @property boolean $vip
+ * @property boolean $again
  * @property integer $wire
  * @property integer $socket
  * @property integer $address_id
@@ -43,7 +43,7 @@ use common\models\User;
  * @property array $installations
  * @property backend\models\Address $address
  * @property backend\models\Package $package
- * @property backend\models\Type $type
+ * @property backend\models\ConnectionType $type
  * @property common\models\User $addUser
  * @property common\models\User $configureUser
  * @property backend\modules\task\models\InstallTask $task
@@ -184,31 +184,15 @@ class Connection extends ActiveRecord
 			'house_detail' => 'Klatka',	
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
-			'typeName' => 'Usługa',
 		];
 	}
-    
-    private function mapperConnInst() {
-        
-        switch ($this->type_id) {
-            case 1:
-                return 1;
-                break;
-            case 2:
-                return 2;
-                break;
-            case 3:
-                return 1;
-                break;
-        }
-    }
-    
+	
     public function getInstallations($type = false) {
     
         if (!$type)
             return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true]);
         else {
-            return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true, 'type_id' => $this->mapperConnInst()]);
+            return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true, 'type_id' => $this->type->installation_type]);
         }
     }
     
