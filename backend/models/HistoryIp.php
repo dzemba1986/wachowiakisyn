@@ -2,8 +2,6 @@
 
 namespace backend\models;
 
-use yii\base\Event;
-
 /**
  * @property string $ip
  * @property string $from_date
@@ -60,39 +58,5 @@ class HistoryIp extends \yii\db\ActiveRecord
     public function getAddress(){
 	
 		return $this->hasOne(Address::className(), ['id' => 'address_id']);
-	}
-	
-	public static function createIp(Event $event) {
-	    
-	    $device = Device::findOne($event->sender->device);
-	    
-	    $historyIp = new self;
-	    $historyIp->scenario = self::SCENARIO_CREATE_IP;
-	    $historyIp->ip = $event->sender->ip;
-	    $historyIp->from_date = date('Y-m-d H:i:s');
-	    $historyIp->address = $device->address_id;
-	    
-	    try {
-	        if (!$historyIp->save()) throw new \Exception('Problem z zapisem historii IP');
-	    } catch (\Exception $e) {
-	        var_dump($historyIp->errors);
-	        exit();
-	    }
-	}
-	
-	public static function deleteIp(Event $event) {
-	    
-	    $device = Device::findOne($event->sender->device);
-	    
-	    $historyIp = self::findOne(['ip' => $event->sender->ip, 'address' => $device->address_id, 'to_date' => null]);
-	    $historyIp->scenario = self::SCENARIO_DELETE_IP;
-	    $historyIp->to_date = date('Y-m-d H:i:s');
-	    
-	    try {
-	        if (!$historyIp->save()) throw new \Exception('Problem z zapisem historii IP');
-	    } catch (\Exception $e) {
-	        var_dump($historyIp->errors);
-	        exit();
-	    }
 	}
 }
