@@ -2,9 +2,11 @@
 
 namespace backend\models;
 
+use yii\helpers\ArrayHelper;
+
 /**
  * @property integer $id
- * @property integer $address
+ * @property integer $address_id
  * @property integer $wire_length
  * @property string $wire_date
  * @property string $socket_date
@@ -19,12 +21,12 @@ class Installation extends \yii\db\ActiveRecord
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	const SCENARIO_SOCKET = 'socket';
-
+	
     public static function tableName()
     {
         return '{{installation}}';
     }
-
+      
 	public function rules(){
 		
 		return [
@@ -83,14 +85,14 @@ class Installation extends \yii\db\ActiveRecord
 			'socket_date' => 'Gniazdo',
 			'wire_user' => 'Monter kabla',
 			'socket_user' => 'Monter gniazda',
-			'type_id' => 'Usługa',
+			'type_id' => 'Typ kabla',
 			'invoice_date' => 'Zaksęgowano',
 			'street' => 'Ulica',
 			'house' => 'Blok',
 			'house_detail' => 'Klatka',	
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
-			'status' => 'Status'	
+			'status' => 'Status'
 		);
 	}
     
@@ -102,5 +104,16 @@ class Installation extends \yii\db\ActiveRecord
     public function getType(){
     
     	return $this->hasOne(InstallationType::className(), ['id' => 'type_id']);
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        
+        //FIXME nie wiem czy nie lepiej zliczać wszystkie instalacje danego typu i wstawiać do odpiwiedniej kolumny w odpowiednich umowach 
+        if ($insert) {
+            $connectionTypeIds = ArrayHelper::map(ConnectionType::find()->select('id')->where($this->type_id . ' = ANY (installation_type)')->all(), 'id', 'id');
+            Connection::updateAllCounters(['wire' => 1], ['type_id' => $connectionTypeIds, 'address_id' => $this->address_id]);
+        }
+        
+        return true;
     }
 }
