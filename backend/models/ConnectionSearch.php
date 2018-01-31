@@ -21,7 +21,7 @@ class ConnectionSearch extends Connection
 		return $rules = [
 			[	
 				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
-				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id',
+				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id', 'vip',
 				'socket', 'again', 'wire',
 				'type_id', 'package_id', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
 				'minConfDate', 'maxConfDate'],
@@ -48,7 +48,6 @@ class ConnectionSearch extends Connection
 				'house' => new Expression('case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end, dom'), 
 				'flat' => new Expression('case when substring(lokal from \'^\d+$\') is null then 9999 else cast(lokal as integer) end, lokal')
 			],
-			//'enableMultiSort' => true,	
 			'attributes' => [
 				'start_date',
 				'conf_date',
@@ -65,8 +64,8 @@ class ConnectionSearch extends Connection
 					'desc' => ['task.start' => SORT_DESC]
 				],	
 				'street' => [
-					'asc' => ['ulica' => SORT_ASC],
-					'desc' => ['ulica' => SORT_DESC]
+					'asc' => ['t_ulica' => SORT_ASC],
+					'desc' => ['t_ulica' => SORT_DESC]
 				],
 				'house' => [
 						'asc' => ['dom' => new Expression(
@@ -99,14 +98,15 @@ class ConnectionSearch extends Connection
 			'pay_date' => $this->pay_date,
 			'close_date' => $this->close_date,
 			'phone_date' => $this->phone_date,
-			'connection.type' => $this->type_id,
+			'connection.type_id' => $this->type_id,
 			'package_id' => $this->package_id,
-			'ulica' => $this->street,
+			't_ulica' => $this->street,
 			'dom' => $this->house,
 			'lokal' => $this->flat,	
             'connection.nocontract' => $this->nocontract,
 			'wire' => $this->wire,
-			'again' => $this->again,	
+			'again' => $this->again,
+		    'vip' => $this->vip,
 			InstallTask::tableName().'.start' => $this->task_id,	
 		]);
 		
@@ -121,7 +121,6 @@ class ConnectionSearch extends Connection
 		//gdy filtr jest pusty bez if'a zapytanie daje zerowy wynik
 		if (!empty($this->synch_date)) $query->andFilterWhere(['like', '{{synch_date}}::text', $this->synch_date.'%', false]);
 
-		
 		return $dataProvider;
 	}
 }
