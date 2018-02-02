@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             	'class' => 'yii\grid\SerialColumn',
             ],
-        	'id', //TODO kolumna powinna być dostępna tylko dla administratora	
+        	'id', //FIXME kolumna powinna być dostępna tylko dla administratora	
             [
             	'attribute' => 'ulica_prefix',
             	'options' => ['style'=>'width:5%'],
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],

@@ -39,7 +39,7 @@ class AddressSearch extends Address
         
         $query->andFilterWhere([
             'ulica_prefix' => $this->ulica_prefix,
-        	'ulica' => $this->ulica,	
+        	't_ulica' => $this->ulica,	
             'dom' => $this->dom,
             'lokal' => $this->lokal,
         ]);
