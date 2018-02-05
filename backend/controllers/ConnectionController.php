@@ -4,9 +4,6 @@ namespace backend\controllers;
 
 use backend\models\Connection;
 use backend\models\ConnectionSearch;
-use backend\models\Device;
-use backend\models\Dhcp;
-use backend\models\HistoryIp;
 use Exception;
 use Yii;
 use yii\filters\AccessControl;
@@ -43,10 +40,6 @@ class ConnectionController extends Controller
         ];
     }
 
-    /**
-     * Lists all Connection models.
-     * @return mixed
-     */
     public function actionIndex($mode = 'nopay')
     {
         $searchModel = new ConnectionSearch();
@@ -105,19 +98,17 @@ class ConnectionController extends Controller
     public function actionView($id)
     {
     	if(Yii::$app->request->isAjax)
-    	
+            $model = $this->findModel($id);
+    	    
             return $this->renderAjax('view', [
-                'model' => $this->findModel($id),
+                'model' => $model,
+                'installations' => $model->installations, 
             ]);
     }
 
-    /**
-     * Creates a new Connection model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
+        //TODO należy udostepnić dodawanie ankiet przez serwis
         $model = new Connection();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -129,67 +120,40 @@ class ConnectionController extends Controller
         }
     }
 
-    /**
-     * Updates an existing Connection model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $modelConnection = $this->findModel($id);
-        $modelConnection->scenario = Connection::SCENARIO_UPDATE;
+    public function actionUpdate($id) {
         
         $request = Yii::$app->request;
-
+        
         if ($request->isAjax){
-	        if ($modelConnection->load(Yii::$app->request->post())) {
-	        	
-	        	$transaction = Yii::$app->getDb()->beginTransaction();
-	        	
-	        	try {
-	        		if (is_null($modelConnection->getOldAttribute('cloase_date')) && $modelConnection->close_date){
-	        			
-	        			if ($modelConnection->host && $modelConnection->type == 1) {
-		        			
-		        			$modelDevice = Device::findOne($modelConnection->host);
-		        			$modelHistoryIp = HistoryIp::findOne(['ip' => $modelDevice->modelIps[0]->ip, 'address' => $modelDevice->address, 'to_date' => null]);
-		        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
-		        			
-		        			$modelDevice->modelTree[0]->delete();
-		        			$modelDevice->modelIps[0]->delete();
-		        			$modelHistoryIp->to_date = date('Y-m-d H:i:s');
-		        			
-		        			if(!($modelHistoryIp->save()))
-		        				throw new Exception('Problem z zapisem histori ip');
-		        			
-		        			$modelDevice->delete();
-		        			
-		        			$modelConnection->host = null;
-		        			
-		        			Dhcp::generateFile([$subnet]);
-	        			}
-	        		}
-	        		
-	        		$modelConnection->close_user = Yii::$app->user->identity->id;
-	        		
-	        		if(!($modelConnection->save()))
-	        			throw new Exception('Problem z zapisem połączenia');
-	        		
-	        		$transaction->commit();
-	        		
-        			return 1;
-	        	} catch (Exception $e) {
-	        		$transaction->rollBack();
-	        		return 0;
-	        	}
-	        } else {
-	            return $this->renderAjax('update', [
-	                'model' => $modelConnection,
-	            ]);
-	        }
+            $connection = $this->findModel($id);
+            $connection->scenario = Connection::SCENARIO_UPDATE;
+            
+            $allConnections = Connection::find()->where([
+                'and', 
+                ['<>', 'type_id', $connection->type_id], 
+                ['address_id' => $connection->address_id], 
+                ['is not', 'host_id', null]])
+            ->count();
+            
+            if ($connection->load($request->post())) {
+                try {
+                    if (!$connection->save()) throw new Exception('Problem z zapisem połączenia');
+                } catch (\Throwable $t) {
+                    var_dump($connection->errors);
+                    var_dump($t->getMessage());
+                    exit();
+                }
+                
+                return 1;
+            } else {
+                return $this->renderAjax('update', [
+                    'connection' => $connection,
+                    'allConnections' => $allConnections,
+                ]);
+            }
         }
     }
+        
     
     public function actionSync($id)
     {
@@ -227,12 +191,6 @@ class ConnectionController extends Controller
     	}
     }
 
-    /**
-     * Deletes an existing Connection model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
