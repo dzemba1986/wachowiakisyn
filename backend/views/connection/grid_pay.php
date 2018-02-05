@@ -1,10 +1,9 @@
 <?php 
-use backend\models\Address;
-use backend\models\Type;
+use backend\models\AddressShort;
+use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 
 /**
  * @var yii\web\View $this
@@ -43,9 +42,10 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 	},
 	'columns' => [
         [
-			'header'=>'Lp.',
-			'class'=>'yii\grid\SerialColumn',
-           	'options'=>['style'=>'width: 4%;'],
+			'header' => 'Lp.',
+			'class' => 'kartik\grid\SerialColumn',
+           	'options' => ['style'=>'width: 4%;'],
+            'mergeHeader' => true
 		],        
 		[
 			'attribute' => 'start_date',
@@ -67,41 +67,41 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 			'options' => ['id'=>'start', 'style'=>'width:10%;'],
 		],
         [	
-            'attribute'=>'street',
-            'value'=>'modelAddress.ulica',
-            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
+            'attribute' => 'street',
+            'value' => 'address.ulica',
+            'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
             'options' => ['style'=>'width:12%;'],
         ],	
         [
-            'attribute'=>'house',
-            'value'=>'modelAddress.dom',
+            'attribute' => 'house',
+            'value' => 'address.dom',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'house_detail',
-            'value'=>'modelAddress.dom_szczegol',
+            'attribute' => 'house_detail',
+            'value' => 'address.dom_szczegol',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'flat',
-            'value'=>'modelAddress.lokal',
+            'attribute' => 'flat',
+            'value' => 'address.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
       	[
-           	'attribute'=>'flat_detail',
-           	'value'=>'modelAddress.lokal_szczegol',
+           	'attribute' => 'flat_detail',
+           	'value' => 'address.lokal_szczegol',
            	'options' => ['style'=>'width:10%;'],
        	],
         [
-            'attribute'=>'type',
-            'value'=>'modelType.name',
-            'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+            'attribute' => 'type_id',
+            'value' => 'type.name',
+            'filter'=> ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'),
             'options' => ['style'=>'width:5%;'],
         ],
 		[
-			'class'=>'kartik\grid\BooleanColumn',
-			'header'=>'Umowa',
-			'attribute'=>'nocontract',
+			'class' => 'kartik\grid\BooleanColumn',
+			'header' => 'Umowa',
+			'attribute' => 'nocontract',
 			'trueLabel' => 'Nie',
 			'falseLabel' => 'Tak',
 			'trueIcon' => GridView::ICON_INACTIVE,
@@ -109,12 +109,11 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 			'options' => ['style'=>'width:5%;'],
 		],
         [
-            'class'=>'kartik\grid\BooleanColumn',
-            'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
+            'class' => 'kartik\grid\BooleanColumn',
+            'attribute' => 'socket',
             'header' => 'Gniazdo',
         	'trueLabel' => 'Tak',
         	'falseLabel' => 'Nie',
-//             'options' => ['style'=>'width:7%;'],
         ],                                 
         [
         	'attribute' => 'conf_date',
@@ -159,10 +158,14 @@ $this->params['breadcrumbs'][] = 'Aktywne';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
+                    2000 => 2000,
                 ],
-                'template' => '{list}',
+                'label' => 'Ilość',
+                'template' => '{label}{list}',
+                'options' => ['class'=>'form-control'],
             ]),
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
+            'mergeHeader' => true,
             'template' => '{view} {update}',
         ],            
     ]
