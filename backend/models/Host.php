@@ -12,10 +12,9 @@ use yii\helpers\ArrayHelper;
  * @property string $desc
  * @property integer $address_id
  * @property integer $type_id
- * @property integer $mac
+ * @property string $mac
  * @property boolean $dhcp
  * @property boolean $smtp
- * @property string $start_date
  * @property Address $address
  * @property Type $type
  */
@@ -35,7 +34,6 @@ class Host extends Device {
 	    return ArrayHelper::merge(
 	        parent::attributes(),
 	        [
-	            'start_date',
 	            'dhcp',
 	            'smtp'
 	        ]
@@ -87,7 +85,6 @@ class Host extends Device {
         return ArrayHelper::merge(
             parent::attributeLabels(),
             [
-                'start_date' => 'Konfiguracja',
                 'dhcp' => 'DHCP',
                 'smtp' => 'SMTP',
             ]
