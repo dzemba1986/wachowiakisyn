@@ -2,38 +2,27 @@
 
 namespace backend\models;
 
-use Yii;
-
 /**
- * This is the model class for table "subnet".
- *
- * The followings are the available columns in table 'subnet':
  * @property integer $id
  * @property string $ip
  * @property string $desc
- * @property integer $vlan
+ * @property integer $vlan_id
+ * @property boolean $dhcp
  * @property integer $dhcp_group
  */
+
 class Subnet extends \yii\db\ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	
-	/**
-	 * @return string the associated database table name
-	 */
 	public static function tableName()
 	{
 		return '{{subnet}}';
 	}
 	
-	/**
-	 * @return array validation rules for model attributes.
-	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return [
 			['ip', 'required', 'message' => 'Wartość wymagana'],
 			['ip', 'ip', 'subnet' => true, 'ipv6' => false, 'message' => 'Zły format adresu ip', 'wrongCidr' => 'Niewłasciwy prefix', 'noSubnet' => 'Brak prefiksu'],
@@ -41,49 +30,46 @@ class Subnet extends \yii\db\ActiveRecord
 			['desc', 'required', 'message' => 'Wartość wymagana'],
 			['desc', 'string'],
 				
-			['vlan', 'required', 'message' => 'Wartość wymagana'],
-			['vlan', 'integer', 'min' => 1, 'max' => 4096, 'tooSmall' => 'Wartość za mała', 'tooBig' => 'Wartość za duża', 'message' => 'Wartość liczbowa'],
-				
-// 			['dhcp_group', 'required', 'message' => 'Wartość wymagana'],
+			['vlan_id', 'required', 'message' => 'Wartość wymagana'],
+			['vlan_id', 'integer', 'min' => 1, 'max' => 4096, 'tooSmall' => 'Wartość za mała', 'tooBig' => 'Wartość za duża', 'message' => 'Wartość liczbowa'],
+			
+		    ['dhcp', 'boolean'],
+		    ['dhcp', 'requred', 'message' => 'Wartość wymagana'],
+		    
 			['dhcp_group', 'integer', 'message' => 'Wartość liczbowa'],
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			[['id', 'ip', 'desc', 'device'], 'safe'],
+
+		    [['ip', 'desc', 'vlan_id', 'dhcp', 'dhcp_group'], 'safe'],
 		];
 	}
 	
 	public function scenarios(){
 	
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ['ip', 'desc', 'vlan', 'dhcp'];
+		$scenarios[self::SCENARIO_CREATE] = ['ip', 'desc', 'vlan_id', 'dhcp'];
 		$scenarios[self::SCENARIO_UPDATE] = ['desc', 'dhcp'];
 	
 		return $scenarios;
 	}
 	
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return [
 			'ip' => 'Podsieć',	
 			'desc' => 'Opis',
-			'vlan' => 'Vlan',
-		);
+			'vlan_id' => 'Vlan',
+		    'dhcp' => 'DHCP',
+		    'dhcp_group' => 'Grupa DHCP'
+		];
 	}
 	
-	public function getModelVlan(){
+	public function getVlan(){
 	
-		//Connection ma tylko 1 Address
-		return $this->hasOne(Vlan::className(), ['id' => 'vlan']);
+		return $this->hasOne(Vlan::className(), ['id' => 'vlan_id']);
 	}
 	
-	public function getModelIps(){
+	public function getIps(){
 	
-		//Connection ma tylko 1 Address
-		return $this->hasMany(Ip::className(), ['subnet' => 'id']);
+		return $this->hasMany(Ip::className(), ['subnet_id' => 'id']);
 	}
 	
 	private function getModelsDhcpValueForSubnet(){
