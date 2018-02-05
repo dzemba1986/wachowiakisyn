@@ -142,9 +142,9 @@ class Address extends ActiveRecord
 					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol;
 			else
 				if ($this->lokal)
-					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol . 'p' . $this->pietro;
 				else
-					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . ' (piętro ' . $this->pietro . ')';
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . 'p' . $this->pietro;
 				
 		} else {
 			if (empty($this->pietro))
