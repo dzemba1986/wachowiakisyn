@@ -2,14 +2,18 @@
 
 namespace backend\controllers;
 
-use Yii;
+use backend\models\Connection;
 use backend\models\Installation;
 use backend\models\InstallationSearch;
+use Exception;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use backend\models\Connection;
-use yii\base\Exception;
+use yii\filters\AjaxFilter;
+
+
+
 /**
  * InstallationController implements the CRUD actions for Installation model.
  */
@@ -23,6 +27,10 @@ class InstallationController extends Controller
                 'actions' => [
                     'delete' => ['post'],
                 ],
+            ],
+            [
+                'class' => AjaxFilter::className(),
+                'only' => ['create', 'update']
             ],
         ];
     }
@@ -54,74 +62,42 @@ class InstallationController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Installation model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    /* public function actionCreate()
-    {
-        $model = new Installation();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    public function actionCreate($connectionId) {
+        
+        $request = Yii::$app->request;
+            
+        $installation = new Installation();
+        $installation->scenario = Installation::SCENARIO_CREATE;
+        $connection = Connection::findOne($connectionId);
+        $connection->scenario = Connection::SCENARIO_CREATE_INSTALLATION;
+        
+        if ($installation->load($request->post()) && $connection->load($request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            
+            try {
+                $installation->address_id = $connection->address_id;
+                $installation->wire_user = implode(",", $installation->wire_user);
+                
+                if (!($connection->save() && $installation->save()))
+                    throw new \Exception('Problem z zapisem instalacji lub połączenia');
+                
+                $transaction->commit();
+        		return 1;
+            } catch (\Throwable $t) {
+                $transaction->rollBack();
+                var_dump($connection->errors);
+                var_dump($installation->errors);
+                var_dump($t->getMessage());
+                exit();
+            }
         } else {
             return $this->renderAjax('create', [
-                'model' => $model,
+                'installation' => $installation,
+                'connection' => $connection,
             ]);
         }
-    } */
-    
-    /**
-     * Creates a new Installation model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate($conId)
-    {
-    	$modelInstallation = new Installation();
-    	$modelConnection = Connection::findOne($conId);
-    	$modelConnection->scenario = Connection::SCENARIO_CREATE_INSTALLATION;
-    	$modelInstallation->scenario = Installation::SCENARIO_CREATE;
-    
-        $request = Yii::$app->request;
-        
-        if ($request->isAjax){
-        	
-            if ($modelInstallation->load($request->post()) && $modelConnection->load($request->post())) {
-			
-            	$transaction = Yii::$app->db->beginTransaction();
-            	
-            	try {
-            		$modelInstallation->type = $modelConnection->getInstallationType();
-            		$modelInstallation->address = $modelConnection->address;
-            		$modelInstallation->wire_user = implode(",", $modelInstallation->wire_user);
-            		
-            		if(!($modelConnection->save() && $modelInstallation->save()))
-            			throw new Exception('Problem z save"em');
-            		
-            		$transaction->commit();	
-            		return 1;
-            	} catch (Exception $e) {
-            		$transaction->rollBack();
-            		//var_dump($modelConnection->save());
-            	}
-
-            } else {
-                return $this->renderAjax('create', [
-                        'modelInstallation' => $modelInstallation,
-                        'modelConnection' => $modelConnection,
-                ]);
-            }
-        }
     }
-
-    /**
-     * Updates an existing Installation model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
+    
     public function actionUpdate($id)
     {
     	$modelInstallation = $this->findModel($id);
