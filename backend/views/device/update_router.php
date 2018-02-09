@@ -17,12 +17,11 @@ $form = ActiveForm::begin([
 	'id' => $device->formName(),
 ])?>
 	
-	<div class="col-md-6">
+	<div class="col-md-5">
 	
-		
 		<div class="row">
-		
-	   		<?= Html::label('Lokalizacja') ?>
+	    
+	    	<?= Html::label('Lokalizacja') ?>
 	    
 	    </div>
 	    
@@ -32,7 +31,7 @@ $form = ActiveForm::begin([
     				'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->widget(Select2::className(), [
-    	     		'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
+        			'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
     	       		'options' => ['placeholder' => 'Ulica'],
     	       		'pluginOptions' => [
     	            	'allowClear' => true
@@ -41,19 +40,19 @@ $form = ActiveForm::begin([
     	    ?>
     	    
     	    <?= $form->field($address, 'dom' , [
-    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->textInput(['placeholder' => $address->getAttributeLabel('dom')]) 
     	    ?>
     	    
     	    <?= $form->field($address, 'dom_szczegol' , [
-    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->textInput(['placeholder' => $address->getAttributeLabel('dom_szczegol')]) 
     	    ?>
     	    
     	    <?= $form->field($address, 'pietro' , [
-    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 0px;'],
+    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 0px;'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->dropDownList(Address::getFloor(), ['prompt' => $address->getAttributeLabel('pietro')]) 
     	    ?>
@@ -67,11 +66,13 @@ $form = ActiveForm::begin([
     		]) ?>
     		
     		<?= $form->field($device, 'serial', [
-    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 3px; padding-right: 3px;']
     		]) ?>
-    		</div>
-    		
-    		<div class="row">
+		
+		</div>
+		
+		<div class="row">
+		
     		<?= $form->field($device, 'proper_name', [
     			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
     		]) ?>
@@ -85,9 +86,9 @@ $form = ActiveForm::begin([
     		])->textarea() ?>	
     
             <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
-  		
-  		</div>
-	
+  
+		</div>
+		
 	</div>
 	
 <?php ActiveForm::end() ?>

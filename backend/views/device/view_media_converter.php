@@ -2,14 +2,12 @@
 use yii\widgets\DetailView;
 
 /**
- * @var MediaConverter $modelDevice
+ * @var backend\models\MediaConverter $device
  */
 
+echo '<div class="col-md-5">';
 echo DetailView::widget([
 	'model' => $device,
-	'options' => [
-			'class' => 'table table-bordered detail-view',
-	],
 	'attributes' => [
 		'id',	
 		[
@@ -35,4 +33,5 @@ echo DetailView::widget([
 		],
 	]
 ]);
+echo '</div>';
 ?>

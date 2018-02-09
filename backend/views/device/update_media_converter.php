@@ -17,16 +17,13 @@ $form = ActiveForm::begin([
 	'id' => $device->formName(),
 ])?>
 	
-	<div class="col-md-6">
+	<div class="col-md-5">
 	
 		<div class="row">
-	    
 	    	<?= Html::label('Lokalizacja') ?>
-	    
 	    </div>
 	    
 	    <div class="row">
-	    
     	    <?= $form->field($address, 't_ulica', [
     				'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;'],
     	    		'template' => "{input}\n{hint}\n{error}",
@@ -56,39 +53,25 @@ $form = ActiveForm::begin([
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->dropDownList(Address::getFloor(), ['prompt' => $address->getAttributeLabel('pietro')]) 
     	    ?>
-    	    
      	</div>
     
     	<div class="row">
-    	
-    		<?= $form->field($device, 'mac', [
-    			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;']
+        	<?= $form->field($device, 'proper_name', [
+        			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
     		]) ?>
     		
     		<?= $form->field($device, 'serial', [
-    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 3px; padding-right: 3px;']
+    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 0px;']
     		]) ?>
-		
 		</div>
 		
 		<div class="row">
-		
-    		<?= $form->field($device, 'proper_name', [
-    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
-    		]) ?>
-		
-		</div>
-	
-		<div class="row">
-		
     		<?= $form->field($device, 'desc', [
-    			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']
-    		])->textarea() ?>	
-    
-            <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
-  
-		</div>
-		
+    			'options' => ['class' => 'col-sm-12', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    		])->textarea() ?>
+    		
+    		<?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
+		</div>	
 	</div>
 	
 <?php ActiveForm::end() ?>

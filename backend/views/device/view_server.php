@@ -2,13 +2,12 @@
 use yii\widgets\DetailView;
 
 /**
- * @var Router $modelDevice
+ * @var backend\models\Server $device
  */
+
+echo '<div class="col-md-5">';
 echo DetailView::widget([
 	'model' => $device,
-	'options' => [
-			'class' => 'table table-bordered detail-view',
-	],
 	'attributes' => [
 		'id',	
 		[
@@ -38,4 +37,19 @@ echo DetailView::widget([
 		],
 	]
 ]);
+echo '</div>';
+
+echo '<div class="col-md-5">';
+echo '<table class="table table-striped table-bordered detail-view">';
+echo '<tbody>';
+foreach ($device->ips as $ip) {
+    
+    echo '<tr>';
+    echo "<th>VLAN {$ip->subnet->vlan->id}</th>";
+    echo "<td>{$ip->ip}</td>";
+    echo '</tr>';
+}
+echo '</tbody>';
+echo '</table>';
+echo '</div>';
 ?>
