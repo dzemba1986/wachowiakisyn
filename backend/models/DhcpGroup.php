@@ -2,7 +2,9 @@
 
 namespace backend\models;
 
-class DhcpGroup extends \yii\db\ActiveRecord
+use yii\db\ActiveRecord;
+
+class DhcpGroup extends ActiveRecord
 {
 	public static function tableName()
 	{
@@ -11,20 +13,13 @@ class DhcpGroup extends \yii\db\ActiveRecord
 	
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return [
 			['name', 'required', 'message' => 'Wartość wymagana'],
 			['name', 'string'],
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			[['name'], 'safe'],
+			
+		    [['name'], 'safe'],
 		];
 	}
-    
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
     
 	public function attributeLabels()
 	{
