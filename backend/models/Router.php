@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -46,6 +47,7 @@ class Router extends Device
 	        parent::rules(),
 	        [
 	            ['mac', 'required', 'message' => 'Wartość wymagana'],
+	            ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
 	            
 	            ['serial', 'required', 'message' => 'Wartość wymagana'],
 	            
