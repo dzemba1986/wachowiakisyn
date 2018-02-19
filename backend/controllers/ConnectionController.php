@@ -10,7 +10,6 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\widgets\ActiveForm;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -25,7 +24,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'validation'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'close'],
         				'roles' => ['@']	
         			]	
         		]
@@ -90,11 +89,6 @@ class ConnectionController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Connection model.
-     * @param string $id
-     * @return mixed
-     */
     public function actionView($id)
     {
     	if(Yii::$app->request->isAjax)
@@ -177,18 +171,33 @@ class ConnectionController extends Controller
     	}
     }
     
-    public function actionValidation($type = 5){
-    		
-    	$modelConnection = new Connection();
-    
-    	$request = Yii::$app->request;
-    
-    	if ($request->isAjax && $modelConnection->load($request->post())) {
-    			
-    		//var_dump($modelDevice); exit();
-    		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    		return ActiveForm::validate($modelConnection, 'mac');
-    	}
+    function actionClose($id) {
+        
+        $request = Yii::$app->request;
+        $connection = $this->findModel($id);
+        
+        if ($request->post()) {
+            $transaction = \Yii::$app->db->beginTransaction();
+            
+            $connection->close_user = Yii::$app->user->identity->id;
+            $connection->close_date = date('Y-m-d H:i:s');
+            
+            try {
+                if (!$connection->save()) throw new Exception('Błąd zamknięcia umowy');
+                
+                $transaction->commit();
+                return 1;
+            } catch (Exception $e) {
+                $transaction->rollBack();
+                var_dump($connection->errors);
+                exit();
+            }
+        } else {
+            return $this->renderAjax('close', [
+                'connection' => $connection,
+            ]);
+        }
+        
     }
 
     public function actionDelete($id)
