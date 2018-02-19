@@ -25,6 +25,9 @@ class Ip extends ActiveRecord
 		return [
 		    ['ip', 'string'],
 			['ip', 'required', 'message' => 'Wartość wymagana'],
+		    
+		    ['main', 'boolean'],
+		    ['main', 'required', 'message' => 'Wartość wymagana'],
 			
 		    ['subnet_id', 'required', 'message' => 'Wartość wymagana'],
 		    ['subnet_id', 'integer', 'message' => 'Wartość musi być liczbą'],
@@ -70,13 +73,15 @@ class Ip extends ActiveRecord
     	    
     	    try {
     	        if (!$historyIp->save()) throw new \Exception('Problem z zapisem historii IP - dodanie IP');
-    	        
-    	        return true;
     	    } catch (\Throwable $t) {
     	        var_dump($historyIp->errors);
     	        var_dump($t->getMessage());
     	        exit();
     	    }
+    	    
+	        Dhcp::generateFile($this->subnet);
+    	    
+    	    return true;
 	    }
 	}
 	
@@ -90,17 +95,27 @@ class Ip extends ActiveRecord
 	    $device = Device::findOne($this->device_id);
 	    
 	    $historyIp = HistoryIp::findOne(['ip' => $this->ip, 'address_id' => $device->address_id, 'to_date' => null]);
-	    $historyIp->scenario = HistoryIp::SCENARIO_DELETE_IP;
-	    $historyIp->to_date = date('Y-m-d H:i:s');
 	    
-	    try {
-	        if (!$historyIp->save()) throw new \Exception('Problem z zapisem historii IP - usunięcie IP');
-	        
-	        return true;
-	    } catch (\Throwable $e) {
-	        var_dump($historyIp->errors);
-	        var_dump($t->getMessage());
-	        exit();
+	    if ($historyIp instanceof HistoryIp) {
+    	    $historyIp->scenario = HistoryIp::SCENARIO_DELETE_IP;
+    	    $historyIp->to_date = date('Y-m-d H:i:s');
+    	    
+    	    try {
+    	        if (!$historyIp->save()) throw new \Exception('Problem z zapisem historii IP - usunięcie IP');
+    	        
+    	        return true;
+    	    } catch (\Throwable $e) {
+    	        var_dump($historyIp->errors);
+    	        var_dump($t->getMessage());
+    	        exit();
+    	    }
 	    }
+	    
+	    return true;
+	}
+	
+	public function afterDelete() {
+	    
+        Dhcp::generateFile($this->subnet);
 	}
 }
