@@ -10,12 +10,8 @@ echo Tabs::widget([
 		    [
 		        'label' => 'Dane',
 		    	'active' => true,	
-				'linkOptions' => ['data-url' => Url::toRoute(['device/view', 'id' => $modelDevice->id])]
+				'linkOptions' => ['data-url' => Url::toRoute(['device/view', 'id' => $device->id])]
 		    ],
-			[
-				'label' => 'Skrypty',
-				'linkOptions' => ['data-url' => Url::toRoute(['device/script', 'device' => $modelDevice->id])]
-			],
 			[
 				'label' => 'Historia',
 				'content' => 'wkrótce',
