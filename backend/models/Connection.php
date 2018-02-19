@@ -79,9 +79,6 @@ class Connection extends ActiveRecord
 			['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
 			['mac', 'default', 'value'=>NULL],
 			['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
-// 			['mac', 'unique', 'targetClass' => 'backend\models\Host', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-//             	return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-//             }],
 			['mac', 'trim', 'skipOnEmpty' => true],
 				
             ['port', 'integer'],
@@ -90,24 +87,24 @@ class Connection extends ActiveRecord
 			['device_id', 'integer'],
 			['device_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
 				
-			['start_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['start_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
 			['start_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
 			['start_date', 'default', 'value' => new \yii\db\Expression('NOW()')],
                       
-            ['conf_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['conf_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
             ['conf_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['conf_date', 'default', 'value'=>NULL],
             
-            ['pay_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['pay_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
             ['pay_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['pay_date', 'default', 'value'=>NULL],
             
-			['phone_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['phone_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
 			['phone_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
 			['phone_date', 'default', 'value'=>NULL],
             
-            ['close_date', 'date', 'format'=>'yyyy-MM-dd'],
-            ['close_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
+		    ['close_date', 'date', 'format'=>'yyyy-MM-dd H:i:s', 'message'=>'Zły format'],
+            //['close_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['close_date', 'default', 'value'=>NULL],
             
             ['add_user', 'integer'],
@@ -224,5 +221,12 @@ class Connection extends ActiveRecord
     public function getCloseUser() {
         
         return $this->hasOne(User::className(), ['id' => 'close_user']);
+    }
+    
+    function isFinal() {
+        
+        $count = self::find()->where(['and', ['is not', 'close_date', null], ['address_id' => $this->address_id], ['host_id' => $this->host_id]])->count();
+        
+        return $count == 0 ? true : false;
     }
 }
