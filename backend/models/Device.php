@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\db\ActiveRecord;
 
 /**
@@ -13,7 +12,7 @@ use yii\db\ActiveRecord;
  * @property string $desc
  * @property integer $address_id
  * @property integer $type_id
- * @property integer $mac
+ * @property string $mac
  * @property string $serial
  * @property integer $model_id
  * @property integer $manufacturer_id
@@ -21,7 +20,9 @@ use yii\db\ActiveRecord;
  * @property backend\models\Type $type
  * @property backend\models\Manufacturer $manufacturer
  * @property backend\models\Model $model
- * @property array $ips
+ * @property Ip[] $ips
+ * @property Tree[] $links
+ * @property string $combinedName 
  */
 
 class Device extends ActiveRecord
@@ -55,9 +56,9 @@ class Device extends ActiveRecord
 	    
 		switch ($row['type_id']) {
 			case Host::TYPE:
-				return new Host() ;
+				return new Host();
 			case Swith::TYPE:
-				return new Swith() ;
+				return new Swith();
 			case Router::TYPE:
 				return new Router();
 			case Camera::TYPE:
@@ -87,18 +88,18 @@ class Device extends ActiveRecord
 			['status', 'default', 'value' => null],
             ['status', 'required', 'message' => 'Wartość wymagana', 'on' => [self::SCENARIO_UPDATE]],
                       
-            ['name', 'string', 'min' => 3, 'max' => 20],
+		    ['name', 'string', 'min' => 3, 'max' => 30, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    
-		    ['proper_name', 'string', 'min' => 3, 'max' => 30],
+		    ['proper_name', 'string', 'min' => 3, 'max' => 30, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    ['proper_name', 'match', 'pattern' => '/^([a-zA-Z]|\d){1}([a-zA-Z]|\d|\.)+[a-zA-Z|\d]{1}$/', 'message' => 'Niewłaściwy format'],
-		    ['proper_name', 'trim'],
+		    ['proper_name', 'trim', 'skipOnEmpty' => true],
+		    ['proper_name', 'default', 'value' => null],
 				
 		    ['desc', 'string', 'max' => 1000],
 		    
 		    ['mac', 'filter', 'filter' => 'strtolower'],
 		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
-		    ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
-		    ['mac', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
+		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
 		        return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
 		    }],
 		    ['mac', 'trim', 'skipOnEmpty' => true],
@@ -115,7 +116,7 @@ class Device extends ActiveRecord
 		    ['model_id', 'integer'],
             
             ['address_id', 'integer'],
-            ['address_id', 'required'], //TODO adres musi być też wymagany w magazynie
+            ['address_id', 'required'], //FIXME adres musi być też wymagany w magazynie
             
             ['type_id', 'integer'],
             ['type_id', 'required', 'message' => 'Wartość wymagana'],           
@@ -175,8 +176,64 @@ class Device extends ActiveRecord
 	    return $this->hasMany(Ip::className(), ['device_id' => 'id'])->orderBy(['main' => SORT_DESC]);
 	}
 	
-	public function getLink(){
+	public function getLinks(){
 	    
 	    return $this->hasMany(Tree::className(), ['device' => 'id']);
+	}
+	
+	function getCombinedName() {
+	    
+	    return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
+	}
+	
+	public function getParentPortName() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentPortIndex = $this->links[0]->parent_port;
+	    
+	    return $parentDevice->model->port[$parentPortIndex];
+	}
+	
+	public function getParentIp() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    
+	    if (!empty($parentDevice->ips)) return $parentDevice->ips[0]->ip;
+	    else return 'Brak ip';
+	}
+	
+	function isParent() {
+	    
+	    return Tree::find()->where(['parent_device' => $this->id])->count() > 0 ? true : false;
+	}
+	
+	public static function create($typeId) {
+	    switch($typeId) {
+	        case Swith::TYPE:
+	            return new Swith();
+	            break;
+	        case Router::TYPE:
+	            return new Router();
+	            break;
+	        case GatewayVoip::TYPE:
+	            return new GatewayVoip();
+	            break;
+	        case Camera::TYPE:
+	            return new Camera();
+	            break;
+	        case MediaConverter::TYPE:
+	            return new MediaConverter();
+	            break;
+	        case Server::TYPE:
+	            return new Server();
+	            break;
+	        case Virtual::TYPE:
+	            return new Virtual();
+	            break;
+	        default :
+	            return new Device();
+	    }
 	}
 }
