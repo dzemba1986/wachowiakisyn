@@ -9,9 +9,6 @@ use yii\widgets\DetailView;
 echo '<div class="col-md-5">';
 echo DetailView::widget([
 	'model' => $device,
-	'options' => [
-			'class' => 'table table-bordered detail-view',
-	],
 	'attributes' => [
 		'id',	
 		[
