@@ -2,20 +2,22 @@
 
 namespace backend\controllers;
 
-use Yii;
-use backend\models\Tree;
-use backend\models\Model;
 use backend\models\Address;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use backend\models\Device;
-use yii\base\Exception;
 use backend\models\Connection;
+use backend\models\Device;
 use backend\models\Host;
 use backend\models\Ip;
-use yii\db\Query;
-use backend\models\Dhcp;
-use backend\models\HistoryIp;
+use backend\models\Model;
+use backend\models\Tree;
+use backend\models\forms\AddHostForm;
+use Yii;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
+use yii\base\Exception;
+use yii\db\Expression;
+use yii\filters\VerbFilter;
+use yii\validators\IpValidator;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class TreeController extends Controller
 {
@@ -31,64 +33,157 @@ class TreeController extends Controller
         ];
     }
 
-    /**
-     * Lists all Modyfication models.
-     * @return mixed
-     */
     public function actionIndex($id = null)
     {
         return $this->render('index', [
         	'id' => $id	
         ]);
     }
-
-    protected function findModel($id)
-    {
-        if (($model = Tree::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+    
+    public function actionAddHost($connectionId) {
+        
+        $request = Yii::$app->request;
+        
+        if ($request->isAjax) {
+            $connection = Connection::findOne($connectionId);
+            //TODO admin musi mieć możliwość ręcznego sterowania warunkiem czy ma byc add czy join (wyjątki)
+            $allConnections = Connection::find()->where(['and', ['<>', 'type_id', $connection->type_id], ['address_id' => $connection->address_id],
+                ['is not', 'host_id', null], ['close_date' => null]])->count();
+                
+                if (empty($allConnections)) {
+                    $model = new AddHostForm();
+                    $model->deviceId = $connection->device_id;
+                    $model->port = $connection->port;
+                    $model->typeId = $connection->type_id;
+                    $model->mac = $connection->mac;
+                    $model->address = $connection->address->toString();
+                    
+                    if ($model->load($request->post())) {
+                        
+                        $transaction = Yii::$app->getDb()->beginTransaction();
+                        try {
+                            $host = new Host();
+                            $link = new Tree();
+                            $ip = new Ip();
+                            
+                            $host->mac = $model->mac;
+                            $host->address_id = $connection->address_id;
+                            $host->status = true;
+                            $host->name = Address::findOne($connection->address_id)->toString(true);
+                            
+                            if (!$host->save()) throw new Exception('Błąd zapisu host');
+                            
+                            $link->device = $host->id;
+                            $link->port = 0;
+                            $link->parent_device = $model->deviceId;
+                            $link->parent_port = $model->port;
+                            
+                            if (!$link->save()) throw new Exception('Błąd zapisu linku');
+                            
+                            $ip->ip = $model->ip;
+                            $ip->subnet_id = $model->subnetId;
+                            $ip->main = true;
+                            $ip->device_id = $host->id;
+                            
+                            if (!$ip->save()) throw new Exception('Błąd zapisu ip');
+                            
+                            $connection->mac = $model->mac;
+                            $connection->device_id = $model->deviceId;
+                            $connection->port = $model->port;
+                            $connection->host_id = $host->id;
+                            $connection->conf_date = date('Y-m-d');
+                            $connection->conf_user = Yii::$app->user->identity->id;
+                            
+                            if (!$connection->save()) throw new Exception('błąd zapisu umowy');
+                            
+                        } catch (\Throwable $t) {
+                            $transaction->rollBack();
+                            var_dump($host->errors);
+                            var_dump($link->errors);
+                            var_dump($ip->errors);
+                            exit();
+                        }
+                        
+                        $transaction->commit();
+                        $this->redirect(['tree/index', 'id' => $host->id . '.0']);
+                    } else {
+                        return $this->renderAjax('add_host', [
+                            'model' => $model,
+                        ]);
+                    }
+                } else {
+                    $hosts = Host::find()->select(['id', new Expression("CONCAT(name, ' (', id, ')')")])->where(['and', ['address_id' => $connection->address_id], ['type_id' => 5]])->asArray()->all();
+                    if ($hostId = $request->post('host')) {
+                        $connection->host_id = $hostId;
+                        $connection->conf_date = date('Y-m-d');
+                        $connection->conf_user = Yii::$app->user->identity->id;
+                        
+                        try {
+                            if (!$connection->save())
+                                throw new Exception('błąd zapisu umowy');
+                        } catch (\Throwable $t){
+                            var_dump($connection->errors);
+                            exit();
+                        }
+                        
+                        return 1;
+                    } else {
+                        return $this->renderAjax('join_host', [
+                            'hosts' => $hosts,
+                        ]);
+                    }
+                }
         }
     }
-    
+
     public function actionGetChildren($id) {
         
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        $arChildren = [];
-        $nodes = [];
+        $device = Device::findOne($id);
+        $model = Model::findOne($device->model_id);
         
-        $arChildren = (new \yii\db\Query())
-        ->select(['agregation.device', 'port', 'parent_device', 'parent_port', 'device.name', 'device.model', 'mac', 'ip', 'device_type.icon', 'device_type.children'])
-	        ->from('agregation')
-	        ->leftJoin('device', 'device.id = agregation.device')
-	        ->leftJoin('device_type', 'device_type.id = device.type')
-	        ->leftJoin('ip', 'ip.device = device.id AND ip.main is true')
-	        ->where(['parent_device' => $id])
-	        ->orderBy('parent_port')
-	        ->all();
+        $nodes = (new \yii\db\Query())
+            ->select([
+                new Expression("CASE WHEN proper_name IS NULL THEN concat(prefix, device.name) ELSE concat(prefix, device.name, '_', proper_name) END"),
+                'agregation.device',
+                'port',
+                'parent_port',
+                'model_id',
+                'mac',
+                'device.type_id',
+                'icon',
+                'children'
+            ])
+            ->from('device')
+            ->leftJoin('agregation', 'device.id = agregation.device')
+            ->leftJoin('device_type', 'device_type.id = device.type_id')
+            ->where(['parent_device' => $id])
+            ->orderBy('parent_port')
+            ->all();
         
-        $model = Model::findOne(Device::findOne($id)->model);
-        
-        foreach ($arChildren as $child){
+        foreach ($nodes as $node){
         	
-        	$nodes[] = [
-        			'id' => (int) $child['device'] . '.' . $child['port'],
-        			'text' => $id != 1	?
-        			$model->port[$child['parent_port']].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$child['name']  :
-        			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $child['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$child['name'],
-        			'name' => $child['name'],
-        			'mac' => $child['mac'],
-        			'ip' => $child['ip'],
-        			'state' => $child['model'] == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
-        			'icon' => false,
-        			'port' => $child['port'],
-        			'parent_port' => $model->port[$child['parent_port']],
-        			'children' => $child['children']
+            $ips = Ip::find()->select('ip')->where(['device_id' => $node['device']])->asArray()->all();
+            
+        	$children[] = [
+        		'id' => (int) $node['device'] . '.' . $node['port'],
+        		'text' => $id != 1	?
+        			$model->port[$node['parent_port']].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat']  :
+        			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'],
+        		'name' => $node['concat'],
+        	    'network' => [
+        	        'mac' => $node['mac'],
+        	        'ips' => $ips,
+        	    ],
+        	    'type' => $node['type_id'],
+        		'state' => $node['model_id'] == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
+        		'icon' => false,
+        	    'children' => $node['children']
         	];
         }
         
-        return $nodes;
+        return $children;
     }
     
     public function actionSearch($str) {
@@ -99,38 +194,25 @@ class TreeController extends Controller
     	if (strlen($str) > 3){
 	    	$path = [];
 	    	
-	    	$validatorIp = new \yii\validators\IpValidator(['ipv6' => false]);
+	    	$validatorIp = new IpValidator(['ipv6' => false]);
+	    	$validatorMac = new MacaddressValidator();
 	    	
-	    	//czy szukana fraza to adres ip
 	    	if ($validatorIp->validate($str)){
-				//wyszukanie wszystkich obiektów spełniajcych kryteria
-				$arsDevice = (new \yii\db\Query())
-					->select(['id', 'type'])
-					->from('device')
-					->leftJoin('ip', 'ip.device = device.id AND ip.main is true')
-					->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str], ["ip.ip"=> $str]])
-					->andWhere(['status' => true])
-					->all();
+				$devices = Ip::find()->select('device_id AS id')->where(['ip' => $str])->asArray()->all();
+	    	} elseif ($validatorMac->validate($str)){
+	    	    $devices = Device::find()->select('id')->where(['and', ["CAST(mac AS varchar)" => $str], ['status' => true]])->asArray()->all();
 	    	} else {
-	    		//wyszukanie wszystkich obiektów spełniajcych kryteria
-	    		$arsDevice = (new \yii\db\Query())
-	    		->select(['id', 'type'])
-	    		->from('device')
-	    		->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false], ["CAST(mac AS varchar)" => $str]])
-	    		->andWhere(['status' => true])
-	    		->all();
+	    	    $devices = Device::find()->select('id')->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false]])->andWhere(['status' => true])->asArray()->all();
 	    	}
 	    	
 	    	//przejscie przez wszystkie wyszukane obiekty typu device 
-	    	foreach ($arsDevice as $arDevice) {
+	    	foreach ($devices as $device) {
 	    		
 	    		//powiazany element typu tree
-	    		$modelTree = Tree::findOne(['device' => $arDevice['id']]);
+	    		$modelTree = Tree::findOne(['device' => $device['id']]);
 	    		
-	    		//sprawdz czy rodzic elementu tree nie jest root'em, jezeli tak zakoncz
+	    		//dopóki nie jest rootem
 	    		while ($modelTree->parent_device <> 1) {
-	    			
-	    			
 	    			$modelTree = Tree::findOne($modelTree->parent_device);
 	    			//jezeli elementu tree rodzica nie ma w tablicy to dodaj 
 	    			if (!in_array($modelTree->device . '.' . $modelTree->port, $path))
@@ -141,377 +223,152 @@ class TreeController extends Controller
     		return null;
     	 
     	return array_reverse($path);
-// 		var_dump($arsDevice);
     }
     
-    public function actionAdd($id, $host = false)
-    { 	
-    	$request = Yii::$app->request;
-    	
-    	if($request->isAjax){
-	    	if (!$host){
-	    		
-		    	$modelDevice = Device::findOne($id);
-		    	$modelTree = new Tree();
-		    	$modelAddress = new Address();
-		    	
-		    	//var_dump($modelTree); exit();
-		    
-		    	if ($modelTree->load($request->post()) && $modelAddress->load($request->post())) {
-		    
-		    		$modelTree->device = $id;
-		    		$modelDevice->status = true;
-		    		
-		    		$transaction = Yii::$app->getDb()->beginTransaction();    		
-		    		
-		    		try {
-		    			if (!$modelAddress->save())
-		    				throw new Exception('Problem z zapisem adresu');
-		    			if (!$modelTree->save())
-		    				throw new Exception('Problem z zapisem drzewa');
-		
-		    			$modelDevice->address = $modelAddress->id;
-		    			$modelDevice->original_name = true;
-		    			$modelDevice->name = $modelDevice->modelAddress->toString(true);
-		    			
-		    			if (!$modelDevice->save())
-		    				throw new Exception('Problem z zapisem device');
-		    			
-		    			$transaction->commit();    			
-		    			$this->redirect(['tree/index']);
-		    		} catch (\Exception $e) {
-		    			$transaction->rollBack();
-		    			var_dump($modelDevice->errors);
-		    		}	
-		    	} else {
-		    		
-		    		return $this->renderAjax('add', [
-		    				'modelDevice' => $modelDevice,
-		    				'modelTree' => $modelTree,
-		    				'modelAddress' => $modelAddress,
-		    		]);
-		    	}
-	    	} else {
-    		
-	    		$modelIp = new Ip();
-	    		$modelTree = new Tree();
-	    		$modelHistoryIp = new HistoryIp();
-	    		$modelConnection = Connection::findOne($id);
-	    		
-	    		if($modelConnection->replaced_id){
-	    			if(Connection::findOne($modelConnection->replaced_id)->close_date == null)
-	    				return 'Na adresie jest aktywna umowa do zamknięcia o id: ' . $modelConnection->replaced_id; 
-	    		}
-	    		
-    			if($request->post('ip')){
-    				$transaction = Yii::$app->getDb()->beginTransaction();
-    				 
-    				$modelConnection = Connection::findOne($id);
-    				 
-    				$modelDevice = new Host();
-    				$modelDevice->status = true;
-    				$modelDevice->mac = $modelConnection->mac;
-    				$modelDevice->address = $modelConnection->address;
-    				$modelDevice->start_date = date('Y-m-d H:i:s');
-    				
-    				if(!$modelDevice->validate('mac'))
-    					return $modelDevice->getFirstError('mac') . ' przez ' . Host::findOne(['mac' => $modelDevice->mac])->name;
-    				 
-    				try {
-    					if (!$modelDevice->save())
-    						throw new Exception('Problem z zapisem device');
-    				} catch (\Exception $e) {
-    					$transaction->rollBack();
-    					return $e->getMessage();
-    				}
-    				
-    				$modelDevice->original_name = true;
-    				$modelDevice->name = $modelDevice->modelAddress->toString(true);
-    				$modelDevice->save();
-    				
-    				$modelTree->device = $modelDevice->id;
-    				$modelTree->port = 0;
-    				$modelTree->parent_device = $modelConnection->device;
-    				$modelTree->parent_port = $modelConnection->port;
-    				 
-    				try {
-    					if (!$modelTree->save())
-    						throw new Exception('Problem z zapisem na drzewie');
-    				} catch (\Exception $e) {
-    					$transaction->rollBack();
-    					return $e->getMessage();
-    				}
-    				 
-    				$modelIp->ip = $request->post('ip');
-    				$modelIp->subnet = $request->post('subnet');
-    				$modelIp->main = true;
-    				$modelIp->device = $modelDevice->id;
-    				
-    				try {
-    					if (!$modelIp->save())
-    						throw new Exception('Problem z zapisem ip');
-    					
-    				} catch (\Exception $e) {
-    					$transaction->rollBack();
-    					return $e->getMessage();
-    				}
-    				
-    				$modelHistoryIp->scenario = HistoryIp::SCENARIO_CREATE;
-    				$modelHistoryIp->ip = $modelIp->ip;
-    				$modelHistoryIp->from_date = date('Y-m-d H:i:s');
-    				$modelHistoryIp->address = $modelDevice->address;
-    				
-    				try {
-    					if (!$modelHistoryIp->save())
-    						throw new Exception('Problem z zapisem historii ip');
-    						
-    				} catch (\Exception $e) {
-    					$transaction->rollBack();
-    					return $e->getMessage();
-    				}
-    				 
-    				$modelConnection->host = $modelDevice->id;
-    				$modelConnection->conf_date = date('Y-m-d');
-    				$modelConnection->conf_user = Yii::$app->user->identity->id;
-    		
-    				try {
-    					if (!$modelConnection->save())
-    						throw new Exception('Problem z zapisem połączenia');
-    				} catch (\Exception $e) {
-    					$transaction->rollBack();
-    					return $e->getMessage();
-    				}
-    				 
-    				$transaction->commit();
-    				
-    				$this->redirect(['tree/index', 'id' => $modelDevice->id . '.0']);
-    				
-    				Dhcp::generateFile([$request->post('subnet')]);
-    			} else {
-    		
-    				return $this->renderAjax('add_host_network', [
-    						'modelIp' => $modelIp,
-    				]);
-    			}
-    		}
-    	} else
-    		echo 'Zapytanie nie ajaxowe';
-	}
-    
-//     public function actionAddHost($id){
-    	
-//     	$modelIp = new Ip();
-//     	$modelTree = new Tree();
-    	
-//     	$request = Yii::$app->request;
-    	
-//     	if($request->isAjax){
-//     		if($request->post('ip')){
-//     			$transaction = Yii::$app->getDb()->beginTransaction();
-    			
-//     			$modelConnection = Connection::findOne($id);
-    			
-//     			$modelDevice = new Host();
-//     			$modelDevice->status = true;
-//     			$modelDevice->mac = $modelConnection->mac;
-//     			$modelDevice->address = $modelConnection->address;
-    			
-//     			try {
-//     				if (!$modelDevice->save())
-//     					throw new Exception('Problem z zapisem device');
-//     			} catch (\Exception $e) {
-//     				$transaction->rollBack();
-//     				return $e->getMessage();
-//     			}
-    			
-//     			$modelTree->device = $modelDevice->id;
-//     			$modelTree->port = 1;
-//     			$modelTree->parent_device = $modelConnection->device;
-//     			$modelTree->parent_port = $modelConnection->port;
-    			
-//     			try {
-//     				if (!$modelTree->save())
-//     					throw new Exception('Problem z zapisem na drzewie');
-//     			} catch (\Exception $e) {
-//     				$transaction->rollBack();
-//     				return $e->getMessage();
-//     			}
-    			
-//     			$modelIp->ip = $request->post('ip');
-//     			$modelIp->subnet = $request->post('subnet');
-//     			$modelIp->main = true;
-//     			$modelIp->device = $modelDevice->id;
-    			
-//     			try {
-//     				if (!$modelIp->save())
-//     					throw new Exception('Problem z zapisem ip');
-//     			} catch (\Exception $e) {
-//     				$transaction->rollBack();
-//     				return $e->getMessage();
-//     			}
-    			
-//     			$modelConnection->host = $modelDevice->id;
-//     			$modelConnection->conf_date = date('Y-m-d');
-//     			$modelConnection->conf_user = Yii::$app->user->identity->id;
-    			 
-//     			try {
-//     				if (!$modelConnection->save())
-//     					throw new Exception('Problem z zapisem połączenia');
-//     			} catch (\Exception $e) {
-//     				$transaction->rollBack();
-//     				return $e->getMessage();
-//     			}
-    			
-//     			$transaction->commit();
-//     			$this->redirect(['tree/index']);
-//     		} else {
-    		
-// 	    		return $this->renderAjax('add_host_network', [
-// 	   				'modelIp' => $modelIp,
-// 	    		]);
-//     		}
-//     	} 
-//     }
-    
-    public function actionSelectListPort($device, $mode='free', $type = null)
-    {
-    	$model = Model::findOne(Device::findOne($device)->model);
-    	 
-    	switch ($mode){
-    		case 'free' :
-    			$modelsTree = Tree::find()->select('parent_port')->where(['parent_device' => $device])
-    				->union(Tree::find()->select('port AS parent_port')->where(['device' => $device]))->all();
-    			
-    			$ports_count = Tree::find()->select('parent_port')->where(['parent_device' => $device])
-    				->union(Tree::find()->select('port AS parent_port')->where(['device' => $device]))->count();
-    			
-    			//jeżeli mamy jakieś zajęte porty	
-    			if ($ports_count > 0){
-    				foreach ($modelsTree as $modelTree){
-    					$ports[$modelTree->parent_port] = $modelTree->parent_port;
-    				}
-    				
-    				$free_ports = array_diff_key($model->port, $ports);
-//     				var_dump($ports); var_dump($model->port); exit();
-    				if (!$type == 'SEU'){
-    					echo '<option value="-1">Brak miejsca</option>';
-    					echo '<option value="-2">Brak na liście</option>';
-    				}
-    				foreach ($free_ports as $key => $free_port ){
-    					echo '<option value="' . ($key) . '">' . $free_port . '</option>';
-    				}
-    			} else {
-   					echo '<option value="-1">Brak miejsca</option>';
-    				echo '<option value="-2">Brak na liście</option>';
-    			}	
-    			break;
-    			
-    		case 'all' :
-    			echo '<option>-</option>';
-    			foreach ($model->port as $key => $port){
-    				echo '<option value="' . ($key) . '">' . $port . '</option>';
-    			}
-    			break;
-    			
-    		case 'use' :
-    			$modelsTree = Tree::find()->select('parent_port')->where(['parent_device' => $device])
-    			->union(Tree::find()->select('port AS parent_port')->where(['device' => $device]))->all();
-    			 
-    			$ports_count = Tree::find()->select('parent_port')->where(['parent_device' => $device])
-    			->union(Tree::find()->select('port AS parent_port')->where(['device' => $device]))->count();
-    			 
-    			if ($ports_count > 0){
-    				foreach ($modelsTree as $modelTree){
-    					$ports[$modelTree->parent_port] = $modelTree->parent_port;
-    				}
-    				
-    				echo '<option>-</option>';
-    				foreach ($ports as $key => $port ){
-    					echo '<option value="' . ($key) . '">' . $port . '</option>';
-    				}
-    			} else
-    				echo '<option>-</option>';
-    			break;
-    	}
+    public function actionListPort($deviceId, $selected = null, $mode = 'free', $install = false) {
+        
+        $device = Device::findOne($deviceId);
+        $model = $device->model;
+        
+        switch ($mode) {
+            case 'free' :
+                $linksWithDevice = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
+                    ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
+                
+                if (!empty($linksWithDevice)) {
+                    foreach ($linksWithDevice as $linkWithDevice) {
+                        $usePorts[$linkWithDevice->parent_port] = $linkWithDevice->parent_port;
+                    }
+                    
+                    $freePorts = array_diff_key($model->port, $usePorts);
+
+                    if ($install){
+                        echo '<option value="-1">Brak miejsca</option>';
+                    }
+                    foreach ($freePorts as $key => $freePort ){
+                        if ($selected == $key) {
+                            echo '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
+                            continue;
+                        }
+                        echo '<option value="' . ($key) . '">' . $freePort . '</option>';
+                    }
+                } else {
+                    echo '<option value="-1">Brak miejsca</option>';
+                }
+                break;
+        }
     }
     
-//     public function actionFreePortList($id)
-//     {	
-//     	$query2 = Tree::find()->select('port AS parent_port')->where(['device' => $id]);
-//     	$modelsTree = Tree::find()->select('parent_port')->where(['parent_device' => $id])->union($query2)->all();
-    	
-//     	$ports_count = Tree::find()->select('parent_port')->where(['parent_device' => $id])->union($query2)->count();
-		
-//     	$model = Model::findOne(Device::findOne($id)->model);
-    	
-//     	if ($ports_count > 0){
-//     		foreach ($modelsTree as $modelTree){
-//     			$ports[$modelTree->parent_port - 1] = $modelTree->parent_port;
-//     		}
-    		
-//     		$free_ports = array_diff_key($model->port, $ports);
-    		
-//     		foreach ($free_ports as $key => $free_port ){
-//     			echo '<option value="' . ($key + 1) . '">' . $free_port . '</option>';
-//     		}
-    		
-//     	} else {    		
-//     		foreach ($model->port as $key => $port){
-//     			echo '<option value="' . ($key + 1) . '">' . $port . '</option>';
-//     		}
-//     	}
-//     }
-    
-    public function actionMove() {
+    public function actionMove($deviceId, $port, $newParentId) {
     	
     	$request = Yii::$app->request;
     	
     	if($request->isAjax){
-    		if($request->post()){
+    	    if($request->post('newParentPort')){
     			
-    			$device = (int)$request->post('device');
-    			$port = $request->post('port');
+    			$link = Tree::find()->where(['device' => $deviceId, 'port' => $port])->one();
     			
-    			$modelTree = Tree::find()->where(['device' => $device, 'port' => $port])->one();
+    			$link->parent_device = $newParentId;
+    			$link->parent_port = $request->post('newParentPort');
     			
-    			$modelTree->parent_device = (int)$request->post('newParentDevice');
-    			$modelTree->parent_port = $request->post('newParentPort');
-    			
-    			if($modelTree->save()){
-    				return 1;
-    			} else {
-    				return 0;
+    			try {
+    			    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+    			} catch (\Throwable $t) {
+    			    var_dump($link->errors);
+    			    var_dump($t->getMessage());
+    			    exit();
     			}
-     		}
     			
+    			return 1;
+     		} else 
+     		    return $this->renderAjax('move', [
+     		        'newParentId' => $newParentId
+     		    ]);
     	}
     }
     
-    public function actionCopy() {
+    public function actionCopy($deviceId, $parentId) {
     	 
-    	$request = Yii::$app->request;
-    	 
-    	if($request->isAjax){
-    		if($request->post()){
-    			 
-    			$modelTree = new Tree();
-    			
-    			$modelTree->device = (int)$request->post('device');
-    			$modelTree->port = $request->post('port');
-    			$modelTree->parent_device = (int)$request->post('newParentDevice');
-    			$modelTree->parent_port = $request->post('newParentPort');
-    			
-    			if($modelTree->save()){
-    				return 1;
-    			} else {
-    				return 0;
-    			}
-    		}
-    		 
-    	}
+        $request = Yii::$app->request;
+        
+        if($request->isAjax){
+            if($request->post()){
+                
+                $link = new Tree();
+                
+                $link->device = $deviceId;
+                $link->port = (int) $request->post('localPort');
+                $link->parent_device = $parentId;
+                $link->parent_port = (int) $request->post('parentPort');
+                
+                try {
+                    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+                } catch (\Throwable $t) {
+                    var_dump($link->errors);
+                    var_dump($t->getMessage());
+                    exit();
+                }
+                
+                return 1;
+            } else
+                return $this->renderAjax('copy', [
+                    'deviceId' => $deviceId,
+                    'parentId' => $parentId
+                ]);
+        }
     }
     
-    public function actionToStore($id, $port){
+    function actionToStore($deviceId, $port) {
+        
+        $request = Yii::$app->request;
+        
+        if($request->isAjax){
+            
+            $device = Device::findOne($deviceId);
+            
+            if($request->post()){
+                
+                $link = Tree::findOne(['device' => $deviceId, 'port' => $port]);
+                $count = Tree::find()->where(['device' => $deviceId])->count();
+                
+                try {
+                    if (!$device->isParent()) {
+                        $transaction = Yii::$app->getDb()->beginTransaction();
+                        
+                        if ($count == 1) {    //ostatnia kopia    
+                            $device->address_id = 1;
+                            $device->status = null;
+                            $device->name = null;
+                            $device->proper_name = null;
+                            isset($device->alias) ? $device->alias = null : null;
+                            
+                            foreach ($device->ips as $ip)
+                                if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
+                            
+                            if (!$link->delete()) throw new Exception('Błąd usuwania agregacji');
+                            if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
+                        } else
+                            if(!$link->delete()) throw new Exception('Błąd usuwania agregacji');
+                                                
+                    } else return 'Urządzenie jest rodzicem';
+                    
+                    $transaction->commit();
+                    return 1;
+                    
+                } catch (\Throwable $t) {
+                    $transaction->rollBack();
+                    var_dump($device->errors);
+                    var_dump($t->getMessage());
+                    exit();
+                }
+            } else
+                return $this->renderAjax('to_store', [
+                    'device' => $device,
+                ]);
+        }
+    }
+    
+    public function actionToStoreBack($id, $port){
     	
     	$modelTree = Tree::findOne(['device' => $id, 'port' => $port]);
     	$modelDevice = Device::findOne($id);
@@ -663,12 +520,13 @@ class TreeController extends Controller
     	]);
     }
     
-    public function actionPortSelect($mode) {
-    	
-    	if ($mode == 'move')
-    		return $this->renderAjax('port_select_move');
-    	elseif ($mode == 'copy')
-    		return $this->renderAjax('port_select_copy');
+    protected function findModel($id)
+    {
+        if (($model = Tree::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }
 
