@@ -2,6 +2,9 @@
 
 namespace backend\models;
 
+use backend\models\configuration\GSSeriesConfiguration;
+use backend\models\configuration\XSeriesConfiguration;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -22,6 +25,7 @@ use yii\helpers\ArrayHelper;
 class Swith extends Device
 {
 	const TYPE = 2;
+	private $conf;
 	
 	public function init() {
 	    
@@ -57,6 +61,7 @@ class Swith extends Device
             parent::rules(),
             [
                 ['mac', 'required', 'message' => 'Wartość wymagana'],
+                ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
                 
                 ['serial', 'required', 'message' => 'Wartość wymagana'],
                 
@@ -86,8 +91,32 @@ class Swith extends Device
         return ArrayHelper::merge(
             parent::attributeLabels(),
             [
-                'distribution' => 'Rodzaj',
+                'distribution' => 'Szkieletowy',
             ]
         ); 
+	}
+	
+	public function configurationAdd() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    
+	    return $this->conf->add();
+	}
+	
+	public function configurationDrop() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    
+	    return $this->conf->drop();
 	}
 }
