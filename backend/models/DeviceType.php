@@ -37,6 +37,6 @@ class DeviceType extends ActiveRecord
 	
 	public static function findOrderName(){
 		
-		return self::find()->select(['id', 'name'])->orderBy('name');
+	    return self::find()->select(['id', 'name'])->where(['list' => true])->orderBy('name');
 	}
 }
