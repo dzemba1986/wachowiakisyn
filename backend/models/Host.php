@@ -2,26 +2,22 @@
 
 namespace backend\models;
 
+use backend\models\configuration\ECSeriesConfiguration;
+use backend\models\configuration\GSSeriesConfiguration;
+use backend\models\configuration\XSeriesConfiguration;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
 /**
- * @property integer $id
- * @property boolean $status
- * @property string $name
- * @property string $proper_name
- * @property string $desc
- * @property integer $address_id
- * @property integer $type_id
- * @property string $mac
  * @property boolean $dhcp
  * @property boolean $smtp
- * @property Address $address
- * @property Type $type
+ * @property backend\models\Connection[] $connections
  */
 
 class Host extends Device {
     
 	const TYPE = 5;
+	private $conf;
 	
 	public function init() {
 		
@@ -40,23 +36,13 @@ class Host extends Device {
 	    );
 	}
 	
-	public static function find() {
-		
-	    return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
-	}
-	
-	public function beforeSave($insert) {
-		
-	    $this->type_id = self::TYPE;
-		return parent::beforeSave($insert);
-	}
-
 	public function rules() {
 		
         return ArrayHelper::merge(
             parent::rules(),
             [
                 ['mac', 'required', 'message' => 'Wartość wymagana'],
+                ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
                 
                 ['dhcp', 'boolean'],
                 ['dhcp', 'default', 'value' => true],
@@ -89,5 +75,72 @@ class Host extends Device {
                 'smtp' => 'SMTP',
             ]
         ); 
+	}
+	
+	public static function find() {
+	    
+	    return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
+	}
+	
+	public function beforeSave($insert) {
+	    
+	    $this->type_id = self::TYPE;
+	    return parent::beforeSave($insert);
+	}
+	
+	function afterSave($insert, $changedAttributes) {
+	    
+	    if (!$insert) {
+	        if (isset($changedAttributes['mac']) || isset($changedAttributes['dhcp'])) {
+	            Dhcp::generateFile($this->ips[0]->subnet);
+	        }
+	    }
+	}
+	
+	public function getConnections() {
+
+	    return $this->hasMany(Connection::className(), ['host_id' => 'id'])->select('id, soa_id, type_id')->where(['connection.type_id' => [1,3], 'close_date' => null]);
+	}
+	
+	public function configurationAdd() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	    else return ' ';
+	    
+	    return $this->conf->add();
+	}
+	
+	public function configurationDrop() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	    else return ' ';
+	    
+	    return $this->conf->drop();
+	}
+	
+	public function configurationChangeMac($newMac) {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	    else return ' ';
+	    
+	    return $this->conf->changeMac($newMac);
 	}
 }
