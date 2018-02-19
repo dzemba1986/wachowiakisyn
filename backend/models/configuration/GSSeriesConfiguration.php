@@ -15,7 +15,7 @@ class GSSeriesConfiguration extends Configuration {
     }
     
     function add() {
-        
+        $add = ' ';
         if ($this->device instanceof Host) {
             
 $add = <<<ADD
@@ -104,13 +104,13 @@ cop r s
 y
 
 ADD;
-        } else $add = '';
+        }
 
     return $add;
     }
 
     function drop() {
-
+        $drop = ' '; 
         if ($this->device instanceof Host) {
             
 $drop = <<<DELETE
@@ -169,7 +169,7 @@ y
 
 DELETE;
             
-        } else $drop = '';
+        }
     
     return $drop;
     }
@@ -186,7 +186,7 @@ exit
 interface vlan {$this->vlanId}
 no bridge address {$this->mac}
 bridge address {$newMac} permanent ethernet {$this->parentPortName}
-exit' . '
+exit
 interface ethernet {$this->parentPortName}
 port security mode lock
 port security discard
@@ -197,7 +197,7 @@ copy r s
 y
 
 CHANGE;
-        } else $change = '';
+        } else $change = ' ';
 
     return $change;
     }

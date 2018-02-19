@@ -11,13 +11,13 @@ class XSeriesConfiguration extends Configuration {
     function __construct($device, $parentDevice) {
         
         parent::__construct($device, $parentDevice);
-        $this->mac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace(':', '', $device->mac));
+        $this->mac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $device->mac));
     }
     
     function add() {
         
         if ($this->device instanceof Host) {
-
+            $add = ' '; 
             if (strpos($this->device->parentIp, '172.') === 0) {
 $add = <<<ADD
 interface {$this->parentPortName}
@@ -157,13 +157,13 @@ exit
 wr
 
 ADD;
-        } else $add = '';
+        }
 
     return $add;
     }
 
     function drop() {
-        
+        $drop = ' '; 
         if ($this->device instanceof Host) {
             if (strpos($this->device->parentIp, '172.') === 0) {
 $drop = <<<DELETE
@@ -233,12 +233,14 @@ wr
 
 DELETE;
             
-        }  else $drop = '';
+        }
         
     return $drop;
     }
     
     function changeMac($newMac) {
+        
+        $newMac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $newMac));
         
         if ($this->device instanceof Host) {
 
@@ -260,7 +262,7 @@ exit
 wr	
 
 CHANGE;
-        } else $change = '';
+        } else $change = ' ';
 
     return $change;
     }
