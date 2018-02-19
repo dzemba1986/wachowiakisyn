@@ -2,22 +2,11 @@
 
 namespace backend\models;
 
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
 /**
- * @property integer $id
- * @property boolean $status
- * @property string $name
- * @property string $proper_name
- * @property string $desc
  * @property boolean $dhcp
- * @property boolean $smtp
- * @property integer $address_id
- * @property integer $type_id
- * @property integer $mac
- * @property string $serial
- * @property integer $model_id
- * @property integer $manufacturer_id
  */
 
 class Virtual extends Device {
@@ -36,7 +25,6 @@ class Virtual extends Device {
 	        parent::attributes(),
 	        [
 	            'dhcp',
-	            'smtp'
 	        ]
 		);
 	}
@@ -58,15 +46,13 @@ class Virtual extends Device {
 	    return ArrayHelper::merge(
 	        parent::rules(),
 	        [
+	            ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
+	            
 	            ['dhcp', 'boolean'],
 	            ['dhcp', 'default', 'value' => false],
 	            ['dhcp', 'required', 'message' => 'Wartość wymagana'],
 	            
-	            ['smtp', 'boolean'],
-	            ['smtp', 'default', 'value' => false],
-	            ['smtp', 'required', 'message' => 'Wartość wymagana'],
-	            
-	            [['mac', 'dhcp', 'smtp'], 'safe'],
+	            [['mac', 'dhcp'], 'safe'],
             ]
         );
 	}
@@ -74,8 +60,8 @@ class Virtual extends Device {
 	public function scenarios() {
 	    
 	    $scenarios = parent::scenarios();
-	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'dhcp', 'smtp']);
-	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'dhcp', 'smtp']);
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'dhcp']);
+	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'dhcp']);
 	    
 	    return $scenarios;
 	}
@@ -86,7 +72,6 @@ class Virtual extends Device {
 	        parent::attributeLabels(),
 	        [
 	            'dhcp' => 'DHCP',
-	            'smtp' => 'SMTP',
 	        ]
         );
 	}
