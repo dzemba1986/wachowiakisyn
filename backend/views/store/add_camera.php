@@ -1,14 +1,12 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
+use backend\models\Camera;
 use backend\models\Manufacturer;
 use backend\models\Model;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Url;
-use backend\models\Swith;
-use backend\models\GatewayVoip;
-use backend\models\Camera;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Installation */
@@ -18,12 +16,12 @@ use backend\models\Camera;
 <div class="add-store-form">
 
     <?php $form = ActiveForm::begin([
-    	'id' => $modelDevice->formName(),
+    	'id' => $device->formName(),
     	'validationUrl' => Url::toRoute(['camera/validation'])	
     		
     ]); ?>    
     
-    <?= $form->field($modelDevice, 'manufacturer')->dropDownList(
+    <?= $form->field($device, 'manufacturer')->dropDownList(
         ArrayHelper::map(Manufacturer::find()->orderBy('name')->all(), 'id', 'name'),
         [
             'prompt' => 'Wybierz producenta', 
@@ -37,14 +35,14 @@ use backend\models\Camera;
         ]
     )?>
     
-    <?= $form->field($modelDevice, 'model', ['options' => ['style' => ['display' => 'none']]])->dropDownList(
+    <?= $form->field($device, 'model', ['options' => ['style' => ['display' => 'none']]])->dropDownList(
         ArrayHelper::map(Model::find()->orderBy('name')->all(), 'id', 'name'),
         [
             'prompt' => 'Wybierz model', 
         ]
     )?>
     
-    <?= $form->field($modelDevice, 'serial', 
+    <?= $form->field($device, 'serial', 
         [
             'enableAjaxValidation' => true, 
             'validateOnChange' => false,
@@ -52,7 +50,7 @@ use backend\models\Camera;
         ]  
     )?>
     
-    <?= $form->field($modelDevice, 'mac', 
+    <?= $form->field($device, 'mac', 
         [       
             'enableAjaxValidation' => true, 
             'validateOnChange' => false,
@@ -60,10 +58,10 @@ use backend\models\Camera;
         ]
     )?>
     
-    <?= $form->field($modelDevice, 'desc', ['options' => ['style' => ['display' => 'none']]])->textarea()?>
+    <?= $form->field($device, 'desc', ['options' => ['style' => ['display' => 'none']]])->textarea()?>
     
     <div class="form-group">
-        <?= Html::submitButton($modelDevice->isNewRecord ? 'Dodaj' : 'Update', ['class' => $modelDevice->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($device->isNewRecord ? 'Dodaj' : 'Update', ['class' => $device->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
        
     <?php ActiveForm::end(); ?>
@@ -74,7 +72,7 @@ use backend\models\Camera;
 
 $(function() {
 
-	$('#<?= $modelDevice->formName(); ?>').on('beforeSubmit', function(e){
+	$('#<?= $device->formName(); ?>').on('beforeSubmit', function(e){
 	
 		var form = $(this);
 	 	$.post(
