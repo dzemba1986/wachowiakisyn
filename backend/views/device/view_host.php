@@ -6,9 +6,11 @@ use yii\widgets\DetailView;
 
 /**
  * @var backend\models\Host $device
+ * @var backend\models\Connection $connection
  */
 
 require_once '_modal_change_mac.php';
+require_once '_modal_device_sm.php';
 
 $add = $device->configurationAdd();
 $drop = $device->configurationDrop();
@@ -24,8 +26,19 @@ echo DetailView::widget([
 		],
 		[
 			'label' => 'Status',
-			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
+		    'value' => $device->status ? '<font color="green">Aktywny</font>' : '<font color="red">Nieaktywny</font>',
+		    'format' => 'raw'
 		],
+	    [
+	        'label' => 'DHCP',
+	        'value' => $device->dhcp ? '<font color="green">Aktywny</font>' : '<font color="red">Brak</font>',
+	        'format' => 'raw'
+	    ],
+	    [
+	        'label' => 'SMTP',
+	        'value' => $device->smtp ? '<font color="green">Aktywny</font>' : '<font color="red">Brak</font>',
+	        'format' => 'raw'
+	    ],
 		[
 			'label' => 'Typ',
 			'value' => $device->type->name
@@ -37,7 +50,7 @@ echo DetailView::widget([
 	    ],
 		[
 			'label' => 'Mac',
-		    'value' => Html::a($device->mac, Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['target'=>'_blank']) . ' ' . Html::a('Zmień', Url::toRoute(['device/change-mac', 'id' => $device->id]),['class' => 'change-mac']),
+		    'value' =>  Html::a($device->mac, Url::toRoute(['device/change-mac', 'hostId' => $device->id]),['class' => 'change-mac']),
 		    'format' => 'raw'
 		],
 		[
@@ -47,16 +60,15 @@ echo DetailView::widget([
 		]
 	]
 ]);
-
 echo Html::label('Umowy :');
 echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->connections as $connection) {
     
-    $url = Html::a('Zamknij', Url::to(['connection/close', 'id' => $connection->id]));
+    $link = Html::a('Zamknij', Url::to(['connection/close', 'id' => $connection->id]), ['class' => 'close-connection']);
 	echo '<tr>';
-	echo "<th>{$connection->type->name}</th>";
-	echo "<td>{$url}</td>";
+	echo "<th>{$connection->type->name} ({$connection->soa_id})</th>";
+	echo "<td>{$link}</td>";
     echo '</tr>';
 }
 echo '</tbody>';
@@ -68,9 +80,10 @@ echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->ips as $ip) {
     
+    $link = Html::a($ip->ip, Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['target'=>'_blank']);
     echo '<tr>';
     echo "<th>VLAN {$ip->subnet->vlan->id}</th>";
-    echo "<td>{$ip->ip}</td>";
+    echo "<td>{$link}</td>";
     echo '</tr>';
 }
 echo '</tbody>';
@@ -92,7 +105,7 @@ $(function(){
     });
 
 
-    $('.change-mac').on('click', function(event){
+    $('.change-mac').on('click', function(event) {
         
 		$('#modal-change-mac').modal('show')
 			.data('mac', '{$device->mac}')
@@ -100,14 +113,30 @@ $(function(){
 			.load($(this).attr('href'));
 
 		//potrzebne by okno modal nie blokowało się
-		$("#device_desc").css("position", "absolute");
+		$('#device_desc').css('position', 'absolute');
 	
         return false;
 	});
 
 	//włącza spowtorem przesówanie opisu urządzenia po zmianie mac
 	$('#modal-change-mac').on('hidden.bs.modal', function () {
-		$("#device_desc").css("position", "fixed");
+		$('#device_desc').css('position', 'fixed');
+	});
+
+    $('.close-connection').on('click', function(event) {
+        
+		$('#modal-device-sm').modal('show')
+			.find('#modal-content-device-sm')
+			.load($(this).attr('href'));
+
+		//potrzebne by okno modal nie blokowało się
+		$('#device_desc').css('position', 'absolute');
+
+        return false;
+	});
+
+    $('#modal-device-sm').on('hidden.bs.modal', function () {
+		$('#device_desc').css('position', 'fixed');
 	});
 });
 JS;
