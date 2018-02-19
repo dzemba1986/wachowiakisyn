@@ -4,20 +4,6 @@ namespace backend\models;
 
 use yii\helpers\ArrayHelper;
 
-/**
- * @property integer $id
- * @property boolean $status
- * @property string $name
- * @property string $proper_name
- * @property string $desc
- * @property integer $address_id
- * @property integer $type_id
- * @property integer $mac
- * @property string $serial
- * @property integer $model_id
- * @property integer $manufacturer_id
- */
-
 class MediaConverter extends Device
 {
 	const TYPE = 8;
@@ -45,15 +31,13 @@ class MediaConverter extends Device
 	    return ArrayHelper::merge(
 	        parent::rules(),
 	        [
-	            ['mac', 'required', 'message' => 'Wartość wymagana'],
-	            
 	            ['serial', 'required', 'message' => 'Wartość wymagana'],
 	            
 	            ['manufacturer_id', 'required', 'message' => 'Wartość wymagana'],
 	            
 	            ['model_id', 'required', 'message' => 'Wartość wymagana'],
 	            
-	            [['mac', 'serial', 'manufacturer_id', 'model_id'], 'safe'],
+	            [['serial', 'manufacturer_id', 'model_id'], 'safe'],
 	        ]
 		);
 	}
@@ -61,8 +45,8 @@ class MediaConverter extends Device
 	public function scenarios(){
 	    
 	    $scenarios = parent::scenarios();
-	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
-	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial']);
+	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE],['serial', 'manufacturer_id', 'model_id']);
+	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['serial']);
 	    
 	    return $scenarios;
 	}
