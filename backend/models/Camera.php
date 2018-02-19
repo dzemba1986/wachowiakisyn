@@ -2,6 +2,9 @@
 
 namespace backend\models;
 
+use backend\models\configuration\GSSeriesConfiguration;
+use backend\models\configuration\XSeriesConfiguration;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -22,14 +25,15 @@ use yii\helpers\ArrayHelper;
 class Camera extends Device
 {
 	const TYPE = 6;
+	private $conf;
 	
-	public function init()
-	{
+	public function init() {
+	    
 		$this->type_id = self::TYPE;
 		parent::init();
 	}
 	
-	public function attributes(){
+	public function attributes() {
 	    
 	    return ArrayHelper::merge(
 	        parent::attributes(),
@@ -39,8 +43,8 @@ class Camera extends Device
 	        );
 	}
 	
-	public static function find()
-	{
+	public static function find() {
+	    
 		return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
 	}
 	
@@ -51,12 +55,13 @@ class Camera extends Device
 		return parent::beforeSave($insert);
 	}
 	
-	public function rules(){
+	public function rules() {
 		
         return ArrayHelper::merge(
             parent::rules(),
             [
                 ['mac', 'required', 'message' => 'Wartość wymagana'],
+                ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
                 
                 ['serial', 'required', 'message' => 'Wartość wymagana'],
                 
@@ -72,7 +77,7 @@ class Camera extends Device
         );       
 	}
 
-	public function scenarios(){
+	public function scenarios() {
 	    
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
@@ -81,13 +86,49 @@ class Camera extends Device
 		return $scenarios;
 	}
     
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
+	    
         return ArrayHelper::merge(
             parent::attributeLabels(),
             [
             	'alias' => 'Nazwa w monitoringu',
             ]
         ); 
+	}
+	
+	public function configurationAdd() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    
+	    return $this->conf->add();
+	}
+	
+	public function configurationDrop() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    
+	    return $this->conf->drop();
+	}
+	
+	public function configurationChangeMac($newMac) {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    
+	    return $this->conf->changeMac($newMac);
 	}
 }
