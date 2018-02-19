@@ -1,7 +1,7 @@
 <?php
 
 use backend\models\Address;
-use backend\models\Type;
+use backend\models\InstallationType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
@@ -86,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'type',
                 'value'=>'modelType.name',
-                'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+                'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(InstallationType::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
                 'options' => ['style'=>'width:5%;'],
             ],
         	[
