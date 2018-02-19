@@ -2,9 +2,11 @@
 
 namespace backend\controllers;
 
-use yii\web\Controller;
 use backend\models\Subnet;
 use backend\models\SubnetSearch;
+use yii\base\Exception;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class SubnetController extends Controller
 {  
@@ -96,26 +98,19 @@ class SubnetController extends Controller
 			return 0;
 	}
 	
-    public function actionSelectList($vlan = null)
-    {
-    	
-    	if(!is_null($vlan)){
-    	
-	        $countSubnets = Subnet::find()->where(['vlan' => $vlan])->count();
-	        $subnets = Subnet::find()->where(['vlan' => $vlan])->orderBy('desc')->all();
-	        
-	        if($countSubnets > 0){
-	            foreach ($subnets as $subnet){
-	                echo '<option value="' . $subnet->id . '">' . $subnet->ip . ' - ' . $subnet->desc . '</option>';
-	            }
-	        } else {
-	            echo '<option>-</option>';
+	public function actionList($vlanId) {
+	    
+	    $subnets = Subnet::find()->where(['vlan_id' => $vlanId])->orderBy('desc')->all();
+	    
+	    if(!empty($subnets)){
+	        foreach ($subnets as $subnet){
+	            echo '<option value="' . $subnet->id . '">' . $subnet->ip . ' - ' . $subnet->desc . '</option>';
 	        }
-    	} else{
-    		echo '<option>-</option>';
-    	}
-    }
-
+	    } else {
+	        echo '<option>-</option>';
+	    }
+	}
+	
     protected function findModel($id)
     {
         if (($model = Subnet::findOne($id)) !== null) {
