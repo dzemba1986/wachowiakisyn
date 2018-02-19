@@ -27,10 +27,10 @@ class HistoryIp extends \yii\db\ActiveRecord
 			['from_date', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_IP],
 				
 			['to_date', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_DELETE_IP],
-			['to_date', 'default', 'value' => NULL],
+			['to_date', 'default', 'value' => null],
 				
 			['address_id', 'integer'],
-			['address_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_DELETE_IP],
+			['address_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_IP],
 				
 			[['ip', 'from_date', 'to_date', 'address_id'], 'safe'],
 		];

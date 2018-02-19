@@ -9,7 +9,7 @@ class HistoryIpSearch extends HistoryIp
 	public function rules()
 	{
 		return [
-            ['ip', 'safe'],
+            [['ip', 'to_date'], 'safe'],
         ];
 	}
 	
@@ -19,7 +19,8 @@ class HistoryIpSearch extends HistoryIp
 	
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-			'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
+			'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,2000]],
+		    'sort' => ['defaultOrder' => ['to_date' => SORT_DESC]]
 		]);	
 		
 		if (!($this->load($params) && $this->validate())) {
