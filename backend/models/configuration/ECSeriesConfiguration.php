@@ -56,7 +56,9 @@ end
 cop r s
 
 ADD;
-            } elseif ($this->device->connections[0]->type_id == 1) {
+            } elseif (count($this->device->connections) == 1) {
+            
+                if ($this->device->connections[0]->type_id == 1) {
 $add = <<<ADD
 mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent
 access-list IP extended internet-user{$this->parentPortNumber}
@@ -93,7 +95,7 @@ end
 cop r s
 
 ADD;
-            } elseif ($this->device->connections[0]->type_id == 3) {
+                } elseif ($this->device->connections[0]->type_id == 3) {
 $add = <<<ADD
 mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent
 access-list IP extended iptv-only{$this->parentPortNumber}
@@ -128,6 +130,7 @@ end
 cop r s
 
 ADD;
+                }
             }
         } elseif ($this->device instanceof GatewayVoip) {
 

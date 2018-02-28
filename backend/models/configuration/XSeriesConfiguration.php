@@ -65,7 +65,8 @@ exit
 wr
 
 ADD;
-                } elseif ($this->device->connections[0]->type_id == 1) {
+                } elseif (count($this->device->connections) == 1) {
+                    if ($this->device->connections[0]->type_id == 1) {
 $add = <<<ADD
 interface {$this->parentPortName}
 shutdown
@@ -89,7 +90,7 @@ exit
 wr
 
 ADD;
-                } elseif ($this->device->connections[0]->type_id == 3) {
+                    } elseif ($this->device->connections[0]->type_id == 3) {
 $add = <<<ADD
 interface {$this->parentPortName}
 shutdown
@@ -113,6 +114,7 @@ exit
 wr
 
 ADD;
+                    }
                 }
             }
         } elseif ($this->device instanceof GatewayVoip) {
