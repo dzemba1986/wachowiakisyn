@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use backend\models\configuration\ECSeriesConfiguration;
 use backend\models\configuration\GSSeriesConfiguration;
 use backend\models\configuration\XSeriesConfiguration;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
@@ -102,8 +103,12 @@ class Camera extends Device
 	    $parentDevice = Device::findOne($parentId);
 	    $parentModelConfType = $parentDevice->model->config;
 	    
-	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
 	    
 	    return $this->conf->add();
 	}
@@ -114,8 +119,12 @@ class Camera extends Device
 	    $parentDevice = Device::findOne($parentId);
 	    $parentModelConfType = $parentDevice->model->config;
 	    
-	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
 	    
 	    return $this->conf->drop();
 	}
@@ -126,8 +135,12 @@ class Camera extends Device
 	    $parentDevice = Device::findOne($parentId);
 	    $parentModelConfType = $parentDevice->model->config;
 	    
-	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	    if ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
 	    
 	    return $this->conf->changeMac($newMac);
 	}
