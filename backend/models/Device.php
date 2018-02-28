@@ -97,7 +97,7 @@ class Device extends ActiveRecord
 				
 		    ['desc', 'string', 'max' => 1000],
 		    
-		    ['mac', 'filter', 'filter' => 'strtolower'],
+		    ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => true],
 		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
 		        return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
@@ -181,7 +181,7 @@ class Device extends ActiveRecord
 	    return $this->hasMany(Tree::className(), ['device' => 'id']);
 	}
 	
-	function getCombinedName() {
+	function getMixName() {
 	    
 	    return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
 	}
