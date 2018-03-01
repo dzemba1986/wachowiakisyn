@@ -14,6 +14,7 @@ use Yii;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\base\Exception;
 use yii\db\Expression;
+use yii\filters\AjaxFilter;
 use yii\filters\VerbFilter;
 use yii\validators\IpValidator;
 use yii\web\Controller;
@@ -30,6 +31,10 @@ class TreeController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            [
+                'class' => AjaxFilter::className(),
+                'only' => ['add-host']
+            ],
         ];
     }
 
@@ -40,102 +45,163 @@ class TreeController extends Controller
         ]);
     }
     
-    public function actionAddHost($connectionId) {
+    /**
+     * @param integer $hostId ID hosta (aktywnego/nieaktywnego) do którego mamy dodać umowę
+     */
+    public function actionAddHost($connectionId, $hostId = null) {
         
         $request = Yii::$app->request;
         
-        if ($request->isAjax) {
-            $connection = Connection::findOne($connectionId);
-            //TODO admin musi mieć możliwość ręcznego sterowania warunkiem czy ma byc add czy join (wyjątki)
-            $allConnections = Connection::find()->where(['and', ['<>', 'type_id', $connection->type_id], ['address_id' => $connection->address_id],
-                ['is not', 'host_id', null], ['close_date' => null]])->count();
+        $model = new AddHostForm();
+        $connection = Connection::findOne($connectionId);
+        
+        if ($request->isPost) {
+            if ($model->load($request->post()) && (is_null($hostId)) || $hostId == 'new') { //tworzy hosta pomimo wszystko
+                $transaction = Yii::$app->getDb()->beginTransaction();
+                try {
+                    $host = new Host();
+                    $link = new Tree();
+                    $ip = new Ip();
+                    
+                    $host->mac = $model->mac;
+                    $host->address_id = $connection->address_id;
+                    $host->status = true;
+                    $host->name = Address::findOne($connection->address_id)->toString(true);
+                    
+                    if (!$host->save()) throw new Exception('Błąd zapisu host');
+                    
+                    $link->device = $host->id;
+                    $link->port = 0;
+                    $link->parent_device = $model->deviceId;
+                    $link->parent_port = $model->port;
+                    
+                    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+                    
+                    $ip->ip = $model->ip;
+                    $ip->subnet_id = $model->subnetId;
+                    $ip->main = true;
+                    $ip->device_id = $host->id;
+                    
+                    if (!$ip->save()) throw new Exception('Błąd zapisu ip');
+                    
+                    $connection->mac = $model->mac;
+                    $connection->device_id = $model->deviceId;
+                    $connection->port = $model->port;
+                    $connection->host_id = $host->id;
+                    $connection->conf_date = date('Y-m-d');
+                    $connection->conf_user = Yii::$app->user->identity->id;
+                    
+                    if (!$connection->save()) throw new Exception('błąd zapisu umowy');
+                    
+                } catch (\Throwable $t) {
+                    $transaction->rollBack();
+                    var_dump($host->errors);
+                    var_dump($link->errors);
+                    var_dump($ip->errors);
+                    exit();
+                }
                 
-                if (empty($allConnections)) {
-                    $model = new AddHostForm();
-                    $model->deviceId = $connection->device_id;
-                    $model->port = $connection->port;
+                $transaction->commit();
+                $this->redirect(['tree/index', 'id' => $host->id . '.0']);
+            } elseif ($model->load($request->post()) && is_int((int) $hostId)) { //przypisuje umowę do nieaktywnego hosta
+                $transaction = Yii::$app->getDb()->beginTransaction();
+                try {
+                    $host = Host::findOne($hostId);
+                    $ip = new Ip();
+                    
+                    $host->status = true;
+                    $host->dhcp = true;
+                    $host->smtp = false;
+                    $host->mac = $model->mac;
+                    
+                    if (!$host->save()) throw new Exception('Błąd zapisu ip');
+                    
+                    $ip->ip = $model->ip;
+                    $ip->subnet_id = $model->subnetId;
+                    $ip->main = true;
+                    $ip->device_id = $hostId;
+                    
+                    if (!$ip->save()) throw new Exception('Błąd zapisu ip');
+                    
+                    $connection->host_id = $hostId;
+                    $connection->conf_date = date('Y-m-d');
+                    $connection->conf_user = Yii::$app->user->identity->id;
+                
+                    if (!$connection->save())
+                        throw new Exception('błąd zapisu umowy');
+                    
+                    $this->redirect(['tree/index', 'id' => $hostId . '.0']);
+                } catch (\Throwable $t){
+                    $transaction->rollBack();
+                    var_dump($connection->errors);
+                    var_dump($host->errors);
+                    var_dump($ip->errors);
+                    exit();
+                }
+                
+                $transaction->commit();
+                $this->redirect(['tree/index', 'id' => $host->id . '.0']);
+            } elseif (is_int((int) $hostId)) { //przypisuje umowę do aktywnego hosta
+                $connection->host_id = $hostId;
+                $connection->conf_date = date('Y-m-d');
+                $connection->conf_user = Yii::$app->user->identity->id;
+                
+                try {
+                    if (!$connection->save())
+                        throw new Exception('błąd zapisu umowy');
+                } catch (\Throwable $t){
+                    var_dump($connection->errors);
+                    exit();
+                }
+                
+                $this->redirect(['tree/index', 'id' => $hostId . '.0']);
+            }
+        } else {
+            $allHosts = Host::find()->select('id, type_id, name, status')->where(['address_id' => $connection->address_id])->all();
+            
+            $hosts = [];
+            foreach ($allHosts as $host) {
+                if (!in_array($connection->type_id, $host->connectionsType)) $hosts[] = $host;
+            }
+            //nie ma w ogóle hosta lub dodanie nowego pomimo znalezienia hostów
+            if ((empty($hosts) && is_null($hostId)) || ($hostId == 'new' && !empty($hosts))) {
+                $model->deviceId = $connection->device_id;
+                $model->port = $connection->port;
+                $model->typeId = $connection->type_id;
+                $model->mac = $connection->mac;
+                $model->address = $connection->address->toString();
+                
+                return $this->renderAjax('add_new_host', [
+                    'model' => $model,
+                    'connectionId' => $connectionId
+                ]);
+            //znalazł hosty i chce przypisać umowę do aktywnego/nieaktywnego
+            } elseif (!empty($hosts) && !is_null($hostId)) {
+                $host = Host::findOne($hostId);
+                if ($host->status) {   
+                    return $this->renderAjax('add_active_host', [
+                        'hostId' => $hostId
+                    ]);
+                } else {
                     $model->typeId = $connection->type_id;
                     $model->mac = $connection->mac;
                     $model->address = $connection->address->toString();
                     
-                    if ($model->load($request->post())) {
-                        
-                        $transaction = Yii::$app->getDb()->beginTransaction();
-                        try {
-                            $host = new Host();
-                            $link = new Tree();
-                            $ip = new Ip();
-                            
-                            $host->mac = $model->mac;
-                            $host->address_id = $connection->address_id;
-                            $host->status = true;
-                            $host->name = Address::findOne($connection->address_id)->toString(true);
-                            
-                            if (!$host->save()) throw new Exception('Błąd zapisu host');
-                            
-                            $link->device = $host->id;
-                            $link->port = 0;
-                            $link->parent_device = $model->deviceId;
-                            $link->parent_port = $model->port;
-                            
-                            if (!$link->save()) throw new Exception('Błąd zapisu linku');
-                            
-                            $ip->ip = $model->ip;
-                            $ip->subnet_id = $model->subnetId;
-                            $ip->main = true;
-                            $ip->device_id = $host->id;
-                            
-                            if (!$ip->save()) throw new Exception('Błąd zapisu ip');
-                            
-                            $connection->mac = $model->mac;
-                            $connection->device_id = $model->deviceId;
-                            $connection->port = $model->port;
-                            $connection->host_id = $host->id;
-                            $connection->conf_date = date('Y-m-d');
-                            $connection->conf_user = Yii::$app->user->identity->id;
-                            
-                            if (!$connection->save()) throw new Exception('błąd zapisu umowy');
-                            
-                        } catch (\Throwable $t) {
-                            $transaction->rollBack();
-                            var_dump($host->errors);
-                            var_dump($link->errors);
-                            var_dump($ip->errors);
-                            exit();
-                        }
-                        
-                        $transaction->commit();
-                        $this->redirect(['tree/index', 'id' => $host->id . '.0']);
-                    } else {
-                        return $this->renderAjax('add_host', [
-                            'model' => $model,
-                        ]);
-                    }
-                } else {
-                    $hosts = Host::find()->select(['id', new Expression("CONCAT(name, ' (', id, ')')")])->where(['and', ['address_id' => $connection->address_id], ['type_id' => 5]])->asArray()->all();
-                    if ($hostId = $request->post('host')) {
-                        $connection->host_id = $hostId;
-                        $connection->conf_date = date('Y-m-d');
-                        $connection->conf_user = Yii::$app->user->identity->id;
-                        
-                        try {
-                            if (!$connection->save())
-                                throw new Exception('błąd zapisu umowy');
-                        } catch (\Throwable $t){
-                            var_dump($connection->errors);
-                            exit();
-                        }
-                        
-                        return 1;
-                    } else {
-                        return $this->renderAjax('join_host', [
-                            'hosts' => $hosts,
-                        ]);
-                    }
+                    return $this->renderAjax('add_inactive_host', [
+                        'model' => $model,
+                        'hostId' => $hostId
+                    ]);
                 }
+            //znalazł hosty i wyświetla wybór hostów lub dodania nowego
+            } elseif (!empty($hosts) && is_null($hostId)) {
+                return $this->renderAjax('add_choise', [
+                    'hosts' => $hosts,
+                    'connection' => $connection,
+                ]);
+            }
         }
     }
-
+    
     public function actionGetChildren($id) {
         
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -151,6 +217,7 @@ class TreeController extends Controller
                 'parent_port',
                 'model_id',
                 'mac',
+                'status',
                 'device.type_id',
                 'icon',
                 'children'
@@ -162,26 +229,32 @@ class TreeController extends Controller
             ->orderBy('parent_port')
             ->all();
         
-        foreach ($nodes as $node){
-        	
-            $ips = Ip::find()->select('ip')->where(['device_id' => $node['device']])->asArray()->all();
-            
-        	$children[] = [
-        		'id' => (int) $node['device'] . '.' . $node['port'],
-        		'text' => $id != 1	?
-        			$model->port[$node['parent_port']].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat']  :
-        			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'],
-        		'name' => $node['concat'],
-        	    'network' => [
-        	        'mac' => $node['mac'],
-        	        'ips' => $ips,
-        	    ],
-        	    'type' => $node['type_id'],
-        		'state' => $node['model_id'] == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
-        		'icon' => false,
-        	    'children' => $node['children']
-        	];
-        }
+        if (!empty($nodes)) {
+        
+            foreach ($nodes as $node){
+            	
+                $ips = Ip::find()->select('ip')->where(['device_id' => $node['device']])->asArray()->all();
+                $text = $node['status'] ?
+                    $model->port[$node['parent_port']].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'] :
+                    $model->port[$node['parent_port']].'	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i><font color="red">'.$node['concat'].'</font>';
+                
+            	$children[] = [
+            		'id' => (int) $node['device'] . '.' . $node['port'],
+            		'text' => $id != 1	? 
+                        $text :
+            			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'],
+            		'name' => $node['concat'],
+            	    'network' => [
+            	        'mac' => $node['mac'],
+            	        'ips' => $ips,
+            	    ],
+            	    'type' => $node['type_id'],
+            		'state' => $node['model_id'] == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
+            		'icon' => false,
+            	    'children' => $node['children']
+            	];
+            }
+        } else $children = [];
         
         return $children;
     }
@@ -202,7 +275,7 @@ class TreeController extends Controller
 	    	} elseif ($validatorMac->validate($str)){
 	    	    $devices = Device::find()->select('id')->where(['and', ["CAST(mac AS varchar)" => $str], ['status' => true]])->asArray()->all();
 	    	} else {
-	    	    $devices = Device::find()->select('id')->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false]])->andWhere(['status' => true])->asArray()->all();
+	    	    $devices = Device::find()->select('id')->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false]])->andWhere(['is not', 'status', null])->asArray()->all();
 	    	}
 	    	
 	    	//przejscie przez wszystkie wyszukane obiekty typu device 
@@ -225,7 +298,7 @@ class TreeController extends Controller
     	return array_reverse($path);
     }
     
-    public function actionListPort($deviceId, $selected = null, $mode = 'free', $install = false) {
+    public function actionListPort($deviceId, $selected = null, $install = false, $mode = 'free') {
         
         $device = Device::findOne($deviceId);
         $model = $device->model;
@@ -240,7 +313,7 @@ class TreeController extends Controller
                         $usePorts[$linkWithDevice->parent_port] = $linkWithDevice->parent_port;
                     }
                     
-                    $freePorts = array_diff_key($model->port, $usePorts);
+                    $freePorts = array_diff_key($model->port->getValue(), $usePorts);
 
                     if ($install){
                         echo '<option value="-1">Brak miejsca</option>';
