@@ -31,12 +31,12 @@ echo DetailView::widget([
 		],
 	    [
 	        'label' => 'DHCP',
-	        'value' => $device->dhcp ? '<font color="green">Aktywny</font>' : '<font color="red">Brak</font>',
+	        'value' => $device->dhcp ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
 	        'format' => 'raw'
 	    ],
 	    [
 	        'label' => 'SMTP',
-	        'value' => $device->smtp ? '<font color="green">Aktywny</font>' : '<font color="red">Brak</font>',
+	        'value' => $device->smtp ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
 	        'format' => 'raw'
 	    ],
 		[
@@ -51,16 +51,18 @@ echo DetailView::widget([
 		[
 			'label' => 'Mac',
 		    'value' =>  Html::a($device->mac, Url::toRoute(['device/change-mac', 'hostId' => $device->id]),['class' => 'change-mac']),
-		    'format' => 'raw'
+		    'format' => 'raw',
+            'visible' => $device->status
 		],
 		[
 		    'label' => 'Skrypty',
 		    'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]) . ' ' . Html::tag('div', '', ['id' => 'message']),
 		    'format' => 'raw',
+		    'visible' => $device->status
 		]
 	]
 ]);
-echo Html::label('Umowy :');
+echo Html::label('Umowy :', null, ['hidden' => !$device->status]);
 echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->connections as $connection) {
@@ -108,7 +110,6 @@ $(function(){
     $('.change-mac').on('click', function(event) {
         
 		$('#modal-change-mac').modal('show')
-			.data('mac', '{$device->mac}')
 			.find('#modal-content-change-mac')
 			.load($(this).attr('href'));
 

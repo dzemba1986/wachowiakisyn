@@ -85,11 +85,17 @@ $form = ActiveForm::begin([
 	
 	<div class="col-md-2">
 		
-		<?= Html::label('Opcje :') ?>
+		<?= Html::label('Opcje :', null, ['hidden' => !$device->status]) ?>
 	
-		<?= $form->field($device, 'dhcp', ['template' => "{label}{input}\n{hint}\n{error}",])->checkbox(['label' => 'DHCP']) ?>
+		<?= $form->field($device, 'dhcp', [
+		    'template' => "{label}{input}\n{hint}\n{error}",
+		    'options' => ['hidden' => !$device->status]
+		])->checkbox(['label' => 'DHCP']) ?>
 		
-		<?= $form->field($device, 'smtp', ['template' => "{label}{input}\n{hint}\n{error}",])->checkbox(['label' => 'SMTP']) ?>
+		<?= $form->field($device, 'smtp', [
+		    'template' => "{label}{input}\n{hint}\n{error}",
+		    'options' => ['hidden' => !$device->status]
+		])->checkbox(['label' => 'SMTP']) ?>
 		
 	</div>
 	
