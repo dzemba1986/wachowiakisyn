@@ -181,14 +181,16 @@ class ConnectionController extends Controller
             
             $connection->close_user = Yii::$app->user->identity->id;
             $connection->close_date = date('Y-m-d H:i:s');
+            $connection->host_id = null;
             
             try {
                 if (!$connection->save()) throw new Exception('Błąd zamknięcia umowy');
                 
                 $transaction->commit();
                 return 1;
-            } catch (Exception $e) {
+            } catch (\Throwable $t) {
                 $transaction->rollBack();
+                var_dump($t->getMessage());
                 var_dump($connection->errors);
                 exit();
             }
