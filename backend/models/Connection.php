@@ -4,12 +4,12 @@ namespace backend\models;
 
 use app\models\Package;
 use backend\modules\task\models\InstallTask;
+use common\models\User;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
-use Yii;
+use yii\db\ActiveRecord;
+use yii\base\Exception;
 
 /**
- * This is the model class for table "{{%connection}}".
- *
  * @property integer $id
  * @property string $ara_id
  * @property string $soa_id
@@ -18,21 +18,22 @@ use Yii;
  * @property string $pay_date
  * @property string $close_date
  * @property string $phone_date
+ * @property date $synch_date
  * @property integer $add_user
  * @property integer $conf_user
  * @property integer $close_user
- * @property integer $nocontract
- * @property integer $vip
- * @property integer $again
+ * @property boolean $nocontract
+ * @property boolean $vip
+ * @property boolean $again
  * @property integer $wire
  * @property integer $socket
- * @property integer $address
+ * @property integer $address_id
  * @property integer $port
- * @property integer $device
- * @property integer $host
+ * @property integer $device_id
+ * @property integer $host_id
  * @property string $mac
- * @property integer $type
- * @property integer $package
+ * @property integer $type_id
+ * @property integer $package_id
  * @property string $phone
  * @property string $phone2
  * @property string $info
@@ -40,35 +41,28 @@ use Yii;
  * @property integer $task_id
  * @property integer $soa_id
  * @property integer $replaced_id
- * @property date $synch_date
- * @property integer $soa_iptv
- * @property Installation $modelInstallationByType
- * @property Installation $modelInstallations
- * @property Address $modelAddress
- * @property Package $modelPackage
- * @property Type $modelType
- * @property User $addUser
- * @property User $configureUser
- * @property InstallTask $task
+ * @property array $installations
+ * @property backend\models\Address $address
+ * @property backend\models\Package $package
+ * @property backend\models\ConnectionType $type
+ * @property common\models\User $addUser
+ * @property common\models\User $configureUser
+ * @property backend\modules\task\models\InstallTask $task
+ * @property backend\models\Host $host
  */
-class Connection extends \yii\db\ActiveRecord
+class Connection extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	const SCENARIO_CLOSE = 'close';
 	const SCENARIO_CREATE_INSTALLATION = 'create_installation';
 	const SCENARIO_TASK = 'task';
-    /**
-     * @inheritdoc
-     */
+
     public static function tableName()
     {
         return '{{connection}}';
     }
 
-    /**
-     * @inheritdoc
-     */
 	public function rules()
 	{
 		return [
@@ -87,42 +81,39 @@ class Connection extends \yii\db\ActiveRecord
 			['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
 			['mac', 'default', 'value'=>NULL],
 			['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
-// 			['mac', 'unique', 'targetClass' => 'backend\models\Host', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-//             	return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-//             }],
 			['mac', 'trim', 'skipOnEmpty' => true],
 				
             ['port', 'integer'],
 			['port', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
 			
-			['device', 'integer'],
-			['device', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
+			['device_id', 'integer'],
+			['device_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
 				
-			['start_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['start_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
 			['start_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
 			['start_date', 'default', 'value' => new \yii\db\Expression('NOW()')],
                       
-            ['conf_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['conf_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
             ['conf_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['conf_date', 'default', 'value'=>NULL],
             
-            ['pay_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['pay_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
             ['pay_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['pay_date', 'default', 'value'=>NULL],
             
-			['phone_date', 'date', 'format'=>'yyyy-MM-dd'],
+		    ['phone_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
 			['phone_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
 			['phone_date', 'default', 'value'=>NULL],
             
-            ['close_date', 'date', 'format'=>'yyyy-MM-dd'],
-            ['close_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
+		    ['close_date', 'date', 'format'=>'yyyy-MM-dd H:i:s', 'message'=>'Zły format'],
+            //['close_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['close_date', 'default', 'value'=>NULL],
             
             ['add_user', 'integer'],
 			['add_user', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],	
             
-            ['address', 'integer'],
-			['address', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],
+            ['address_id', 'integer'],
+			['address_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE],
             
             ['close_user', 'integer'],
 			['close_user', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],
@@ -132,8 +123,8 @@ class Connection extends \yii\db\ActiveRecord
 			[
 				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'again',
-				'address', 'phone', 'phone2', 'info', 'info_boa',
-				'port', 'device', 'mac', 'type', 'package', 'task_id'],
+				'address_id', 'phone', 'phone2', 'info', 'info_boa',
+				'port', 'device_id', 'mac', 'type_id', 'package_id', 'task_id'],
 				'safe'
 			],	
 		];
@@ -143,21 +134,18 @@ class Connection extends \yii\db\ActiveRecord
 	{
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['id', 'soa_id', 'ara_id', 'start_date', 'add_user', 'nocontract', 'vip', 'port', 'mac',
-				'phone', 'phone2', 'info_boa', 'device', 'package', 'address', 'type', 'phone_date'
+				'phone', 'phone2', 'info_boa', 'device_id', 'package_id', 'address_id', 'type_id', 'phone_date'
 		];
 		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'pay_date', 'phone_date', 'close_date', 'nocontract', 'vip', 'port',
-				'mac', 'phone', 'phone2', 'info', 'info_boa', 'device', 'wire', 'socket'
+				'mac', 'phone', 'phone2', 'info', 'info_boa', 'device_id', 'wire', 'socket'
 		];
 		$scenarios[self::SCENARIO_CLOSE] = ['close_date', 'close_user'];
-		$scenarios[self::SCENARIO_CREATE_INSTALLATION] = ['port', 'device', 'info'];
+		$scenarios[self::SCENARIO_CREATE_INSTALLATION] = ['port', 'device_id', 'info'];
 		$scenarios[self::SCENARIO_TASK] = ['task_id', 'mac'];
 		 
 		return $scenarios;
 	}
 
-    /**
-     * @inheritdoc
-     */
 	public function attributeLabels()
 	{
 		return [
@@ -174,15 +162,12 @@ class Connection extends \yii\db\ActiveRecord
 			'synch_date' => 'Synchronizacja',	
 			'add_user' => 'Dodał',
 			'conf_user' => 'Skonfigurował',
-			'install_user' => 'Zainstalował',
-			'address' => 'Adres ID',
-			'device' => 'Urządzenie',
-			'switch_string' => 'Switch',
+			'address_id' => 'Adres',
+			'device_id' => 'Urządzenie',
 			'port' => 'Port',
 			'mac' => 'Mac',
-			'type' => 'Usługa',
-			'package' => 'Pakiet',		
-			'speed' => 'Prędkość',
+			'type_id' => 'Usługa',
+			'package_id' => 'Pakiet',		
 			'phone' => 'Tel. domowy',
 			'phone2' => 'Tel. komórkowy',
 			'info' => 'Info',
@@ -198,71 +183,82 @@ class Connection extends \yii\db\ActiveRecord
 			'house_detail' => 'Klatka',	
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
-			'typeName' => 'Usługa',
 		];
 	}
+	
+    public function getInstallations($type = false) {
     
-    public function getModelInstallationsByType(){
-        
-        return $this->getModelInstallations()->where([Installation::tableName().'.type' => $this->getInstallationType()])->all();
-        
-    	//return Installation::find()->where(['installation.type' => $ins_type])->andWhere(['installation.address' => $this->address])->all();
+        if (!$type)
+            return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true]);
+        else {
+            return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true, 'type_id' => $this->type->installation_type]);
+        }
     }
     
-    //Instalacje na tym samym adresie różnego typu niż umowa
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getModelInstallations(){
+    public function getAddress(){
     
-    	//Connection ma wiele instalacji na danym adresie
-    	return $this->hasMany(Installation::className(), ['address'=>'address'])->where(['status' => true]);
+    	return $this->hasOne(Address::className(), ['id' => 'address_id']);
     }
     
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getModelAddress(){
-    
-    	//Connection ma tylko 1 Address
-    	return $this->hasOne(Address::className(), ['id'=>'address']);
-    }
-    
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getTask(){
     
-    	//Connection ma zgłoszone zdarzenie
-    	return $this->hasOne(InstallTask::className(), ['id'=>'task_id']);
+    	return $this->hasOne(InstallTask::className(), ['id' => 'task_id']);
     }
     
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getModelType(){
+    public function getType(){
     
-    	return $this->hasOne(Type::className(), ['id'=>'type']);
+    	return $this->hasOne(ConnectionType::className(), ['id' => 'type_id']);
     }
     
-    public function getModelPackage(){
+    public function getPackage(){
     
-    	return $this->hasOne(Package::className(), ['id'=>'package']);
+    	return $this->hasOne(Package::className(), ['id' => 'package_id']);
     }
     
-    public function getInstallationType() {
-    	
-    	if ($this->type == 1){ //jeżeli internet
-    		return 1; //ethernet
-    	}
-    	elseif ($this->type == 2){ //jeżeli telefon
-    		return 2; //kabel telefoniczny
-    	}
-    	elseif ($this->type == 3){ //jeżeli telewizja
-    		if ($this->package == 5) 
-    			return 1; //ethernet
+    public function getConfUser() {
+        
+        return $this->hasOne(User::className(), ['id' => 'conf_user']);
+    }
+    
+    public function getCloseUser() {
+        
+        return $this->hasOne(User::className(), ['id' => 'close_user']);
+    }
+    
+    public function getHost() {
+        
+        return $this->hasOne(Host::className(), ['id' => 'host_id']);
+    }
+    
+    function isActive() : bool {
+        
+        return is_null($this->close_date) ? true : false;
+    }
+    
+    function canConfigure() : bool {
+        
+        return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 ? true : false;
+    }
+    
+    function afterSave($insert, $changedAttributes) {
+        
+        if (!$insert) {
+            
+            if (array_key_exists('close_date', $changedAttributes) && is_null($changedAttributes['close_date'])) {
+                if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
+                    $host = Host::findOne($changedAttributes['host_id']);
+                    $host->status = false;
+                    $host->dhcp = false;
+                    $host->smtp = false;
+                    $host->mac = null;
+                    
+                    if (!$host->save()) throw new Exception('Błąd zapisu hosta');
+                    
+                    foreach ($host->ips as $ip)
+                        if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
 
-    	//rozbudować w miarę potrzeby
-    	}
+                }
+            }
+        }
     }
 }

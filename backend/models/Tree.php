@@ -2,29 +2,22 @@
 
 namespace backend\models;
 
-use Yii;
-use backend\models\Device;
-
 /**
- * This is the model class for table "tbl_agregation".
- *
  * @property intiger $device
- * @property string $port
- * @property string $parent_device
- * @property string $parent_port
+ * @property integer $port
+ * @property integer $parent_device
+ * @property integer $parent_port
  */
+
 class Tree extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
+    public static function tableName() {
+        
         return '{{agregation}}';
     }
 
-    public function rules()
-    {
+    public function rules() {
+        
         return [	
         		
         	['device', 'required', 'message'=>'Wartość wymagana'],
@@ -34,44 +27,23 @@ class Tree extends \yii\db\ActiveRecord
         	['parent_device', 'required', 'message'=>'Wartość wymagana'],
         		
         	['parent_port', 'required', 'message'=>'Wartość wymagana'],
-//         		['device', 'port', 'parent_device', 'parent_port'],
-//         	 	'integer'
-//         	],
-//            [//artybuty wymagane
-//            	['title', 'start', 'end', 'address', 'add_user', 'add'], 
-//            	'required',	'message'=>'Wartość jest wymagana',
-//            ],
-            [
-            	['device', 'port', 'parent_device', 'parent_port'], 
-				'safe',
-			],
+            
+            [['device', 'port', 'parent_device', 'parent_port'], 'safe'],
         ];
     }
     
-    public function getModelDevice(){
+    public function getDevice() {
     
-    	// agregacja dotyczy 1 urządzenia
-    	return $this->hasOne(Device::className(), ['id'=>'device']);
+    	return $this->hasOne(Device::className(), ['id' => 'device']);
     }
     
-    public function getParents($id) {
+    public function getParent() {
         
-        //SELECT parent_device FROM Agregacja WHERE device='$dev_id' AND uplink='1' LIMIT 1
-        
-    }
-	
-    public static function getIdDevice($id){
-    	
-    	return (int) substr($id, 0, stripos($id, '.'));
+        return $this->hasOne(Device::className(), ['id' => 'parent_device']);
     }
     
-    public static function getPortDevice($id){
-    	
-    	return (int) substr($id, stripos($id, '.') + 1, stripos($id, '-') - stripos($id, '.') + 1);
-    }
-
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
+        
         return [
             'device' => 'Urządzenie',
             'port' => 'Port',

@@ -1,7 +1,7 @@
 <?php 
 use app\models\Package;
-use backend\models\Address;
-use backend\models\Type;
+use backend\models\AddressShort;
+use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
         ],          
         [
         	'attribute' => 'start_date',
-        	'value'=> 'start_date',
+        	'value' => 'start_date',
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -79,43 +79,43 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
         	],
         	'options' => ['id'=>'start', 'style'=>'width:10%;'],
         ],
-        [	
-            'attribute'=>'street',
-            'value'=>'modelAddress.ulica',
-            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
+        [
+            'attribute' => 'street',
+            'value' => 'address.ulica',
+            'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
             'options' => ['style'=>'width:12%;'],
-        ],	
+        ],
         [
-            'attribute'=>'house',
-            'value'=>'modelAddress.dom',
+            'attribute' => 'house',
+            'value' => 'address.dom',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'house_detail',
-            'value'=>'modelAddress.dom_szczegol',
+            'attribute' => 'house_detail',
+            'value' => 'address.dom_szczegol',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'flat',
-            'value'=>'modelAddress.lokal',
+            'attribute' => 'flat',
+            'value' => 'address.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'type',
-            'value'=>'modelType.name',
-            'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+            'attribute' => 'type_id',
+            'value' => 'type.name',
+            'filter' => ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'),
             'options' => ['style'=>'width:5%;'],
         ],
         [
-	        'attribute'=>'package',
-	        'value'=>'modelPackage.name',
-	        'filter'=> Html::activeDropDownList($searchModel, 'package', ArrayHelper::map(Package::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
-	        'options' => ['style'=>'width:5%;'],
+            'attribute' => 'package_id',
+            'value' => 'package.name',
+            'filter' => ArrayHelper::map(Package::find()->all(), 'id', 'name'),
+            'options' => ['style'=>'width:5%;'],
         ],
         [
-	        'class'=>'kartik\grid\BooleanColumn',
-	        'header'=>'Umowa',
-	        'attribute'=>'nocontract',
+	        'class' => 'kartik\grid\BooleanColumn',
+	        'header' => 'Umowa',
+	        'attribute' => 'nocontract',
 	        'trueLabel' => 'Nie',
 	        'falseLabel' => 'Tak',
 	        'trueIcon' => GridView::ICON_INACTIVE,
@@ -123,7 +123,7 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
 	        'options' => ['style'=>'width:5%;'],
         ],
         [
-            'class'=>'kartik\grid\BooleanColumn',
+            'class' => 'kartik\grid\BooleanColumn',
             'attribute' => 'socket',
             'header' => 'Gniazdo',
             'options' => ['style'=>'width:7%;'],
@@ -188,7 +188,7 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    //5000 => 5000,
+                    2000 => 2000,
                 ],
                 'template' => '{list}',
             ]),

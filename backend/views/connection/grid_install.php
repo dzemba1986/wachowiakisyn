@@ -1,7 +1,6 @@
 <?php 
-use backend\models\Address;
-use backend\models\Task;
-use backend\models\Type;
+use backend\models\AddressShort;
+use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
@@ -73,9 +72,10 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
 	},
 	'columns' => [
         [
-			'header'=>'Lp.',
-			'class'=>'yii\grid\SerialColumn',
-           	'options'=>['style'=>'width: 4%;'],
+			'header' => 'Lp.',
+			'class' => 'kartik\grid\SerialColumn',
+           	'options' => ['style'=>'width: 4%;'],
+            'mergeHeader' => true
 		],
         [
             'class' => 'kartik\grid\ExpandRowColumn',
@@ -103,45 +103,45 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
         			'endDate' => '0d',
         		]
         	],
-        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        	'options' => ['id'=>'start', 'style'=>'width:13%;'],
         ],
         [	
-            'attribute'=>'street',
-            'value'=>'modelAddress.ulica',
-            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
+            'attribute' => 'street',
+            'value' => 'address.ulica',
+            'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
             'options' => ['style'=>'width:15%;'],
         ],	
         [
-            'attribute'=>'house',
-            'value'=>'modelAddress.dom',
+            'attribute' => 'house',
+            'value' => 'address.dom',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'house_detail',
-            'value'=>'modelAddress.dom_szczegol',
+            'attribute' => 'house_detail',
+            'value' => 'address.dom_szczegol',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'flat',
-            'value'=>'modelAddress.lokal',
+            'attribute' => 'flat',
+            'value' => 'address.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
        	[
-           	'attribute'=>'flat_detail',
-           	'value'=>'modelAddress.lokal_szczegol',
+           	'attribute' => 'flat_detail',
+           	'value' => 'address.lokal_szczegol',
            	'options' => ['style'=>'width:10%;'],
        	],
         [
-            'attribute'=>'type',
-            'value'=>'modelType.name',
-            'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+            'attribute' => 'type_id',
+            'value' => 'type.name',
+            'filter' => ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'),
             'options' => ['style'=>'width:5%;'],
         ],
         [
             'header' => 'Kabel',
             'format' => 'raw',
-            'value' => function ($data){
-                return Html::a('dodaj', Url::to(['installation/create', 'conId' => $data->id]), ['class' => 'create-installation']);
+            'value' => function ($model, $key){
+                return Html::a('dodaj', Url::to(['installation/create', 'connectionId' => $key]), ['class' => 'create-installation']);
             },            
             'options' => ['style'=>'width:7%;'],
         ],
@@ -159,9 +159,9 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
         	'attribute' => 'task_id',
         	'label' => 'Montaż',
         	'format' => 'raw',
-        	'value' => function ($data){
-        		if ($data->task)
-        			return date("Y-m-d", strtotime($data->task->start));
+        	'value' => function ($model){
+        		if ($model->task)
+        			return date("Y-m-d", strtotime($model->task->start));
             },
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
@@ -174,20 +174,24 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
         			'todayHighlight' => true,
         		]
         	],
-        	'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        	'options' => ['id'=>'start', 'style'=>'width:13%;'],
         ],
         [   
             'header' => PageSize::widget([
                 'defaultPageSize' => 100,
+                'pageSizeParam' => 'per-page',
                 'sizes' => [
                     10 => 10,
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
                 ],
-                'template' => '{list}',
+                'label' => 'Ilość',
+                'template' => '{label}{list}',
+                'options' => ['class'=>'form-control'],
             ]),
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
+            'mergeHeader' => true,
             'template' => '{view} {update}',
         ],              
     ]

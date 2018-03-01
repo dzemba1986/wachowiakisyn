@@ -2,17 +2,16 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\web\Controller;
-use backend\models\Subnet;
-use backend\models\Ip;
-use IPBlock;
-use yii\helpers\ArrayHelper;
-use backend\models\IpSearch;
 use backend\models\Device;
-use backend\models\Dhcp;
-use backend\models\HistoryIp;
 use backend\models\HistoryIpSearch;
+use backend\models\Ip;
+use backend\models\IpSearch;
+use backend\models\Subnet;
+use IPBlock;
+use Yii;
+use yii\helpers\ArrayHelper;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class IpController extends Controller
 {  
@@ -28,102 +27,72 @@ class IpController extends Controller
 			return null;
 	}
 	
-	public function actionUpdateByDevice($device)
-	{
-		if(!is_null($device)){
-			$modelIps = Device::findOne($device)->modelIps;
-			if(Device::findOne($device)->type == 5 && isset(Device::findOne($device)->modelIps[0])){
-				$oldSubnetId = Device::findOne($device)->modelIps[0]->subnet;
-			}
-		} else {
-			$modelIps = [];
-		}
-		
-		$request = Yii::$app->request;
-		
-		if ($request->isAjax){
-			if(!empty($request->post('network')) && $request->post('save')){
-				$newModelIps = [];
-				$index = 0;
-				foreach ($request->post('network') as $net){
-					$newModelIp = new Ip();
-					$newModelIp->ip = $net['ip'];
-					$newModelIp->subnet = $net['subnet'];
-					$newModelIp->main = $index == 0 ? true : false;
-					$newModelIp->device = $device;
-					$index++;
-					 
-					$newModelIps[] = $newModelIp;
-				}
-					 
-				foreach ($modelIps as $modelIp){
-					
-					if (Device::findOne($device)->type == 5){
-						
-						$modelHistoryIp = HistoryIp::findOne(['ip' => $modelIp->ip, 'address' => Device::findOne($device)->address, 'to_date' => null]);
-						$modelHistoryIp->to_date = date('Y-m-d H:i:s');
-						
-						try {
-							if(!($modelHistoryIp->save()))
-								throw new Exception('Problem z zapisem histori ip');
-						} catch (Exception $e) {
-							var_dump($modelHistoryIp->errors);
-							exit();
-						}
-					}
-					
-					$modelIp->delete();
-				}
-				 
-				foreach ($newModelIps as $newModelIp){
-							 
-					try {
-						if(!$newModelIp->save())
-							throw new Exception('Problem z zapisem adresu ip');
-						
-						if (Device::findOne($device)->type == 5){
-							
-							$modelHistoryIp = new HistoryIp();
-							
-							$modelHistoryIp->scenario = HistoryIp::SCENARIO_CREATE;
-							$modelHistoryIp->ip = $newModelIp->ip;
-							$modelHistoryIp->from_date = date('Y-m-d H:i:s');
-							$modelHistoryIp->address = Device::findOne($device)->address;
-							
-							if(!($modelHistoryIp->save()))
-								throw new Exception('Problem z zapisem histori ip');
-						}
-							
-					} catch (Exception $e) {
-						var_dump($newModelIp->errors);
-						var_dump($modelHistoryIp->errors);
-						var_dump($e->getMessage());
-						exit();
-					}
-				}
-				
-				if (Device::findOne($device)->type == 5 && isset($oldSubnetId)){
-					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
-				}
-				
-				return 1;
-				
-			} elseif ($request->post('save')){
-				
-				foreach ($modelIps as $modelIp)
-					$modelIp->delete();
-				
-					if (Device::findOne($device)->type == 5 && isset($oldSubnetId)){
-					Dhcp::generateFile([$oldSubnetId, Device::findOne($device)->modelIps[0]->subnet]);
-				}
-				
-				return 1;
-			} else {
-				return $this->renderAjax('update_by_device', [
-					'modelIps' => $modelIps,
-				]);
-			}
-		}
+	public function actionUpdate($deviceId) {  //FIXME zapomniałem o generowaniu DHCP
+	    
+	    $request = \Yii::$app->request;
+	    $transaction = \Yii::$app->db->beginTransaction();
+	    
+	    if ($request->isAjax) {
+	        
+	        if (is_null($deviceId)) 
+	            return "Parametr $deviceId jest null'em";
+	        
+            $device = Device::findOne($deviceId);
+            $ips = $device->ips;
+	        
+            if ($request->post('save')){
+                if ($nets = $request->post('network')) {
+                    $newIps = [];
+                    
+                    $index = 0;
+                    foreach ($nets as $net) {
+                        $newIp = new Ip();
+                        $newIp->ip = $net['ip'];
+                        $newIp->subnet_id = $net['subnet'];
+                        $newIp->device_id = $device->id;
+                        $newIp->main = $index == 0 ? true : false;
+                        $newIps[] = $newIp;
+                        
+                        $index++;
+                    }
+                    
+                    try {
+                        foreach ($ips as $ip) {
+                            $ip->delete();
+                        }
+                        
+                        foreach ($newIps as $newIp) {
+                            if (!$newIp->save()) throw new \Exception('Problem z zapisem adresu ip');
+                        }
+                    } catch (\Throwable $t){
+                        $transaction->rollBack();
+                        var_dump($t->getMessage());
+                        exit();
+                    }
+                    
+                    $transaction->commit();
+                    return 1;
+                } else {
+                    try {
+                        foreach ($ips as $ip){
+                            $ip->delete();
+                        }
+                    }
+                    catch (\Throwable $t){
+                        $transaction->rollBack();
+                        var_dump($t->getMessage());
+                        exit();
+                    }
+                    
+                    $transaction->commit();
+                    return 1;
+                }
+            } else {
+                return $this->renderAjax('update', [
+                    'ips' => $ips,
+                ]);
+            }
+	    }
 	}
 	
 	public function actionSelectList($subnet, $ip = null, $mode = 'all')
@@ -155,7 +124,7 @@ class IpController extends Controller
 					}
 					break;
 				case 'free':
-					$useIps = ArrayHelper::map(Ip::find()->where(['subnet' => $subnet])->all(), 'ip', 'ip');
+					$useIps = ArrayHelper::map(Ip::find()->where(['subnet_id' => $subnet])->all(), 'ip', 'ip');
 					$freeIps = array_diff($allIps, $useIps);
 					
 					if(isset($ip)){
@@ -261,12 +230,12 @@ class IpController extends Controller
     
     public function actionHistory(){
     	
-    	$searchModel = new HistoryIpSearch();
-    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    	$historyIp = new HistoryIpSearch();
+    	$dataProvider = $historyIp->search(Yii::$app->request->queryParams);
     	
     	return $this->render('history', [
-    			'searchModel' => $searchModel,
-    			'dataProvider' => $dataProvider,
+			'historyIp' => $historyIp,
+			'dataProvider' => $dataProvider,
     	]);
     }
 

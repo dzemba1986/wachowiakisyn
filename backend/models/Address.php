@@ -2,8 +2,9 @@
 
 namespace backend\models;
 
-use backend\models\Installation;
+use backend\modules\task\models\InstallTask;
 use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table 'address'.
  *
@@ -22,7 +23,12 @@ use yii\db\ActiveRecord;
  * @property string $lokal
  * @property string $lokal_szczegol
  * @property string $pietro
+ * @property Installation[] $installations
+ * @property Device[] $devices
+ * @property InstallTask[] $tasks
+ * @property Connection[] $connections
  */
+
 class Address extends ActiveRecord
 {
 	const SCENARIO_UPDATE = 'update';
@@ -33,8 +39,8 @@ class Address extends ActiveRecord
 	}
 	
 	public function rules() : array {
-		
-		return [
+
+	    return [
 			['t_ulica', 'required', 'message' => 'Wartość wymagana'],
 				
 			['dom', 'string', 'min' => 1, 'max' => 10],
@@ -136,9 +142,9 @@ class Address extends ActiveRecord
 					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol;
 			else
 				if ($this->lokal)
-					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol . 'p' . $this->pietro;
 				else
-					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . ' (piętro ' . $this->pietro . ')';
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . 'p' . $this->pietro;
 				
 		} else {
 			if (empty($this->pietro))
@@ -170,26 +176,22 @@ class Address extends ActiveRecord
 	
 	public function getInstallations(){
 	
-		//Wiele instalacji na danym adresie
 		return $this->hasMany(Installation::className(), ['address'=>'id']);
 	}
 	
 	public function getConnections(){
 	
-		//Wiele umów na danym adresie
 		return $this->hasMany(Connection::className(), ['address'=>'id']);
 	}
 	
-	public function getModelsDevice(){
+	public function getDevices(){
 	
-		//Wiele urządzeń na danym adresie
 		return $this->hasMany(Device::className(), ['address'=>'id']);
 	}
 	
-	public function getModelsTask(){
+	public function getTasks(){
 	
-		//Wiele zadań na danym adresie
-		return $this->hasMany(Task::className(), ['address'=>'id']);
+		return $this->hasMany(InstallTask::className(), ['address'=>'id']);
 	}
 	
 	private function getShortAddress(){

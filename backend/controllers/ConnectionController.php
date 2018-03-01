@@ -2,17 +2,14 @@
 
 namespace backend\controllers;
 
-use Yii;
 use backend\models\Connection;
 use backend\models\ConnectionSearch;
+use Exception;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use backend\models\Device;
-use backend\models\Dhcp;
-use yii\widgets\ActiveForm;
-use backend\models\HistoryIp;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -27,7 +24,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'validation'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'close'],
         				'roles' => ['@']	
         			]	
         		]
@@ -42,10 +39,6 @@ class ConnectionController extends Controller
         ];
     }
 
-    /**
-     * Lists all Connection models.
-     * @return mixed
-     */
     public function actionIndex($mode = 'nopay')
     {
         $searchModel = new ConnectionSearch();
@@ -96,27 +89,20 @@ class ConnectionController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Connection model.
-     * @param string $id
-     * @return mixed
-     */
     public function actionView($id)
     {
     	if(Yii::$app->request->isAjax)
-    	
+            $model = $this->findModel($id);
+    	    
             return $this->renderAjax('view', [
-                'model' => $this->findModel($id),
+                'model' => $model,
+                'installations' => $model->installations, 
             ]);
     }
 
-    /**
-     * Creates a new Connection model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
+        //TODO należy udostepnić dodawanie ankiet przez serwis
         $model = new Connection();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -128,67 +114,40 @@ class ConnectionController extends Controller
         }
     }
 
-    /**
-     * Updates an existing Connection model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $modelConnection = $this->findModel($id);
-        $modelConnection->scenario = Connection::SCENARIO_UPDATE;
+    public function actionUpdate($id) {
         
         $request = Yii::$app->request;
-
+        
         if ($request->isAjax){
-	        if ($modelConnection->load(Yii::$app->request->post())) {
-	        	
-	        	$transaction = Yii::$app->getDb()->beginTransaction();
-	        	
-	        	try {
-	        		if (is_null($modelConnection->getOldAttribute('cloase_date')) && $modelConnection->close_date){
-	        			
-	        			if ($modelConnection->host && $modelConnection->type == 1) {
-		        			
-		        			$modelDevice = Device::findOne($modelConnection->host);
-		        			$modelHistoryIp = HistoryIp::findOne(['ip' => $modelDevice->modelIps[0]->ip, 'address' => $modelDevice->address, 'to_date' => null]);
-		        			$subnet = $modelDevice->modelIps[0]->modelSubnet->id;
-		        			
-		        			$modelDevice->modelTree[0]->delete();
-		        			$modelDevice->modelIps[0]->delete();
-		        			$modelHistoryIp->to_date = date('Y-m-d H:i:s');
-		        			
-		        			if(!($modelHistoryIp->save()))
-		        				throw new Exception('Problem z zapisem histori ip');
-		        			
-		        			$modelDevice->delete();
-		        			
-		        			$modelConnection->host = null;
-		        			
-		        			Dhcp::generateFile([$subnet]);
-	        			}
-	        		}
-	        		
-	        		$modelConnection->close_user = Yii::$app->user->identity->id;
-	        		
-	        		if(!($modelConnection->save()))
-	        			throw new Exception('Problem z zapisem połączenia');
-	        		
-	        		$transaction->commit();
-	        		
-        			return 1;
-	        	} catch (Exception $e) {
-	        		$transaction->rollBack();
-	        		return 0;
-	        	}
-	        } else {
-	            return $this->renderAjax('update', [
-	                'model' => $modelConnection,
-	            ]);
-	        }
+            $connection = $this->findModel($id);
+            $connection->scenario = Connection::SCENARIO_UPDATE;
+            
+            $allConnections = Connection::find()->where([
+                'and', 
+                ['<>', 'type_id', $connection->type_id], 
+                ['address_id' => $connection->address_id], 
+                ['is not', 'host_id', null]])
+            ->count();
+            
+            if ($connection->load($request->post())) {
+                try {
+                    if (!$connection->save()) throw new Exception('Problem z zapisem połączenia');
+                } catch (\Throwable $t) {
+                    var_dump($connection->errors);
+                    var_dump($t->getMessage());
+                    exit();
+                }
+                
+                return 1;
+            } else {
+                return $this->renderAjax('update', [
+                    'connection' => $connection,
+                    'allConnections' => $allConnections,
+                ]);
+            }
         }
     }
+        
     
     public function actionSync($id)
     {
@@ -212,26 +171,37 @@ class ConnectionController extends Controller
     	}
     }
     
-    public function actionValidation($type = 5){
-    		
-    	$modelConnection = new Connection();
-    
-    	$request = Yii::$app->request;
-    
-    	if ($request->isAjax && $modelConnection->load($request->post())) {
-    			
-    		//var_dump($modelDevice); exit();
-    		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    		return ActiveForm::validate($modelConnection, 'mac');
-    	}
+    function actionClose($id) {
+        
+        $request = Yii::$app->request;
+        $connection = $this->findModel($id);
+        
+        if ($request->post()) {
+            $transaction = \Yii::$app->db->beginTransaction();
+            
+            $connection->close_user = Yii::$app->user->identity->id;
+            $connection->close_date = date('Y-m-d H:i:s');
+            $connection->host_id = null;
+            
+            try {
+                if (!$connection->save()) throw new Exception('Błąd zamknięcia umowy');
+                
+                $transaction->commit();
+                return 1;
+            } catch (\Throwable $t) {
+                $transaction->rollBack();
+                var_dump($t->getMessage());
+                var_dump($connection->errors);
+                exit();
+            }
+        } else {
+            return $this->renderAjax('close', [
+                'connection' => $connection,
+            ]);
+        }
+        
     }
 
-    /**
-     * Deletes an existing Connection model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();

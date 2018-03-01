@@ -2,6 +2,11 @@
 use yii\bootstrap\Tabs;
 use yii\helpers\Url;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\Device $device
+ */
+
 echo Tabs::widget([
 		//'position' => TabsX::POS_LEFT,
 		//'sideways' => true,
@@ -10,11 +15,11 @@ echo Tabs::widget([
 		    [
 		        'label' => 'Dane',
 		    	'active' => true,	
-				'linkOptions' => ['data-url' => Url::toRoute(['device/update', 'id' => $modelDevice->id])]
+				'linkOptions' => ['data-url' => Url::toRoute(['device/update', 'id' => $device->id])]
 		    ],
 			[
 				'label' => 'Adresacja',
-				'linkOptions' => ['data-url' => Url::toRoute(['ip/update-by-device', 'device' => $modelDevice->id])]
+				'linkOptions' => ['data-url' => Url::toRoute(['ip/update', 'deviceId' => $device->id])]
 			],
 			[
 				'label' => 'Historia',

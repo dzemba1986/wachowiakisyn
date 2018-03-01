@@ -9,21 +9,19 @@ class HistoryIpSearch extends HistoryIp
 	public function rules()
 	{
 		return [
-		// The following rule is used by search().
-		// @todo Please remove those attributes that should not be searched.
-		[
-            ['ip'], 'safe'],
-		];
+            [['ip', 'to_date'], 'safe'],
+        ];
 	}
 	
 	public function search($params)
 	{
-		$query = HistoryIp::find()->joinWith('modelAddress');
+		$query = HistoryIp::find()->joinWith('address');
 	
 		$dataProvider = new ActiveDataProvider([
-				'query' => $query,
-				'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
-				]);	
+			'query' => $query,
+			'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,2000]],
+		    'sort' => ['defaultOrder' => ['to_date' => SORT_DESC]]
+		]);	
 		
 		if (!($this->load($params) && $this->validate())) {
 			return $dataProvider;

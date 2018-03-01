@@ -4,28 +4,15 @@ namespace backend\models;
 
 use yii\data\ActiveDataProvider;
 
-/**
- * IpSearch represents the model behind the search form about `app\models\Ip`.
- */
 class IpSearch extends Ip
 {
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see \backend\models\Ip::rules()
-	 */
     public function rules() : array {
     	
         return [
-            [['ip', 'subnet', 'main', 'device'], 'safe'],
+            [['ip', 'subnet_id', 'main', 'device_id'], 'safe'],
         ];
     }
 
-    /**
-     * 
-     * @param array $params
-     * @return \yii\data\ActiveDataProvider
-     */
     public function search($params)
     {
         $query = Ip::find();
@@ -35,14 +22,14 @@ class IpSearch extends Ip
         	'pagination' => ['pageSize' => 100],
         ]);
         
-        $query->joinWith(['modelDevice']);
+        $query->joinWith(['device']);
         
         $dataProvider->setSort([
         	'attributes' => [
         		'ip',
-        		'subnet',
+        		'subnet_id',
         		'main',
-        		'device'	
+        		'device_id'	
         	]
         ]);
 
@@ -52,12 +39,10 @@ class IpSearch extends Ip
         
         $query->filterWhere([
             'ip' => $this->ip,
-        	'subnet' => $this->subnet,
+        	'subnet_id' => $this->subnet_id,
         	'main' => $this->main,
-        	'device' => $this->device	
+        	'device_id' => $this->device_id	
         ]);
-
-        //$query->andFilterWhere(['like', 'desc', $this->desc]);
 
         return $dataProvider;
     }

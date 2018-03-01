@@ -17,8 +17,6 @@ class InstallationSearch extends Installation
 	public function rules()
 	{
 		return [
-		// The following rule is used by search().
-		// @todo Please remove those attributes that should not be searched.
 		[['address', 'wire_length', 'type', 'status',
 		 'wire_date', 'socket_date', 'minSocketDate', 'maxSocketDate',
 		 'wire_user', 'socket_user', 'invoice_date', 'street', 'house', 'house_detail', 'flat', 'flat_detail'], 
@@ -31,13 +29,11 @@ class InstallationSearch extends Installation
 		$query = Installation::find();
 	
 		$dataProvider = new ActiveDataProvider([
-				'query' => $query,
-                'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
-				]);
+			'query' => $query,
+            'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,1000]],
+		]);
 	
-		$query->joinWith(['modelAddress',
-						  'modelType'
-        ]);
+		$query->joinWith(['address', 'type']);
 		
 		$dataProvider->setSort([
 			'defaultOrder' => ['socket_date' => SORT_ASC, 'street' => SORT_ASC, 'house' => SORT_ASC, 'flat' => SORT_ASC],
@@ -48,7 +44,7 @@ class InstallationSearch extends Installation
 				'wire_user',
 				'socket_user',
 				'invoice_date',
-                'type',
+                'type_id',
                 'street' => [
 					'asc' => ['ulica' => SORT_ASC],
 					'desc' => ['ulica' => SORT_DESC],
@@ -77,7 +73,7 @@ class InstallationSearch extends Installation
 				'wire_length' => $this->wire_length,
 				'wire_date' => $this->wire_date,
 				'socket_date' => $this->socket_date,
-				'type' => $this->type,
+				'type_id' => $this->type,
 				'ulica' => $this->street,
 				'dom' => $this->house,
 				'lokal' => $this->flat,

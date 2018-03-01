@@ -2,15 +2,16 @@
 
 namespace backend\controllers;
 
-use Yii;
 use backend\models\Address;
 use backend\models\AddressSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use backend\models\AddressShort;
 use backend\models\AddressShortSearch;
+use Yii;
+use yii\base\Exception;
 use yii\db\Query;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * AddressController implements the CRUD actions for Address model.
@@ -126,38 +127,6 @@ class AddressController extends Controller
     	return $out;
     }
 
-    /**
-     * Updates an existing Address model.
-     * Only ajax request, if update is successful, return 1 else 0.
-     * @param integer $id
-     * @return integer|string
-     */
-    public function actionUpdate($id)
-    {
-    	$request = Yii::$app->request;
-    		
-    	if ($request->isAjax){
-    		$model = $this->findModel($id);
-    		
-    		try {
-    			if ($model->load($request->post())) {
-    				if ($model->save())
-    					return 1;
-    				else 
-    					return 0;
-    			} else {
-    				return $this->renderAjax('update', [
-    					'model' => $model,
-    				]);
-    			}
-    		} catch (Exception $e) {
- 				echo $e->getMessage();   			
-    		}
-    	} else { //TODO może by trzeba było obsłużyć jakoś zapytanie nie ajax'owe?
-    		echo "Zapytanie nie ajax'owe";
-    	}
-    }
-    
     public function actionUpdateShort($id)
     {
     	$request = Yii::$app->request;

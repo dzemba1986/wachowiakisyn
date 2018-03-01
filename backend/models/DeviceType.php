@@ -2,28 +2,22 @@
 
 namespace backend\models;
 
-use backend\models\Device;
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * @property integer $id
  * @property string $name
  * @property boolean $list
  * @property boolean $children
-
  */
-class DeviceType extends \yii\db\ActiveRecord
+
+class DeviceType extends ActiveRecord
 {
 	public static function tableName()
 	{
 		return '{{device_type}}';
 	}
 
-	public function getModelDevice(){
-	
-		return $this->hasMany(Device::className(), ['type'=>'id']);
-	}
-	
 	public function rules()
 	{
 		return [
@@ -33,9 +27,6 @@ class DeviceType extends \yii\db\ActiveRecord
 		];
 	}
 	
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels()
 	{
 		return array(
@@ -46,6 +37,6 @@ class DeviceType extends \yii\db\ActiveRecord
 	
 	public static function findOrderName(){
 		
-		return self::find()->select(['id', 'name'])->orderBy('name');
+	    return self::find()->select(['id', 'name'])->where(['list' => true])->orderBy('name');
 	}
 }

@@ -1,9 +1,11 @@
 <?php
 
 use kartik\grid\GridView;
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\ConnectionSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+
+/**
+ * @var \yii\web\View $title
+ * @var backend\models\HistoryIp $historyIp
+ */
 
 $this->title = 'Historia IP';
 $this->params['breadcrumbs'][] = $this->title;
@@ -13,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'id' => 'ip-history-grid',
         'dataProvider' => $dataProvider,
-    	'filterModel' => $searchModel,
+    	'filterModel' => $historyIp,
         'pjax' => true,
         'pjaxSettings' => [
             'options' => [
@@ -21,10 +23,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ]    
         ],
         'resizableColumns' => FALSE,
-        //'showPageSummary' => TRUE,
     	'export' => false,
         'columns' => [
-            'ip',		
+            'ip',
+            [
+                'attribute' => 'address',
+                'value' => function ($model) {
+                    return $model->address->toString();
+                }
+            ],
         	[
         		'attribute' => 'from_date',
         		'format' => ['date', 'php:Y-m-d H:i:s']
@@ -32,12 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
         	[
         		'attribute' => 'to_date',
         		'format' => ['date', 'php:Y-m-d H:i:s']
-        	],  
-        	[
-        		'attribute' => 'address',
-        		'value' => function ($model) {
-        		    return $model->modelAddress->toString();
-        		},
-        	]
+        	]  
         ]                
     ]); ?>

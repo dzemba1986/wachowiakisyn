@@ -1,7 +1,7 @@
 <?php
 
-use backend\models\Address;
-use backend\models\Type;
+use backend\models\AddressShort;
+use backend\models\ConnectionType;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
                 'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 15px; padding-right: 5px;'], 
                 'template' => "{input}\n{hint}\n{error}",
             ])->widget(Select2::className(), [
-            	'data' => ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->all(), 'ulica', 'ulica'),
+                'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
             	'options' => ['placeholder' => 'Ulica'],
             	'pluginOptions' => [
             		'allowClear' => true
@@ -61,10 +61,10 @@ use yii\widgets\ActiveForm;
         ?>
         
         
-        <?= $form->field($searchModel, 'type', [
+        <?= $form->field($searchModel, 'type_id', [
                 'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 5px; padding-right: 5px;'], 
                 'template' => "{input}\n{hint}\n{error}",
-            ])->dropDownList((ArrayHelper::map(Type::find()->all(), 'id', 'name')), ['prompt' => $searchModel->getAttributeLabel('type')]) 
+            ])->dropDownList((ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name')), ['prompt' => $searchModel->getAttributeLabel('type_id')]) 
         ?>
         
         <?= $form->field($searchModel, 'ara_id', [

@@ -2,49 +2,63 @@
 
 namespace backend\models;
 
-use backend\models\Address;
-use backend\models\DeviceType;
-use backend\models\Model;
-use backend\models\Manufacturer;
-use backend\models\Tree;
-use yii\db\Query;
+use yii\db\ActiveRecord;
+
 /**
- * This is the model class for table "device".
- *
- * The followings are the available columns in table 'device':
  * @property integer $id
- * @property integer $status
+ * @property boolean $status
  * @property string $name
+ * @property string $proper_name
  * @property string $desc
- * @property integer $address
- * @property date $start_date
+ * @property integer $address_id
+ * @property integer $type_id
+ * @property string $mac
+ * @property string $serial
+ * @property integer $model_id
+ * @property integer $manufacturer_id
+ * @property backend\models\Address $address
+ * @property backend\models\Type $type
+ * @property backend\models\Manufacturer $manufacturer
+ * @property backend\models\Model $model
+ * @property Ip[] $ips
+ * @property Tree[] $links
+ * @property string $combinedName 
  */
 
-class Device extends \yii\db\ActiveRecord
+class Device extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
-	const SCENARIO_DELETE = 'delete';
-	const SCENARIO_TOSTORE = 'toStore';
-	const SCENARIO_TOTREE = 'toTree';
 	
-	
-	/**
-	 * @return string the associated database table name
-	 */
-	
-	public static function tableName()
-	{
+	public static function tableName(){
+	    
 		return '{{device}}';
 	}
 	
-	public static function instantiate($row)
-	{
-		switch ($row['type']) {
+	public function attributes(){
+	    
+	    return [
+	        'id',
+	        'status',
+	        'name',
+	        'proper_name',
+	        'desc',
+	        'mac',
+	        'serial',
+	        'address_id',
+	        'type_id',
+	        'manufacturer_id',
+	        'model_id',
+	    ];
+	}
+	
+	public static function instantiate($row){
+	    
+		switch ($row['type_id']) {
 			case Host::TYPE:
-				return new Host() ;
+				return new Host();
 			case Swith::TYPE:
-				return new Swith() ;
+				return new Swith();
 			case Router::TYPE:
 				return new Router();
 			case Camera::TYPE:
@@ -65,135 +79,161 @@ class Device extends \yii\db\ActiveRecord
 				return new self;
 		}
 	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules(){
+	
+	public function rules() {
 		
 		return [
             
             ['status', 'boolean'],
 			['status', 'default', 'value' => null],
-            ['status', 'required', 'message'=>'Pole jest wymagane', 'on' => self::SCENARIO_TOSTORE],
+            ['status', 'required', 'message' => 'Wartość wymagana', 'on' => [self::SCENARIO_UPDATE]],
                       
-            ['name', 'string', 'min' => 2, 'max' => 50],
+		    ['name', 'string', 'min' => 3, 'max' => 30, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    
+		    ['proper_name', 'string', 'min' => 3, 'max' => 30, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    ['proper_name', 'match', 'pattern' => '/^([a-zA-Z]|\d){1}([a-zA-Z]|\d|\.)+[a-zA-Z|\d]{1}$/', 'message' => 'Niewłaściwy format'],
+		    ['proper_name', 'trim', 'skipOnEmpty' => true],
+		    ['proper_name', 'default', 'value' => null],
 				
-			['original_name', 'boolean'],	
+		    ['desc', 'string', 'max' => 1000],
+		    
+		    ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => true],
+		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
+		        return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
+		    }],
+		    ['mac', 'trim', 'skipOnEmpty' => true],
+		    
+		    ['serial', 'filter', 'filter' => 'strtoupper'],
+		    ['serial', 'string', 'max' => 30],
+		    ['serial', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Serial zajęty', 'when' => function ($model, $attribute) {
+		        return $model->{$attribute} !== $model->getOldAttribute($attribute);
+		    }],
+		    ['serial', 'trim'],
+		    
+		    ['manufacturer_id', 'integer'],
+		    
+		    ['model_id', 'integer'],
             
-            ['desc', 'string'],
+            ['address_id', 'integer'],
+            ['address_id', 'required'], //FIXME adres musi być też wymagany w magazynie
             
-            ['address', 'integer'],
-            ['address', 'required', 'on' => self::SCENARIO_TOTREE],
-            
-            ['type', 'integer'],
-            ['type', 'required', 'message'=>'Wartość wymagana'],           
+            ['type_id', 'integer'],
+            ['type_id', 'required', 'message' => 'Wartość wymagana'],           
 				
-			[['status', 'desc', 'address', 'type', 'name', 'original_name'],'safe'],
+			[['status', 'desc', 'address_id', 'type_id', 'name', 'proper_name'], 'safe'],
 		];
 	}
     
-	public function scenarios()
-	{
+	public function scenarios(){
+	    
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ['desc', 'address', 'type'];
-		$scenarios[self::SCENARIO_UPDATE] = ['status', 'name', 'desc', 'original_name'];
-		$scenarios[self::SCENARIO_TOSTORE] = ['address', 'status'];
-		$scenarios[self::SCENARIO_TOTREE] = ['address', 'status'];
-		//$scenarios[self::SCENARIO_DELETE] = ['close_date', 'close_user'];
+		$scenarios[self::SCENARIO_CREATE] = ['desc', 'type_id'];
+		$scenarios[self::SCENARIO_UPDATE] = ['name', 'desc', 'proper_name', 'address_id', 'status'];
 			
 		return $scenarios;
 	}
 	
-    public function beforeValidate()
-    {
-        if (parent::beforeValidate()) {
-
-            if(!empty($this->serial))   
-                $this->serial = strtoupper($this->serial);
-            
-            if(!empty($this->mac))
-              	$this->mac = strtolower($this->mac);
-
-            return true;
-        }
-    }
-
-		/**
-	 * @return array relational rules.
-	 */
-	public function getModelAddress(){
-	
-		//urządzenie ma jeden adres
-		return $this->hasOne(Address::className(), ['id'=>'address']);
-	}
-    
-    public function getModelIps(){
-	
-		//urządzenie ma wiele aresów IP
-		return $this->hasMany(Ip::className(), ['device'=>'id'])->orderBy(['main' => SORT_DESC]);
-	}
-        
-    public function getModelType(){
-	
-		//urządzenie ma jeden typ
-		return $this->hasOne(DeviceType::className(), ['id'=>'type']);
-	}
-    
-    public function getModelModel(){
-	
-		//urządzenie ma jeden typ
-		return $this->hasOne(Model::className(), ['id'=>'model']);
-	}
-    
-    public function getModelManufacturer(){
-	
-		//urządzenie ma jeden typ
-		return $this->hasOne(Manufacturer::className(), ['id'=>'manufacturer']);
-	}
-    
-    public function getModelTree(){
-	
-		//urządzenie ma jeden typ
-		return $this->hasMany(Tree::className(), ['device'=>'id']);
-	}
-    
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-    
-	public function attributeLabels()
-	{
+	public function attributeLabels(){
+	    
 		return array(
 			'id' => 'ID',
 			'status' => 'Status',
             'name' => 'Nazwa',
-			'original_name' => 'Org.',	
+			'proper_name' => 'Nazwa własna',	
             'desc' => 'Opis',
-			'address' => 'Adres',
-			'type' => 'Typ',
-			'manufacturer' => 'Producent'	
+		    'mac' => 'Mac',
+		    'selial' => 'Serial',
+			'address_id' => 'Adres',
+			'type_id' => 'Typ',
+		    'manufacturer_id' => 'Producent',
+		    'model_id' => 'Model',
 		);
 	}
 	
-	public static  function getDeviceList(){
-		
-		$query = new Query();
-		$query->select(['d.id', 'a.t_ulica', new \yii\db\Expression("
-	    		CASE
-	    			WHEN pietro IS NULL THEN
-	    				CONCAT(adrs.name, ' ', dom, dom_szczegol, ' ', '[', ip, ']')
-	    			ELSE
-	    				CONCAT(adrs.name, ' ', dom, dom_szczegol, ' (piętro', pietro, ')', ' ', '[', ip, ']')
-	    		END
-	    	")])
-    	->from('device d')
-    	->join('INNER JOIN', 'address a', 'a.id = d.address')
-    	->join('INNER JOIN', 'ip', 'ip.device = d.id')
-    	->join('INNER JOIN', 'address_short adrs', 'adrs.t_ulica = a.t_ulica')
-    	->where(['status' => true]);
-    	$command = $query->createCommand();
-    	
-    	return $command->queryAll();
+	public function getAddress(){
+	    
+	    return $this->hasOne(Address::className(), ['id' => 'address_id']);
+	}
+	
+	public function getType(){
+	    
+	    return $this->hasOne(DeviceType::className(), ['id' => 'type_id']);
+	}
+	
+	public function getModel(){
+	    
+	    return $this->hasOne(Model::className(), ['id' => 'model_id']);
+	}
+	
+	public function getManufacturer(){
+	    
+	    return $this->hasOne(Manufacturer::className(), ['id' => 'manufacturer_id']);
+	}
+	
+	public function getIps(){
+	    
+	    return $this->hasMany(Ip::className(), ['device_id' => 'id'])->orderBy(['main' => SORT_DESC]);
+	}
+	
+	public function getLinks(){
+	    
+	    return $this->hasMany(Tree::className(), ['device' => 'id']);
+	}
+	
+	function getMixName() {
+	    
+	    return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
+	}
+	
+	public function getParentPortName() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentPortIndex = $this->links[0]->parent_port;
+	    
+	    return $parentDevice->model->port[$parentPortIndex];
+	}
+	
+	public function getParentIp() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    
+	    if (!empty($parentDevice->ips)) return $parentDevice->ips[0]->ip;
+	    else return 'Brak ip';
+	}
+	
+	function isParent() {
+	    
+	    return Tree::find()->where(['parent_device' => $this->id])->count() > 0 ? true : false;
+	}
+	
+	public static function create($typeId) {
+	    switch($typeId) {
+	        case Swith::TYPE:
+	            return new Swith();
+	            break;
+	        case Router::TYPE:
+	            return new Router();
+	            break;
+	        case GatewayVoip::TYPE:
+	            return new GatewayVoip();
+	            break;
+	        case Camera::TYPE:
+	            return new Camera();
+	            break;
+	        case MediaConverter::TYPE:
+	            return new MediaConverter();
+	            break;
+	        case Server::TYPE:
+	            return new Server();
+	            break;
+	        case Virtual::TYPE:
+	            return new Virtual();
+	            break;
+	        default :
+	            return new Device();
+	    }
 	}
 }

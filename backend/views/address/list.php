@@ -1,12 +1,10 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use kartik\grid\GridView;
-use backend\models\Address;
-use yii\base\Widget;
-use yii\helpers\Url;
 use backend\models\AddressShort;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * @var $this yii\web\View
@@ -61,7 +59,7 @@ require_once '_modal_update.php';
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],

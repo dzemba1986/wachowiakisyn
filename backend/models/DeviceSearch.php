@@ -2,8 +2,6 @@
 
 namespace backend\models;
 
-use Yii;
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 class DeviceSearch extends Device
@@ -11,12 +9,7 @@ class DeviceSearch extends Device
 	public function rules()
 	{
 		return [
-		// The following rule is used by search().
-		// @todo Please remove those attributes that should not be searched.
-		[
-            ['id', 'status', 'address', 'mac', 'name', 'type', 'desc', 'model', 'manufacturer', 'serial'],
-            'safe'],
-		];
+		[['status', 'address_id', 'mac', 'name', 'type_id', 'desc', 'model_id', 'manufacturer_id', 'serial'], 'safe'],];
 	}
 	
 	public function search($params)
@@ -24,20 +17,20 @@ class DeviceSearch extends Device
 		$query = Device::find();
 	
 		$dataProvider = new ActiveDataProvider([
-				'query' => $query,
-				'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
-				]);	
+			'query' => $query,
+			'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,2000]],
+		]);	
 		
 		$dataProvider->setSort([
 			'attributes' => [
 				'status',
 				'name',
 				'mac',
-				'address',
-				'type',
-                'serial',
-                'model',
-                'manufacturer',
+			    'serial',
+				'address_id',
+				'type_id',
+                'model_id',
+                'manufacturer_id',
 			]
 		]);
 		
@@ -46,16 +39,13 @@ class DeviceSearch extends Device
 		}
 	
 		$query->andFilterWhere([
-				'id' => $this->id,
-				'status' => $this->status,
-				//'mac' => $this->mac,
-				'address' => $this->address,
-                'type' => $this->type,
-                'manufacturer' => $this->manufacturer,
-                'model' => $this->model,
-				]);
-		
-		
+			'id' => $this->id,
+			'status' => $this->status,
+		    'type_id' => $this->type_id,
+			'address_id' => $this->address_id,
+            'manufacturer_id' => $this->manufacturer_id,
+            'model_id' => $this->model_id,
+		]);
 	
 		$query->andFilterWhere(['like', 'desc', $this->desc])
 			->andFilterWhere(['like', 'name', $this->name])

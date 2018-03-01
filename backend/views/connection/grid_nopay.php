@@ -1,10 +1,7 @@
 <?php 
 use app\models\Package;
-use backend\models\Address;
-use backend\models\Connection;
-use backend\models\Device;
-use backend\models\Task;
-use backend\models\Type;
+use backend\models\AddressShort;
+use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
@@ -65,26 +62,25 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 	},
 	'columns' => [
         [
-			'header'=>'Lp.',
-			'class'=>'yii\grid\SerialColumn',
-           	'options'=>['style'=>'width: 4%;'],
+			'header' => 'Lp.',
+			'class' => 'kartik\grid\SerialColumn',
+           	'options' => ['style'=>'width: 4%;'],
+            'mergeHeader' => true
 		],
         [
             'class' => 'kartik\grid\ExpandRowColumn',
-            'value' => function ($model, $key, $index, $column){
+            'value' => function ($model){
 
                 return GridView::ROW_COLLAPSED;
             },
-            'detail' => function($data){
+            'detail' => function($model){
 
-                return 'Info: '.$data->info.'<br>Info Boa: '.$data->info_boa;
+                return 'Info: '.$model->info.'<br>Info Boa: '.$model->info_boa;
             },
         ],
         [
         	'attribute' => 'start_date',
-        	'value'=> function ($model){
-        		return date("Y-m-d", strtotime($model->start_date));
-            },
+        	'value'=> 'start_date',
             'filterType' => GridView::FILTER_DATE,
             'filterWidgetOptions' => [
             	'model' => $searchModel,
@@ -99,43 +95,43 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             ],
             'options' => ['id'=>'start', 'style'=>'width:10%;'],
         ],
-        [	
-            'attribute'=>'street',
-            'value'=>'modelAddress.ulica',
-            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
-            'options' => ['style'=>'width:15%;'],
+        [
+            'attribute' => 'street',
+            'value' => 'address.ulica',
+            'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
+            'options' => ['style'=>'width:12%;'],
         ],	
         [
-            'attribute'=>'house',
-            'value'=>'modelAddress.dom',
+            'attribute' => 'house',
+            'value' => 'address.dom',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'house_detail',
-            'value'=>'modelAddress.dom_szczegol',
+            'attribute' => 'house_detail',
+            'value' => 'address.dom_szczegol',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'flat',
-            'value'=>'modelAddress.lokal',
+            'attribute' => 'flat',
+            'value' => 'address.lokal',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'type',
-            'value'=>'modelType.name',
-            'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+            'attribute' => 'type_id',
+            'value' => 'type.name',
+            'filter' => ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'),
             'options' => ['style'=>'width:5%;'],
         ],
         [
-	        'attribute'=>'package',
-	        'value'=>'modelPackage.name',
-	        'filter'=> Html::activeDropDownList($searchModel, 'package', ArrayHelper::map(Package::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+	        'attribute' => 'package_id',
+	        'value' => 'package.name',
+            'filter' => ArrayHelper::map(Package::find()->all(), 'id', 'name'),
 	        'options' => ['style'=>'width:5%;'],
         ],
         [
-            'class'=>'kartik\grid\BooleanColumn',
-        	'header'=>'Umowa',
-            'attribute'=>'nocontract',
+            'class' => 'kartik\grid\BooleanColumn',
+        	'header' => 'Umowa',
+            'attribute' => 'nocontract',
             'trueLabel' => 'Nie', 
             'falseLabel' => 'Tak',
         	'trueIcon' => GridView::ICON_INACTIVE,
@@ -143,16 +139,16 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'options' => ['style'=>'width:5%;'],
         ],
 		[
-			'class'=>'kartik\grid\BooleanColumn',
-			'attribute' => 'wire', // it can be 'attribute' => 'tableField' to.
+			'class' => 'kartik\grid\BooleanColumn',
+			'attribute' => 'wire',
 			'header' => 'Kabel',
 			'trueLabel' => 'Tak',
 			'falseLabel' => 'Nie',
 			'options' => ['style'=>'width:7%;'],
 		],
         [
-            'class'=>'kartik\grid\BooleanColumn',
-            'attribute' => 'socket', // it can be 'attribute' => 'tableField' to.
+            'class' => 'kartik\grid\BooleanColumn',
+            'attribute' => 'socket',
             'header' => 'Gniazdo',
         	'trueLabel' => 'Tak',
         	'falseLabel' => 'Nie',
@@ -189,7 +185,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 					'endDate' => '0d',
 				]
 			],
-			'options' => ['id'=>'start', 'style'=>'width:10%;'],
+			'options' => ['style'=>'width:10%;'],
 		],
         [   
             'header' => PageSize::widget([
@@ -201,20 +197,24 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
                     500 => 500,
                     1000 => 1000,
                 ],
-                'template' => '{list}',
+                'label' => 'Ilość',
+                'template' => '{label}{list}',
+                'options' => ['class'=>'form-control'],
             ]),
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
+            'mergeHeader' => true,
             'template' => '{view} {update} {tree}',
+            'options' => ['style' => 'width:6%;'],
         	'buttons' => [
-        		'tree' => function ($model, $data) {
-        			if($data->mac && $data->port >= 0 && $data->device && !$data->nocontract && !$data->host && $data->wire > 0 && is_null($data->close_date)){
-        				$url = Url::toRoute(['tree/add', 'id' => $data->id, 'host' => true]);
+        		'tree' => function ($url, $model, $key) {
+        			if($model->canConfigure()){
+        				$url = Url::toRoute(['tree/add-host', 'connectionId' => $key]);
 	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
 	        				'title' => \Yii::t('yii', 'Zamontuj'),
 	        				'data-pjax' => '0',
 	        			]);
-        			} elseif ($data->host) {
-        				$url = Url::toRoute(['tree/index', 'id' => $data->host . '.0']);
+        			} elseif ($model->host_id) {
+        				$url = Url::toRoute(['tree/index', 'id' => $model->host_id . '.0']);
         				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
         					'title' => \Yii::t('yii', 'SEU'),
         					'data-pjax' => '0',

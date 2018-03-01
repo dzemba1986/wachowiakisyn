@@ -2,91 +2,160 @@
 
 namespace backend\models;
 
-use backend\models\Address;
-use backend\models\Model;
-use yii\helpers\ArrayHelper;
+use backend\models\configuration\ECSeriesConfiguration;
+use backend\models\configuration\GSSeriesConfiguration;
+use backend\models\configuration\XSeriesConfiguration;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
+use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "device".
- *
- * The followings are the available columns in table 'device':
- * @property integer $id
- * @property integer $status
- * @property string $name
- * @property integer $mac
- * @property string $desc
- * @property integer $address
- * @property integer $type
+ * @property boolean $dhcp
+ * @property boolean $smtp
+ * @property backend\models\Connection[] $connections
  */
 
-class Host extends Device
-{
-	const TYPE = 5; //id w tabeli device_type dla Hosta
+class Host extends Device {
+    
+	const TYPE = 5;
+	private $conf;
 	
-	public function init()
-	{
-		$this->type = self::TYPE;
+	public function init() {
+		
+	    $this->type_id = self::TYPE;
 		parent::init();
 	}
 	
-	public static function find()
-	{
-		return new DeviceQuery(get_called_class(), ['type' => self::TYPE]);
+	public function attributes() {
+	    
+	    return ArrayHelper::merge(
+	        parent::attributes(),
+	        [
+	            'dhcp',
+	            'smtp'
+	        ]
+	    );
 	}
 	
-	public function beforeSave($insert)
-	{
-		$this->type = self::TYPE;
-		return parent::beforeSave($insert);
-	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules(){
+	public function rules() {
 		
         return ArrayHelper::merge(
             parent::rules(),
             [
-            	['mac', 'filter', 'filter' => function($value) { return strtolower($value); }],
-            	['mac', 'string', 'min'=>12, 'max'=>17, 'tooShort'=>'Za mało znaków', 'tooLong'=>'Za dużo znaków'],
-            	['mac', 'required', 'message'=>'Wartość wymagana'],
-            	['mac', MacaddressValidator::className(), 'message'=>'Zły format'],
-            	['mac', 'unique', 'targetClass' => 'backend\models\Host', 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-            		return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-            	}],
-            	['mac', 'trim', 'skipOnEmpty' => true],
+                ['mac', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model) {return $model->status;}],
+                ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
+                
+                ['dhcp', 'boolean'],
+                ['dhcp', 'default', 'value' => true],
+                ['dhcp', 'required', 'message' => 'Wartość wymagana'],
+                
+                ['smtp', 'boolean'],
+                ['smtp', 'default', 'value' => false],
+                ['smtp', 'required', 'message' => 'Wartość wymagana'],
             	
-                [['mac'], 'safe'],
+                [['mac', 'dhcp', 'smtp'], 'safe'],
             ]
         );       
 	}
 	
-	public function scenarios()
-	{
+	public function scenarios() {
+	    
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac']);
-		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac']);
-		$scenarios[self::SCENARIO_TOSTORE] = ArrayHelper::merge($scenarios[self::SCENARIO_TOSTORE], ['address', 'status']);
-		$scenarios[self::SCENARIO_TOTREE] = ArrayHelper::merge($scenarios[self::SCENARIO_TOTREE], ['address', 'status']);
-		//$scenarios[self::SCENARIO_DELETE] = ['close_date', 'close_user'];
+		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE], ['mac', 'dhcp', 'smtp']);
+		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'dhcp', 'smtp']);
 			
 		return $scenarios;
 	}
     
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-    
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
+	    
         return ArrayHelper::merge(
             parent::attributeLabels(),
             [
-                'layer3' => 'Warstwa',
-                'distribution' => 'Rodzaj',
+                'dhcp' => 'DHCP',
+                'smtp' => 'SMTP',
             ]
         ); 
+	}
+	
+	public static function find() {
+	    
+	    return new DeviceQuery(get_called_class(), ['type_id' => self::TYPE]);
+	}
+	
+	public function beforeSave($insert) {
+	    
+	    $this->type_id = self::TYPE;
+	    return parent::beforeSave($insert);
+	}
+	
+	function afterSave($insert, $changedAttributes) {
+	    
+	    if (!$insert) {
+	        if (isset($changedAttributes['mac']) || isset($changedAttributes['dhcp'])) {
+	            !empty($this->ips) ? Dhcp::generateFile($this->ips[0]->subnet) : null;
+	        }
+	    }
+	}
+	
+	public function getConnections() {
+
+	    return $this->hasMany(Connection::className(), ['host_id' => 'id']);
+	}
+	
+	function getConnectionsType() : array {
+	    
+	    foreach ($this->connections as $connection) {
+            $types[] = $connection->type_id;
+	    }
+	    
+	    return $types;
+	}
+	
+	public function configurationAdd() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    else return ' ';
+	    } else return ' ';
+	    
+	    return $this->conf->add();
+	}
+	
+	public function configurationDrop() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    else return ' ';
+	    } else return ' ';
+	    
+	    return $this->conf->drop();
+	}
+	
+	public function configurationChangeMac($newMac) {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    else return ' ';
+        } else return ' ';
+        
+	    return $this->conf->changeMac($newMac);
 	}
 }
