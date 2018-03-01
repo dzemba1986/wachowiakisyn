@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
@@ -15,6 +16,8 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
+$urlView = Url::to(['device/tabs-view']);
+
 $js = <<<JS
 $(function(){
 
@@ -33,7 +36,11 @@ $(function(){
 	 	).done(function(result){
 	 		if(result == 1){
 				$('#modal-device-sm').modal('hide');
-                //$('#device_desc').text('Odśwież...');
+                var ids = $("#device_tree").jstree('get_selected');
+                if (ids.length == 1) {
+                    var id = ids[0];
+        			$('#device_desc').load('{$urlView}&id=' + id.substr(0, id.indexOf('.')));
+                }
 	 		}
 	 		else{
 	 			console.log(result);

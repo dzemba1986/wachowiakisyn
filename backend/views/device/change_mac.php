@@ -32,6 +32,8 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php 
+$urlView = Url::to(['device/tabs-view']);
+
 $js = <<<JS
 $(function(){
 
@@ -51,7 +53,12 @@ $(function(){
       		form.serialize()
      	).done(function(result){
      		if(result == 1){
-    			$('#modal-change-mac').modal('hide');
+                $('#modal-change-mac').modal('hide');
+                var ids = $("#device_tree").jstree('get_selected');
+                if (ids.length == 1) {
+                    var id = ids[0];
+        			$('#device_desc').load('{$urlView}&id=' + id.substr(0, id.indexOf('.')));
+                }
      		}
      		else{
      			console.log(result);
