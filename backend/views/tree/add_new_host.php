@@ -105,6 +105,7 @@ $deviceId = json_encode($model->deviceId);
 $port = json_encode($model->port);
 $deviceListUrl = Url::to(['device/list-from-tree', 'id' => $model->deviceId]);
 $portListUrl = Url::to(['tree/list-port', 'deviceId' => $model->deviceId, 'selected' => $model->port]);
+//$urlAction = Url::to(['tree/add-host', 'connectionId' => $connectionId]);
 
 $js = <<<JS
 $(function() {
@@ -114,18 +115,18 @@ $(function() {
     $('.modal-header h4').html('{$model->address}');
 
     if (deviceId) {
-		$.getJSON('{$deviceListUrl}', function(data){
+		$.getJSON('{$deviceListUrl}', function(data) {
 			$('#select2-addhostform-deviceid-container').html(data.results.concat);
 		});
 	
-        if (port) {
-            $.get('{$portListUrl}', function(data){
+        if (port !== null) {
+            $.get('{$portListUrl}', function(data) {
                 $('select[name="AddHostForm[port]"]').html(data);
             });
         }
 	}
 
-    $('#{$model->formName()}').on('beforeSubmit', function(e){
+    $('#{$model->formName()}').on('beforeSubmit', function(e) {
 		var form = $(this);
      	$.post(
       		form.attr('action'),
@@ -144,6 +145,5 @@ $(function() {
 	});
 });
 JS;
-
 $this->registerJs($js);
 ?>
