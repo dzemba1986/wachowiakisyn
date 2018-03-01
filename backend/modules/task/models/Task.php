@@ -2,11 +2,9 @@
 
 namespace backend\modules\task\models;
 
-use Yii;
+use backend\models\Address;
 use common\models\User;
 use yii\db\Expression;
-use backend\models\Address;
-use yii\db\ActiveRecord;
 
 /**
  * @property integer $id
@@ -95,18 +93,6 @@ class Task extends \yii\db\ActiveRecord
     	return $scenarios;
     }
     
-//     public function behaviors(){
-    	
-//     	return [
-//     		'timestamp' => [
-//     			'class' => 'yii\behaviors\TimestampBehavior',
-//     			'attributes' => [
-//     				ActiveRecord::EVENT_BEFORE_INSERT => ['create'],
-//     			]
-//     		]
-//     	];
-//     }
-
     public function attributeLabels()
     {
         return [

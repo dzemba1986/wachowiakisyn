@@ -38,6 +38,6 @@ class TaskType extends ActiveRecord
 	
 	public static function findWhereType($type){
 		
-		return self::find()->select(['id', 'name'])->where(['type' => $type]);
+		return self::find()->select(['id', 'name'])->where(['type_id' => $type]);
 	}
 }
