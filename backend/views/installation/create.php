@@ -109,39 +109,46 @@ use yii\widgets\ActiveForm;
 
 </div>
 
-<script>
+<?php
+$deviceId = json_encode($connection->device_id);
+$deviceListUrl = Url::to(['device/list-from-tree', 'id' => $connection->device_id]);
+$port = json_encode($connection->port);
+$portListUrl = Url::to(['tree/list-port', 'deviceId' => $connection->device_id, 'selected' => $connection->port, 'install' => true]);
 
-$(function(){
+$js = <<<JS
+$(function() {
+    var deviceId = {$deviceId}; //jeżeli urządzenie jest ustawione pobiera jego wartość id
+    var port = {$port}; //jeżeli port jest ustawiony pobiera jego wartość
 
-	var device = <?= json_encode($connection->device_id); ?>
+    $('.modal-header h4').html('{$connection->address->toString()}');
 
-	if (device){
-		$.getJSON("<?= Url::toRoute(["device/list", "id" => $connection->device_id])?>", function(data){
-			$("#select2-connection-device-container").html(data.results.concat);
+    if (deviceId) {
+		$.getJSON('{$deviceListUrl}', function(data){
+			$('#select2-connection-device_id-container').html(data.results.concat);
 		});
-	
-		$("#connection-device").trigger("change");
+        
+        if (port !== null) {
+            $.get('{$portListUrl}', function(data){
+                $('select#connection-port').html(data);
+            });
+        }
 	}
 
-	
-	$(".modal-header h4").html("<?= $connection->address->toString() ?>");
+    $(".modal-header h4").html('{$connection->address->toString()}');
 
-	$('#<?= $installation->formName(); ?>').on('beforeSubmit', function(e){
+	$('#{$installation->formName()}').on('beforeSubmit', function(e){
 
 		var form = $(this);
 	 	$.post(
-	  		form.attr("action"), // serialize Yii2 form
+	  		form.attr('action'),
 	  		form.serialize()
 	 	).done(function(result){
-			
-//	 		console.log(result);
 	 		if(result == 1){
 	 			$(form).trigger('reset');	//TODO przy resecie wysyła ponowne zapytanie o ilość wolnych portów dla deviceId = null
 				$('#modal-create-installation').modal('hide');
 	 			$.pjax.reload({container: '#connection-grid-pjax'});
 	 		}
 	 		else{
-			
 	 			$('#message').html(result);
 	 		}
 	 	}).fail(function(){
@@ -150,5 +157,8 @@ $(function(){
 	 	
 		return false;				
 	});
-})
-</script>
+});
+JS;
+
+$this->registerJs($js);
+?>

@@ -130,7 +130,6 @@ $(function(){
 		});
         
         if (port !== null) {
-            console.log(port);
             $.get('{$portListUrl}', function(data){
                 $('select#connection-port').html(data);
             });
