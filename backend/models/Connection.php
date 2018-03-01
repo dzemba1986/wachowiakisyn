@@ -7,6 +7,7 @@ use backend\modules\task\models\InstallTask;
 use common\models\User;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\db\ActiveRecord;
+use yii\base\Exception;
 
 /**
  * @property integer $id
@@ -47,6 +48,7 @@ use yii\db\ActiveRecord;
  * @property common\models\User $addUser
  * @property common\models\User $configureUser
  * @property backend\modules\task\models\InstallTask $task
+ * @property backend\models\Host $host
  */
 class Connection extends ActiveRecord
 {
@@ -223,10 +225,40 @@ class Connection extends ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'close_user']);
     }
     
-    function isFinal() {
+    public function getHost() {
         
-        $count = self::find()->where(['and', ['is not', 'close_date', null], ['address_id' => $this->address_id], ['host_id' => $this->host_id]])->count();
+        return $this->hasOne(Host::className(), ['id' => 'host_id']);
+    }
+    
+    function isActive() : bool {
         
-        return $count == 0 ? true : false;
+        return is_null($this->close_date) ? true : false;
+    }
+    
+    function canConfigure() : bool {
+        
+        return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 ? true : false;
+    }
+    
+    function afterSave($insert, $changedAttributes) {
+        
+        if (!$insert) {
+            
+            if (array_key_exists('close_date', $changedAttributes) && is_null($changedAttributes['close_date'])) {
+                if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
+                    $host = Host::findOne($changedAttributes['host_id']);
+                    $host->status = false;
+                    $host->dhcp = false;
+                    $host->smtp = false;
+                    $host->mac = null;
+                    
+                    if (!$host->save()) throw new Exception('Błąd zapisu hosta');
+                    
+                    foreach ($host->ips as $ip)
+                        if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
+
+                }
+            }
+        }
     }
 }
