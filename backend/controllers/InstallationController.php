@@ -79,7 +79,7 @@ class InstallationController extends Controller
                 $installation->wire_user = implode(",", $installation->wire_user);
                 
                 if (!($connection->save() && $installation->save()))
-                    throw new \Exception('Problem z zapisem instalacji lub połączenia');
+                    throw new \Exception('Błąd zapisu instalacji lub połączenia');
                 
                 $transaction->commit();
         		return 1;
