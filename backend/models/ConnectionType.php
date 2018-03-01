@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use kossmoss\PostgresqlArrayField\PostgresqlArrayFieldBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -16,16 +15,6 @@ class ConnectionType extends ActiveRecord
 	public static function tableName() : string	{
 		
 		return '{{connection_type}}';
-	}
-	
-	public function behaviors() {
-	    return [
-	        [
-	            'class' => PostgresqlArrayFieldBehavior::className(),
-	            'arrayFieldName' => 'installation_type',
-	            'onEmptySaveNull' => true
-	        ]
-	    ];
 	}
 	
 	public function rules() : array	{

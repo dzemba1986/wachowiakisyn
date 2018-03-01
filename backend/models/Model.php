@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use kossmoss\PostgresqlArrayField\PostgresqlArrayFieldBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -20,17 +19,7 @@ class Model extends ActiveRecord
 	{
 		return '{{model}}';
 	}
-
-	public function behaviors() {
-        return [
-            [
-                'class' => PostgresqlArrayFieldBehavior::className(),
-                'arrayFieldName' => 'port',
-                'onEmptySaveNull' => true 
-            ]    
-        ];
-    }
-    
+	
 	public function rules()
 	{
 		return [
@@ -41,6 +30,7 @@ class Model extends ActiveRecord
 		    ['port_count', 'required', 'message' => 'Wartość wymagana'],
 		    
 		    ['port', 'required', 'message' => 'Wartość wymagana'],
+		    //['port', 'each', 'rule' => ['string']],
 		    
 		    ['type_id', 'required', 'message' => 'Wartość wymagana'],
 		    
