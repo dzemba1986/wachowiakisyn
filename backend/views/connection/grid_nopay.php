@@ -80,9 +80,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         ],
         [
         	'attribute' => 'start_date',
-        	'value'=> function ($model){
-        		return date("Y-m-d", strtotime($model->start_date));
-            },
+        	'value'=> 'start_date',
             'filterType' => GridView::FILTER_DATE,
             'filterWidgetOptions' => [
             	'model' => $searchModel,
@@ -208,15 +206,15 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
             'template' => '{view} {update} {tree}',
             'options' => ['style' => 'width:6%;'],
         	'buttons' => [
-        		'tree' => function ($model, $data) {
-        			if(!$data->nocontract && !$data->host_id && $data->wire > 0 && is_null($data->close_date) && $data->type_id <> 2){
-        				$url = Url::toRoute(['tree/add-host', 'connectionId' => $data->id]);
+        		'tree' => function ($url, $model, $key) {
+        			if($model->canConfigure()){
+        				$url = Url::toRoute(['tree/add-host', 'connectionId' => $key]);
 	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
 	        				'title' => \Yii::t('yii', 'Zamontuj'),
 	        				'data-pjax' => '0',
 	        			]);
-        			} elseif ($data->host_id) {
-        				$url = Url::toRoute(['tree/index', 'id' => $data->host_id . '.0']);
+        			} elseif ($model->host_id) {
+        				$url = Url::toRoute(['tree/index', 'id' => $model->host_id . '.0']);
         				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
         					'title' => \Yii::t('yii', 'SEU'),
         					'data-pjax' => '0',

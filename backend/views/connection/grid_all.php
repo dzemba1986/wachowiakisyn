@@ -58,9 +58,9 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
 
                 return GridView::ROW_COLLAPSED;
             },
-            'detail' => function($data){
+            'detail' => function($model){
 
-                return 'Info: '.$data->info.'<br>Info Boa: '.$data->info_boa;
+                return 'Info: '.$model->info.'<br>Info Boa: '.$model->info_boa;
             },
         ], 
         [
@@ -202,15 +202,15 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
             'template' => '{view} {update} {tree}',
             'options' => ['style' => 'width:6%;'],
         	'buttons' => [
-        		'tree' => function ($model, $data) {
-        			if($data->mac && $data->port >= 0 && $data->device_id && !$data->nocontract && !$data->host_id && $data->wire > 0 && is_null($data->close_date)){
-        				$url = Url::toRoute(['tree/add', 'id' => $data->id, 'host_id' => true]);
+        		'tree' => function ($url, $model, $key) {
+                    if($model->canConfigure()){
+        				$url = Url::toRoute(['tree/add-host', 'connectionId' => $key]);
         				return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
         					'title' => \Yii::t('yii', 'Zamontuj'),
         					'data-pjax' => '0',
         				]);
-        			} elseif($data->host_id){
-        				$url = Url::toRoute(['tree/index', 'id' => $data->host_id . '.0']);
+        			} elseif($model->host_id){
+        				$url = Url::toRoute(['tree/index', 'id' => $model->host_id . '.0']);
         				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
         					'title' => \Yii::t('yii', 'SEU'),
         					'data-pjax' => '0',
