@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use yii\helpers\ArrayHelper;
 
 /**
  * @property integer $id
@@ -15,6 +14,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $type_id
  * @property string $invoice_date
  * @property string $status
+ * @property array $connectionTypeIds
  */
 class Installation extends \yii\db\ActiveRecord
 {
@@ -106,14 +106,27 @@ class Installation extends \yii\db\ActiveRecord
     	return $this->hasOne(InstallationType::className(), ['id' => 'type_id']);
     }
     
+    /**
+     * @return array Powiązanie typów instalacji z typami umów
+     */
+    function getConnectionTypeIds() : array {
+        
+        if ($this->type_id == 1) return [1,3];
+        elseif ($this->type_id == 2) return [2];
+        elseif ($this->type_id == 3) return [];
+        elseif ($this->type_id == 4) return [1,3];
+    }
+    
     public function afterSave($insert, $changedAttributes) {
         
-        //FIXME nie wiem czy nie lepiej zliczać wszystkie instalacje danego typu i wstawiać do odpiwiedniej kolumny w odpowiednich umowach 
         if ($insert) {
-            $connectionTypeIds = ArrayHelper::map(ConnectionType::find()->select('id')->where($this->type_id . ' = ANY (installation_type)')->all(), 'id', 'id');
-            Connection::updateAllCounters(['wire' => 1], ['type_id' => $connectionTypeIds, 'address_id' => $this->address_id]);
+            $count = Installation::find()->where(['address_id' => $this->address_id, 'type_id' => $this->type_id])->andWhere(['is not', 'wire_date', null])->count();
+            Connection::updateAll(['wire' => $count], ['type_id' => $this->connectionTypeIds, 'address_id' => $this->address_id]);
         }
         
-        return true;
+        if (!$insert && array_key_exists('socket_date', $changedAttributes) && is_null($changedAttributes['socket_date'])) {
+            $count = Installation::find()->where(['address_id' => $this->address_id, 'type_id' => $this->type_id])->andWhere(['is not', 'socket_date', null])->count();
+            Connection::updateAll(['socket' => $count], ['type_id' => $this->connectionTypeIds, 'address_id' => $this->address_id]);
+        }
     }
 }
