@@ -41,7 +41,7 @@ class Host extends Device {
         return ArrayHelper::merge(
             parent::rules(),
             [
-                ['mac', 'required', 'message' => 'Wartość wymagana'],
+                ['mac', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model) {return $model->status;}],
                 ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
                 
                 ['dhcp', 'boolean'],
@@ -92,14 +92,23 @@ class Host extends Device {
 	    
 	    if (!$insert) {
 	        if (isset($changedAttributes['mac']) || isset($changedAttributes['dhcp'])) {
-	            Dhcp::generateFile($this->ips[0]->subnet);
+	            !empty($this->ips) ? Dhcp::generateFile($this->ips[0]->subnet) : null;
 	        }
 	    }
 	}
 	
 	public function getConnections() {
 
-	    return $this->hasMany(Connection::className(), ['host_id' => 'id'])->select('id, soa_id, type_id')->where(['connection.type_id' => [1,3], 'close_date' => null]);
+	    return $this->hasMany(Connection::className(), ['host_id' => 'id']);
+	}
+	
+	function getConnectionsType() : array {
+	    
+	    foreach ($this->connections as $connection) {
+            $types[] = $connection->type_id;
+	    }
+	    
+	    return $types;
 	}
 	
 	public function configurationAdd() {
@@ -108,10 +117,12 @@ class Host extends Device {
 	    $parentDevice = Device::findOne($parentId);
 	    $parentModelConfType = $parentDevice->model->config;
 	    
-	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
-	    else return ' ';
+	    if (!empty($this->ips)) {
+    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    else return ' ';
+	    } else return ' ';
 	    
 	    return $this->conf->add();
 	}
@@ -122,10 +133,12 @@ class Host extends Device {
 	    $parentDevice = Device::findOne($parentId);
 	    $parentModelConfType = $parentDevice->model->config;
 	    
-	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
-	    else return ' ';
+	    if (!empty($this->ips)) {
+    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    else return ' ';
+	    } else return ' ';
 	    
 	    return $this->conf->drop();
 	}
@@ -136,11 +149,13 @@ class Host extends Device {
 	    $parentDevice = Device::findOne($parentId);
 	    $parentModelConfType = $parentDevice->model->config;
 	    
-	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
-	    else return ' ';
-	    
+	    if (!empty($this->ips)) {
+    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    else return ' ';
+        } else return ' ';
+        
 	    return $this->conf->changeMac($newMac);
 	}
 }
