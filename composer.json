@@ -26,10 +26,8 @@
         "kartik-v/yii2-editable": "*",
         "nterms/yii2-pagesize-widget": "*",
         "kartik-v/yii2-widget-timepicker": "*",
-        "kossmoss/yii2-postgresql-array-field": "^0.2",
         "rlanvin/php-ip": "1.*",
         "vakorovin/yii2-macaddress-validator": "dev-master",
-        "yii2tech/ar-role": "^1.0",
         "bobchengbin/yii2-xml-request-parser" : "*"
     },
     "require-dev": {
