@@ -495,7 +495,7 @@ class TreeController extends Controller
     	}
     }
     
-    public function actionReplaceFromStore($device)
+    public function actionReplace($deviceId)
     {
     	$request = Yii::$app->request;
     	
@@ -506,7 +506,7 @@ class TreeController extends Controller
 				$transaction = Yii::$app->getDb()->beginTransaction();
 				
 				foreach ($request->post('map') as $key => $value){
-					$modelTree = Tree::find()->where(['parent_device' => $device, 'parent_port' => $key])->one();
+					$modelTree = Tree::find()->where(['parent_device' => $deviceId, 'parent_port' => $key])->one();
 					
 					if(is_object($modelTree)){
 						$modelTree->parent_device = $request->post('deviceDestination');
@@ -521,7 +521,7 @@ class TreeController extends Controller
 							return 0;
 						}
 					} else {
-						$modelTree = Tree::find()->where(['device' => $device, 'port' => $key])->one();
+						$modelTree = Tree::find()->where(['device' => $deviceId, 'port' => $key])->one();
 						$modelTree->device = $request->post('deviceDestination');
 						$modelTree->port = $value;
 						
@@ -536,7 +536,7 @@ class TreeController extends Controller
 					}
 				}
 				
-				$deviceSource = Device::findOne($device);
+				$deviceSource = Device::findOne($deviceId);
 				$deviceDestination = Device::findOne($request->post('deviceDestination'));
 				
 				$deviceDestination->address = $deviceSource->address;
@@ -571,7 +571,7 @@ class TreeController extends Controller
 				return 1;
 			} else {	
 	    		return $this->renderAjax('replace_from_store', [
-	    			'device' => $device	
+	    			'device' => $deviceId	
 	    		]);
 			}
     	}
