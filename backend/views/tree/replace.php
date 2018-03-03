@@ -1,13 +1,12 @@
 <?php
-use backend\models\Device;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
-	'id' => 'replace-from-store-form'
+	'id' => 'replace'
 ]); ?>
 
 	<?= Html::label('Wybierz urządzenie z magazynu') ?>
@@ -17,31 +16,25 @@ $form = ActiveForm::begin([
 			'name' => 'device',
     		'language' => 'pl',
             'options' => [
-//             	'class' => 'col-md-5', 
-//             	'style' => 'padding-right: 5px;',
             	'placeholder' => 'Urządzenie nadrzędne',
-            	'onchange' => '
-                	$.get( "' . Url::toRoute('tree/replace-device-port-select') . '&deviceSource=' . $device . '" + "&deviceDestination=" + $(this).val(), function(data){
-						$("#port-select").html(data);
-					} );
-                '
+            	'onchange' => new JsExpression("
+                    $.get('" . Url::toRoute('tree/replace-port') . "&deviceSourceId={$deviceId}&deviceDestinationId=' + $(this).val(), function(data){
+				    	$('#port-select').html(data);
+                    });
+        	    "),
             ],
     		'pluginOptions' => [
-    			
     			'allowClear' => true,
     			'minimumInputLength' => 2,
     			'language' => [
-    				
     				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     			],
     			'ajax' => [
-    				'url' => Url::toRoute('device/list'),
+    				'url' => Url::toRoute('device/list-from-store'),
     				'dataType' => 'json',
     				'data' => new JsExpression('function(params) { 
     					return {
     						q : params.term,
-    						type : [1, 2, 3, 4, 6, 8],
-    						store : true
 						}; 
 					}')
 	    		],
