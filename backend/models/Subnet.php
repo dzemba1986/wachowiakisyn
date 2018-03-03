@@ -109,7 +109,7 @@ class Subnet extends ActiveRecord
 	 * Jeżeli chcemy przysłonić te ocje to w tabeli `dhcp_value` ustawiamy odpowiednią opcję dla grupy lub dla pojedyńczej podsieci
 	 * z wagą > 1 (wagę 1 mają domyslne ocje) według reguły:
 	 * waga 3 dla opcji dla pojedyńczej podsieci
-	 * waga 2 dla opcji dla grupu podsieci
+	 * waga 2 dla opcji dla grupy podsieci
 	 */
 	public function generateOptionsDhcp() {
 		
@@ -118,7 +118,7 @@ class Subnet extends ActiveRecord
 			3 => ['option' => 3, 'value' => (string) $this->blockIp[1], 'weight' => 1],
 			6 => ['option' => 6, 'value' => '213.5.208.3, 213.5.208.35', 'weight' => 1],
 			28 => ['option' => 28, 'value' => (string) $this->blockIp->getLastIp(), 'weight' => 1],
-			49 => ['option' => 49, 'value' => 7200, 'weight' => 1]
+			//49 => ['option' => 49, 'value' => 7200, 'weight' => 1]
 		];
 		
 		//jeżeli znajdzie opcje z wyższą wagą wśród opcji dla grupy DHCP to podmienia
@@ -148,7 +148,10 @@ class Subnet extends ActiveRecord
 		    $data .= "\t{$dhcpOptions[$option['option']]} {$option['value']};\n";
 		}
 		
-		//TODO obgadać z Borysem czy opcje wysłane na maila też mają zostać
+		//TODO tymczasowo tak, potem do poprawki by można było pojedyńczą podsieć skonfigurować indywidualnie
+		$data .= "\tdefault-lease-time 86400\n";
+		$data .= "\tmax-lease-time 86400\n";
+		$data .= "\tmin-lease-time 86400\n";
 		//$data .= "\tdefault-lease-time" . $option['value'] . ";\n";
 		$data .= "\n";
 		
