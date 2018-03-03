@@ -33,7 +33,7 @@ class TreeController extends Controller
             ],
             [
                 'class' => AjaxFilter::className(),
-                'only' => ['add-host']
+                'only' => ['add-host', 'get-children', 'move', 'copy', 'to-store', 'search', 'port-list']
             ],
         ];
     }
@@ -303,32 +303,35 @@ class TreeController extends Controller
         $device = Device::findOne($deviceId);
         $model = $device->model;
         
-        switch ($mode) {
-            case 'free' :
-                $linksWithDevice = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
-                    ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
+        if ($mode == 'free') {
+            $linksWithDevice = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
+                ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
+            
+            if (!empty($linksWithDevice)) {
+                foreach ($linksWithDevice as $linkWithDevice) {
+                    $usePorts[$linkWithDevice->parent_port] = $linkWithDevice->parent_port;
+                }
                 
-                if (!empty($linksWithDevice)) {
-                    foreach ($linksWithDevice as $linkWithDevice) {
-                        $usePorts[$linkWithDevice->parent_port] = $linkWithDevice->parent_port;
-                    }
-                    
-                    $freePorts = array_diff_key($model->port->getValue(), $usePorts);
+                $freePorts = array_diff_key($model->port->getValue(), $usePorts);
 
-                    if ($install){
-                        echo '<option value="-1">Brak miejsca</option>';
-                    }
-                    foreach ($freePorts as $key => $freePort ){
-                        if ($selected == $key) {
-                            echo '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
-                            continue;
-                        }
-                        echo '<option value="' . ($key) . '">' . $freePort . '</option>';
-                    }
-                } else {
+                if ($install){
                     echo '<option value="-1">Brak miejsca</option>';
                 }
-                break;
+                foreach ($freePorts as $key => $freePort ){
+                    if ($selected == $key) {
+                        echo '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
+                        continue;
+                    }
+                    echo '<option value="' . ($key) . '">' . $freePort . '</option>';
+                }
+            } else {
+                echo '<option value="-1">Brak miejsca</option>';
+            }
+        } elseif ($mode == 'all') {
+            echo '<option>-</option>';
+            foreach ($model->port as $key => $port){
+                echo '<option value="' . ($key) . '">' . $port . '</option>';
+            }
         }
     }
     
@@ -336,163 +339,101 @@ class TreeController extends Controller
     	
     	$request = Yii::$app->request;
     	
-    	if($request->isAjax){
-    	    if($request->post('newParentPort')){
-    			
-    			$link = Tree::find()->where(['device' => $deviceId, 'port' => $port])->one();
-    			
-    			$link->parent_device = $newParentId;
-    			$link->parent_port = $request->post('newParentPort');
-    			
-    			try {
-    			    if (!$link->save()) throw new Exception('Błąd zapisu linku');
-    			} catch (\Throwable $t) {
-    			    var_dump($link->errors);
-    			    var_dump($t->getMessage());
-    			    exit();
-    			}
-    			
-    			return 1;
-     		} else 
-     		    return $this->renderAjax('move', [
-     		        'newParentId' => $newParentId
-     		    ]);
-    	}
+	    if($request->post('newParentPort')){
+			
+			$link = Tree::find()->where(['device' => $deviceId, 'port' => $port])->one();
+			
+			$link->parent_device = $newParentId;
+			$link->parent_port = $request->post('newParentPort');
+			
+			try {
+			    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+			} catch (\Throwable $t) {
+			    var_dump($link->errors);
+			    var_dump($t->getMessage());
+			    exit();
+			}
+			
+			return 1;
+ 		} else 
+ 		    return $this->renderAjax('move', [
+ 		        'newParentId' => $newParentId
+ 		    ]);
     }
     
     public function actionCopy($deviceId, $parentId) {
     	 
         $request = Yii::$app->request;
         
-        if($request->isAjax){
-            if($request->post()){
-                
-                $link = new Tree();
-                
-                $link->device = $deviceId;
-                $link->port = (int) $request->post('localPort');
-                $link->parent_device = $parentId;
-                $link->parent_port = (int) $request->post('parentPort');
-                
-                try {
-                    if (!$link->save()) throw new Exception('Błąd zapisu linku');
-                } catch (\Throwable $t) {
-                    var_dump($link->errors);
-                    var_dump($t->getMessage());
-                    exit();
-                }
-                
-                return 1;
-            } else
-                return $this->renderAjax('copy', [
-                    'deviceId' => $deviceId,
-                    'parentId' => $parentId
-                ]);
-        }
+        if($request->post()){
+            
+            $link = new Tree();
+            
+            $link->device = $deviceId;
+            $link->port = (int) $request->post('localPort');
+            $link->parent_device = $parentId;
+            $link->parent_port = (int) $request->post('parentPort');
+            
+            try {
+                if (!$link->save()) throw new Exception('Błąd zapisu linku');
+            } catch (\Throwable $t) {
+                var_dump($link->errors);
+                var_dump($t->getMessage());
+                exit();
+            }
+            
+            return 1;
+        } else
+            return $this->renderAjax('copy', [
+                'deviceId' => $deviceId,
+                'parentId' => $parentId
+            ]);
     }
     
     function actionToStore($deviceId, $port) {
         
         $request = Yii::$app->request;
+        $device = Device::findOne($deviceId);
         
-        if($request->isAjax){
+        if($request->post()){
             
-            $device = Device::findOne($deviceId);
+            $link = Tree::findOne(['device' => $deviceId, 'port' => $port]);
+            $count = Tree::find()->where(['device' => $deviceId])->count();
             
-            if($request->post()){
-                
-                $link = Tree::findOne(['device' => $deviceId, 'port' => $port]);
-                $count = Tree::find()->where(['device' => $deviceId])->count();
-                
-                try {
-                    if (!$device->isParent()) {
-                        $transaction = Yii::$app->getDb()->beginTransaction();
+            try {
+                if (!$device->isParent()) {
+                    $transaction = Yii::$app->getDb()->beginTransaction();
+                    
+                    if ($count == 1) {    //ostatnia kopia    
+                        $device->address_id = 1;
+                        $device->status = null;
+                        $device->name = null;
+                        $device->proper_name = null;
+                        isset($device->alias) ? $device->alias = null : null;
                         
-                        if ($count == 1) {    //ostatnia kopia    
-                            $device->address_id = 1;
-                            $device->status = null;
-                            $device->name = null;
-                            $device->proper_name = null;
-                            isset($device->alias) ? $device->alias = null : null;
-                            
-                            foreach ($device->ips as $ip)
-                                if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
-                            
-                            if (!$link->delete()) throw new Exception('Błąd usuwania agregacji');
-                            if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
-                        } else
-                            if(!$link->delete()) throw new Exception('Błąd usuwania agregacji');
-                                                
-                    } else return 'Urządzenie jest rodzicem';
-                    
-                    $transaction->commit();
-                    return 1;
-                    
-                } catch (\Throwable $t) {
-                    $transaction->rollBack();
-                    var_dump($device->errors);
-                    var_dump($t->getMessage());
-                    exit();
-                }
-            } else
-                return $this->renderAjax('to_store', [
-                    'device' => $device,
-                ]);
-        }
-    }
-    
-    public function actionToStoreBack($id, $port){
-    	
-    	$modelTree = Tree::findOne(['device' => $id, 'port' => $port]);
-    	$modelDevice = Device::findOne($id);
-    	
-    	$countParent = Tree::find()->where(['parent_device' => $id])->count();
-    	$countDevice = Tree::find()->where(['device' => $id])->count();
-    	
-    	// jeżeli urządzenie nie jest rodzicem
-    	if ($countParent == 0) {
-			
-    		$transaction = Yii::$app->getDb()->beginTransaction();
-    		// jeżeli urządzenie jest ostatnią kopią na drzewie
-    		if ($countDevice == 1){
-    			
-    			try {
-    				$modelDevice->address = null;
-    				$modelDevice->status = null;
-    				$modelDevice->name = null;
-    				$modelDevice->original_name = null;
-    				
-    				if (!$modelDevice->save())
-    					throw new Exception('Nie można zapisać do device');
-    				
-    				foreach ($modelDevice->modelIps as $modelIp){
-    					if (!$modelIp->delete())
-    						throw new Exception('Nie można usunąć ip');
-    				}
-    					
-    				if (!$modelTree->delete())
-    					throw new Exception('Nie można usunąć agregacji');
-    				
-    				$transaction->commit();
-    				return 1;
-    			} catch (Exception $e) {
-    				$transaction->rollBack();
-    				return $e->getMessage();
-//     				exit();
-    			}
-    		} else { //nie jest ostatnią kopią
-    			try {
-    				if (!$modelTree->delete())
-    					throw new Exception('Nie można usunąć agregacji');
-    				return 1;
-    			} catch (Exception $e) {
-    				var_dump($e->getMessage());
-    				exit();
-    			}
-    		}
-    	} else { //urzadzenie jest rodzicem
-    		return null;
-    	}
+                        foreach ($device->ips as $ip)
+                            if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
+                        
+                        if (!$link->delete()) throw new Exception('Błąd usuwania agregacji');
+                        if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
+                    } else
+                        if(!$link->delete()) throw new Exception('Błąd usuwania agregacji');
+                                            
+                } else return 'Urządzenie jest rodzicem';
+                
+                $transaction->commit();
+                return 1;
+                
+            } catch (\Throwable $t) {
+                $transaction->rollBack();
+                var_dump($device->errors);
+                var_dump($t->getMessage());
+                exit();
+            }
+        } else
+            return $this->renderAjax('to_store', [
+                'device' => $device,
+            ]);
     }
     
     public function actionReplace($deviceId)
@@ -570,26 +511,26 @@ class TreeController extends Controller
 				
 				return 1;
 			} else {	
-	    		return $this->renderAjax('replace_from_store', [
-	    			'device' => $deviceId	
+	    		return $this->renderAjax('replace', [
+	    			'deviceId' => $deviceId	
 	    		]);
 			}
     	}
     }
     
-    public function actionReplaceDevicePortSelect($deviceSource, $deviceDestination) {
+    public function actionReplacePort($deviceSourceId, $deviceDestinationId) {
     	
-    	$query1 = (Tree::find()->select(['device', 'parent_port AS port'])->where(['parent_device' => $deviceSource]));
-    	$query2 = (Tree::find()->select(['parent_device AS device', 'port'])->where(['device' => $deviceSource]));
+    	$query1 = (Tree::find()->select(['device', 'parent_port AS port'])->where(['parent_device' => $deviceSourceId]));
+    	$query2 = (Tree::find()->select(['parent_device AS device', 'port'])->where(['device' => $deviceSourceId]));
     	 
-    	$modelsTree =  (new \yii\db\Query())
+    	$links =  (new \yii\db\Query())
     	->from(['result' => $query1->union($query2)])
-    	->orderBy(['port' => SORT_DESC])->all();
+    	->orderBy(['port' => SORT_ASC])->all();
     	
-    	return $this->renderAjax('replace_device_port', [
-    		'modelsTree' => $modelsTree,	
-    		'deviceSource' => $deviceSource,
-    		'deviceDestination' => $deviceDestination	
+    	return $this->renderAjax('replace_port', [
+    		'links' => $links,	
+    		'deviceSource' => Device::findOne($deviceSourceId),
+    		'deviceDestination' => Device::findOne($deviceDestinationId)	
     	]);
     }
     
