@@ -149,9 +149,9 @@ class Subnet extends ActiveRecord
 		}
 		
 		//TODO tymczasowo tak, potem do poprawki by można było pojedyńczą podsieć skonfigurować indywidualnie
-		$data .= "\tdefault-lease-time 86400\n";
-		$data .= "\tmax-lease-time 86400\n";
-		$data .= "\tmin-lease-time 86400\n";
+		$data .= "\tdefault-lease-time 86400;\n";
+		$data .= "\tmax-lease-time 86400;\n";
+		$data .= "\tmin-lease-time 86400;\n";
 		//$data .= "\tdefault-lease-time" . $option['value'] . ";\n";
 		$data .= "\n";
 		
