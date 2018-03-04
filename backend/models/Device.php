@@ -90,7 +90,7 @@ class Device extends ActiveRecord
                       
 		    ['name', 'string', 'min' => 3, 'max' => 30, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    
-		    ['proper_name', 'string', 'min' => 3, 'max' => 15, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    ['proper_name', 'string', 'min' => 2, 'max' => 15, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    ['proper_name', 'match', 'pattern' => '/^([a-zA-Z]|\d){1}([a-zA-Z]|\d|\.)+[a-zA-Z|\d]{1}$/', 'message' => 'Niewłaściwy format'],
 		    ['proper_name', 'trim', 'skipOnEmpty' => true],
 		    ['proper_name', 'default', 'value' => null],
