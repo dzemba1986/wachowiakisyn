@@ -32,5 +32,7 @@ class Dhcp extends Model
 	        $fileConf = $pathDhcp . '/subnets/' . $subnet->id . '.conf';
 	        file_put_contents($fileConf, $data);
 	    }
+	    
+	    file_put_contents($updateFile, time());
 	}
 }
