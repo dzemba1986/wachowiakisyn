@@ -2,9 +2,8 @@
 
 namespace console\controllers;
 
-use yii\console\Controller;
 use backend\models\Device;
-use backend\models\Ip;
+use yii\console\Controller;
 
 class DeviceController extends Controller {
 	
@@ -236,7 +235,7 @@ class DeviceController extends Controller {
 		
 		//x510-172
 		$modelsDevicex510_172 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
-		where(['and', ['like', 'model.name', 'x510'],['is not', 'address', null],['main' => true]])->orderBy('ip.ip')->all();
+		where(['and', ['like', 'model.name', 'x510'],['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '172.20.'],['main' => true]])->orderBy('ip.ip')->all();
 		
 		$ipsList = '';
 		
@@ -250,7 +249,7 @@ class DeviceController extends Controller {
 		
 		//x510-10
 		$modelsDevicex510_10 = Device::find()->joinWith('modelIps')->joinWith('modelModel')->
-		where(['and', ['like', 'model.name', 'x510'],['is not', 'address', null],['main' => true]])->orderBy('ip.ip')->all();
+		where(['and', ['like', 'model.name', 'x510'],['is not', 'address', null],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '10.224'],['main' => true]])->orderBy('ip.ip')->all();
 		
 		$ipsList = '';
 		
