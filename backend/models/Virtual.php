@@ -47,6 +47,9 @@ class Virtual extends Device {
 	        parent::rules(),
 	        [
 	            ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
+	            ['mac', 'filter', 'filter' => function ($value) {
+	                return $value==='' ? null : $value;
+	            }],
 	            
 	            ['dhcp', 'boolean'],
 	            ['dhcp', 'default', 'value' => false],
