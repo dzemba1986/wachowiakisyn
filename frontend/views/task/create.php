@@ -1,9 +1,8 @@
 <?php
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
 use kartik\select2\Select2;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
 use yii\web\JsExpression;
-use yii\helpers\Url;
 
 /**
  * @var $this yii\web\View
@@ -25,7 +24,7 @@ use yii\helpers\Url;
 			    				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
 			    			],
 			    			'ajax' => [
-			    					'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch-for-monitoring',	//http://localhost/backend/index.php?r=device/list
+		    					'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Flist-from-tree',	//http://localhost/backend/index.php?r=device/list
 			    				'dataType' => 'json',
 			    				'data' => new JsExpression("function(params) {
 			    					return {

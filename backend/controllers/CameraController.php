@@ -5,9 +5,11 @@ namespace backend\controllers;
 use backend\models\Camera;
 use Yii;
 use yii\db\Query;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\widgets\ActiveForm;
 
-class CameraController extends DeviceController
+class CameraController extends Controller
 {	
 	public function actionValidation($id = null){
 		 
@@ -22,7 +24,7 @@ class CameraController extends DeviceController
 		}
 	}
 	
-	public function actionSearchForMonitoring($q = null) {
+	public function actionListFromTree($q = null, $monitoring = false) {
 		
 		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		
@@ -33,7 +35,7 @@ class CameraController extends DeviceController
 			$query = new Query();
 			$query->select(['d.id', 'd.alias'])
 	    	->from('device d')
-	    	->where(['and', ['like', "replace(lower(d.alias), '_', ' ')", str_replace('_', ' ', strtolower($q)) . '%', false], ['is not', 'address', null], ['is not', 'status', null], ['d.type' => Camera::TYPE]])
+	    	->where(['and', ['like', "replace(lower(d.alias), '_', ' ')", str_replace('_', ' ', strtolower($q)) . '%', false], ['<>', 'address_id', 1], ['is not', 'status', null], ['d.type_id' => Camera::TYPE]])
 	    	->limit(50)->orderBy('d.alias');
 	    	
     		$command = $query->createCommand();

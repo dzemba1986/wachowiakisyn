@@ -1,16 +1,12 @@
 <?php
 
-use backend\modules\task\models\DeviceTaskSearch;
 use common\models\User;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
-use yii\bootstrap\Modal;
-use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
-use yii\web\View;
 
 /**
  * @var View $this
@@ -99,7 +95,7 @@ require_once '_modal_task.php';
             			'allowClear' => true,
             			'minimumInputLength' => 2,
             			'ajax' => [
-            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Fsearch-for-monitoring',	//http://localhost/backend/index.php?r=device/list
+            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Flist-from-tree',	//http://localhost/backend/index.php?r=device/list
             				'dataType' => 'json',
             				'data' => new JsExpression("function(params) {
 			    				return {

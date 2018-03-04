@@ -6,7 +6,6 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
     ],
-	//ustawienie dodatkowych aliasów do sciezek	
 	'aliases' => [
 		'@common' => dirname(__DIR__),
 		'@frontend' => dirname(dirname(__DIR__)) . '/frontend',
