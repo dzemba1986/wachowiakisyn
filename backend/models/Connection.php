@@ -186,12 +186,22 @@ class Connection extends ActiveRecord
 		];
 	}
 	
+	/**
+	 * @return array Powiązanie typów umów z typami instalacji
+	 */
+	function getInstallationTypeIds() : array {
+	    
+	    if ($this->type_id == 1) return [1,4];
+	    elseif ($this->type_id == 2) return [2];
+	    elseif ($this->type_id == 3) return [1,4];
+	}
+	
     public function getInstallations($type = false) {
     
         if (!$type)
             return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true]);
         else {
-            return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true, 'type_id' => $this->type->installation_type]);
+            return $this->hasMany(Installation::className(), ['address_id' => 'address_id'])->where(['status' => true, 'type_id' => $this->getInstallationTypeIds()]);
         }
     }
     
