@@ -133,7 +133,7 @@ $(function() {
       		form.serialize()
      	).done(function(result){
  			if(result){
-                window.location.replace(result);
+                //window.location.replace(result);
  			}
  			else{
  				alert(result);
