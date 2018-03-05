@@ -80,8 +80,6 @@ class Ip extends ActiveRecord
     	    }
     	    
 	        Dhcp::generateFile($this->subnet);
-    	    
-    	    return true;
 	    }
 	}
 	
