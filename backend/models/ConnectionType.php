@@ -7,7 +7,6 @@ use yii\db\ActiveRecord;
 /**
  * @property integer $id
  * @property string $name
- * @property array $installation_type
  */
 
 class ConnectionType extends ActiveRecord
