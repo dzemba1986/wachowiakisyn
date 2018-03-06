@@ -95,7 +95,7 @@ use yii\widgets\ActiveForm;
 	<?= $form->field($installation, 'type_id', [
 	    'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 5px;'],
         'template' => "{input}\n{hint}\n{error}",
-	])->dropDownList(ArrayHelper::map(InstallationType::findAll($connection->type->installation_type), 'id', 'name')) ?>
+	])->dropDownList(ArrayHelper::map(InstallationType::findAll($connection->getInstallationTypeIds()), 'id', 'name')) ?>
 	
 	</div>
 	
