@@ -43,13 +43,13 @@ class DeviceTask extends Task
     	
         return ArrayHelper::merge(
         	[	
-        		['address_id', 'default', 'value' => Device::findOne($this->device_id)->address],	
+        		['address_id', 'default', 'value' => Device::findOne($this->device_id)->address_id],	
         			
         		['device_id', 'integer'],
         		['device_id', 'required', 'message' => 'Wartość wymagana'],
         			
         		['device_type', 'integer'],
-        		['device_type', 'default', 'value' => Device::findOne($this->device_id)->type],	
+        		['device_type', 'default', 'value' => Device::findOne($this->device_id)->type_id],	
         		['device_type', 'required', 'message' => 'Wartość wymagana'],
         			
         		['when', 'date', 'format' => 'yyyy-MM-dd H:i:s'],

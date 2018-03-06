@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use backend\modules\task\models\DeviceTaskSearch;
+use backend\models\Camera;
 
 class TaskController extends Controller
 {
@@ -42,7 +43,7 @@ class TaskController extends Controller
     	$dataProvider->query->andWhere([
     		'and',
     		['is not', 'device_id', null],
-    		['device_type' => 6],
+    		['device_type' => Camera::TYPE],
     		['or', ['task.status' => false], ['task.status' => null]]	
     	])->orderBy('status DESC, create DESC');
     				

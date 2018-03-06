@@ -65,7 +65,6 @@ require_once '_modal_task.php';
             		'model' => $searchModel,
             		'attribute' => 'create',
             		'pickerButton' => false,
-            		//'removeButton' => false,
             		'language' => 'pl',
             		'pluginOptions' => [
             			'format' => 'yyyy-mm-dd',
@@ -95,7 +94,7 @@ require_once '_modal_task.php';
             			'allowClear' => true,
             			'minimumInputLength' => 2,
             			'ajax' => [
-            				'url' => Yii::$app->urlManagerBackend->baseUrl . '/index.php?r=camera%2Flist-from-tree',	//http://localhost/backend/index.php?r=device/list
+            				'url' => Url::to(['device/list-camera']),
             				'dataType' => 'json',
             				'data' => new JsExpression("function(params) {
 			    				return {
@@ -112,18 +111,6 @@ require_once '_modal_task.php';
             	'format' => 'raw',
             	'options' => ['style'=>'width:30%;']
             ],
-//             [
-//                 'attribute' => 'type_id',
-//                 'value' => 'type.name',
-//                 'filter' => ArrayHelper::map(TaskType::findWhereType(2)->all(), 'id', 'name'),
-//                 'options' => ['style'=>'width:5%;'],
-//             ],
-//             [
-//                 'attribute' => 'category_id',
-//                 'value' => 'category.name',
-//                 'filter'=> ArrayHelper::map(TaskCategory::findWhereType(2)->all(), 'id', 'name'),
-//                 'options' => ['style'=>'width:5%;'],
-//             ],
             [
             	'attribute' => 'add_user',
             	'value' => 'addUser.last_name',

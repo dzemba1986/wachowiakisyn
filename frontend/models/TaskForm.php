@@ -36,7 +36,6 @@ class TaskForm extends Model
     		$task->description = $this->description;
     		$task->device_id = $this->device_id;
     		$task->editable = true;
-//     		$task->device_type = 6;	//kamera
     		$task->type_id = 5;
     		$task->category_id = 5;
     		
