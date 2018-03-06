@@ -54,7 +54,7 @@ use backend\models\Connection;
 	
 	<?php else :?>
 		
-		<?= '<center><h4>'.Html::label($connection->modelAddress->toString()).'</h4></center>'; ?>
+		<?= '<center><h4>'.Html::label($connection->address->toString()).'</h4></center>'; ?>
 		
 	<?php endif;?>
 

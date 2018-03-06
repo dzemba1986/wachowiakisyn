@@ -125,7 +125,7 @@ class InstallTaskController extends Controller
     						throw new Exception('Problem z zapisem zadania');
     					
     				} else {	//zadanie z LP
-    					$task->address_id = $connection->address;
+    					$task->address_id = $connection->address_id;
     					
     					if ($task->save()){
     						$connection->task_id = $task->id;
