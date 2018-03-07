@@ -45,6 +45,45 @@ class TreeController extends Controller
         ]);
     }
     
+    public function actionAdd($deviceId)
+    {
+        $request = Yii::$app->request;
+        $device = Device::findOne($deviceId);
+        $link = new Tree();
+        $address = new Address();
+        
+        if ($link->load($request->post()) && $address->load($request->post())) {
+            $transaction = Yii::$app->getDb()->beginTransaction();
+            
+            $link->device = $deviceId;
+            $device->status = true;
+            try {
+                if (!$address->save()) throw new Exception('Błąd zapisu adresu');
+                
+                $device->address_id = $address->id;
+                $device->name = $address->toString();
+                if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
+                
+                if (!$link->save()) throw new Exception('Błąd zapisu drzewa');
+                            
+                $transaction->commit();
+                $this->redirect(['tree/index']);
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                var_dump($device->errors);
+                var_dump($address->errors);
+                var_dump($link->errors);
+                exit();
+            }
+        } else {
+            return $this->renderAjax('add', [
+                'device' => $device,
+                'link' => $link,
+                'address' => $address,
+            ]);
+        }
+    }
+    
     /**
      * @param integer $hostId ID hosta (aktywnego/nieaktywnego) do którego mamy dodać umowę
      */
@@ -303,32 +342,30 @@ class TreeController extends Controller
         $device = Device::findOne($deviceId);
         $model = $device->model;
         
-        switch ($mode) {
-            case 'free' :
-                $linksWithDevice = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
-                    ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
+        if ($mode == 'free') {
+            $links = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
+                ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
+            
+            if (!empty($links)) {
+                foreach ($links as $link) {
+                    $usePorts[$link->parent_port] = $link->parent_port;
+                }
                 
-                if (!empty($linksWithDevice)) {
-                    foreach ($linksWithDevice as $linkWithDevice) {
-                        $usePorts[$linkWithDevice->parent_port] = $linkWithDevice->parent_port;
-                    }
-                    
-                    $freePorts = array_diff_key($model->port->getValue(), $usePorts);
+                $freePorts = array_diff_key($model->port->getValue(), $usePorts);
 
-                    if ($install){
-                        echo '<option value="-1">Brak miejsca</option>';
-                    }
-                    foreach ($freePorts as $key => $freePort ){
-                        if ($selected == $key) {
-                            echo '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
-                            continue;
-                        }
-                        echo '<option value="' . ($key) . '">' . $freePort . '</option>';
-                    }
-                } else {
+                if ($install){
                     echo '<option value="-1">Brak miejsca</option>';
                 }
-                break;
+                foreach ($freePorts as $key => $freePort ){
+                    if ($selected == $key) {
+                        echo '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
+                        continue;
+                    }
+                    echo '<option value="' . ($key) . '">' . $freePort . '</option>';
+                }
+            } else {
+                echo '<option value="-1">Brak miejsca</option>';
+            }
         }
     }
     
