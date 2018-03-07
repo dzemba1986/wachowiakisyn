@@ -4,7 +4,7 @@ use yii\bootstrap\Modal;
 Modal::begin([
     'id' => 'modal_add_tree',
     'header' => '<center><h4>Dodaj do drzewa</h4></center>',
-    'size' => 'modal-mg',
+    'size' => 'modal-mm',
     'options' => [
         'tabindex' => false,
     ],
