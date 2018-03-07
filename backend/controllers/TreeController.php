@@ -33,7 +33,7 @@ class TreeController extends Controller
             ],
             [
                 'class' => AjaxFilter::className(),
-                'only' => ['add-host']
+                'only' => ['add-host', 'move', 'copy']
             ],
         ];
     }
@@ -378,59 +378,51 @@ class TreeController extends Controller
     	
     	$request = Yii::$app->request;
     	
-    	if($request->isAjax){
-    	    if($request->post('newParentPort')){
-    			
-    			$link = Tree::find()->where(['device' => $deviceId, 'port' => $port])->one();
-    			
-    			$link->parent_device = $newParentId;
-    			$link->parent_port = $request->post('newParentPort');
-    			
-    			try {
-    			    if (!$link->save()) throw new Exception('Błąd zapisu linku');
-    			} catch (\Throwable $t) {
-    			    var_dump($link->errors);
-    			    var_dump($t->getMessage());
-    			    exit();
-    			}
-    			
-    			return 1;
-     		} else 
-     		    return $this->renderAjax('move', [
-     		        'newParentId' => $newParentId
-     		    ]);
-    	}
+	    if($request->isPost) {
+			$link = Tree::find()->where(['device' => $deviceId, 'port' => $port])->one();
+			$link->parent_device = $newParentId;
+			$link->parent_port = $request->post('newParentPort');
+			
+			try {
+			    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+			} catch (\Throwable $t) {
+			    var_dump($link->errors);
+			    var_dump($t->getMessage());
+			    exit();
+			}
+			
+			return 1;
+ 		} else 
+ 		    return $this->renderAjax('move', [
+ 		        'newParentId' => $newParentId
+ 		    ]);
     }
     
     public function actionCopy($deviceId, $parentId) {
     	 
         $request = Yii::$app->request;
         
-        if($request->isAjax){
-            if($request->post()){
-                
-                $link = new Tree();
-                
-                $link->device = $deviceId;
-                $link->port = (int) $request->post('localPort');
-                $link->parent_device = $parentId;
-                $link->parent_port = (int) $request->post('parentPort');
-                
-                try {
-                    if (!$link->save()) throw new Exception('Błąd zapisu linku');
-                } catch (\Throwable $t) {
-                    var_dump($link->errors);
-                    var_dump($t->getMessage());
-                    exit();
-                }
-                
-                return 1;
-            } else
-                return $this->renderAjax('copy', [
-                    'deviceId' => $deviceId,
-                    'parentId' => $parentId
-                ]);
-        }
+        if($request->isPost){
+            $link = new Tree();
+            $link->device = $deviceId;
+            $link->port = (int) $request->post('localPort');
+            $link->parent_device = $parentId;
+            $link->parent_port = (int) $request->post('parentPort');
+            
+            try {
+                if (!$link->save()) throw new Exception('Błąd zapisu linku');
+            } catch (\Throwable $t) {
+                var_dump($link->errors);
+                var_dump($t->getMessage());
+                exit();
+            }
+            
+            return 1;
+        } else
+            return $this->renderAjax('copy', [
+                'deviceId' => $deviceId,
+                'parentId' => $parentId
+            ]);
     }
     
     function actionToStore($deviceId, $port) {
