@@ -15,6 +15,7 @@ use yii\helpers\Url;
  */ 
 
 require_once '_modal_store.php';
+require_once '_modal_add_tree.php';
 require_once '_add_device_form.php';
 
 $this->title = 'Magazyn';
@@ -94,8 +95,8 @@ echo GridView::widget([
             'template' => '{update} {tree} {delete}',
             'options' => ['style' => 'width:6%;'],
             'buttons' => [
-                'tree' => function ($model, $data) {
-                    $url = Url::toRoute(['tree/add', 'id' => $data->id]);
+                'tree' => function ($url, $model, $key) {
+                    $url = Url::to(['tree/add', 'deviceId' => $key]);
                     return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
                                 'title' => \Yii::t('yii', 'Zamontuj'),
                                 'data-pjax' => '0',
