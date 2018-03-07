@@ -17,12 +17,12 @@ use backend\models\Router;
 <div class="add-store-form">
 
     <?php $form = ActiveForm::begin([
-    	'id' => $modelDevice->formName(),
+    	'id' => $device->formName(),
     	'validationUrl' => Url::toRoute(['router/validation', 'type' => Swith::TYPE])	
     		
     ]); ?>    
     
-    <?= $form->field($modelDevice, 'manufacturer')->dropDownList(
+    <?= $form->field($device, 'manufacturer')->dropDownList(
         ArrayHelper::map(Manufacturer::find()->orderBy('name')->all(), 'id', 'name'),
         [
             'prompt' => 'Wybierz producenta', 
@@ -36,14 +36,14 @@ use backend\models\Router;
         ]
     )?>
     
-    <?= $form->field($modelDevice, 'model', ['options' => ['style' => ['display' => 'none']]])->dropDownList(
+    <?= $form->field($device, 'model', ['options' => ['style' => ['display' => 'none']]])->dropDownList(
         ArrayHelper::map(Model::find()->orderBy('name')->all(), 'id', 'name'),
         [
             'prompt' => 'Wybierz model', 
         ]
     )?>
     
-    <?= $form->field($modelDevice, 'serial', 
+    <?= $form->field($device, 'serial', 
         [
             'enableAjaxValidation' => true, 
             'validateOnChange' => false,
@@ -51,7 +51,7 @@ use backend\models\Router;
         ]  
     )?>
     
-    <?= $form->field($modelDevice, 'mac', 
+    <?= $form->field($device, 'mac', 
         [       
             'enableAjaxValidation' => true, 
             'validateOnChange' => false,
@@ -59,10 +59,10 @@ use backend\models\Router;
         ]
     )?>
     
-    <?= $form->field($modelDevice, 'desc', ['options' => ['style' => ['display' => 'none']]])->textarea()?>
+    <?= $form->field($device, 'desc', ['options' => ['style' => ['display' => 'none']]])->textarea()?>
     
     <div class="form-group">
-        <?= Html::submitButton($modelDevice->isNewRecord ? 'Dodaj' : 'Update', ['class' => $modelDevice->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($device->isNewRecord ? 'Dodaj' : 'Update', ['class' => $device->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
        
     <?php ActiveForm::end(); ?>
@@ -73,7 +73,7 @@ use backend\models\Router;
 
 $(function() {
 
-	$('#<?= $modelDevice->formName(); ?>').on('beforeSubmit', function(e){
+	$('#<?= $device->formName(); ?>').on('beforeSubmit', function(e){
 	
 		var form = $(this);
 	 	$.post(

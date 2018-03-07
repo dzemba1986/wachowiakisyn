@@ -32,7 +32,7 @@ echo GridView::widget([
             'id' => 'store-grid-pjax'
         ]    
     ],
-    'resizableColumns' => FALSE,
+    'resizableColumns' => false,
     'export' => false,
     'panel' => [
         'heading'=>'Magazyn',

@@ -6,40 +6,42 @@ use backend\models\Model;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model backend\models\Installation */
-/* @var $form yii\widgets\ActiveForm */
+/** 
+ * @var yii\web\View $this
+ * @var backend\models\Camera $device
+ */ 
 ?>
 
 <div class="add-store-form">
 
     <?php $form = ActiveForm::begin([
     	'id' => $device->formName(),
-    	'validationUrl' => Url::toRoute(['camera/validation'])	
+    	'validationUrl' => Url::to(['camera/validation'])	
     		
     ]); ?>    
     
-    <?= $form->field($device, 'manufacturer')->dropDownList(
+    <?= $form->field($device, 'manufacturer_id')->dropDownList(
         ArrayHelper::map(Manufacturer::find()->orderBy('name')->all(), 'id', 'name'),
         [
             'prompt' => 'Wybierz producenta', 
-            'onchange' => '$(".field-camera-model").removeAttr("style");'
-                . '$(".field-camera-serial").removeAttr("style");'
-                . '$(".field-camera-mac").removeAttr("style");'
-                . '$(".field-camera-desc").removeAttr("style");'
-                . '$.get( "' . Url::toRoute('model/list') . '&typeId=" + '. Camera::TYPE .' + "&manufacturerId=" + $(this).val(), function(data) {'
-                    . '$("select#camera-model").html(data);'   
-                . '} )'            
+            'onchange' => new JsExpression("
+                $('.field-camera-model_id').removeAttr('style');
+                $('.field-camera-serial').removeAttr('style');
+                $('.field-camera-mac').removeAttr('style');
+                $('.field-camera-desc').removeAttr('style');
+                $.get('" . Url::to(['model/list']) . "&typeId=" . Camera::TYPE . "&manufacturerId=' + $(this).val(), function(data) {
+                    $('select#camera-model_id').html(data);
+                });
+            ")
         ]
     )?>
     
-    <?= $form->field($device, 'model', ['options' => ['style' => ['display' => 'none']]])->dropDownList(
-        ArrayHelper::map(Model::find()->orderBy('name')->all(), 'id', 'name'),
-        [
-            'prompt' => 'Wybierz model', 
-        ]
+    <?= $form->field($device, 'model_id', ['options' => ['style' => ['display' => 'none']]])->dropDownList(
+            ArrayHelper::map(Model::find()->orderBy('name')->all(), 'id', 'name'),
+            ['prompt' => 'Wybierz model']
     )?>
     
     <?= $form->field($device, 'serial', 
@@ -68,26 +70,22 @@ use yii\widgets\ActiveForm;
 
 </div>
 
-<script>
-
+<?php
+$js = <<<JS
 $(function() {
-
-	$('#<?= $device->formName(); ?>').on('beforeSubmit', function(e){
+	$('#{$device->formName()}').on('beforeSubmit', function(e){
 	
 		var form = $(this);
 	 	$.post(
-	  		form.attr("action"), // serialize Yii2 form
+	  		form.attr('action'),
 	  		form.serialize()
 	 	).done(function(result){
-			
-	// 		console.log(result);
 	 		if(result == 1){
 	 			$(form).trigger('reset');
-				$('#modal-add-store').modal('hide');
+				$('#modal-store').modal('hide');
 	 			$.pjax.reload({container: '#store-grid-pjax'});
 	 		}
 	 		else{
-			
 	 			$('#message').html(result);
 	 		}
 	 	}).fail(function(){
@@ -97,5 +95,7 @@ $(function() {
 	});
 
 });
+JS;
 
-</script>
+$this->registerJs($js);
+?>
