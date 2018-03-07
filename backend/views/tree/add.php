@@ -1,35 +1,22 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use kartik\select2\Select2;
-use backend\models\Tree;
 use backend\models\Address;
-use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
-use yii\widgets\DetailView;
-use backend\models\Device;
-use yii\web\JsExpression;
 use backend\models\AddressShort;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\web\JsExpression;
+use yii\widgets\ActiveForm;
 
-echo DetailView::widget([
-	'model' => $modelDevice,
-    'attributes' => [
-    	[
-    		'attribute' => 'type',
-    		'value' => $modelDevice->modelType->name,	
-    	],
-    	[
-    		'attribute' => 'model',
-    			'value' => $modelDevice->modelModel->name,
-    	],
-     	'mac',
-        'serial',
-	],
-]);
-?>
+/**
+ * @var yii\web\View $this
+ * @var backend\models\Device $device
+ * @var backend\models\Tree $link
+ * @var backend\models\Address $address
+ */ 
 
-<?php $form = ActiveForm::begin([
+$form = ActiveForm::begin([
 	'id' => 'add-device-form',
     ])?>
     
@@ -37,8 +24,8 @@ echo DetailView::widget([
     
     <div class="row">
     
-    <?= $form->field($modelAddress, 't_ulica', [
-			'options' => ['class' => 'col-md-5', 'style' => 'padding-right: 5px;'],
+    <?= $form->field($address, 't_ulica', [
+			'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
     	])->widget(Select2::className(), [
      		'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
@@ -49,22 +36,22 @@ echo DetailView::widget([
         ])
     ?>
     
-    <?= $form->field($modelAddress, 'dom' , [
-    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+    <?= $form->field($address, 'dom' , [
+    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
-    	])->textInput(['placeholder' => $modelAddress->getAttributeLabel('dom')]) 
+    	])->textInput(['placeholder' => $address->getAttributeLabel('dom')]) 
     ?>
     
-    <?= $form->field($modelAddress, 'dom_szczegol' , [
-    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+    <?= $form->field($address, 'dom_szczegol' , [
+    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
-    	])->textInput(['placeholder' => $modelAddress->getAttributeLabel('dom_szczegol')]) 
+    	])->textInput(['placeholder' => $address->getAttributeLabel('dom_szczegol')]) 
     ?>
     
-    <?= $form->field($modelAddress, 'pietro' , [
-    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+    <?= $form->field($address, 'pietro' , [
+    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
-    	])->dropDownList(Address::getFloor(), ['prompt' => $modelAddress->getAttributeLabel('pietro')]) 
+    	])->dropDownList(Address::getFloor(), ['prompt' => $address->getAttributeLabel('pietro')]) 
     ?>
     
     </div>
@@ -73,25 +60,24 @@ echo DetailView::widget([
     
     <div class="row">
 
-    <?= $form->field($modelTree, 'parent_device', [
-    		'options' => ['class' => 'col-md-5', 'style' => 'padding-right: 5px;'],
+    <?= $form->field($link, 'parent_device', [
+    		'options' => ['class' => 'col-md-8', 'style' => 'padding-right: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
     	])->widget(Select2::classname(), [
     		'language' => 'pl',
             'options' => [
             	'placeholder' => 'Urządzenie nadrzędne',
-            	'onchange' => '
-                	$.get( "' . Url::toRoute('tree/select-list-port') . '&device=" + $("select#tree-parent_device").val(), function(data){
-						$("select#tree-parent_port").html(data);
-					} );
+                'onchange' => new JsExpression("
+                    $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + $('select#tree-parent_device').val(), function(data){
+						$('select#tree-parent_port').html(data);
+					});
                                         		
-                    $.get( "' . Url::toRoute('tree/select-list-port') . '&device=" + "' . Yii::$app->request->get("id") . '" + "&mode=all", function(data){
-						$("select#tree-port").html(data);
+                    $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$device->id} + '&mode=all', function(data){
+						$('select#tree-port').html(data);
 					} );
-            	'
+                ")
             ],
     		'pluginOptions' => [
-    			
     			'allowClear' => true,
     			'minimumInputLength' => 1,
     			'language' => [
@@ -99,12 +85,12 @@ echo DetailView::widget([
     				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     			],
     			'ajax' => [
-    				'url' => Url::toRoute('device/list'),
+    				'url' => Url::to(['device/list-from-tree']),
     				'dataType' => 'json',
     				'data' => new JsExpression('function(params) {
     					return { 
     						q : params.term,
-    						type : 2
+    						type_id : [1,2],
 						}; 
 					}')
 	    		],
@@ -115,42 +101,36 @@ echo DetailView::widget([
     	])     
     ?>
     
-    <?= $form->field($modelTree, 'parent_port', [
-    		'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+    <?= $form->field($link, 'parent_port', [
+    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
-    	])->dropDownList([''], ['prompt' => $modelTree->getAttributeLabel('parent_port')]) 
+    	])->dropDownList([''], ['prompt' => $link->getAttributeLabel('parent_port')]) 
     ?>
     
-    <?= $form->field($modelTree, 'port', [
-    		'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+    <?= $form->field($link, 'port', [
+    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
-    	])->dropDownList([''], ['prompt' => $modelTree->getAttributeLabel('port')]) 
+    	])->dropDownList([''], ['prompt' => $link->getAttributeLabel('port')]) 
     ?>
         
     </div>
     
-	<?= Html::submitButton($modelDevice->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
+	<?= Html::submitButton('Dodaj', ['class' => 'btn btn-success']) ?>
+
 <?php ActiveForm::end() ?>
 
-<script>
-
+<?php
+$js = <<<JS
 $(function(){
 	$("#add-device-form").on('beforeSubmit', function(e){
-
 		var form = $(this);
      	$.post(
-      		form.attr("action"), // serialize Yii2 form
+      		form.attr("action"),
       		form.serialize()
      	).done(function(result){
-		
-// 			console.log(result);
  			if(result == 1){
- 				//$("#device_tree").jstree(true).refresh();
-// 				$('#modal-update-net').modal('hide');
-//  			$.pjax.reload({container: '#subnet-grid-pjax'});
- 			}
- 			else{
-		
+			}
+ 			else {
  				$('#message').html(result);
  			}
  		}).fail(function(){
@@ -159,5 +139,6 @@ $(function(){
 		return false;				
 	});
 });
-
-</script>
+JS;
+$this->registerJs($js);
+?>
