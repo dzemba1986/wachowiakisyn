@@ -2,29 +2,24 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\widgets\ActiveForm;
 use backend\models\GatewayVoip;
+use Yii;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 class GatewayVoipController extends DeviceController
 {	
-	public function actionValidation($id = null){
-		 
-		$modelDevice = is_null($id) ? new GatewayVoip() : $this->findModel($id);
-		
-		$request = Yii::$app->request;
-		
-		if ($request->isAjax && $modelDevice->load($request->post())) {
-			
-//  				var_dump($modelDevice); exit();
-	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-	               	return ActiveForm::validate($modelDevice, 'mac');
-
-              	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return ActiveForm::validate($modelDevice, 'serial');
-
-		}
-	}
+    function actionValidation() {
+        
+        $request = Yii::$app->request;
+        $voip = new GatewayVoip();
+        
+        if ($voip->load($request->post())){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($voip);
+        };
+    }
     
     protected function findModel($id)
     {

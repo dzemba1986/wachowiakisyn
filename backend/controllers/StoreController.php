@@ -48,7 +48,7 @@ class StoreController extends Controller {
         	$device->address_id = 1;
         	
             try {
-            	if(!$device->save()) throw new Exception('Problem z zapisem urządzenia');
+            	if(!$device->save()) throw new Exception('Błąd zapisu urządzenia');
             	
             	return 1;
             } catch (Exception $e) {
@@ -60,44 +60,38 @@ class StoreController extends Controller {
         } else {
             switch (get_class($device)){
                 case 'backend\models\Router':
-                    echo $this->renderAjax('add_router', [
-                    'device' => $device,
+                    return $this->renderAjax('add_router', [
+                        'device' => $device,
                     ]);
                     break;
                 case 'backend\models\Swith':
-                    
-                    echo $this->renderAjax('add_switch', [
-                    'device' => $device,
+                    return $this->renderAjax('add_switch', [
+                        'device' => $device,
                     ]);
                     break;
                 case 'backend\models\GatewayVoip':
-                    
-                    echo $this->renderAjax('add_gateway_voip', [
-                    'device' => $device,
+                    return $this->renderAjax('add_gateway_voip', [
+                        'device' => $device,
                     ]);
                     break;
                 case 'backend\models\Camera':
-                    
-                    echo $this->renderAjax('add_camera', [
-                    'device' => $device,
+                    return $this->renderAjax('add_camera', [
+                        'device' => $device,
                     ]);
                     break;
                 case 'backend\models\Server':
-                    
-                    echo $this->renderAjax('add_server', [
-                    'device' => $device,
+                    return $this->renderAjax('add_server', [
+                        'device' => $device,
                     ]);
                     break;
                 case 'backend\models\Virtual':
-                    
-                    echo $this->renderAjax('add_virtual', [
-                    'device' => $device,
+                    return $this->renderAjax('add_virtual', [
+                        'device' => $device,
                     ]);
                     break;
                 case 'backend\models\MediaConverter':
-                    
-                    echo $this->renderAjax('add_media_converter', [
-                    'device' => $device,
+                    return $this->renderAjax('add_media_converter', [
+                        'device' => $device,
                     ]);
                     break;
             }

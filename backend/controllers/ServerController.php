@@ -2,29 +2,24 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\widgets\ActiveForm;
 use backend\models\Server;
+use Yii;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 class ServerController extends DeviceController
 {	
-	public function actionValidation($id = null){
-		 
-		$modelDevice = is_null($id) ? new Server() : Server::findOne($id);
-		
-		$request = Yii::$app->request;
-		
-		if ($request->isAjax && $modelDevice->load($request->post())) {
-			
-//  				var_dump($modelDevice); exit();
-	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-	               	return ActiveForm::validate($modelDevice, 'mac');
-
-              	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return ActiveForm::validate($modelDevice, 'serial');
-
-		}
-	}
+    function actionValidation() {
+        
+        $request = Yii::$app->request;
+        $server = new Server();
+        
+        if ($server->load($request->post())){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($server);
+        };
+    }
     
     protected function findModel($id)
     {

@@ -2,25 +2,24 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\widgets\ActiveForm;
 use backend\models\Virtual;
+use Yii;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 class VirtualController extends DeviceController
 {	
-	public function actionValidation($id = null){
-		 
-		$modelDevice = is_null($id) ? new Virtual() : $this->findModel($id);
-		
-		$request = Yii::$app->request;
-		
-		if ($request->isAjax && $modelDevice->load($request->post())) {
-			
-//  				var_dump($modelDevice); exit();
-	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-	               	return ActiveForm::validate($modelDevice, 'mac');
-		}
-	}
+    function actionValidation() {
+        
+        $request = Yii::$app->request;
+        $virtual = new Virtual();
+        
+        if ($virtual->load($request->post())){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($virtual);
+        };
+    }
     
     protected function findModel($id)
     {
