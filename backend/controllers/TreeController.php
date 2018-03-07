@@ -61,13 +61,13 @@ class TreeController extends Controller
                 if (!$address->save()) throw new Exception('Błąd zapisu adresu');
                 
                 $device->address_id = $address->id;
-                $device->name = $address->toString();
+                $device->name = $address->toString(true);
                 if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
                 
                 if (!$link->save()) throw new Exception('Błąd zapisu drzewa');
                             
                 $transaction->commit();
-                $this->redirect(['tree/index']);
+                $this->redirect(['tree/index', 'id' => $device->id . '.' . $link->port]);
             } catch (\Exception $e) {
                 $transaction->rollBack();
                 var_dump($device->errors);
@@ -344,7 +344,7 @@ class TreeController extends Controller
         
         if ($mode == 'free') {
             $links = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
-                ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
+            ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
             
             if (!empty($links)) {
                 foreach ($links as $link) {
@@ -352,7 +352,7 @@ class TreeController extends Controller
                 }
                 
                 $freePorts = array_diff_key($model->port->getValue(), $usePorts);
-
+                
                 if ($install){
                     echo '<option value="-1">Brak miejsca</option>';
                 }
@@ -365,6 +365,11 @@ class TreeController extends Controller
                 }
             } else {
                 echo '<option value="-1">Brak miejsca</option>';
+            }
+        } elseif ($mode == 'all') {
+            echo '<option></option>';
+            foreach ($model->port as $key => $port){
+                echo '<option value="' . ($key) . '">' . $port . '</option>';
             }
         }
     }
