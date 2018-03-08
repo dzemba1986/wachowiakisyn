@@ -38,7 +38,6 @@ use yii\widgets\ActiveForm;
 		
 		<?= Html::dropDownList('subnet', '', [], [
 			'class' => 'form-control',
-// 			'style' => 'padding-left: 3px; padding-right: 3px;'
 			'onchange' => new yii\web\JsExpression("
 				var row = $(this).parents('.network-group');
 				var index = row.attr('data-network-index');
@@ -57,7 +56,6 @@ use yii\widgets\ActiveForm;
 		
 		<?= Html::dropDownList('ip', '', [], [
 			'class' => 'form-control',
-// 			'style' => 'padding-left: 3px; padding-right: 3px;'
 		]) ?>
 		
 	</div>
@@ -98,7 +96,7 @@ $form = ActiveForm::begin([
 						var row = $(this).parents('.network-group');
 						var index = row.attr('data-network-index');
 							
-						$.get('" . Url::toRoute('subnet/select-list') . "&vlan=' + $(this).val(), function(data){
+						$.get('" . Url::toRoute('subnet/list') . "&vlanId=' + $(this).val(), function(data){
 							$('select[name=\"network[' + index + '][subnet]\"]').html(data).trigger('change');
 						});	
 					")	
@@ -110,7 +108,7 @@ $form = ActiveForm::begin([
 				
 				<?= $key == 0 ? Html::label('Podsieć') : null ?>
 				
-				<?= Html::dropDownList('network[' . $key . '][subnet]', $ip->subnet, ArrayHelper::map(Subnet::find()->select(['id', 'ip'])->where(['vlan_id' => $ip->subnet->vlan->id])->all(), 'id', 'ip'), [
+				<?= Html::dropDownList('network[' . $key . '][subnet]', $ip->subnet_id, ArrayHelper::map(Subnet::find()->select(['id', 'ip'])->where(['vlan_id' => $ip->subnet->vlan->id])->all(), 'id', 'ip'), [
 					'class' => 'form-control',
 					'prompt' => 'Podsieć',
 					'onchange' => new yii\web\JsExpression("
@@ -131,7 +129,6 @@ $form = ActiveForm::begin([
 				
 				<?= Html::dropDownList('network[' . $key . '][ip]', '', [], [
 					'class' => 'form-control',
-	// 				'style' => 'padding-left: 3px; padding-right: 3px;'
 				]) ?>
 				
 			</div>
