@@ -20,7 +20,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$urlView = Url::to(['device/view']);
+$urlView = Url::to(['device/tabs-view']);
 
 $js = <<<JS
 $(function(){

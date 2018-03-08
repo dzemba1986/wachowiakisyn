@@ -9,7 +9,6 @@ use yii\widgets\DetailView;
  * @var backend\models\Connection $connection
  */
 
-require_once '_modal_change_mac.php';
 require_once '_modal_device_sm.php';
 
 $add = $device->configurationAdd();
@@ -112,16 +111,8 @@ $(function(){
 		$('#modal-change-mac').modal('show')
 			.find('#modal-content-change-mac')
 			.load($(this).attr('href'));
-
-		//potrzebne by okno modal nie blokowało się
-		$('#device_desc').css('position', 'absolute');
 	
         return false;
-	});
-
-	//włącza spowtorem przesówanie opisu urządzenia po zmianie mac
-	$('#modal-change-mac').on('hidden.bs.modal', function () {
-		$('#device_desc').css('position', 'fixed');
 	});
 
     $('.close-connection').on('click', function(event) {
@@ -130,14 +121,7 @@ $(function(){
 			.find('#modal-content-change-mac')
 			.load($(this).attr('href'));
 
-		//potrzebne by okno modal nie blokowało się
-		$('#device_desc').css('position', 'absolute');
-
         return false;
-	});
-
-    $('#modal-device-sm').on('hidden.bs.modal', function () {
-		$('#device_desc').css('position', 'fixed');
 	});
 });
 JS;

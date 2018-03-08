@@ -7,6 +7,7 @@ use yii\helpers\Url;
  */ 
 
 require_once '_modal_tree.php';
+require_once '_modal_change_mac.php';
 
 $this->registerJsFile('@web/js/jstree/dist/jstree.min.js');
 $this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');

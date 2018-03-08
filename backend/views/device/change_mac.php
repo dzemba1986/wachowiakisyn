@@ -32,8 +32,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php 
-$urlMac = Url::to(['host/get-mac', 'id' => $device->id]);
-$urlCheckDhcp = Url::to(['host/get-url-check-dhcp', 'id' => $device->id]);
+$urlView = Url::to(['device/tabs-view']);
 
 $js = <<<JS
 $(function(){
@@ -55,10 +54,7 @@ $(function(){
      	).done(function(result){
      		if(result == 1){
                 $('#modal-change-mac').modal('hide');
-    			$('.change-mac').load('{$urlMac}');
-                $.get('{$urlCheckDhcp}', function(data) {
-                    $('#check-dhcp').attr('href', data);
-                });
+    			$('#device_desc').load('{$urlView}&id=' + {$device->id});
      		}
      		else{
      			console.log(result);

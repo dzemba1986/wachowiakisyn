@@ -7,9 +7,6 @@ Modal::begin([
     'size' => 'modal-sm',
     'options' => [
         'tabindex' => false, // important for Select2 to work properly
-        'enforceFocus' => false,
-        'style' => ['position' => 'fixed'],
-        'backdrop' => false,
     ],
 ]);
 
