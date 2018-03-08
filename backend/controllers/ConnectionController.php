@@ -175,8 +175,9 @@ class ConnectionController extends Controller
         
         $request = Yii::$app->request;
         $connection = $this->findModel($id);
+        $hostId = $connection->host->id;
         
-        if ($request->post()) {
+        if ($request->isPost) {
             $transaction = \Yii::$app->db->beginTransaction();
             
             $connection->close_user = Yii::$app->user->identity->id;
@@ -196,7 +197,7 @@ class ConnectionController extends Controller
             }
         } else {
             return $this->renderAjax('close', [
-                'connection' => $connection,
+                'hostId' => $hostId,
             ]);
         }
         

@@ -126,8 +126,8 @@ $(function(){
 
     $('.close-connection').on('click', function(event) {
         
-		$('#modal-device-sm').modal('show')
-			.find('#modal-content-device-sm')
+		$('#modal-change-mac').modal('show')
+			.find('#modal-content-change-mac')
 			.load($(this).attr('href'));
 
 		//potrzebne by okno modal nie blokowało się

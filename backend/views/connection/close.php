@@ -4,6 +4,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
+/**
+ * @var integer $hostId
+ */
+
 $form = ActiveForm::begin([
 	'id' => 'close'
 ]) ?>
@@ -16,7 +20,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$urlView = Url::to(['device/tabs-view']);
+$urlView = Url::to(['device/view']);
 
 $js = <<<JS
 $(function(){
@@ -35,12 +39,8 @@ $(function(){
 	  		form.serialize()
 	 	).done(function(result){
 	 		if(result == 1){
-				$('#modal-device-sm').modal('hide');
-                var ids = $("#device_tree").jstree('get_selected');
-                if (ids.length == 1) {
-                    var id = ids[0];
-        			$('#device_desc').load('{$urlView}&id=' + id.substr(0, id.indexOf('.')));
-                }
+				$('#modal-change-mac').modal('hide');
+    			$('#device_desc').load('{$urlView}&id=' + {$hostId});
 	 		}
 	 		else{
 	 			console.log(result);

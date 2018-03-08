@@ -105,7 +105,7 @@ class Connection extends ActiveRecord
 			['phone_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
 			['phone_date', 'default', 'value'=>NULL],
             
-		    ['close_date', 'date', 'format'=>'yyyy-MM-dd H:i:s', 'message'=>'Zły format'],
+		    ['close_date', 'date', 'format'=>'php:Y-m-d H:i:s', 'message'=>'Zły format'],
             //['close_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
             ['close_date', 'default', 'value'=>NULL],
             
@@ -253,7 +253,6 @@ class Connection extends ActiveRecord
     function afterSave($insert, $changedAttributes) {
         
         if (!$insert) {
-            
             if (array_key_exists('close_date', $changedAttributes) && is_null($changedAttributes['close_date'])) {
                 if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
                     $host = Host::findOne($changedAttributes['host_id']);
