@@ -5,6 +5,7 @@ use backend\models\AddressShort;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /**
@@ -15,6 +16,7 @@ use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
 	'id' => $device->formName(),
+    'validationUrl' => Url::to(['server/validation', 'id' => $device->id])
 ])?>
 	
 	<div class="col-md-5">
@@ -62,10 +64,12 @@ $form = ActiveForm::begin([
     	<div class="row">
     	
     		<?= $form->field($device, 'mac', [
+    		    'enableAjaxValidation' => true,
     			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;']
     		]) ?>
     		
     		<?= $form->field($device, 'serial', [
+    		    'enableAjaxValidation' => true,
     			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 0px;']
     		]) ?>
     		</div>

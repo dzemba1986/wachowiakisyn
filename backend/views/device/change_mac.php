@@ -14,7 +14,7 @@ use yii\web\JsExpression;
 $form = ActiveForm::begin([
 	'id' => $device->formName(),
     'enableAjaxValidation' => true,
-    'validationUrl' => Url::to(['validator/host']),
+    'validationUrl' => Url::to(['host/validation', 'id' => $device->id]),
     'validateOnType' => true
 ])?>
 	

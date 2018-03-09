@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
 	'id' => $model->formName(),
-    'validationUrl' => Url::to(['validator/add-host'])
+    'validationUrl' => Url::to(['host/add-host-validation'])
 ]);
 ?>
 
