@@ -89,8 +89,7 @@ class Connection extends ActiveRecord
 			['device_id', 'integer'],
 			['device_id', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CREATE_INSTALLATION],
 				
-		    ['start_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
-			['start_date', 'match', 'pattern'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
+		    ['start_date', 'date', 'format'=>'php:Y-m-d H:i:s', 'message'=>'Zły format'],
 			['start_date', 'default', 'value' => new \yii\db\Expression('NOW()')],
                       
 		    ['conf_date', 'date', 'format'=>'yyyy-MM-dd', 'message'=>'Zły format'],
