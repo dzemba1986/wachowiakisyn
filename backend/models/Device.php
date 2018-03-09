@@ -100,7 +100,7 @@ class Device extends ActiveRecord
 		    ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => true],
 		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
-		        return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
+		        return strtolower($model->mac) !== strtolower($model->getOldAttribute('mac'));
 		    }],
 		    ['mac', 'trim', 'skipOnEmpty' => true],
 		    

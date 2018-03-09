@@ -50,6 +50,10 @@ class Virtual extends Device {
 	            ['mac', 'filter', 'filter' => function ($value) {
 	                return $value==='' ? null : $value;
 	            }],
+	            //hosty i virtualki mogą być w tej samej podsieci
+	            ['mac', 'unique', 'targetClass' => Host::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
+	                return strtolower($model->mac) !== strtolower($model->getOldAttribute('mac'));
+	            }],
 	            
 	            ['dhcp', 'boolean'],
 	            ['dhcp', 'default', 'value' => false],
