@@ -17,7 +17,7 @@ class InstallationSearch extends Installation
 	public function rules()
 	{
 		return [
-		[['address', 'wire_length', 'type', 'status',
+		[['address', 'wire_length', 'type_id', 'status',
 		 'wire_date', 'socket_date', 'minSocketDate', 'maxSocketDate',
 		 'wire_user', 'socket_user', 'invoice_date', 'street', 'house', 'house_detail', 'flat', 'flat_detail'], 
 		 'safe'],
@@ -46,8 +46,8 @@ class InstallationSearch extends Installation
 				'invoice_date',
                 'type_id',
                 'street' => [
-					'asc' => ['ulica' => SORT_ASC],
-					'desc' => ['ulica' => SORT_DESC],
+					'asc' => ['t_ulica' => SORT_ASC],
+					'desc' => ['t_ulica' => SORT_DESC],
 				],	
 				'house' => [
 						'asc' => ['dom' => SORT_ASC],
@@ -69,17 +69,17 @@ class InstallationSearch extends Installation
 		}
 	
 		$query->andFilterWhere([
-				'tbl_installation.id' => $this->id,
-				'wire_length' => $this->wire_length,
-				'wire_date' => $this->wire_date,
-				'socket_date' => $this->socket_date,
-				'type_id' => $this->type,
-				'ulica' => $this->street,
-				'dom' => $this->house,
-				'lokal' => $this->flat,
-				'invoiced' => $this->invoice_date,
-				'status' => $this->status
-				]);
+			'tbl_installation.id' => $this->id,
+			'wire_length' => $this->wire_length,
+			'wire_date' => $this->wire_date,
+			'socket_date' => $this->socket_date,
+			'type_id' => $this->type_id,
+			't_ulica' => $this->street,
+			'dom' => $this->house,
+			'lokal' => $this->flat,
+			'invoiced' => $this->invoice_date,
+			'status' => $this->status
+		]);
 		
 		
 	

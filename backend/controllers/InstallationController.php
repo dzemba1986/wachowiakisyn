@@ -35,10 +35,6 @@ class InstallationController extends Controller
         ];
     }
 
-    /**
-     * Lists all Installation models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new InstallationSearch();
@@ -50,11 +46,6 @@ class InstallationController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Installation model.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionView($id)
     {
         return $this->render('view', [
