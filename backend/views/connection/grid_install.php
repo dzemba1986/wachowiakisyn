@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
         ],          
         [
         	'attribute' => 'start_date',
-            'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
+            'format' => ['date', 'php:Y-m-d'],
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -158,11 +158,8 @@ $this->params['breadcrumbs'][] = 'Bez kabla';
         [
         	'attribute' => 'task_id',
         	'label' => 'Montaż',
-        	'format' => 'raw',
-        	'value' => function ($model){
-        		if ($model->task)
-        			return date("Y-m-d", strtotime($model->task->start));
-            },
+            'format' => ['date', 'php:Y-m-d'],
+        	'value' => 'task.start',
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,

@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = 'Odłączone';
 		],        
 		[
 			'attribute' => 'start_date',
-		    'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
+		    'format' => ['date', 'php:Y-m-d'],
 			'filterType' => GridView::FILTER_DATE,
 			'filterWidgetOptions' => [
 				'model' => $searchModel,
@@ -113,7 +113,6 @@ $this->params['breadcrumbs'][] = 'Odłączone';
         ],
         [
         	'attribute' => 'conf_date',
-        	'value'=> 'conf_date',
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -130,7 +129,6 @@ $this->params['breadcrumbs'][] = 'Odłączone';
         ],
         [
         	'attribute' => 'pay_date',
-        	'value'=> 'pay_date',
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -147,7 +145,7 @@ $this->params['breadcrumbs'][] = 'Odłączone';
         ],
         [
         	'attribute' => 'close_date',
-            'value'=> function($model) { return date('Y-m-d', strtotime($model->close_date)); },
+            'format' => ['date', 'php:Y-m-d'],
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,

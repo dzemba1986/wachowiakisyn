@@ -27,8 +27,12 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
 				'id' => 'connection-grid-pjax'
 		]
 	],
-	'resizableColumns' => FALSE,
+	'resizableColumns' => false,
 	'export' => false,
+    'formatter' => [
+        'class' => 'yii\i18n\Formatter',
+        'nullDisplay' => ''
+    ],
 	'summary' => 'Widoczne {count} z {totalCount}',
 	'panel' => [
 			'before' => $this->renderAjax('_search', [
@@ -65,7 +69,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         ], 
         [
         	'attribute' => 'start_date',
-            'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
+            'format' => ['date', 'php:Y-m-d'],
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -167,7 +171,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         ],
         [
         	'attribute' => 'close_date',
-            'value'=> function($model) { return date('Y-m-d', strtotime($model->close_date)); },
+            'format' => ['date', 'php:Y-m-d'],
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,

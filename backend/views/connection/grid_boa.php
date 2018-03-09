@@ -58,11 +58,12 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
 		}
 	},
 	'columns' => [
-        [
-			'header'=>'Lp.',
-			'class'=>'yii\grid\SerialColumn',
-           	'options'=>['style'=>'width: 4%;'],
-		],
+	    [
+	        'header' => 'Lp.',
+	        'class' => 'kartik\grid\SerialColumn',
+	        'options' => ['style'=>'width: 4%;'],
+	        'mergeHeader' => true
+	    ],
         [
             'class' => 'kartik\grid\ExpandRowColumn',
             'value' => function ($model, $key, $index, $column){
@@ -76,7 +77,7 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
         ],          
         [
         	'attribute' => 'start_date',
-            'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
+            'format' => ['date', 'php:Y-m-d'],
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -145,9 +146,7 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
         ],
         [
         	'attribute' => 'synch_date',
-        	'value'=> function ($model){
-        		return date("Y-m-d", strtotime($model->synch_date));
-        	},
+            'format' => ['date', 'php:Y-m-d'],
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -171,12 +170,16 @@ $this->params['breadcrumbs'][] = 'Zaksięgowane';
                     100 => 100,
                     500 => 500,
                     1000 => 1000,
-                    2000 => 2000,
                 ],
-                'template' => '{list}',
+                'label' => 'Ilość',
+                'template' => '{label}{list}',
+                'options' => ['class' => 'form-control'],
+                
             ]),
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
+            'mergeHeader' => true,
             'template' => '{view}',
+            'options' => ['style' => 'width:6%;'],
         ],            
     ]
 ]); 

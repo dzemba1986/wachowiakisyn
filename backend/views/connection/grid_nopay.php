@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         ],
         [
         	'attribute' => 'start_date',
-            'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
+            'format' => ['date', 'php:Y-m-d'],
             'filterType' => GridView::FILTER_DATE,
             'filterWidgetOptions' => [
             	'model' => $searchModel,
@@ -172,7 +172,6 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
         ],
         [
         	'attribute' => 'conf_date',
-        	'value'=> 'conf_date',
 			'filterType' => GridView::FILTER_DATE,
 			'filterWidgetOptions' => [
 				'model' => $searchModel,
