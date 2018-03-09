@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
         ],          
         [
         	'attribute' => 'start_date',
-        	'value' => 'start_date',
+            'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,
@@ -164,7 +164,7 @@ $this->params['breadcrumbs'][] = 'Niezaksięgowane';
         ],
         [
         	'attribute' => 'close_date',
-        	'value'=> 'close_date',
+            'value'=> function($model) { return date('Y-m-d', strtotime($model->close_date)); },
         	'filterType' => GridView::FILTER_DATE,
         	'filterWidgetOptions' => [
         		'model' => $searchModel,

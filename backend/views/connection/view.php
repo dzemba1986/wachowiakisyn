@@ -47,7 +47,10 @@ use yii\widgets\DetailView;
         	'nullDisplay' => ''
         ],
         'attributes' => [
-            'start_date',
+            [
+                'attribute' => 'start_date',
+                'value' => date('Y-m-d', strtotime($model->start_date))
+            ],
         	'soa_date',
             [
                 'attribute' => 'conf_date',

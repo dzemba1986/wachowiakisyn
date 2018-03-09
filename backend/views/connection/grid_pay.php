@@ -49,9 +49,7 @@ $this->params['breadcrumbs'][] = 'Aktywne';
 		],        
 		[
 			'attribute' => 'start_date',
-			'value'=> function ($model){
-				return date("Y-m-d", strtotime($model->start_date));
-			},
+		    'value'=> function($model) { return date('Y-m-d', strtotime($model->start_date)); },
 			'filterType' => GridView::FILTER_DATE,
 			'filterWidgetOptions' => [
 				'model' => $searchModel,
