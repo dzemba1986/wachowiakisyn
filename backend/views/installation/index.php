@@ -57,9 +57,10 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'columns' => [
             [
-                'header'=>'Lp.',
-                'class'=>'yii\grid\SerialColumn',
-                'options'=>['style'=>'width: 4%;'],
+                'header' => 'Lp.',
+                'class' => 'kartik\grid\SerialColumn',
+                'options' => ['style'=>'width: 4%;'],
+                'mergeHeader' => true
             ],
             [	
                 'attribute' => 'street',
@@ -136,18 +137,23 @@ $this->params['breadcrumbs'][] = $this->title;
         		'options' => ['style'=>'width:5%;'],
         	],
             [   
-            'header' => PageSize::widget([
-                'defaultPageSize' => 100,
-                'sizes' => [
-                    10 => 10,
-                    100 => 100,
-                    500 => 500,
-                    1000 => 1000,
-                ],
-                'template' => '{list}',
-            ]),
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{update}',
+                'header' => PageSize::widget([
+                    'defaultPageSize' => 100,
+                    'pageSizeParam' => 'per-page',
+                    'sizes' => [
+                        10 => 10,
+                        100 => 100,
+                        500 => 500,
+                        1000 => 1000,
+                    ],
+                    'label' => 'Ilość',
+                    'template' => '{label}{list}',
+                    'options' => ['class'=>'form-control'],
+                ]),
+                'class' => 'kartik\grid\ActionColumn',
+                'mergeHeader' => true,
+                'options' => ['style' => 'width:6%;'],
+                'template' => '{update}',
         ],     
         ],
     ]); ?>
