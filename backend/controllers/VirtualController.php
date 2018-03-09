@@ -10,14 +10,14 @@ use yii\widgets\ActiveForm;
 
 class VirtualController extends DeviceController
 {	
-    function actionValidation() {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
-        $virtual = new Virtual();
+        $host = is_null($id) ? new Virtual() : Virtual::findOne($id);
         
-        if ($virtual->load($request->post())){
+        if ($host->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($virtual);
+            return ActiveForm::validate($host);
         };
     }
     

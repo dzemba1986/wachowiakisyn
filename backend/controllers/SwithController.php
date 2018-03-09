@@ -11,10 +11,10 @@ use yii\widgets\ActiveForm;
 
 class SwithController extends Controller
 {	
-    function actionValidation() {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
-        $switch = new Swith();
+        $switch = is_null($id) ? new Swith() : Swith::findOne($id);
         
         if ($switch->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;

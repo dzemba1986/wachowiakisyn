@@ -11,10 +11,10 @@ use yii\widgets\ActiveForm;
 
 class CameraController extends Controller
 {	
-    function actionValidation() {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
-        $camera = new Camera();
+        $camera = is_null($id) ? new Camera() : Camera::findOne($id);
         
         if ($camera->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;

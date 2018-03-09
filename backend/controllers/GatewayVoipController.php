@@ -10,10 +10,10 @@ use yii\widgets\ActiveForm;
 
 class GatewayVoipController extends DeviceController
 {	
-    function actionValidation() {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
-        $voip = new GatewayVoip();
+        $voip = is_null($id) ? new GatewayVoip() : GatewayVoip::findOne($id);
         
         if ($voip->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -21,8 +21,8 @@ class GatewayVoipController extends DeviceController
         };
     }
     
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
+        
         if (($model = GatewayVoip::findOne($id)) !== null) {
             return $model;
         } else {

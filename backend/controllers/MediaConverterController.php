@@ -11,14 +11,14 @@ use yii\widgets\ActiveForm;
 
 class MediaConverterController extends Controller
 {	
-    function actionValidation() {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
-        $mc = new MediaConverter();
+        $host = is_null($id) ? new MediaConverter() : MediaConverter::findOne($id);
         
-        if ($mc->load($request->post())){
+        if ($host->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($mc);
+            return ActiveForm::validate($host);
         };
     }
 	

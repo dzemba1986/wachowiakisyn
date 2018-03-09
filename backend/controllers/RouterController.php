@@ -10,10 +10,10 @@ use yii\widgets\ActiveForm;
 
 class RouterController extends DeviceController
 {	
-    function actionValidation() {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
-        $router = new Router();
+        $router = is_null($id) ? new Router() : Router::findOne($id);
         
         if ($router->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;
