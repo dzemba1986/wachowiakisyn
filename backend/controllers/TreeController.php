@@ -134,6 +134,7 @@ class TreeController extends Controller
                     
                 } catch (\Throwable $t) {
                     $transaction->rollBack();
+                    var_dump($connection->errors);
                     var_dump($host->errors);
                     var_dump($link->errors);
                     var_dump($ip->errors);

@@ -88,9 +88,9 @@ class Device extends ActiveRecord
 			['status', 'default', 'value' => null],
             ['status', 'required', 'message' => 'Wartość wymagana', 'on' => [self::SCENARIO_UPDATE]],
                       
-		    ['name', 'string', 'min' => 3, 'max' => 30, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    ['name', 'string', 'min' => 3, 'max' => 40, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 		    
-		    ['proper_name', 'string', 'min' => 2, 'max' => 15, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    ['proper_name', 'string', 'min' => 2, 'max' => 15, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 		    ['proper_name', 'match', 'pattern' => '/^([a-zA-Z]|\d){1}([a-zA-Z]|\d|\.)+[a-zA-Z|\d]{1}$/', 'message' => 'Niewłaściwy format'],
 		    ['proper_name', 'trim', 'skipOnEmpty' => true],
 		    ['proper_name', 'default', 'value' => null],
@@ -98,14 +98,14 @@ class Device extends ActiveRecord
 		    ['desc', 'string', 'max' => 1000],
 		    
 		    ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => true],
-		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
+		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
 		        return strtolower($model->mac) !== strtolower($model->getOldAttribute('mac'));
 		    }],
 		    ['mac', 'trim', 'skipOnEmpty' => true],
 		    
-		    ['serial', 'filter', 'filter' => 'strtoupper'],
-		    ['serial', 'string', 'max' => 30],
+		    ['serial', 'filter', 'filter' => 'strtoupper', 'skipOnEmpty' => true],
+		    ['serial', 'string', 'max' => 30, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 		    ['serial', 'unique', 'targetClass' => 'backend\models\Device', 'message' => 'Serial zajęty', 'when' => function ($model, $attribute) {
 		        return $model->{$attribute} !== $model->getOldAttribute($attribute);
 		    }],
