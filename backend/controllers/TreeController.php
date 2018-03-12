@@ -328,7 +328,7 @@ class TreeController extends Controller
                 echo '<option value="-1">Brak miejsca</option>';
             }
         } elseif ($mode == 'all') {
-            echo '<option>-</option>';
+            echo '<option></option>';
             foreach ($model->port as $key => $port){
                 echo '<option value="' . ($key) . '">' . $port . '</option>';
             }
@@ -518,19 +518,23 @@ class TreeController extends Controller
     	}
     }
     
-    public function actionReplacePort($deviceSourceId, $deviceDestinationId) {
+    public function actionReplacePort($sourceDeviceId, $destinationDeviceId) {
     	
-    	$query1 = (Tree::find()->select(['device', 'parent_port AS port'])->where(['parent_device' => $deviceSourceId]));
-    	$query2 = (Tree::find()->select(['parent_device AS device', 'port'])->where(['device' => $deviceSourceId]));
-    	 
+        $sourceDevice = Device::findOne($sourceDeviceId);
+        $destinationDevice = Device::findOne($destinationDeviceId);
+        
+    	$query1 = (Tree::find()->select(['device', 'parent_port AS port'])->where(['parent_device' => $sourceDeviceId]));
+    	$query2 = (Tree::find()->select(['parent_device AS device', 'port'])->where(['device' => $sourceDeviceId]));
+    	
     	$links =  (new \yii\db\Query())
     	->from(['result' => $query1->union($query2)])
     	->orderBy(['port' => SORT_ASC])->all();
     	
     	return $this->renderAjax('replace_port', [
     		'links' => $links,	
-    		'deviceSource' => Device::findOne($deviceSourceId),
-    		'deviceDestination' => Device::findOne($deviceDestinationId)	
+    		'sourceDevice' => $sourceDevice,
+    		'destinationDeviceId' => $destinationDeviceId,
+    	    'onetoone' => $sourceDevice->model_id == $destinationDevice->model_id ? true : false
     	]);
     }
     
