@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
     
     <div class="row">
     
-    <?php $labelDevice = $connection->type_id == 1 ? 'przełącznik dostępowy' : 'bramkę'; ?>
+    <?php $labelDevice = $connection->type_id == 1 || $connection->type_id == 3 ? 'przełącznik dostępowy' : 'bramkę'; ?>
     
     <?= $form->field($connection, 'device_id', [
     		'options' => ['class' => 'col-md-9', 'style' => 'padding-right: 5px;'],
@@ -50,7 +50,7 @@ use yii\widgets\ActiveForm;
     				'data' => new JsExpression("function(params) {
     					return {
     						q : params.term,
-    						type_id : $connection->type_id == 1 ? [2] : [3],
+    						type_id : $connection->type_id == 1 || $connection->type_id == 3 ? [2] : [3],
 						}; 
 					}")
 	    		],

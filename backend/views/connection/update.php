@@ -78,7 +78,7 @@ use yii\web\JsExpression;
 	    			'dataType' => 'json',
 	    			'data' => new JsExpression("function(params) { return {
 	    				q : params.term,
-						type_id : $connection->type_id == 1 ? [2] : [3],
+						type_id : $connection->type_id == 1 || $connection->type_id == 3 ? [2] : [3],
 					};}")
 		    	],
 		    	'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
