@@ -19,6 +19,7 @@ use yii\filters\VerbFilter;
 use yii\validators\IpValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Html;
 
 class TreeController extends Controller
 {
@@ -438,84 +439,61 @@ class TreeController extends Controller
     
     public function actionReplace($deviceId)
     {
-    	$request = Yii::$app->request;
-    	
-		if($request->isAjax){
-			if($request->post()){
-				 
-				//var_dump($request->post());
-				$transaction = Yii::$app->getDb()->beginTransaction();
-				
-				foreach ($request->post('map') as $key => $value){
-					$modelTree = Tree::find()->where(['parent_device' => $deviceId, 'parent_port' => $key])->one();
-					
-					if(is_object($modelTree)){
-						$modelTree->parent_device = $request->post('deviceDestination');
-						$modelTree->parent_port = $value;
-						
-						try {
-							if (!$modelTree->save())
-								throw new Exception('Problem z zapisem drzewa');
-						} catch (\Exception $e) {
-							$transaction->rollBack();
-							echo $e->getMessage();
-							return 0;
-						}
-					} else {
-						$modelTree = Tree::find()->where(['device' => $deviceId, 'port' => $key])->one();
-						$modelTree->device = $request->post('deviceDestination');
-						$modelTree->port = $value;
-						
-						try {
-							if (!$modelTree->save())
-								throw new Exception('Problem z zapisem drzewa');
-						} catch (\Exception $e) {
-							$transaction->rollBack();
-							echo $e->getMessage();
-							return 0;
-						}
-					}
-				}
-				
-				$deviceSource = Device::findOne($deviceId);
-				$deviceDestination = Device::findOne($request->post('deviceDestination'));
-				
-				$deviceDestination->address = $deviceSource->address;
-				$deviceDestination->status = true;
-				$deviceDestination->name = $deviceSource->name;
-				
-				$deviceSource->address = null;
-				$deviceSource->status = null;
-				$deviceSource->name = null;
-				
-				
-				
-				foreach ($deviceSource->modelIps as $modelIp){
-// 					var_dump($modelIp); exit();
-					$modelIp->device = $deviceDestination->id;
-					$modelIp->save();
-				}
-				
-				try {
-					if (!$deviceSource->save())
-						throw new Exception('Problem z zapisem urządzenia');
-					if (!$deviceDestination->save())
-						throw new Exception('Problem z zapisem urządzenia');
-				} catch (\Exception $e) {
-					$transaction->rollBack();
-					echo $deviceSource->hasErrors();
-					//return 0;
-				}
-				
-				$transaction->commit();
-				
-				return 1;
-			} else {	
-	    		return $this->renderAjax('replace', [
-	    			'deviceId' => $deviceId	
-	    		]);
-			}
-    	}
+        $request = Yii::$app->request;
+        
+        if($request->isPost) {
+            $map = $request->post('map');
+            $destinationDevice = Device::findOne($request->post('destinationDeviceId'));
+            $sourceDevice = Device::findOne($deviceId);
+            $transaction = Yii::$app->getDb()->beginTransaction();
+            
+            try {
+                foreach ($map as $oldPort => $newPort) {
+                    $link = Tree::findOne(['parent_device' => $deviceId, 'parent_port' => $oldPort]);
+                    
+                    if (is_object($link)) {
+                        $link->parent_device = $destinationDevice->id;
+                        $link->parent_port = $newPort;
+                        
+                    } else {
+                        $link = Tree::findOne(['device' => $deviceId, 'port' => $oldPort]);
+                        if (!is_object($link)) throw new Exception('Nie znalazł linku');
+                        
+                        $link->device = $destinationDevice->id;
+                        $link->port = $newPort;
+                    }
+                    
+                    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+                }
+                
+                foreach ($sourceDevice->ips as $ip) {
+                    $ip->device_id = $destinationDevice->id;
+                    if (!$ip->save()) throw new Exception('Błąd zapisu ip');
+                }
+                
+                $destinationDevice->address_id = $sourceDevice->address_id;
+                $destinationDevice->status = $sourceDevice->status;
+                $destinationDevice->name = $sourceDevice->name;
+                
+                $sourceDevice->address_id = 1;
+                $sourceDevice->status = null;
+                $sourceDevice->name = null;
+                
+                if (!($sourceDevice->save() && $destinationDevice->save())) throw new Exception('Błąd zapisu urządzenia');
+                
+            } catch (\Throwable $t) {
+                $transaction->rollBack();
+                echo $t->getMessage();
+                exit();
+            }
+            
+            $transaction->commit();
+            return 1;
+        } else {
+            return $this->renderAjax('replace', [
+                'deviceId' => $deviceId
+            ]);
+        }
     }
     
     public function actionReplacePort($sourceDeviceId, $destinationDeviceId) {
@@ -530,12 +508,18 @@ class TreeController extends Controller
     	->from(['result' => $query1->union($query2)])
     	->orderBy(['port' => SORT_ASC])->all();
     	
-    	return $this->renderAjax('replace_port', [
-    		'links' => $links,	
-    		'sourceDevice' => $sourceDevice,
-    		'destinationDeviceId' => $destinationDeviceId,
-    	    'onetoone' => $sourceDevice->model_id == $destinationDevice->model_id ? true : false
-    	]);
+    	if ($sourceDevice->type_id != $destinationDevice->type_id) {
+            return Html::tag('p', 'Wybrałeś urządzenie innego typu');
+    	} elseif (!in_array($sourceDevice->type_id, [1,2,3,8])) {  //tylko typy do podmiany "1 do 1"
+            return 'podmiana 1 do 1';   
+        } else {
+        	return $this->renderAjax('replace_port', [
+        		'links' => $links,	
+        		'sourceDevice' => $sourceDevice,
+        		'destinationDeviceId' => $destinationDeviceId,
+        	    'onetoone' => $sourceDevice->model_id == $destinationDevice->model_id ? true : false
+        	]);
+    	}
     }
     
     protected function findModel($id)
