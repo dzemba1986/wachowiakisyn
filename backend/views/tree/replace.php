@@ -5,6 +5,11 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 
+/**
+ * @var \yii\web\View $this
+ * @var \yii\widgets\ActiveForm $form
+ */
+
 $form = ActiveForm::begin([
 	'id' => 'replace'
 ]); ?>
@@ -13,12 +18,12 @@ $form = ActiveForm::begin([
 	
 	<?= Select2::widget([
 			'id' => 'device-select',
-			'name' => 'device',
+			'name' => 'destinationDeviceId',
     		'language' => 'pl',
             'options' => [
             	'placeholder' => 'Urządzenie nadrzędne',
             	'onchange' => new JsExpression("
-                    $.get('" . Url::toRoute('tree/replace-port') . "&deviceSourceId={$deviceId}&deviceDestinationId=' + $(this).val(), function(data){
+                    $.get('" . Url::to(['tree/replace-port']) . "&sourceDeviceId={$deviceId}&destinationDeviceId=' + $(this).val(), function(data){
 				    	$('#port-select').html(data);
                     });
         	    "),
@@ -30,7 +35,7 @@ $form = ActiveForm::begin([
     				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     			],
     			'ajax' => [
-    				'url' => Url::toRoute('device/list-from-store'),
+    				'url' => Url::to(['device/list-from-store']),
     				'dataType' => 'json',
     				'data' => new JsExpression('function(params) { 
     					return {
@@ -45,52 +50,33 @@ $form = ActiveForm::begin([
     	])     
     ?>
     
-    <div id="port-select" style="display: table; width: 100%"></div>
+    <div id="port-select"></div>
     
-    <div class="form-group" style="display: table-row;">
-		<?= Html::submitButton('Zamień', ['id' => 'change', 'class' => 'btn btn-primary']); ?>
-	</div>
-
 <?php ActiveForm::end(); ?>
 
-<script>
+<?php 
+$js = <<<JS
 $(function(){
-	$('#replace-from-store-form').on('beforeSubmit', function(e){
-
-		var tree = $("#device_tree").jstree(true);
-		var map = {};
-
-		$("#destination").children().each(function(index, element){
-			$(element).children( "div" ).length ? map[$(element).children("div").attr('id')] = element.id : null;
-			//console.log(element.id + " - " + $(element).children("div").attr('id'));
-		});
-        //console.log(map);
-
-        if($("#source").has("div").length) 
-            alert("Zostało " + $("#source").children("div").length + " elementów");
-        else {
-            
-			$.post(
-				$(this).attr("action"),
-				{ 
-					map, 
-					'deviceDestination' : $('#device-select').val()
-				} 
-			).done(function(result){
-		 		if(result == 1){
-		 			$("#modal-replace-store").modal("hide");
-		 			tree.refresh();
-		 		}
-		 		else{
-				
-		 			$('#message').html(result);
-		 		}
-		 	}).fail(function(){
-		 		console.log('server error');
-		 	});
-        }
-    
-        return false;
-	});
+    $('#replace').on('beforeSubmit', function(e){
+		
+		var form = $(this);
+	 	$.post(
+	  		form.attr('action'),
+	  		form.serialize()
+	 	).done(function(result){
+	 		if(result == 1){
+				$('#modal-replace').modal('hide');
+                var tree = $("#device_tree").jstree(true);
+                tree.refresh();
+	 		}
+	 		else{
+	 		}
+	 	}).fail(function(){
+	 		console.log('server error');
+	 	});
+		return false;				
+	});	
 });
-</script>
+JS;
+$this->registerJs($js);
+?>

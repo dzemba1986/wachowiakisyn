@@ -10,18 +10,26 @@ use yii\helpers\Url;
  * @var $onetoone
  */
 
-echo "<div>";
+echo "<div class='row'>";
+echo "<div class='col-md-6'>";
 echo Html::checkbox('onetoone', false, ['label' => '"1 do 1"', 'disabled' => !$onetoone]);
 echo '</div>';
+echo '</div>';
 
+echo "<div class='row'>";
 foreach ($links as $link) {
     
     $string = Device::findOne($link['device'])->address->toString(true);
     $dropDown = Html::dropDownList('map[' . $link['port'] . ']',  null, [], ['class' => 'port form-control', 'port' => $link['port']]);
-    echo '<div class="col-md-4">';
+    echo "<div class='col-md-4'>";
     echo "{$sourceDevice->model->port[$link['port']]} - {$string} $dropDown";
     echo '</div>';
 }
+echo '</div>';
+
+echo '<div class="form-group">';
+echo Html::submitButton('Zamień', ['id' => 'change', 'class' => 'btn btn-primary']);
+echo '</div>';
 
 $urlPortList = Url::to(['tree/list-port']);
 $js = <<<JS
