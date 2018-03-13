@@ -13,7 +13,7 @@ $form = ActiveForm::begin([
 	'id' => $device->formName(),
 ])?>
 	
-	<div class="col-md-5">
+	<div class="col-md-4">
 	
      	<div class="row">
      	
