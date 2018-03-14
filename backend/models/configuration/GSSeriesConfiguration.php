@@ -176,7 +176,7 @@ DELETE;
     
     function changeMac($newMac) {
 
-        if ($this->device instanceof Host) {
+$change = ' ';
 
 $change = <<<CHANGE
 interface ethernet {$this->parentPortName}
@@ -197,7 +197,6 @@ copy r s
 y
 
 CHANGE;
-        } else $change = ' ';
 
     return $change;
     }

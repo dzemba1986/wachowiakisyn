@@ -8,6 +8,7 @@ use yii\helpers\Url;
 
 require_once '_modal_tree.php';
 require_once '_modal_change_mac.php';
+require_once '_modal_replace.php';
 
 $this->registerJsFile('@web/js/jstree/dist/jstree.min.js');
 $this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');
@@ -29,7 +30,7 @@ $urlUpdate = Url::to(['device/tabs-update']);
 $urlView = Url::to(['device/tabs-view']);
 $urlMove = Url::to(['tree/move']);
 $urlCopy = Url::to(['tree/copy']);
-$urlReplace = Url::to(['tree/replace-from-store']);
+$urlReplace = Url::to(['tree/replace']);
 $urlToStore = Url::to(['tree/to-store']);
 
 $js = <<<JS
@@ -128,8 +129,8 @@ $(function() {
     						'replacestore' : {
     							'label' : 'Zamień z magazynu',
     							'action' : function () {
-    
-    							    $('#modal-replace-store').modal('show').find('#modal-content-replace-store').load('{$urlReplace}&device=' + getId(node.id));	
+                                    if (node.original.type == 5) return false;
+    							    $('#modal-replace').modal('show').find('#modal-content-replace').load('{$urlReplace}&deviceId=' + getId(node.id));	
                                 }
     						}
                         }    

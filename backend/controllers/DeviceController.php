@@ -299,33 +299,25 @@ class DeviceController extends Controller
         }
     }
     
-	public function actionListFromStore($q = null, $type = null) {
+	public function actionListFromStore($q = null) {
 	
-		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+	    $response = Yii::$app->response;
+	    $response->format = Response::FORMAT_JSON;
 		 
 		$out = ['results' => ['id' => '', 'concat' => '']];
 		 
 		if (!is_null($q)) {
-	
 			$query = new Query();
-			$query->select(['d.id', new \yii\db\Expression("
-	    		CONCAT(m.name, chr(9), d.mac, ' - ', d.serial)
-	    	")])
-	    	->from('device d')
-	    	->join('INNER JOIN', 'model m', 'm.id = d.model')
-	    	->where(['like', new \yii\db\Expression('CAST(mac AS varchar)'), $q])
-	    	->orWhere(['like', 'm.name', $q]);
-	
-	    	if(!is_null($type))
-	    		$query->andWhere(['type' => $type]);
+			$query->select(['d.id', new \yii\db\Expression("CONCAT(m.name, ' - ', d.mac, ' - ', d.serial)")])
+    	    	->from('device d')
+    	    	->join('INNER JOIN', 'model m', 'm.id = d.model_id')
+    	    	->where(['address_id' => 1])->andWhere(['or', ['like', new \yii\db\Expression("CAST(mac AS varchar)"), $q], ['like', 'lower(m.name)', strtolower($q)]]);
 	
     		$command = $query->createCommand();
     		$data = $command->queryAll();
     		$out['results'] = array_values($data);
 		}
-		elseif ($id > 0) {
-			$out['results'] = ['id' => $id, 'concat' => Device::findOne($id)->modelAddress->fullDeviceAddress];
-		}
+		
 		return $out;
 	}
 

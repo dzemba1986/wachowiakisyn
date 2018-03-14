@@ -104,4 +104,20 @@ class GatewayVoip extends Device
 	    
 	    return $this->conf->drop();
 	}
+	
+	public function configurationChangeMac($newMac) {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
+	    
+	    return $this->conf->changeMac($newMac);
+	}
 }

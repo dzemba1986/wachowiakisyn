@@ -205,23 +205,22 @@ class XSeriesConfiguration extends Configuration {
     
     function changeMac($newMac) {
         $newMac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $newMac));
-        if ($this->device instanceof Host) {
-            $change = "interface {$this->parentPortName}\n";
-            $change .= "shutdown\n";
-            $change .= "no switchport port-security\n";
-            $change .= "exit\n";
-            $change .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
-            $change .= "mac address-table static {$newMac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
-            $change .= "exit\n";
-            $change .= "clear ip dhcp snooping binding {$this->ip}\n";
-            $change .= "configure terminal\n";
-            $change .= "interface {$this->parentPortName}\n";
-            $change .= "switchport port-security\n";
-            $change .= "no shutdown\n";
-            $change .= "exit\n";
-            $change .= "exit\n";
-            $change .= "wr\n";	
-        } else $change = ' ';
+        
+        $change = "interface {$this->parentPortName}\n";
+        $change .= "shutdown\n";
+        $change .= "no switchport port-security\n";
+        $change .= "exit\n";
+        $change .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+        $change .= "mac address-table static {$newMac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+        $change .= "exit\n";
+        $change .= "clear ip dhcp snooping binding {$this->ip}\n";
+        $change .= "configure terminal\n";
+        $change .= "interface {$this->parentPortName}\n";
+        $change .= "switchport port-security\n";
+        $change .= "no shutdown\n";
+        $change .= "exit\n";
+        $change .= "exit\n";
+        $change .= "wr\n";	
 
     return $change;
     }
