@@ -20,6 +20,7 @@ use yii\validators\IpValidator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Html;
+use backend\models\Camera;
 
 class TreeController extends Controller
 {
@@ -442,10 +443,12 @@ class TreeController extends Controller
         $request = Yii::$app->request;
         
         if($request->isPost) {
-            $map = $request->post('map');
+            $transaction = Yii::$app->getDb()->beginTransaction();
             $destinationDevice = Device::findOne($request->post('destinationDeviceId'));
             $sourceDevice = Device::findOne($deviceId);
-            $transaction = Yii::$app->getDb()->beginTransaction();
+            $destinationDevice->scenario = Device::SCENARIO_REPLACE;
+            $sourceDevice->scenario = Device::SCENARIO_REPLACE;
+            $map = $request->post('map');
             
             try {
                 foreach ($map as $oldPort => $newPort) {
@@ -471,19 +474,33 @@ class TreeController extends Controller
                     if (!$ip->save()) throw new Exception('Błąd zapisu ip');
                 }
                 
+                if (get_class($sourceDevice) == Camera::className() && get_class($destinationDevice) == Camera::className()) {
+                    if ($request->post('replaceMac', false)) {
+                        $tempMac = $destinationDevice->mac;
+                        $destinationDevice->mac = $sourceDevice->mac;
+                        $sourceDevice->mac = $tempMac;
+                    }
+                    $destinationDevice->alias = $sourceDevice->alias;
+                    $sourceDevice->alias = null;
+                }
+                
                 $destinationDevice->address_id = $sourceDevice->address_id;
                 $destinationDevice->status = $sourceDevice->status;
                 $destinationDevice->name = $sourceDevice->name;
+                $destinationDevice->proper_name = $sourceDevice->proper_name;
                 
                 $sourceDevice->address_id = 1;
                 $sourceDevice->status = null;
                 $sourceDevice->name = null;
+                $sourceDevice->proper_name = null;
                 
                 if (!($sourceDevice->save() && $destinationDevice->save())) throw new Exception('Błąd zapisu urządzenia');
                 
             } catch (\Throwable $t) {
                 $transaction->rollBack();
                 echo $t->getMessage();
+                var_dump($destinationDevice->errors);
+                var_dump($sourceDevice->errors);
                 exit();
             }
             
@@ -510,9 +527,12 @@ class TreeController extends Controller
     	
     	if ($sourceDevice->type_id != $destinationDevice->type_id) {
             return Html::tag('p', 'Wybrałeś urządzenie innego typu');
-    	} elseif (!in_array($sourceDevice->type_id, [1,2,3,8])) {  //tylko typy do podmiany "1 do 1"
-            return 'podmiana 1 do 1';   
-        } else {
+    	} elseif (in_array($sourceDevice->type_id, Device::ONE_TO_ONE_DEVICE)) {
+    	    return $this->renderAjax('replace_onetoone', [
+    	        'sourceDevice' => $sourceDevice,
+    	        'destinationDevice' => $destinationDevice,
+    	    ]);
+    	} else {
         	return $this->renderAjax('replace_port', [
         		'links' => $links,	
         		'sourceDevice' => $sourceDevice,
