@@ -29,6 +29,8 @@ class Device extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
+	const SCENARIO_REPLACE = 'replace';
+	const ONE_TO_ONE_DEVICE = [3,6,7];
 	
 	public static function tableName(){
 	    
@@ -101,7 +103,7 @@ class Device extends ActiveRecord
 		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Za mało znaków', 'tooLong' => 'Za dużo znaków'],
 		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
 		        return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-		    }],
+		    }, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
 		    ['mac', 'trim', 'skipOnEmpty' => true],
 		    
 		    ['serial', 'filter', 'filter' => 'strtoupper'],
@@ -130,6 +132,7 @@ class Device extends ActiveRecord
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['desc', 'type_id'];
 		$scenarios[self::SCENARIO_UPDATE] = ['name', 'desc', 'proper_name', 'address_id', 'status'];
+		$scenarios[self::SCENARIO_REPLACE] = ['status', 'name', 'mac', 'address_id', 'proper_name'];
 			
 		return $scenarios;
 	}
