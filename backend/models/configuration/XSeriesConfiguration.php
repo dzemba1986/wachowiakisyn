@@ -244,7 +244,7 @@ DELETE;
         
         $newMac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $newMac));
         
-        if ($this->device instanceof Host) {
+        $change = ' ';
 
 $change = <<<CHANGE
 interface {$this->parentPortName}
@@ -264,7 +264,6 @@ exit
 wr	
 
 CHANGE;
-        } else $change = ' ';
 
     return $change;
     }
