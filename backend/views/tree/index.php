@@ -128,7 +128,7 @@ $(function() {
     						'replacestore' : {
     							'label' : 'Zamień z magazynu',
     							'action' : function () {
-    
+                                    if (node.original.type == 5) return false;
     							    $('#modal-replace').modal('show').find('#modal-content-replace').load('{$urlReplace}&deviceId=' + getId(node.id));	
                                 }
     						}
