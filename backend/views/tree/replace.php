@@ -54,7 +54,9 @@ $form = ActiveForm::begin([
     
 <?php ActiveForm::end(); ?>
 
-<?php 
+<?php
+$urlView = Url::to(['device/tabs-view']);
+
 $js = <<<JS
 $(function(){
     $('#replace').on('beforeSubmit', function(e){
@@ -68,6 +70,7 @@ $(function(){
 				$('#modal-replace').modal('hide');
                 var tree = $("#device_tree").jstree(true);
                 tree.refresh();
+                $('#device_desc').load('{$urlView}&id=' + $('#device-select').val());  
 	 		}
 	 		else{
 	 		}
