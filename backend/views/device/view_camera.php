@@ -18,10 +18,16 @@ echo DetailView::widget([
 			'label' => 'Adres',
 			'value' => $device->address->toString()
 		],
-		[
-			'label' => 'Status',
-			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
-		],
+	    [
+	        'label' => 'Status',
+	        'value' => $device->status ? '<font color="green">Aktywny</font>' : '<font color="red">Nieaktywny</font>',
+	        'format' => 'raw'
+	    ],
+	    [
+	        'label' => 'DHCP',
+	        'value' => $device->dhcp ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
+	        'format' => 'raw'
+	    ],
 		[
 			'label' => 'Typ',
 			'value' => $device->type->name

@@ -40,6 +40,7 @@ class Camera extends Device
 	        parent::attributes(),
 	        [
 	            'alias',
+	            'dhcp'
 	        ]
 	        );
 	}
@@ -72,6 +73,10 @@ class Camera extends Device
                 
             	['alias', 'string', 'min' => 2, 'max' => 30],
                 ['alias', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model){ isset($model->status); }],
+                
+                ['dhcp', 'boolean'],
+                ['dhcp', 'default', 'value' => false],
+                ['dhcp', 'required', 'message' => 'Wartość wymagana'],
             		
                 [['mac', 'serial', 'manufacturer_id', 'model_id', 'alias'], 'safe'],
             ]
@@ -82,8 +87,8 @@ class Camera extends Device
 	    
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
-		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'alias']);
-		$scenarios[self::SCENARIO_REPLACE] = ArrayHelper::merge($scenarios[self::SCENARIO_REPLACE], ['alias']);
+		$scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'alias', 'dhcp']);
+		$scenarios[self::SCENARIO_REPLACE] = ArrayHelper::merge($scenarios[self::SCENARIO_REPLACE], ['alias', 'dhcp']);
 			
 		return $scenarios;
 	}
@@ -96,6 +101,15 @@ class Camera extends Device
             	'alias' => 'Nazwa w monitoringu',
             ]
         ); 
+	}
+	
+	function afterSave($insert, $changedAttributes) {
+	    
+	    if (!$insert) {
+	        if (isset($changedAttributes['mac']) || isset($changedAttributes['dhcp'])) {
+	            !empty($this->ips) ? Dhcp::generateFile($this->ips[0]->subnet) : null;
+	        }
+	    }
 	}
 	
 	public function configurationAdd() {
