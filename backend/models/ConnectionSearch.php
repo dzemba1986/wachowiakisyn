@@ -93,7 +93,7 @@ class ConnectionSearch extends Connection
 		$query->FilterWhere([
 			'ara_id' => $this->ara_id,
 			'soa_id' => $this->soa_id,	
-			'start_date' => $this->start_date,
+			//'start_date' => $this->start_date,
 			'conf_date' => $this->conf_date,
 			'pay_date' => $this->pay_date,
 			'close_date' => $this->close_date,
@@ -120,6 +120,7 @@ class ConnectionSearch extends Connection
 		
 		//gdy filtr jest pusty bez if'a zapytanie daje zerowy wynik
 		if (!empty($this->synch_date)) $query->andFilterWhere(['like', '{{synch_date}}::text', $this->synch_date.'%', false]);
+		if (!empty($this->start_date)) $query->andFilterWhere(['like', '{{start_date}}::text', $this->start_date.'%', false]);
 
 		return $dataProvider;
 	}
