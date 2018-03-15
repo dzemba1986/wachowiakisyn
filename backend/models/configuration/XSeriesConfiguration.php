@@ -15,9 +15,8 @@ class XSeriesConfiguration extends Configuration {
     }
     
     function add() {
-        
+        $add = ' ';
         if ($this->device instanceof Host) {
-            $add = ' '; 
             if (strpos($this->device->parentIp, '172.') === 0) {
                 $add = "interface {$this->parentPortName}\n";
                 $add .= "shutdown\n";
@@ -28,7 +27,7 @@ class XSeriesConfiguration extends Configuration {
                 $add .= "description {$this->desc}\n";
                 $add .= "egress-rate-limit 508032k\n";
                 $add .= "service-policy input 501M\n";
-                $add .= "access-group anyuser\n";
+                $this->device->smtp ? $add .= "access-group anyuser-smtp\n" : $add .= "access-group anyuser\n";
                 $add .= "switchport access vlan {$this->vlanId}\n";
                 $add .= "spanning-tree portfast\n";
                 $add .= "spanning-tree portfast bpdu-guard enable\n";
@@ -50,7 +49,7 @@ class XSeriesConfiguration extends Configuration {
                     $add .= "description {$this->desc}\n";
                     $add .= "egress-rate-limit 508032k\n";
                     $add .= "service-policy input iptv-user-501M\n";
-                    $add .= "access-group iptv-user\n";
+                    $this->device->smtp ? $add .= "access-group iptv-user-smtp\n" : $add .= "access-group iptv-user\n";
                     $add .= "no ip igmp trusted all\n";
                     $add .= "ip igmp trusted report\n";
                     $add .= "switchport access vlan {$this->vlanId}\n";
@@ -72,7 +71,7 @@ class XSeriesConfiguration extends Configuration {
                         $add .= "description {$this->desc}\n";
                         $add .= "egress-rate-limit 508032k\n";
                         $add .= "service-policy input internet-user-501M\n";
-                        $add .= "access-group internet-user\n";
+                        $this->device->smtp ? $add .= "access-group internet-user-smtp\n" : $add .= "access-group internet-user\n";
                         $add .= "no ip igmp trusted all\n";
                         $add .= "ip igmp trusted report\n";
                         $add .= "switchport access vlan {$this->vlanId}\n";
@@ -153,7 +152,7 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "no switchport port-security\n";
                 $drop .= "no service-policy input 501M\n";
                 $drop .= "no egress-rate-limit\n";
-                $drop .= "no access-group anyuser\n";
+                $this->device->smtp ? $drop .= "no access-group anyuser-smtp\n" : $drop .= "no access-group anyuser\n";
                 $drop .= "switchport access vlan 555\n";
                 $drop .= "exit\n";
                 $drop .= "do clear ip dhcp snooping binding int {$this->parentPortName}\n";
@@ -168,8 +167,8 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "no service-policy input iptv-only-501M\n";
                 $drop .= "no egress-rate-limit\n";
                 $drop .= "no ip igmp trust all\n";
-                $drop .= "no access-group internet-user\n";
-                $drop .= "no access-group iptv-user\n";
+                $this->device->smtp ? $drop .= "no access-group internet-user-smtp\n" : $drop .= "no access-group internet-user\n";
+                $this->device->smtp ? $drop .= "no access-group iptv-user-smtp\n" : $drop .= "no access-group iptv-user\n";
                 $drop .= "no access-group iptv-only\n";
                 $drop .= "switchport access vlan 555\n";
                 $drop .= "exit\n";

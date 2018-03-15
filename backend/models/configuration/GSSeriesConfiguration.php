@@ -17,187 +17,153 @@ class GSSeriesConfiguration extends Configuration {
     function add() {
         $add = ' ';
         if ($this->device instanceof Host) {
-            
-$add = <<<ADD
-interface ethernet {$this->parentPortName}
-no service-acl input
-exit
-no ip access-list user{$this->parentPortNumber}
-no ip access-list user{$this->parentPortNumber}
-interface vlan {$this->vlanId}
-bridge address {$this->mac} permanent ethernet {$this->parentPortName}
-exit
-ip access-list user{$this->parentPortNumber}
-deny-udp any any any 68
-deny-tcp any any any 25
-permit any {$this->ip} 0.0.0.0 any
-permit-udp 0.0.0.0 0.0.0.0 68 any 67
-exit
-interface ethernet {$this->parentPortName}
-shutdown
-switchport trunk allowed vlan remove all
-switchport mode access
-switchport access vlan {$this->vlanId}
-description {$this->desc}
-service-acl input user{$this->parentPortNumber}
-traffic-shape 520000 5200000
-rate-limit 800000
-port security mode lock
-port security discard
-spanning-tree portfast
-spanning-tree bpduguard
-no shutdown
-exit
-exit
-copy r s
-y
-
-ADD;
+            $add = "interface ethernet {$this->parentPortName}\n";
+            $add .= "no service-acl input\n";
+            $add .= "exit\n";
+            $add .= "no ip access-list user{$this->parentPortNumber}\n";
+            if ($this->device->smtp) $add .= "no ip access-list user{$this->parentPortNumber}smtp\n";
+            $add .= "interface vlan {$this->vlanId}\n";
+            $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
+            $add .= "exit\n";
+            $this->device->smtp ? $add .= "ip access-list user{$this->parentPortNumber}smtp\n" : $add .= "ip access-list user{$this->parentPortNumber}\n";
+            $add .= "deny-udp any any any 68\n";
+            if (!$this->device->smtp) $add .= "deny-tcp any any any 25\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 any\n";
+            $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+            $add .= "exit\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "switchport trunk allowed vlan remove all\n";
+            $add .= "switchport mode access\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "description {$this->desc}\n";
+            $this->device->smtp ? $add .= "service-acl input user{$this->parentPortNumber}smtp\n" : $add .= "service-acl input user{$this->parentPortNumber}\n";
+            $add .= "traffic-shape 520000 5200000\n";
+            $add .= "rate-limit 800000\n";
+            $add .= "port security mode lock\n";
+            $add .= "port security discard\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree bpduguard\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "exit\n";
+            $add .= "copy r s\n";
+            $add .= "y\n";
         } elseif ($this->device instanceof GatewayVoip) {
-
-$add = <<<ADD
-ip access-list voip{$this->parentPortNumber}
-deny-udp any any any 68
-permit any {$this->ip} 0.0.0.0 213.5.208.0 0.0.0.63
-permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63
-permit any {$this->ip} 0.0.0.0 10.111.0.0 0.0.255.255
-permit-udp 0.0.0.0 0.0.0.0 68 any 67
-exit
-interface ethernet {$this->parentPortName}
-shutdown
-switchport trunk allowed vlan remove all
-switchport mode access
-description {$this->desc}
-switchport access vlan {$this->vlanId}
-spanning-tree portfast
-spanning-tree bpduguard
-service-acl input voip{$this->parentPortNumber}
-no shutdown
-exit
-exit
-copy r s
-y
-
-ADD;
+            $add = "ip access-list voip{$this->parentPortNumber}\n";
+            $add .= "deny-udp any any any 68\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 10.111.0.0 0.0.255.255\n";
+            $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+            $add .= "exit\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "switchport trunk allowed vlan remove all\n";
+            $add .= "switchport mode access\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree bpduguard\n";
+            $add .= "service-acl input voip{$this->parentPortNumber}\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "exit\n";
+            $add .= "copy r s\n";
+            $add .= "y\n";
         } elseif ($this->device instanceof Camera) {
-
-$add = <<<ADD
-interface vlan {$this->vlanId}
-bridge address {$this->mac} permanent ethernet {$this->parentPortName}
-ip access-list cam{$this->parentPortNumber}
-deny-udp any any any 68
-permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63
-permit any {$this->ip} 0.0.0.0 192.168.5.0 0.0.0.255
-permit-udp 0.0.0.0 0.0.0.0 68 any 67
-exit
-interface ethernet {$this->parentPortName}
-shutdown
-description {$this->desc}
-switchport access vlan {$this->vlanId}
-service-acl input cam{$this->parentPortNumber}
-port security mode lock
-port security discard
-no shutdown
-exit
-exit
-cop r s
-y
-
-ADD;
+            $add = "interface vlan {$this->vlanId}\n";
+            $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
+            $add .= "ip access-list cam{$this->parentPortNumber}\n";
+            $add .= "deny-udp any any any 68\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 192.168.5.0 0.0.0.255\n";
+            $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+            $add .= "exit\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "service-acl input cam{$this->parentPortNumber}\n";
+            $add .= "port security mode lock\n";
+            $add .= "port security discard\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "exit\n";
+            $add .= "cop r s\n";
+            $add .= "y\n";
         }
-
     return $add;
     }
 
     function drop() {
         $drop = ' '; 
         if ($this->device instanceof Host) {
-            
-$drop = <<<DELETE
-interface vlan {$this->vlanId}
-no bridge address {$this->mac}
-exit
-interface ethernet {$this->parentPortName}
-shutdown
-no service-acl input
-no traffic-shape
-no rate-limit
-no port security
-sw a v 555
-no shutdown
-exit
-no ip access-list user{$this->parentPortNumber}
-no ip access-list user{$this->parentPortNumber}
-exit
-copy r s
-y
-
-DELETE;
+            $drop = "interface vlan {$this->vlanId}\n";
+            $drop .= "no bridge address {$this->mac}\n";
+            $drop .= "exit\n";
+            $drop .= "interface ethernet {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "no service-acl input\n";
+            $drop .= "no traffic-shape\n";
+            $drop .= "no rate-limit\n";
+            $drop .= "no port security\n";
+            $drop .= "sw a v 555\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "no ip access-list user{$this->parentPortNumber}\n";
+            if ($this->device->smtp) $drop .= "no ip access-list user{$this->parentPortNumber}smtp\n";
+            $drop .= "exit\n";
+            $drop .= "copy r s\n";
+            $drop .= "y\n";
         } elseif ($this->device instanceof GatewayVoip) {
-
-$drop = <<<DELETE
-interface ethernet {$this->parentPortName}
-shutdown
-switchport access vlan 555
-no service-acl input
-no shutdown
-exit
-no ip access-list voip{$this->parentPortNumber}
-no ip access-list voip{$this->parentPortNumber}
-exit
-copy r s
-y
-
-DELETE;
+            $drop = "interface ethernet {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "switchport access vlan 555\n";
+            $drop .= "no service-acl input\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "no ip access-list voip{$this->parentPortNumber}\n";
+            $drop .= "no ip access-list voip{$this->parentPortNumber}\n";
+            $drop .= "exit\n";
+            $drop .= "copy r s\n";
+            $drop .= "y\n";
         } elseif ($this->device instanceof Camera) {
-
-$drop = <<<DELETE
-interface vlan {$this->vlanId}
-no bridge address {$this->mac}
-interface ethernet {$this->parentPortName}
-shutdown
-no description
-switchport access vlan 555
-no service-acl input
-no port security
-no shutdown
-exit
-no ip access-list cam{$this->parentPortNumber}
-exit
-cop r s 
-y
-
-DELETE;
-            
+            $drop = "interface vlan {$this->vlanId}\n";
+            $drop .= "no bridge address {$this->mac}\n";
+            $drop .= "interface ethernet {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "no description\n";
+            $drop .= "switchport access vlan 555\n";
+            $drop .= "no service-acl input\n";
+            $drop .= "no port security\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "no ip access-list cam{$this->parentPortNumber}\n";
+            $drop .= "exit\n";
+            $drop .= "cop r s\n"; 
+            $drop .= "y\n";
         }
-    
     return $drop;
     }
     
     function changeMac($newMac) {
-
-$change = ' ';
-
-$change = <<<CHANGE
-interface ethernet {$this->parentPortName}
-shutdown
-no port security
-exit
-interface vlan {$this->vlanId}
-no bridge address {$this->mac}
-bridge address {$newMac} permanent ethernet {$this->parentPortName}
-exit
-interface ethernet {$this->parentPortName}
-port security mode lock
-port security discard
-no shutdown
-exit
-exit
-copy r s
-y
-
-CHANGE;
-
+        $change = "interface ethernet {$this->parentPortName}\n";
+        $change .= "shutdown\n";
+        $change .= "no port security\n";
+        $change .= "exit\n";
+        $change .= "interface vlan {$this->vlanId}\n";
+        $change .= "no bridge address {$this->mac}\n";
+        $change .= "bridge address {$newMac} permanent ethernet {$this->parentPortName}\n";
+        $change .= "exit\n";
+        $change .= "interface ethernet {$this->parentPortName}\n";
+        $change .= "port security mode lock\n";
+        $change .= "port security discard\n";
+        $change .= "no shutdown\n";
+        $change .= "exit\n";
+        $change .= "exit\n";
+        $change .= "copy r s\n";
+        $change .= "y\n";
     return $change;
     }
 }

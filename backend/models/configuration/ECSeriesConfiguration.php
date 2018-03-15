@@ -12,7 +12,6 @@ class ECSeriesConfiguration extends Configuration {
         
         parent::__construct($device, $parentDevice);
         $this->mac = preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace([':', '.', '-'], '', $device->mac));
-        
     }
     
     function add() {
@@ -20,226 +19,191 @@ class ECSeriesConfiguration extends Configuration {
         if ($this->device instanceof Host) {
 
             if (count($this->device->connections) == 2) {
-$add = <<<ADD
-mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent
-access-list IP extended iptv-user{$this->parentPortNumber}
-deny TCP any any destination-port 25
-permit host {$this->ip} any
-deny any any
-exit
-interface ethernet {$this->parentPortName}
-shutdown
-description {$this->desc}
-ip igmp filter 8
-port security
-rate-limit input 812000
-rate-limit output 560000
-switchport allowed vlan add {$this->vlanId} untagged
-switchport ingress-filtering
-switchport mode access
-switchport native vlan {$this->vlanId}
-switchport allowed vlan remove 1
-spanning-tree edge-port
-spanning-tree bpdu-filter
-no spanning-tree bpdu-guard
-queue mode strict
-ip access-group iptv-user{$this->parentPortNumber} in
-service-policy input iptv-user-501M
-ip dhcp snooping max-number 1
-ip igmp query-drop
-ip multicast-data-drop
-loopback-detection
-discard cdp
-discard pvs
-no shutdown
-end
-cop r s
-
-ADD;
+                $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
+                $add .= "access-list IP extended iptv-user{$this->parentPortNumber}\n";
+                $add .= "deny TCP any any destination-port 25\n";
+                $add .= "permit host {$this->ip} any\n";
+                $add .= "deny any any\n";
+                $add .= "exit\n";
+                $add .= "interface ethernet {$this->parentPortName}\n";
+                $add .= "shutdown\n";
+                $add .= "description {$this->desc}\n";
+                $add .= "ip igmp filter 8\n";
+                $add .= "port security\n";
+                $add .= "rate-limit input 812000\n";
+                $add .= "rate-limit output 560000\n";
+                $add .= "switchport allowed vlan add {$this->vlanId} untagged\n";
+                $add .= "switchport ingress-filtering\n";
+                $add .= "switchport mode access\n";
+                $add .= "switchport native vlan {$this->vlanId}\n";
+                $add .= "switchport allowed vlan remove 1\n";
+                $add .= "spanning-tree edge-port\n";
+                $add .= "spanning-tree bpdu-filter\n";
+                $add .= "no spanning-tree bpdu-guard\n";
+                $add .= "queue mode strict\n";
+                $add .= "ip access-group iptv-user{$this->parentPortNumber} in\n";
+                $add .= "service-policy input iptv-user-501M\n";
+                $add .= "ip dhcp snooping max-number 1\n";
+                $add .= "ip igmp query-drop\n";
+                $add .= "ip multicast-data-drop\n";
+                $add .= "loopback-detection\n";
+                $add .= "discard cdp\n";
+                $add .= "discard pvs\n";
+                $add .= "no shutdown\n";
+                $add .= "end\n";
+                $add .= "cop r s\n";
             } elseif (count($this->device->connections) == 1) {
-            
                 if ($this->device->connections[0]->type_id == 1) {
-$add = <<<ADD
-mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent
-access-list IP extended internet-user{$this->parentPortNumber}
-deny TCP any any destination-port 25
-permit host {$this->ip} any
-deny any any
-exit
-interface ethernet {$this->parentPortName}
-shutdown 
-description {$this->desc}
-ip igmp filter 7
-port security
-rate-limit input 812000
-rate-limit output 560000
-switchport allowed vlan add {$this->vlanId} untagged
-switchport ingress-filtering
-switchport mode access
-switchport native vlan {$this->vlanId}
-switchport allowed vlan remove 1
-spanning-tree edge-port
-spanning-tree bpdu-filter
-no spanning-tree bpdu-guard
-queue mode strict
-ip access-group internet-user{$this->parentPortNumber} in
-service-policy input internet-user-501M
-ip dhcp snooping max-number 1
-ip igmp query-drop
-ip multicast-data-drop
-loopback-detection
-discard cdp
-discard pvs
-no shutdown
-end
-cop r s
-
-ADD;
+                    $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
+                    $add .= "access-list IP extended internet-user{$this->parentPortNumber}\n";
+                    $add .= "deny TCP any any destination-port 25\n";
+                    $add .= "permit host {$this->ip} any\n";
+                    $add .= "deny any any\n";
+                    $add .= "exit\n";
+                    $add .= "interface ethernet {$this->parentPortName}\n";
+                    $add .= "shutdown\n"; 
+                    $add .= "description {$this->desc}\n";
+                    $add .= "ip igmp filter 7\n";
+                    $add .= "port security\n";
+                    $add .= "rate-limit input 812000\n";
+                    $add .= "rate-limit output 560000\n";
+                    $add .= "switchport allowed vlan add {$this->vlanId} untagged\n";
+                    $add .= "switchport ingress-filtering\n";
+                    $add .= "switchport mode access\n";
+                    $add .= "switchport native vlan {$this->vlanId}\n";
+                    $add .= "switchport allowed vlan remove 1\n";
+                    $add .= "spanning-tree edge-port\n";
+                    $add .= "spanning-tree bpdu-filter\n";
+                    $add .= "no spanning-tree bpdu-guard\n";
+                    $add .= "queue mode strict\n";
+                    $add .= "ip access-group internet-user{$this->parentPortNumber} in\n";
+                    $add .= "service-policy input internet-user-501M\n";
+                    $add .= "ip dhcp snooping max-number 1\n";
+                    $add .= "ip igmp query-drop\n";
+                    $add .= "ip multicast-data-drop\n";
+                    $add .= "loopback-detection\n";
+                    $add .= "discard cdp\n";
+                    $add .= "discard pvs\n";
+                    $add .= "no shutdown\n";
+                    $add .= "end\n";
+                    $add .= "cop r s\n";
                 } elseif ($this->device->connections[0]->type_id == 3) {
-$add = <<<ADD
-mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent
-access-list IP extended iptv-only{$this->parentPortNumber}
-deny any any
-exit
-interface ethernet {$this->parentPortName} 
-shutdown
-description {$this->desc}
-ip igmp filter 8
-port security
-rate-limit input 812000
-rate-limit output 560000
-switchport allowed vlan add {$this->vlanId} untagged
-switchport ingress-filtering
-switchport mode access
-switchport native vlan {$this->vlanId}
-switchport allowed vlan remove 1
-spanning-tree edge-port
-spanning-tree bpdu-filter
-no spanning-tree bpdu-guard
-queue mode strict
-ip access-group iptv-only{$this->parentPortNumber} in
-service-policy input iptv-user-501M
-ip dhcp snooping max-number 1
-ip igmp query-drop
-ip multicast-data-drop
-loopback-detection
-discard cdp
-discard pvs
-no shutdown
-end
-cop r s
-
-ADD;
+                    $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
+                    $add .= "access-list IP extended iptv-only{$this->parentPortNumber}\n";
+                    $add .= "deny any any\n";
+                    $add .= "exit\n";
+                    $add .= "interface ethernet {$this->parentPortName}\n";
+                    $add .= "shutdown\n";
+                    $add .= "description {$this->desc}\n";
+                    $add .= "ip igmp filter 8\n";
+                    $add .= "port security\n";
+                    $add .= "rate-limit input 812000\n";
+                    $add .= "rate-limit output 560000\n";
+                    $add .= "switchport allowed vlan add {$this->vlanId} untagged\n";
+                    $add .= "switchport ingress-filtering\n";
+                    $add .= "switchport mode access\n";
+                    $add .= "switchport native vlan {$this->vlanId}\n";
+                    $add .= "switchport allowed vlan remove 1\n";
+                    $add .= "spanning-tree edge-port\n";
+                    $add .= "spanning-tree bpdu-filter\n";
+                    $add .= "no spanning-tree bpdu-guard\n";
+                    $add .= "queue mode strict\n";
+                    $add .= "ip access-group iptv-only{$this->parentPortNumber} in\n";
+                    $add .= "service-policy input iptv-user-501M\n";
+                    $add .= "ip dhcp snooping max-number 1\n";
+                    $add .= "ip igmp query-drop\n";
+                    $add .= "ip multicast-data-drop\n";
+                    $add .= "loopback-detection\n";
+                    $add .= "discard cdp\n";
+                    $add .= "discard pvs\n";
+                    $add .= "no shutdown\n";
+                    $add .= "end\n";
+                    $add .= "cop r s\n";
                 }
             }
         } elseif ($this->device instanceof GatewayVoip) {
-
-$add = <<<ADD
-
-ADD;
+            $add = " ";
         } elseif ($this->device instanceof Camera) {
-
-$add = <<<ADD
-
-ADD;
+            $add = " ";
         }
-
     return $add;
     }
 
     function drop() {
         $drop = ' ';        
         if ($this->device instanceof Host) {
-            
-$drop = <<<DELETE
-no mac-address-table static {$this->mac} vlan {$this->vlanId}
-interface ethernet {$this->parentPortName}
-shutdown
-ip igmp filter 7
-no port security
-rate-limit input 1000000
-no rate-limit input
-rate-limit output 1000000
-no rate-limit output
-switchport allowed vlan add 555 untagged
-switchport ingress-filtering
-switchport mode access
-switchport native vlan 555
-switchport allowed vlan remove 1
-spanning-tree edge-port
-spanning-tree bpdu-filter
-spanning-tree bpdu-guard
-queue mode strict
-no ip access-group iptv-user{$this->parentPortNumber} in
-no ip access-group iptv-user-smtp{$this->parentPortNumber} in
-no ip access-group internet-user{$this->parentPortNumber} in
-no ip access-group internet-user-smtp{$this->parentPortNumber} in
-no ip access-group iptv-only{$this->parentPortNumber} in
-no service-policy input iptv-user-501M
-no service-policy input internet-user-501M
-no ip dhcp snooping max-number
-no ip source-guard 
-ip source-guard mode acl
-ip igmp query-drop 
-ip multicast-data-drop
-loopback-detection
-discard cdp
-discard pvs
-no shutdown
-exit
-no access-list IP extended iptv-user{$this->parentPortNumber}
-no access-list IP extended iptv-user-smtp{$this->parentPortNumber}
-no access-list IP extended internet-user{$this->parentPortNumber}
-no access-list IP extended internet-user-smtp{$this->parentPortNumber}
-no access-list IP extended iptv-only{$this->parentPortNumber}
-exit
-clear ip dhcp snooping binding {$this->mac} {$this->ip}
-cop r s
-
-DELETE;
-
+            $drop = "no mac-address-table static {$this->mac} vlan {$this->vlanId}\n";
+            $drop .= "interface ethernet {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "ip igmp filter 7\n";
+            $drop .= "no port security\n";
+            $drop .= "rate-limit input 1000000\n";
+            $drop .= "no rate-limit input\n";
+            $drop .= "rate-limit output 1000000\n";
+            $drop .= "no rate-limit output\n";
+            $drop .= "switchport allowed vlan add 555 untagged\n";
+            $drop .= "switchport ingress-filtering\n";
+            $drop .= "switchport mode access\n";
+            $drop .= "switchport native vlan 555\n";
+            $drop .= "switchport allowed vlan remove 1\n";
+            $drop .= "spanning-tree edge-port\n";
+            $drop .= "spanning-tree bpdu-filter\n";
+            $drop .= "spanning-tree bpdu-guard\n";
+            $drop .= "queue mode strict\n";
+            $drop .= "no ip access-group iptv-user{$this->parentPortNumber} in\n";
+            $drop .= "no ip access-group iptv-user-smtp{$this->parentPortNumber} in\n";
+            $drop .= "no ip access-group internet-user{$this->parentPortNumber} in\n";
+            $drop .= "no ip access-group internet-user-smtp{$this->parentPortNumber} in\n";
+            $drop .= "no ip access-group iptv-only{$this->parentPortNumber} in\n";
+            $drop .= "no service-policy input iptv-user-501M\n";
+            $drop .= "no service-policy input internet-user-501M\n";
+            $drop .= "no ip dhcp snooping max-number\n";
+            $drop .= "no ip source-guard\n"; 
+            $drop .= "ip source-guard mode acl\n";
+            $drop .= "ip igmp query-drop\n"; 
+            $drop .= "ip multicast-data-drop\n";
+            $drop .= "loopback-detection\n";
+            $drop .= "discard cdp\n";
+            $drop .= "discard pvs\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "no access-list IP extended iptv-user{$this->parentPortNumber}\n";
+            $drop .= "no access-list IP extended iptv-user-smtp{$this->parentPortNumber}\n";
+            $drop .= "no access-list IP extended internet-user{$this->parentPortNumber}\n";
+            $drop .= "no access-list IP extended internet-user-smtp{$this->parentPortNumber}\n";
+            $drop .= "no access-list IP extended iptv-only{$this->parentPortNumber}\n";
+            $drop .= "exit\n";
+            $drop .= "clear ip dhcp snooping binding {$this->mac} {$this->ip}\n";
+            $drop .= "cop r s\n";
         } elseif ($this->device instanceof GatewayVoip) {
-
-$drop = <<<DELETE
-
-DELETE;
-            
+            $drop = " ";   
         } elseif ($this->device instanceof Camera) {
-
-$drop = <<<DELETE
-
-DELETE;
-            
+            $drop = " ";    
         }
         
-    return $drop;
+        return $drop;
     }
     
     function changeMac($newMac) {
         
         $newMac = preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace([':', '.', '-'], '', $newMac));
         
-        $change = ' ';
-
-$change = <<<CHANGE
-interface {$this->parentPortName}
-shutdown
-no switchport port-security
-exit
-no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}
-mac address-table static {$newMac} forward interface {$this->parentPortName} vlan {$this->vlanId}
-exit
-clear ip dhcp snooping binding {$this->ip}
-configure terminal
-interface {$this->parentPortName}
-switchport port-security
-no shutdown
-exit
-exit
-wr	
-
-CHANGE;
-
-    return $change;
+        $change = "interface {$this->parentPortName}\n";
+        $change .= "shutdown\n";
+        $change .= "no switchport port-security\n";
+        $change .= "exit\n";
+        $change .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+        $change .= "mac address-table static {$newMac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+        $change .= "exit\n";
+        $change .= "clear ip dhcp snooping binding {$this->ip}\n";
+        $change .= "configure terminal\n";
+        $change .= "interface {$this->parentPortName}\n";
+        $change .= "switchport port-security\n";
+        $change .= "no shutdown\n";
+        $change .= "exit\n";
+        $change .= "exit\n";
+        $change .= "wr\n";	
+    
+        return $change;
     }
 }
