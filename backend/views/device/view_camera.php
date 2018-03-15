@@ -68,7 +68,7 @@ echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->ips as $ip) {
     
-    $url = Html::a($ip->ip, "http://{$ip->ip}");
+    $url = Html::a($ip->ip, "http://{$ip->ip}", ['target'=>'_blank']);
     echo '<tr>';
     echo "<th>VLAN {$ip->subnet->vlan->id}</th>";
     echo "<td>{$url}</td>";
