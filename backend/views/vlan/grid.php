@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
         		'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', ['vlan/create'], ['class' => 'create-vlan']),
         		'buttons' => [
         			'view' => function ($model, $data) {
-        				$url = Url::toRoute(['subnet/grid', 'vlan' => $data->id]);
+        				$url = Url::toRoute(['subnet/index', 'vlan' => $data->id]);
         				return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
         					'class' => 'show-subnet',	
         					'title' => \Yii::t('yii', 'Widok podsieci'),

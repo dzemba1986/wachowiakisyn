@@ -15,7 +15,7 @@ use yii\web\NotFoundHttpException;
 
 class IpController extends Controller
 {  
-	public function actionViewByDevice($device)
+	public function actionView($device)
 	{
 		$modelIps = !is_null($device) ? Device::findOne($device)->modelIps : [];
 		
@@ -214,16 +214,14 @@ class IpController extends Controller
     	}
     }
     
-    public function actionGrid($subnet = null){
+    public function actionIndex($subnetId){
     	
-    	$modelIp = new IpSearch();
-		$dataProvider = $modelIp->search(\Yii::$app->request->queryParams);
+    	$ip = new IpSearch();
+		$dataProvider = $ip->search(\Yii::$app->request->queryParams);
 		
-		if(!is_null($subnet))
-			$dataProvider->query->joinWith('modelDevice')->andWhere(['subnet' => $subnet])->orderBy('ip');
+		$dataProvider->query->joinWith('device')->andWhere(['subnet_id' => $subnetId])->orderBy('ip');
 	
-		return $this->renderAjax('grid', [
-			//'modelIp' => $modelIp,
+		return $this->renderAjax('index', [
 			'dataProvider' => $dataProvider,
 		]);
     }

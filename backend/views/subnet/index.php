@@ -5,9 +5,10 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\ConnectionSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/**
+ * @var yii\web\View $this
+ * @var backend\models\ConnectionSearch $modelSearch
+ */
 
 ?>
 
@@ -28,7 +29,6 @@ use yii\bootstrap\Modal;
     <?= GridView::widget([
         'id' => 'subnet-grid',
         'dataProvider' => $dataProvider,
-        //'filterModel' => $modelSubnet,
         'pjax' => true,
         'pjaxSettings' => [
             'options' => [
@@ -36,7 +36,6 @@ use yii\bootstrap\Modal;
             ]    
         ],
         'resizableColumns' => FALSE,
-        //'showPageSummary' => TRUE,
     	'export' => false,
         'columns' => [
         	'id',	
@@ -48,7 +47,6 @@ use yii\bootstrap\Modal;
         		'trueLabel' => 'Tak',
         		'falseLabel' => 'Nie',
         	],
-        	//'size',
         	[
         		'header' => 'Wolne',
         		'value' => 'ipFreeCount'
@@ -59,7 +57,7 @@ use yii\bootstrap\Modal;
         		'template' => '{view} {update} {delete} {dhcp}',
         		'buttons' => [
         			'view' => function ($model, $data) {
-        				$url = Url::toRoute(['ip/grid', 'subnet' => $data->id]);
+        				$url = Url::toRoute(['ip/index', 'subnetId' => $data->id]);
         				return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
         					'class' => 'show-ip',	
         					'title' => \Yii::t('yii', 'Widok'),

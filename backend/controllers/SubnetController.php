@@ -10,16 +10,15 @@ use yii\web\NotFoundHttpException;
 
 class SubnetController extends Controller
 {  
-	public function actionGrid($vlan = null)
+	public function actionIndex($vlan)
 	{
-		$modelSubnet = new SubnetSearch();
-		$dataProvider = $modelSubnet->search(\Yii::$app->request->queryParams);
+		$subnet = new SubnetSearch();
+		$dataProvider = $subnet->search(\Yii::$app->request->queryParams);
 		
-		if(!is_null($vlan))
-			$dataProvider->query->andWhere(['vlan' => $vlan]);
+		$dataProvider->query->andWhere(['vlan_id' => $vlan]);
 	
-		return $this->renderAjax('grid', [
-			'modelSubnet' => $modelSubnet,
+		return $this->renderAjax('index', [
+			'subnet' => $subnet,
 			'dataProvider' => $dataProvider,
 			'vlan' => $vlan	
 		]);
