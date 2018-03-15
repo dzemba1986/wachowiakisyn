@@ -245,8 +245,8 @@ class Connection extends ActiveRecord
     }
     
     function canConfigure() : bool {
-        
-        return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 ? true : false;
+        //kabel musi być gdyż po konfiguracji szczurek nie ma już na liście odpowiedniego portu do wyboru 
+        return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 && $this->wire > 0 ? true : false;
     }
     
     function afterSave($insert, $changedAttributes) {
