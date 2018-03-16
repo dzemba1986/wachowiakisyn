@@ -130,7 +130,7 @@ use yii\web\JsExpression;
 $deviceId = json_encode($connection->device_id);
 $deviceListUrl = Url::to(['device/list-from-tree', 'id' => $connection->device_id]);
 $port = json_encode($connection->port);
-$portListUrl = Url::to(['tree/list-port', 'deviceId' => $connection->device_id, 'selected' => $connection->port]);
+$portListUrl = Url::to(['tree/list-port', 'deviceId' => $connection->device_id, 'selected' => $connection->port, 'install' => true]);
 
 $js = <<<JS
 $(function(){
