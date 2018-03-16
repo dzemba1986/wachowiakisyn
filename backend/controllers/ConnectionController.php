@@ -130,7 +130,7 @@ class ConnectionController extends Controller
             ->count();
             
             if ($connection->load($request->post())) {
-                if (!empty($connection->close_date)) {
+                if (!empty($connection->close_date) && is_null($connection->oldAttributes['close_date'])) {
                     $connection->close_user = \Yii::$app->user->identity->id;
                     $connection->close_date = $connection->close_date . ' ' . date('H:i:s');
                 }
