@@ -249,6 +249,23 @@ class Connection extends ActiveRecord
         return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 && $this->wire > 0 ? true : false;
     }
     
+    function beforeSave($insert) {
+        
+        if (!$insert) {
+            if (is_null($this->close_date) && !is_null($this->oldAttributes['close_date'])) {
+                $this->close_user = null;
+                $this->conf_date = null;
+                $this->info = '[Cofnięcie rezygnacji: ' . date('Y-m-d') . ']';
+            }
+        }
+        
+        if (!parent::beforeSave($insert)){
+            return false;
+        }
+        
+        return true;
+    }
+    
     function afterSave($insert, $changedAttributes) {
         
         if (!$insert) {
@@ -268,7 +285,7 @@ class Connection extends ActiveRecord
     
                     }
                 }
-            }
+            } 
         }
     }
 }
