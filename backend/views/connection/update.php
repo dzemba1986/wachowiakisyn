@@ -22,7 +22,7 @@ use yii\web\JsExpression;
     <div class="row">
     
     	<?= $form->field($connection, 'pay_date', [
-			'options' => ['class' => 'col-sm-3', 'style' => 'padding-right: 0px;'],
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-right: 3px;'],
 		])->widget(DatePicker::className(), [
         	'model' => $connection,
             'attribute' => 'pay_date',
@@ -37,11 +37,11 @@ use yii\web\JsExpression;
         ])?>
             
         <?= $form->field($connection, 'phone', [
-    		'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 6px; padding-right: 3px;'],
+    		'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
     	]) ?>
 	    
 	    <?= $form->field($connection, 'phone2', [
-	    	'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 3px; padding-right: 6px;'],
+	    	'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
 	    ]) ?>
 		    
 	    <?php if($connection->type_id == 1 || $connection->type_id == 3) :?>
@@ -56,7 +56,7 @@ use yii\web\JsExpression;
     <div class="row">
         
         <?= $form->field($connection, 'device_id', [
-			'options' => ['class' => 'col-sm-8', 'style' => 'padding-right: 3px;'],
+			'options' => ['class' => 'col-sm-7', 'style' => 'padding-right: 3px;'],
     	])->widget(Select2::classname(), [
     		'language' => 'pl',
            	'options' => [
@@ -88,8 +88,23 @@ use yii\web\JsExpression;
     	]) ?>
     
 		<?= $form->field($connection, 'port', [
-			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px;'],
-		])->dropDownList([], ['prompt'=>'port']) ?> 
+			'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+		])->dropDownList([], ['prompt'=>'port']) ?>
+		
+		<?= $form->field($connection, 'close_date', [
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px;'],
+		    'labelOptions' => ['style' => 'color:red']
+		])->widget(DatePicker::className(), [
+        	'model' => $connection,
+            'attribute' => 'close_date',
+			'pickerButton' => false,
+			'language' => 'pl',
+            'pluginOptions' => [
+            	'format' => 'yyyy-mm-dd',
+                'todayHighlight' => true,
+                'endDate' => '0d',
+            ]
+        ])?>
 
 	</div>
 	<?php elseif ($allConnections > 0 || !empty($connection->host_id)) : ?>
@@ -102,7 +117,7 @@ use yii\web\JsExpression;
 			])->textarea(['rows' => "7", 'style' => 'resize: vertical']) ?>
 			
 			<?= $form->field($connection, 'info_boa', [
-	        	'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px;'],
+	        	'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px;'],
 	        ])->textarea(['rows' => "7", 'style' => 'resize: vertical']) ?>
     </div>
     

@@ -130,6 +130,10 @@ class ConnectionController extends Controller
             ->count();
             
             if ($connection->load($request->post())) {
+                if (!empty($connection->close_date)) {
+                    $connection->close_user = \Yii::$app->user->identity->id;
+                    $connection->close_date = $connection->close_date . ' ' . date('H:i:s');
+                }
                 try {
                     if (!$connection->save()) throw new Exception('Problem z zapisem połączenia');
                 } catch (\Throwable $t) {

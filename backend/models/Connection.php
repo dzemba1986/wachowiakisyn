@@ -253,18 +253,20 @@ class Connection extends ActiveRecord
         
         if (!$insert) {
             if (array_key_exists('close_date', $changedAttributes) && is_null($changedAttributes['close_date'])) {
-                if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
-                    $host = Host::findOne($changedAttributes['host_id']);
-                    $host->status = false;
-                    $host->dhcp = false;
-                    $host->smtp = false;
-                    $host->mac = null;
-                    
-                    if (!$host->save()) throw new Exception('Błąd zapisu hosta');
-                    
-                    foreach ($host->ips as $ip)
-                        if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
-
+                if (!is_null($changedAttributes['host_id'])) {
+                    if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
+                        $host = Host::findOne($changedAttributes['host_id']);
+                        $host->status = false;
+                        $host->dhcp = false;
+                        $host->smtp = false;
+                        $host->mac = null;
+                        
+                        if (!$host->save()) throw new Exception('Błąd zapisu hosta');
+                        
+                        foreach ($host->ips as $ip)
+                            if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
+    
+                    }
                 }
             }
         }

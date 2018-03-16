@@ -49,7 +49,7 @@ use yii\widgets\DetailView;
         'attributes' => [
             [
                 'attribute' => 'start_date',
-                'value' => date('Y-m-d', strtotime($model->start_date))
+                'format' => ['date', 'php:Y-m-d'],
             ],
         	'soa_date',
             [
@@ -61,7 +61,11 @@ use yii\widgets\DetailView;
                 'visible' => in_array($model->type_id, [2]),
             ],
             'pay_date',
-            'close_date',
+            [
+                'attribute' => 'close_date',
+                'format' => ['date', 'php:Y-m-d'],
+                'contentOptions' => ['style' => 'color: red'],
+            ]
         ],
     ]);
     ?>
