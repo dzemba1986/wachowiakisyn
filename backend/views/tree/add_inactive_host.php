@@ -14,17 +14,17 @@ use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
 	'id' => $model->formName(),
-    'validationUrl' => Url::to(['validator/add-host'])
+    'validationUrl' => Url::to(['host/add-host-validation'])
 ]);
 ?>
 
 <div class="row">
+	<?= Html::label("Umowa zostanie przypisana do hosta o id : {$hostId}" , null, ['class' => 'col-sm-8']) ?>
+
 	<?= $form->field($model, 'mac', [
 	    'enableAjaxValidation' => true,
-	    'options' => ['class' => 'col-sm-3', 'style' => 'padding-right: 3px;'],
+	    'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px;'],
 	]) ?>
-	
-	<?= Html::label("Umowa zostanie przypisana do hosta o id : {$hostId}") ?>
 </div>
 	
 <div class="row">
