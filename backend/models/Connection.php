@@ -253,7 +253,7 @@ class Connection extends ActiveRecord
         
         if (!$insert) {
             if (array_key_exists('close_date', $changedAttributes) && is_null($changedAttributes['close_date'])) {
-                if (!is_null($changedAttributes['host_id'])) {
+                if (($this->type_id != 2 && array_key_exists('host_id', $changedAttributes)) && !is_null($changedAttributes['host_id'])) {
                     if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
                         $host = Host::findOne($changedAttributes['host_id']);
                         $host->status = false;
