@@ -2,16 +2,13 @@
 
 namespace backend\modules\task\controllers;
 
-use backend\models\Address;
-use backend\models\Connection;
 use backend\modules\task\models\DeviceTask;
 use backend\modules\task\models\DeviceTaskSearch;
-use backend\modules\task\models\InstallTask;
-use backend\modules\task\models\Task;
 use common\models\User;
 use Yii;
 use yii\base\Exception;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class DeviceTaskController extends Controller
 {
@@ -41,7 +38,7 @@ class DeviceTaskController extends Controller
         		//'is not', 'close_user', null,
         	]);
         	
-        	$dataProvider->query->orderBy('close');
+        	$dataProvider->query->orderBy('close DESC');
         }
         
         //$dataProvider->query->orderBy('start_date, start_time');
