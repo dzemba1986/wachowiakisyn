@@ -203,7 +203,7 @@ class TreeController extends Controller
             
             $hosts = [];
             foreach ($allHosts as $host) {
-                if (!in_array($connection->type_id, $host->connectionsType)) $hosts[] = $host;
+                if (!$host->status || !in_array($connection->type_id, $host->connectionsType)) $hosts[] = $host;
             }
             //nie ma w ogóle hosta lub dodanie nowego pomimo znalezienia hostów
             if ((empty($hosts) && is_null($hostId)) || ($hostId == 'new' && !empty($hosts))) {
