@@ -104,9 +104,11 @@ class Host extends Device {
 	
 	function getConnectionsType() : array {
 	    
-	    foreach ($this->connections as $connection) {
-            $types[] = $connection->type_id;
-	    }
+	    if (empty($this->connections)) {
+    	    foreach ($this->connections as $connection) {
+                $types[] = $connection->type_id;
+    	    }
+	    } else $types = [];
 	    
 	    return $types;
 	}
