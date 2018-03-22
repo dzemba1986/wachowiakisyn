@@ -86,7 +86,7 @@ class DeviceController extends Controller
     
     function actionHistory($id) {
         
-        $histories = History::find()->joinWith('user')->select('history.created_at, last_name, desc')->where(['device_id' => $id])->asArray()->all();
+        $histories = History::find()->joinWith('user')->select('history.created_at, created_by, last_name, desc')->where(['device_id' => $id])->asArray()->all();
         
         return $this->renderAjax('history', [
             'histories' => $histories
