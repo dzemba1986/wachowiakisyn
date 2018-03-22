@@ -6,7 +6,9 @@ use backend\models\configuration\ECSeriesConfiguration;
 use backend\models\configuration\GSSeriesConfiguration;
 use backend\models\configuration\XSeriesConfiguration;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * @property boolean $dhcp
@@ -84,16 +86,72 @@ class Host extends Device {
 	
 	public function beforeSave($insert) {
 	    
+	    if (!$insert) {
+	        if (array_key_exists('mac', $this->dirtyAttributes) && $this->oldAttributes['mac'] && $this->mac) {
+	            
+	            $history = \Yii::createObject([
+	                'class' => History::className(),
+	                'created_at' => date('Y-m-d H:i:s'),
+	                'desc' => 'Zmiana adresu MAC z ' . Html::label($this->oldAttributes['mac']) . ' na ' . Html::label($this->mac),
+	                'address_id' => $this->address_id,
+	                'device_id' => $this->id,
+	                'created_by' => \Yii::$app->user->id
+	            ]);
+	            
+	            if (!$history->save()) throw new Exception('Błąd zapisu historii');
+	        }
+	        
+	        if (array_key_exists('status', $this->dirtyAttributes) && $this->oldAttributes['status'] && !$this->status) {
+	            
+	            $history = \Yii::createObject([
+	                'class' => History::className(),
+	                'created_at' => date('Y-m-d H:i:s'),
+	                'desc' => 'Dezaktywacja hosta',
+	                'address_id' => $this->address_id,
+	                'device_id' => $this->id,
+	                'created_by' => \Yii::$app->user->id
+	            ]);
+	            
+	            if (!$history->save()) throw new Exception('Błąd zapisu historii');
+	        }
+	        
+	        if (array_key_exists('status', $this->dirtyAttributes) && !$this->oldAttributes['status'] && $this->status) {
+	            
+	            $history = \Yii::createObject([
+	                'class' => History::className(),
+	                'created_at' => date('Y-m-d H:i:s'),
+	                'desc' => 'Aktywacja hosta z adresem MAC ' . Html::label($this->mac),
+	                'address_id' => $this->address_id,
+	                'device_id' => $this->id,
+	                'created_by' => \Yii::$app->user->id
+	            ]);
+	            
+	            if (!$history->save()) throw new Exception('Błąd zapisu historii');
+	        }
+	    }
+	    
 	    $this->type_id = self::TYPE;
 	    return parent::beforeSave($insert);
 	}
 	
+	
 	function afterSave($insert, $changedAttributes) {
 	    
 	    if (!$insert) {
-	        if (isset($changedAttributes['mac']) || isset($changedAttributes['dhcp'])) {
+	        if (array_key_exists('mac', $changedAttributes) || array_key_exists('dhcp', $changedAttributes)) {
 	            !empty($this->ips) ? Dhcp::generateFile($this->ips[0]->subnet) : null;
 	        }
+	    } else {
+	        $history = \Yii::createObject([
+	            'class' => History::className(),
+	            'created_at' => date('Y-m-d H:i:s'),
+	            'desc' => 'Aktywacja hosta z adresem MAC ' . Html::label($this->mac),
+	            'address_id' => $this->address_id,
+	            'device_id' => $this->id,
+	            'created_by' => \Yii::$app->user->id
+	        ]);
+	        
+	        if (!$history->save()) throw new Exception('Błąd zapisu historii');
 	    }
 	}
 	

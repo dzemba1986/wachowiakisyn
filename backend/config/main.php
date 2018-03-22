@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
 	'defaultRoute' => 'connection/index',
+    'timeZone' => 'Europe/Warsaw',
     'bootstrap' => ['log'],
     'modules' => [
     	'gridview' => [

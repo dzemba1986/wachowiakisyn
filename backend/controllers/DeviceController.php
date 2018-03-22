@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\Address;
 use backend\models\Device;
 use backend\models\DeviceSearch;
+use backend\models\History;
 use backend\models\Host;
 use Yii;
 use yii\base\Exception;
@@ -81,6 +82,15 @@ class DeviceController extends Controller
 	            ]);
 	            break;
 	    }
+    }
+    
+    function actionHistory($id) {
+        
+        $histories = History::find()->joinWith('user')->select('history.created_at, last_name, desc')->where(['device_id' => $id])->asArray()->all();
+        
+        return $this->renderAjax('history', [
+            'histories' => $histories
+        ]);
     }
     
     public function actionChangeMac($hostId) {

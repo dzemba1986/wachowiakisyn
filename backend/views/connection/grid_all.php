@@ -203,7 +203,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
             ]),
             'class' => 'kartik\grid\ActionColumn',
             'mergeHeader' => true,
-            'template' => '{view} {update} {tree}',
+            'template' => '{view} {update} {history} {tree}',
             'options' => ['style' => 'width:6%;'],
         	'buttons' => [
         		'tree' => function ($url, $model, $key) {
@@ -222,8 +222,23 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         			} else
         				return null;
         		},
+        		'history' => function ($url, $model, $key) {
+                    return Html::a('<span class="glyphicon glyphicon-menu-hamburger"></span>', Url::to(['connection/history', 'id' => $key]), ['class' => 'history', 'title' => \Yii::t('yii', 'Historia')]);
+        		}
         	]
         ],            
     ]
-		]); 
+]);
+
+$this->registerJs(
+"$(function(){
+	$('body').on('click', '.history', function(event){
+		$('#modal-connection-view').modal('show')
+			.find('#modal-content-connection-view')
+			.load($(this).attr('href'));
+    
+        return false;
+	});
+});"
+);
 ?>

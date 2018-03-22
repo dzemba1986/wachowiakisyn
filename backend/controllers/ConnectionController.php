@@ -10,6 +10,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use backend\models\History;
 /**
  * ConnectionController implements the CRUD actions for Connection model.
  */
@@ -24,7 +25,7 @@ class ConnectionController extends Controller
         		'rules'	=> [
         			[
         				'allow' => true,
-        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'close'],
+        				'actions' => ['create', 'delete', 'index', 'update', 'view', 'sync', 'close', 'history'],
         				'roles' => ['@']	
         			]	
         		]
@@ -173,6 +174,15 @@ class ConnectionController extends Controller
     			return 0;
     		}
     	}
+    }
+    
+    function actionHistory($id) {
+        
+        $histories = History::find()->joinWith('user')->select('history.created_at, last_name, desc')->where(['connection_id' => $id])->asArray()->all();
+        
+        return $this->renderAjax('history', [
+            'histories' => $histories
+        ]);
     }
     
     function actionClose($id) {

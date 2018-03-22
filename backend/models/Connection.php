@@ -255,7 +255,31 @@ class Connection extends ActiveRecord
             if (is_null($this->close_date) && !is_null($this->oldAttributes['close_date'])) {
                 $this->close_user = null;
                 $this->conf_date = null;
-                $this->info = '[Cofnięcie rezygnacji: ' . date('Y-m-d') . ']';
+                
+                $history = \Yii::createObject([
+                    'class' => History::className(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'desc' => 'Cofnięcie rezygnacji',
+                    'address_id' => $this->address_id,
+                    'connection_id' => $this->id,
+                    'created_by' => \Yii::$app->user->id
+                ]);
+                
+                if (!$history->save()) throw new Exception('Błąd zapisu historii');
+            }
+            
+            if (array_key_exists('conf_date', $this->dirtyAttributes) && $this->conf_date && !$this->oldAttributes['conf_date']) {
+                
+                $history = \Yii::createObject([
+                    'class' => History::className(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'desc' => 'Konfiguracja',
+                    'address_id' => $this->address_id,
+                    'connection_id' => $this->id,
+                    'created_by' => \Yii::$app->user->id
+                ]);
+                
+                if (!$history->save()) throw new Exception('Błąd zapisu historii');
             }
         }
         
@@ -270,6 +294,18 @@ class Connection extends ActiveRecord
         
         if (!$insert) {
             if (array_key_exists('close_date', $changedAttributes) && is_null($changedAttributes['close_date'])) {
+                
+                $history = \Yii::createObject([
+                    'class' => History::className(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'desc' => 'Rezygnacja z umowy',
+                    'address_id' => $this->address_id,
+                    'connection_id' => $this->id,
+                    'created_by' => \Yii::$app->user->id
+                ]);
+                
+                if (!$history->save()) throw new Exception('Błąd zapisu historii');
+                
                 if (($this->type_id != 2 && array_key_exists('host_id', $changedAttributes)) && !is_null($changedAttributes['host_id'])) {
                     if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
                         $host = Host::findOne($changedAttributes['host_id']);
