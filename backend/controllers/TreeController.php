@@ -140,6 +140,7 @@ class TreeController extends Controller
                     var_dump($host->errors);
                     var_dump($link->errors);
                     var_dump($ip->errors);
+                    var_dump($t->getMessage());
                     exit();
                 }
                 
