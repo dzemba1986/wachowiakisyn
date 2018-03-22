@@ -92,7 +92,7 @@ class Host extends Device {
 	            $history = \Yii::createObject([
 	                'class' => History::className(),
 	                'created_at' => date('Y-m-d H:i:s'),
-	                'desc' => 'Zmiana adresu MAC z ' . Html::label($this->oldAttributes['mac']) . ' na ' . Html::label($this->mac),
+	                'desc' => 'Zmiana adresu MAC z ' . Html::label($this->oldAttributes['mac']) . ' na ' . Html::label(strtolower($this->mac)),
 	                'address_id' => $this->address_id,
 	                'device_id' => $this->id,
 	                'created_by' => \Yii::$app->user->id
@@ -120,7 +120,7 @@ class Host extends Device {
 	            $history = \Yii::createObject([
 	                'class' => History::className(),
 	                'created_at' => date('Y-m-d H:i:s'),
-	                'desc' => 'Aktywacja hosta z adresem MAC ' . Html::label($this->mac),
+	                'desc' => 'Aktywacja hosta z adresem MAC ' . Html::label(strtolower($this->mac)),
 	                'address_id' => $this->address_id,
 	                'device_id' => $this->id,
 	                'created_by' => \Yii::$app->user->id
