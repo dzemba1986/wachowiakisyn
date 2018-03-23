@@ -114,7 +114,7 @@ class DeviceController extends Controller {
 		$ipsList = '';
 		
 		foreach ($GSDevices24 as $GSDevice24){
-			$ipsList .= $GSDevices24->ips[0]->ip . "\n";
+			$ipsList .= $GSDevice24->ips[0]->ip . "\n";
 		}
 		
 		$file = fopen(\Yii::getAlias('@console') . "/device/lists/8000GS-24", "w");
@@ -128,7 +128,7 @@ class DeviceController extends Controller {
 		$ipsList = '';
 		
 		foreach ($GSDevices48 as $GSDevice48){
-			$ipsList .= $GSDevices48->ips[0]->ip . "\n";
+			$ipsList .= $GSDevice48->ips[0]->ip . "\n";
 		}
 		
 		$file = fopen(\Yii::getAlias('@console') . "/device/lists/8000GS-48", "w");
