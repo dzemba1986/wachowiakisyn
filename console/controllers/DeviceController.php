@@ -262,6 +262,14 @@ class DeviceController extends Controller {
 		fclose($file);
 	}
 	
+	function actionIcinga() {
+	    
+	    echo \Yii::$app->apiIcingaClient->put('objects/hosts/seutest', [
+	        "templates" => ["generic-host"], 
+	        "attrs" => ["address" => "192.168.1.1", "check_command" => "hostalive", "vars.os" => "Linux"]
+	    ], ['Content-Type' => 'application/json', 'Authorization' => 'Basic YXBpOmFwaXBhc3M=', 'Accept' => 'application/json'])->send()->content;
+	}
+	
 	public function actionSsh() {
 		
 		$methods = [

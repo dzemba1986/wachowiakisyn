@@ -5,6 +5,12 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'apiIcingaClient' => [
+            'class' => 'yii\httpclient\Client',
+            'baseUrl' => 'https://10.111.233.4:5665/v1',
+            'requestConfig' => ['format' => 'json', 'options' => ['sslverify_peer' => false, 'sslverify_peer_name' => false]], //['sslverify_peer' => false, 'sslverify_peer_name' => false],
+            //'transport' => 'yii\httpclient\CurlTransport'
+        ],
     ],
 	'aliases' => [
 		'@common' => dirname(__DIR__),
