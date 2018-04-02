@@ -1,6 +1,6 @@
 <?php 
 use app\models\Package;
-use backend\models\Address;
+use backend\models\AddressShort;
 use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         [	
             'attribute' => 'street',
             'value' => 'address.ulica',
-            'filter' => Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
+            'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
             'options' => ['style'=>'width:12%;'],
         ],	
         [
@@ -108,13 +108,13 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
         [
             'attribute' =>'type_id',
             'value' => 'type.name',
-            'filter'=> Html::activeDropDownList($searchModel, 'type_id', ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+            'filter'=> ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'),
             'options' => ['style'=>'width:5%;'],
         ],
         [
 	        'attribute' => 'package_id',
 	        'value' => 'package.name',
-	        'filter'=> Html::activeDropDownList($searchModel, 'package_id', ArrayHelper::map(Package::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
+            'filter'=> ArrayHelper::map(Package::find()->all(), 'id', 'name'),
 	        'options' => ['style'=>'width:5%;'],
         ],
         [
