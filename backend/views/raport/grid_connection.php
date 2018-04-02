@@ -1,13 +1,9 @@
 <?php 
-use backend\models\Address;
-use backend\models\Type;
+use backend\models\AddressShort;
+use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
-use yii\web\View;
-use backend\models\ConnectionSearch;
-use yii\widgets\ActiveForm;
 
 /**
  * @var View $this
@@ -96,53 +92,36 @@ $this->params['breadcrumbs'][] = 'Podłączenia';
 			'options' => ['id'=>'start', 'style'=>'width:10%;'],
 		],
         [	
-            'attribute'=>'street',
-            'value'=>'modelAddress.ulica',
-            'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
-            //'options' => ['style'=>'width:12%;'],
+            'attribute' => 'street',
+            'value' => 'address.ulica',
+            'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
         ],	
         [
-            'attribute'=>'house',
-            'value'=>'modelAddress.dom',
+            'attribute' => 'house',
+            'value' => 'address.dom',
             'options' => ['style'=>'width:5%;'],
         ],
         [
-            'attribute'=>'house_detail',
-            'value'=>'modelAddress.dom_szczegol',
-            //'options' => ['style'=>'width:5%;'],
+            'attribute' => 'house_detail',
+            'value' => 'address.dom_szczegol',
         ],
         [
-            'attribute'=>'flat',
-            'value'=>'modelAddress.lokal',
-            //'options' => ['style'=>'width:5%;'],
+            'attribute' => 'flat',
+            'value' => 'address.lokal',
         ],
-//        [
-//            'attribute'=>'flat_detail',
-//            'value'=>'modelAddress.lokal_szczegol',
-//            'options' => ['style'=>'width:10%;'],
-//        ],
         [
-            'attribute'=>'type',
-            'value'=>'modelType.name',
-            'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
-            //'options' => ['style'=>'width:5%;'],
+            'attribute' => 'type_id',
+            'value' => 'type.name',
+            'filter'=> ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name'),
         ],
-//         [
-//             'class'=>'kartik\grid\BooleanColumn',
-//             'attribute'=>'nocontract',
-//             'trueLabel' => 'Tak', 
-//             'falseLabel' => 'Nie',
-//             'options' => ['style'=>'width:5%;'],
-//         ],
 		[
-        	'class'=>'kartik\grid\BooleanColumn',
-            'attribute'=>'again',
+        	'class' => 'kartik\grid\BooleanColumn',
+            'attribute' => 'again',
             'trueLabel' => 'Tak',
             'falseLabel' => 'Nie',
-            //'options' => ['style'=>'width:5%;'],
         ],
         [
-            'class'=>'kartik\grid\BooleanColumn',
+            'class' => 'kartik\grid\BooleanColumn',
             'attribute' => 'socket',
             'header' => 'Gniazdo',
         	'trueLabel' => 'Tak',
