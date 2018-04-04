@@ -1,47 +1,59 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
+/**
+ * @var $this yii\web\View
+ * @var $subnet backend\models\Subnet
+ * @var $form yii\widgets\ActiveForm
+ */
+
 $form = ActiveForm::begin([
-	'id' => $modelSubnet->formName(),
-])?>
-    
-    <?= $form->field($modelSubnet, 'desc') ?>
+    'id' => $subnet->formName()
+]); ?>
 
-    <?= $form->field($modelSubnet, 'dhcp')->checkbox() ?>
+    <?= $form->field($subnet, 'desc'); ?>
+
+    <?= $form->field($subnet, 'dhcp')->checkbox(); ?>
     
-    <div class="form-group">
-	<?= Html::submitButton($modelSubnet->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
-	</div>
+	<?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
 	
-<?php ActiveForm::end() ?>
+<?php ActiveForm::end(); ?>
 
-<script>
+<?php
+$urlSubnet = Url::to(['subnet/index', 'vlan' => $subnet->vlan_id]);
 
-$('#<?= $modelSubnet->formName(); ?>').on('beforeSubmit', function(e){
+$js = <<<JS
+$(function() {
 
-	var form = $(this);
- 	$.post(
-  		form.attr("action"), // serialize Yii2 form
-  		form.serialize()
- 	).done(function(result){
-		
-// 		console.log(result);
- 		if(result == 1){
- 			$(form).trigger('reset');
-			$('#modal-update-net').modal('hide');
- 			$.pjax.reload({container: '#subnet-grid-pjax'});
- 		}
- 		else{
-		
- 			$('#message').html(result);
- 		}
- 	}).fail(function(){
- 		console.log('server error');
- 	});
-	return false;				
+    $('.modal-header h4').html('Dodaj podsieć');
+
+    $('#{$subnet->formName()}').on('beforeSubmit', function(e){
+
+    	var form = $(this);
+     	$.post(
+      		form.attr("action"), // serialize Yii2 form
+      		form.serialize()
+     	).done(function(result){
+    		
+     		if(result == 1){
+     			$(form).trigger('reset');
+                $('#modal-update-net').modal('hide');
+                $('#subnet-grid').load('{$urlSubnet}');
+     		}
+     		else{
+    		
+     			$('#message').html(result);
+     		}
+     	}).fail(function(){
+     		console.log('server error');
+     	});
+    	return false;				
+    });
 });
+JS;
 
-</script>
-
+$this->registerJs($js);
+?>

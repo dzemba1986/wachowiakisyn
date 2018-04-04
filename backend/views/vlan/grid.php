@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
-<div class="subnet-grid col-xs-9"></div>
+<div id="subnet-grid" class="subnet-grid col-xs-9"></div>
 <div class="ip-grid col-xs-12"></div>
 
 <script>

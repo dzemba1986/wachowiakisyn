@@ -40,7 +40,7 @@ class Subnet extends ActiveRecord
 			['vlan_id', 'integer', 'min' => 1, 'max' => 4096, 'tooSmall' => 'Wartość za mała', 'tooBig' => 'Wartość za duża', 'message' => 'Wartość liczbowa'],
 			
 		    ['dhcp', 'boolean'],
-		    ['dhcp', 'requred', 'message' => 'Wartość wymagana'],
+		    ['dhcp', 'required', 'message' => 'Wartość wymagana'],
 		    
 			['dhcp_group', 'integer', 'message' => 'Wartość liczbowa'],
 

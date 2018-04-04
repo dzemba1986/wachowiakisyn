@@ -5,13 +5,24 @@ namespace backend\controllers;
 use backend\models\Subnet;
 use backend\models\SubnetSearch;
 use yii\base\Exception;
+use yii\filters\AjaxFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class SubnetController extends Controller
-{  
-	public function actionIndex($vlan)
-	{
+class SubnetController extends Controller {
+    
+    public function behaviors() {
+        
+        return [
+            [
+                'class' => AjaxFilter::className(),
+                'only' => ['create', 'update']
+            ],
+        ];
+    }
+    
+    public function actionIndex($vlan) {
+        
 		$subnet = new SubnetSearch();
 		$dataProvider = $subnet->search(\Yii::$app->request->queryParams);
 		
@@ -24,73 +35,64 @@ class SubnetController extends Controller
 		]);
 	}
 	
-	public function actionCreate($vlan = null)
-	{
-		$modelSubnet = new Subnet();
-		$modelSubnet->scenario = Subnet::SCENARIO_CREATE;
+	public function actionCreate($vlan) {
+	    
+		$subnet = new Subnet();
+		$subnet->scenario = Subnet::SCENARIO_CREATE;
 	
 		$request = \Yii::$app->request;
 	
-		if ($request->isAjax){
-			if ($modelSubnet->load($request->post())) {
-				$modelSubnet->vlan = $vlan;
-				if($modelSubnet->validate()){
-					try {
-						if(!$modelSubnet->save())
-							throw new Exception('Problem z zapisem podsieci');
-							return 1;
-					} catch (Exception $e) {
-						var_dump($modelSubnet->errors);
-						var_dump($e->getMessage());
-						exit();
-					}
-						
-				} else {
-					var_dump($modelSubnet->errors);
-					exit();
-				}
-			} else {
-				return $this->renderAjax('create', [
-					'modelSubnet' => $modelSubnet,
-				]);
+		if ($subnet->load($request->post())) {
+			$subnet->vlan_id = $vlan;
+			
+			try {
+				if(!$subnet->save()) throw new Exception('Problem z zapisem podsieci');
+				
+				return 1;
+			} catch (\Throwable $t) {
+				var_dump($subnet->errors);
+				var_dump($t->getMessage());
+				exit();
 			}
+		} else {
+			return $this->renderAjax('create', [
+				'subnet' => $subnet,
+			]);
 		}
 	}
 	
-	public function actionUpdate($id)
-	{
-		$modelSubnet = $this->findModel($id);
-		$modelSubnet->scenario = Subnet::SCENARIO_UPDATE;
+	public function actionUpdate($id) {
+	    
+		$subnet = $this->findModel($id);
+		$subnet->scenario = Subnet::SCENARIO_UPDATE;
 	
 		$request = \Yii::$app->request;
 	
-		if($request->isAjax){
-			if($modelSubnet->load($request->post())){
-				if($modelSubnet->validate()){
-					try {
-						if(!$modelSubnet->save())
-							throw new Exception('Problem z zapisem podsieci');
-							return 1;
-					} catch (Exception $e) {
-						var_dump($modelSubnet->errors);
-						exit();
-					}
-				}
-			} else {
-				return $this->renderAjax('update', [
-					'modelSubnet' => $modelSubnet
-				]);
+		if($subnet->load($request->post())){
+			try {
+				if(!$subnet->save()) throw new Exception('Problem z zapisem podsieci');
+					
+				return 1;
+			} catch (Exception $e) {
+				var_dump($subnet->errors);
+				exit();
 			}
+		} else {
+			return $this->renderAjax('update', [
+				'subnet' => $subnet
+			]);
 		}
-	}
+    }
 	
 	public function actionDelete($id)
 	{
 		if($id){
-			if (count($this->findModel($id)->modelIps) > 0)
+		    $subnet = $this->findModel($id);
+		    
+			if ($subnet->getIps()->count() > 0)
 				return 'Podsieć wykorzystywana';
 			else
-				$this->findModel($id)->delete();
+				$subnet->delete();
 			
 			return 1;
 		} else
