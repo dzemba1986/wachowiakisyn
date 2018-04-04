@@ -174,6 +174,7 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "exit\n";
                 $drop .= "do clear ip dhcp snooping binding interface {$this->parentPortName}\n";
                 $drop .= "exit\n";
+                $drop .= "wr\n";
             }
 
         } elseif ($this->device instanceof GatewayVoip) {
