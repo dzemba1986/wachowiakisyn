@@ -53,6 +53,10 @@ use yii\widgets\DetailView;
             ],
         	'soa_date',
             [
+                'attribute' => 'exec_date',
+                'visible' => in_array($model->type_id, [1,3]),
+            ],
+            [
                 'attribute' => 'conf_date',
                 'visible' => in_array($model->type_id, [1,3]),
             ],

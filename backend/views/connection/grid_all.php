@@ -40,14 +40,13 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
 			]),
 	],
 	'rowOptions' => function($model){
-		if ($model->pay_date <> null && $model->close_date == null) {
-	
+    	if ($model->exec_date) {
+    	    return ['class' => 'sevendays'];
+    	} elseif ($model->pay_date <> null && $model->close_date == null) {
 			return ['class' => 'pay'];
-		}
-		elseif ($model->close_date <> null) {
-	
+		} elseif ($model->close_date <> null) {
 			return ['class' => 'inactiv'];
-		}
+		} 
 	},
 	'columns' => [
 	    [

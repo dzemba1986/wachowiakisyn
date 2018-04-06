@@ -131,6 +131,7 @@ class TreeController extends Controller
                     $connection->host_id = $host->id;
                     $connection->conf_date = date('Y-m-d');
                     $connection->conf_user = Yii::$app->user->identity->id;
+                    if ($connection->exec_date) $connection->exec_date = null;
                     
                     if (!$connection->save()) throw new Exception('błąd zapisu umowy');
                     
@@ -169,6 +170,7 @@ class TreeController extends Controller
                     $connection->host_id = $hostId;
                     $connection->conf_date = date('Y-m-d');
                     $connection->conf_user = Yii::$app->user->identity->id;
+                    if ($connection->exec_date) $connection->exec_date = null;
                 
                     if (!$connection->save())
                         throw new Exception('błąd zapisu umowy');
@@ -188,6 +190,7 @@ class TreeController extends Controller
                 $connection->host_id = $hostId;
                 $connection->conf_date = date('Y-m-d');
                 $connection->conf_user = Yii::$app->user->identity->id;
+                if ($connection->exec_date) $connection->exec_date = null;
                 
                 try {
                     if (!$connection->save())

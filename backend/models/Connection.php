@@ -41,6 +41,7 @@ use yii\base\Exception;
  * @property integer $task_id
  * @property integer $soa_id
  * @property integer $replaced_id
+ * @property string $exec_date
  * @property array $installations
  * @property backend\models\Address $address
  * @property backend\models\Package $package
@@ -158,7 +159,8 @@ class Connection extends ActiveRecord
 			'close_date' => 'Rezygnacja',
 			'phone_date' => 'Przeniesienie',
 			'install_date' => 'Data instalacji',
-			'synch_date' => 'Synchronizacja',	
+			'synch_date' => 'Synchronizacja',
+		    'exec_date' => 'Skonfigurować',
 			'add_user' => 'Dodał',
 			'conf_user' => 'Skonfigurował',
 			'address_id' => 'Adres',
@@ -246,7 +248,7 @@ class Connection extends ActiveRecord
     
     function canConfigure() : bool {
         //kabel musi być gdyż po konfiguracji szczurek nie ma już na liście odpowiedniego portu do wyboru 
-        return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 && $this->wire > 0 ? true : false;
+        return !$this->nocontract && is_null($this->close_date) && is_null($this->host_id) && $this->type_id <> 2 && $this->wire > 0 && $this->exec_date <= date('Y-m-d')? true : false;
     }
     
     function beforeSave($insert) {

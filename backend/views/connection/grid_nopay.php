@@ -55,10 +55,11 @@ $this->params['breadcrumbs'][] = 'Niepłacący';
 		]),
 	],
 	'rowOptions' => function($model){
-		if((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
-	
+    	if ($model->exec_date) {
+    	    return ['class' => 'sevendays'];
+    	} elseif ((strtotime(date("Y-m-d")) - strtotime($model->start_date)) / (60*60*24) >= 21){
 			return ['class' => 'after-date'];
-		}
+		} 
 	},
 	'columns' => [
         [
