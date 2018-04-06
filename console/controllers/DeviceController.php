@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use backend\models\Device;
 use yii\console\Controller;
+use backend\models\Swith;
 
 class DeviceController extends Controller {
 	
@@ -262,12 +263,39 @@ class DeviceController extends Controller {
 		fclose($file);
 	}
 	
-	function actionIcinga() {
+	function actionIcingaAdd() {
 	    
-	    echo \Yii::$app->apiIcingaClient->put('objects/hosts/seutest', [
-	        "templates" => ["generic-host"], 
-	        "attrs" => ["address" => "192.168.1.1", "check_command" => "hostalive", "vars.os" => "Linux"]
-	    ], ['Content-Type' => 'application/json', 'Authorization' => 'Basic YXBpOmFwaXBhc3M=', 'Accept' => 'application/json'])->send()->content;
+	    $switches = Swith::find()->joinWith(['mainIp', 'model'])->andWhere(['model.name' => 'AT-8000GS/24'])->orderBy('device.name')->limit(1)->all();
+	    
+	    foreach ($switches as $switch) {
+	        
+	        if ($switch->proper_name) 
+	            $name = 'sw' . $switch->name . '_' . $switch->proper_name;
+	        else 
+	            $name = 'sw' . $switch->name;
+                
+	        echo \Yii::$app->apiIcingaClient->put('objects/hosts/' . $name, [
+	            "templates" => [ $switch->model->name ],
+	            "attrs" => [
+	                "address" => $switch->mainIp->ip,
+	                'vars.device' => 'switch',
+	                'vars.model' => $switch->model->name,
+	            ]
+	        ], [
+	            'Content-Type' => 'application/json',
+	            'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+	            'Accept' => 'application/json'
+	        ])->send()->content;
+	    }
+	}
+	
+	function actionIcingaDel() {
+	    
+        echo \Yii::$app->apiIcingaClient->delete('objects/hosts/swNAR47?cascade=1', null, [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+            'Accept' => 'application/json'
+        ])->send()->content;
 	}
 	
 	public function actionSsh() {
