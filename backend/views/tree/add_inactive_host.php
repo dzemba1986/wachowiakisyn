@@ -10,6 +10,7 @@ use yii\widgets\ActiveForm;
  * @var \yii\web\View $this
  * @var backend\models\forms\AddHostForm $model
  * @var \yii\widgets\ActiveForm $form
+ * @var backend\models\Host $host
  */
 
 $form = ActiveForm::begin([
@@ -19,7 +20,7 @@ $form = ActiveForm::begin([
 ?>
 
 <div class="row">
-	<?= Html::label("Umowa zostanie przypisana do hosta o id : {$hostId}" , null, ['class' => 'col-sm-8']) ?>
+	<?= Html::label("Umowa zostanie przypisana do hosta na porcie {$host->parentPortName} przełącznika o ip " . Html::a($host->parentIp, "ssh://{$host->parentIp}:22222"), null, ['class' => 'col-sm-8']) ?>
 
 	<?= $form->field($model, 'mac', [
 	    'enableAjaxValidation' => true,
@@ -62,8 +63,6 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>	
 
 <?php
-//$urlAction = Url::to(['tree/add-host', 'connectionId' => $connectionId, 'hostId' => $hostId]);
-
 $js = <<<JS
 $(function() {
     $('#{$model->formName()}').on('beforeSubmit', function(e){

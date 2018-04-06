@@ -232,7 +232,7 @@ class TreeController extends Controller
                     
                     return $this->renderAjax('add_inactive_host', [
                         'model' => $model,
-                        'hostId' => $hostId
+                        'host' => $host
                     ]);
                 }
             //znalazł hosty i wyświetla wybór hostów lub dodania nowego
