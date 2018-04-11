@@ -19,7 +19,9 @@ use yii\helpers\ArrayHelper;
  * @property string $serial
  * @property integer $model_id
  * @property integer $manufacturer_id
- * @property boolean distribution
+ * @property boolean $distribution
+ * @property boolean $monitoring
+ * @property string $geolocation
  */
 
 class Swith extends Device
@@ -39,6 +41,8 @@ class Swith extends Device
 	        parent::attributes(),
 	        [
 	            'distribution',
+	            'monitoring',
+	            'geolocation',
 	        ]
 	    );
 	}
@@ -49,6 +53,55 @@ class Swith extends Device
 	}
 	
 	public function beforeSave($insert) {
+	    
+	    if (!$insert) {
+	        if (array_key_exists('monitoring', $this->dirtyAttributes) && !$this->oldAttributes['monitoring'] && $this->monitoring) {
+	                    
+                \Yii::$app->apiIcingaClient->put('objects/hosts/' . $this->id, [
+                    "templates" => [ $this->model->name ],
+                    "attrs" => [
+                        'display_name' => $this->mixName,
+                        'address' => $this->mainIp->ip,
+                        'vars.geolocation' => $this->geolocation,
+                        'vars.device' => $this->type->name,
+                        'vars.model' => $this->model->name,
+                    ]
+                ], [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+                    'Accept' => 'application/json'
+                ])->send();
+                
+                \Yii::$app->apiIcingaClient->post('actions/restart-process', null, [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+                    'Accept' => 'application/json'
+                ])->send();
+	        }
+	        
+	        if (array_key_exists('monitoring', $this->dirtyAttributes) && $this->oldAttributes['monitoring'] && !$this->monitoring) {
+	            
+                \Yii::$app->apiIcingaClient->delete("objects/hosts/{$this->id}?cascade=1", null, [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+                    'Accept' => 'application/json'
+                ])->send();
+	        }
+	        
+	        if ((array_key_exists('geolocation', $this->dirtyAttributes) || array_key_exists('name', $this->dirtyAttributes) || array_key_exists('proper_name', $this->dirtyAttributes)) && $this->monitoring) {
+	            
+	            \Yii::$app->apiIcingaClient->post('objects/hosts/' . $this->id, [
+	                "attrs" => [
+	                    'vars.display_name' => $this->mixName,
+	                    'vars.geolocation' => $this->geolocation,
+	                ]
+	            ], [
+	                'Content-Type' => 'application/json',
+	                'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+	                'Accept' => 'application/json'
+	            ])->send();
+	        }
+	    }
 	    
 		if(!$insert) 
 			$this->type_id = self::TYPE;
@@ -72,7 +125,15 @@ class Swith extends Device
                 ['distribution', 'boolean'],
                 ['distribution', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model){ isset($model->status); }],
                 
-                [['mac', 'serial', 'manufacturer_id', 'model_id', 'distribution'], 'safe'],
+                ['monitoring', 'boolean'],
+                
+                ['geolocation', 'required', 'message' => 'Wartość nie może być pusta', 'when' => function($model) { return $model->monitoring; }, 
+                    'whenClient' => "function(attribute, value) { return $('#swith-monitoring').is(':checked') == true; }"
+                ],
+                ['geolocation', 'trim'],
+                ['geolocation', 'match', 'pattern' => '/^[\d]{2}\.[\d]{6}, [\d]{2}\.[\d]{6}$/', 'message' => 'Niewłaściwy format (12.123456, 12.123456)'],
+                
+                [['mac', 'serial', 'manufacturer_id', 'model_id', 'distribution', 'monitoring', 'geolocation'], 'safe'],
             ]
         );       
 	}
@@ -81,7 +142,7 @@ class Swith extends Device
 	    
 	    $scenarios = parent::scenarios();
 	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
-	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'distribution']);
+	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'distribution', 'monitoring', 'geolocation']);
 	    
 	    return $scenarios;
 	}
@@ -92,6 +153,8 @@ class Swith extends Device
             parent::attributeLabels(),
             [
                 'distribution' => 'Szkieletowy',
+                'geolocation' => 'Geolokalizacja',
+                'monitoring' => 'Monitorować'
             ]
         ); 
 	}

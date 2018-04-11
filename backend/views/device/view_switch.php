@@ -21,6 +21,15 @@ echo DetailView::widget([
 			'label' => 'Status',
 			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
 		],
+	    [
+	        'label' => 'Monitorować',
+	        'value' => $device->monitoring ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
+	        'format' => 'raw'
+	    ],
+	    [
+	        'label' => 'Geolokacja',
+	        'value' => $device->geolocation,
+	    ],
 		[
 			'label' => 'Typ',
 			'value' => $device->type->name

@@ -30,7 +30,7 @@ class Device extends ActiveRecord
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	const SCENARIO_REPLACE = 'replace';
-	const ONE_TO_ONE_DEVICE = [3,6,7];
+	const ONE_TO_ONE_DEVICE = [3,6,7,10];
 	
 	public static function tableName(){
 	    
@@ -179,15 +179,25 @@ class Device extends ActiveRecord
 	    return $this->hasMany(Ip::className(), ['device_id' => 'id'])->orderBy(['main' => SORT_DESC]);
 	}
 	
+	public function getMainIp(){
+	    
+	    return $this->hasOne(Ip::className(), ['device_id' => 'id'])->where(['main' => true]);
+	}
+	
 	public function getLinks(){
 	    
 	    return $this->hasMany(Tree::className(), ['device' => 'id']);
 	}
 	
-	function getMixName() {
+	function getMixName($pl = true) {
 	    
-	    return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
-	}
+	    if ($pl)
+	        return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
+        else {
+            $trans = ['Ą' => 'A', 'Ł' => 'L', 'E' => 'Ę', 'Ó' => 'O', 'Ś' => 'S', 'Ć' => 'C', 'Ż' => 'Z', 'Ź' => 'Z', 'Ń' => 'N'];
+	        return $this->proper_name ? $this->type->prefix . strtr($this->name,  $trans) . '_' . $this->proper_name : $this->type->prefix . strtr($this->name, $trans);
+        }
+    }
 	
 	public function getParentPortName() {
 	    
