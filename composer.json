@@ -15,7 +15,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": ">=2.0.4",
+        "yiisoft/yii2": ">=2.0.14",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "kartik-v/yii2-grid": "@dev",
@@ -28,7 +28,8 @@
         "kartik-v/yii2-widget-timepicker": "*",
         "rlanvin/php-ip": "1.*",
         "vakorovin/yii2-macaddress-validator": "dev-master",
-        "bobchengbin/yii2-xml-request-parser" : "*"
+        "bobchengbin/yii2-xml-request-parser" : "*",
+		"yiisoft/yii2-httpclient": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
