@@ -131,7 +131,7 @@ class Swith extends Device
                     'whenClient' => "function(attribute, value) { return $('#swith-monitoring').is(':checked') == true; }"
                 ],
                 ['geolocation', 'trim'],
-                ['geolocation', 'match', 'pattern' => '/^[\d]{2}\.[\d]{6}, [\d]{2}\.[\d]{6}$/', 'message' => 'Niewłaściwy format (12.123456, 12.123456)'],
+                ['geolocation', 'match', 'pattern' => '/^[\d]{2}\.[\d]{7}, [\d]{2}\.[\d]{7}$/', 'message' => 'Niewłaściwy format (12.1234567, 12.1234567)'],
                 
                 [['mac', 'serial', 'manufacturer_id', 'model_id', 'distribution', 'monitoring', 'geolocation'], 'safe'],
             ]
@@ -153,7 +153,7 @@ class Swith extends Device
             parent::attributeLabels(),
             [
                 'distribution' => 'Szkieletowy',
-                'geolocation' => 'Geolokalizacja',
+                'geolocation' => 'Geolokacja',
                 'monitoring' => 'Monitorować'
             ]
         ); 
