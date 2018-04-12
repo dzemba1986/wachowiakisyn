@@ -451,7 +451,9 @@ class TreeController extends Controller
                         $device->status = null;
                         $device->name = null;
                         $device->proper_name = null;
-                        isset($device->alias) ? $device->alias = null : null;
+                        if (array_key_exists('alias', $device->attributes)) $device->alias = null;
+                        if (array_key_exists('monitoring', $device->attributes)) $device->monitoring = false;
+                        if (array_key_exists('geolocation', $device->attributes)) $device->geolocation = null;
                         
                         foreach ($device->ips as $ip)
                             if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
@@ -528,11 +530,15 @@ class TreeController extends Controller
                 $destinationDevice->status = $sourceDevice->status;
                 $destinationDevice->name = $sourceDevice->name;
                 $destinationDevice->proper_name = $sourceDevice->proper_name;
+                if (array_key_exists('monitoring', $destinationDevice->attributes)) $destinationDevice->monitoring = $sourceDevice->monitoring;
+                if (array_key_exists('geolocation', $destinationDevice->attributes)) $destinationDevice->geolocation = $sourceDevice->geolocation;
                 
                 $sourceDevice->address_id = 1;
                 $sourceDevice->status = null;
                 $sourceDevice->name = null;
                 $sourceDevice->proper_name = null;
+                if (array_key_exists('geolocation', $sourceDevice->attributes)) $sourceDevice->geolocation = null;
+                if (array_key_exists('monitoring', $sourceDevice->attributes)) $sourceDevice->monitoring = null;
                 
                 if (!($sourceDevice->save() && $destinationDevice->save())) throw new Exception('Błąd zapisu urządzenia');
                 

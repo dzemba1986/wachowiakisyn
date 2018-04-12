@@ -72,13 +72,16 @@ $form = ActiveForm::begin([
     		    'enableAjaxValidation' => true,
     			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 0px;']
     		]) ?>
-    		</div>
+		</div>
     		
-    		<div class="row">
+		<div class="row">
     		<?= $form->field($device, 'proper_name', [
     			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
     		]) ?>
-		
+			
+			<?= $form->field($device, 'geolocation', [
+    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    		]) ?>
 		</div>
 	
 		<div class="row">
@@ -98,6 +101,10 @@ $form = ActiveForm::begin([
 		<?= Html::label('Opcje :') ?>
 	
 		<?= $form->field($device, 'distribution', [
+			'template' => "{label}{input}\n{hint}\n{error}",
+		])->checkbox() ?>
+		
+		<?= $form->field($device, 'monitoring', [
 			'template' => "{label}{input}\n{hint}\n{error}",
 		])->checkbox() ?>
 		

@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use backend\models\Device;
 use yii\console\Controller;
+use backend\models\Swith;
 
 class DeviceController extends Controller {
 	
@@ -260,6 +261,36 @@ class DeviceController extends Controller {
 		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x510-10", "w");
 		fwrite($file, $ipsList);
 		fclose($file);
+	}
+	
+	function actionIcingaAdd() {
+	    
+	    $switches = Swith::find()->joinWith(['mainIp', 'model'])->andWhere(['model.name' => 'AT-8000GS/24'])->orderBy('device.name')->limit(1)->all();
+	    
+	    foreach ($switches as $switch) {
+	        echo \Yii::$app->apiIcingaClient->put('objects/hosts/' . $switch->mixName, [
+	            "templates" => [ $switch->model->name ],
+	            "attrs" => [
+	                "address" => $switch->mainIp->ip,
+	                'vars.device' => 'switch',
+	                'vars.model' => $switch->model->name,
+	                'vars.geolocation' => $switch->geolocation,
+	            ]
+	        ], [
+	            'Content-Type' => 'application/json',
+	            'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+	            'Accept' => 'application/json'
+	        ])->send()->content;
+	    }
+	}
+	
+	function actionIcingaDel() {
+	    
+        echo \Yii::$app->apiIcingaClient->delete('objects/hosts/swOP5G?cascade=1', null, [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+            'Accept' => 'application/json'
+        ])->send()->content;
 	}
 	
 	public function actionSsh() {
