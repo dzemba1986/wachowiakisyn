@@ -268,18 +268,13 @@ class DeviceController extends Controller {
 	    $switches = Swith::find()->joinWith(['mainIp', 'model'])->andWhere(['model.name' => 'AT-8000GS/24'])->orderBy('device.name')->limit(1)->all();
 	    
 	    foreach ($switches as $switch) {
-	        
-	        if ($switch->proper_name) 
-	            $name = 'sw' . $switch->name . '_' . $switch->proper_name;
-	        else 
-	            $name = 'sw' . $switch->name;
-                
-	        echo \Yii::$app->apiIcingaClient->put('objects/hosts/' . $name, [
+	        echo \Yii::$app->apiIcingaClient->put('objects/hosts/' . $switch->mixName, [
 	            "templates" => [ $switch->model->name ],
 	            "attrs" => [
 	                "address" => $switch->mainIp->ip,
 	                'vars.device' => 'switch',
 	                'vars.model' => $switch->model->name,
+	                'vars.geolocation' => $switch->geolocation,
 	            ]
 	        ], [
 	            'Content-Type' => 'application/json',
@@ -291,7 +286,7 @@ class DeviceController extends Controller {
 	
 	function actionIcingaDel() {
 	    
-        echo \Yii::$app->apiIcingaClient->delete('objects/hosts/swNAR47?cascade=1', null, [
+        echo \Yii::$app->apiIcingaClient->delete('objects/hosts/swOP5G?cascade=1', null, [
             'Content-Type' => 'application/json',
             'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
             'Accept' => 'application/json'
