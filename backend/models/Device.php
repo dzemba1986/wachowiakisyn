@@ -195,7 +195,7 @@ class Device extends ActiveRecord
 	        return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
         else {
             $trans = ['Ą' => 'A', 'Ł' => 'L', 'Ę' => 'E', 'Ó' => 'O', 'Ś' => 'S', 'Ć' => 'C', 'Ż' => 'Z', 'Ź' => 'Z', 'Ń' => 'N', 'ą' => 'a', 'ł' => 'l', 'ę' => 'e', 'ó' => 'o', 'ś' => 's', 'ć' => 'c', 'ż' => 'z', 'ź' => 'z', 'ń' => 'n'];
-	        return $this->proper_name ? $this->type->prefix . strtr($this->name,  $trans) . '_' . $this->proper_name : $this->type->prefix . strtr($this->name, $trans);
+	        return $this->proper_name ? $this->type->prefix . strtr($this->name,  $trans) . '_' . strtr($this->proper_name, $trans) : $this->type->prefix . strtr($this->name, $trans);
         }
     }
 	
