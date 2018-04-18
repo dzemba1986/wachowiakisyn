@@ -22,7 +22,7 @@ abstract class Configuration {
         $this->parentPortName = $parentDevice->model->port[$parentPortIndex];
         $this->vlanId = $device->ips[0]->subnet->vlan->id;
         $this->ip = $device->ips[0]->ip;
-        $this->desc = $device->mixName;
+        $this->desc = $device->getMixName(false);
     }
     abstract function add();
     abstract function drop();
