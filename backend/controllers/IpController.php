@@ -112,21 +112,23 @@ class IpController extends Controller
 			
 			switch ($mode){
 				case 'all':
+				    $select = '';
+				    
 					if(!ksort($allIps, SORT_NATURAL | SORT_FLAG_CASE))
 						return '<option>-</option>';
 					
 					if(array_count_values($allIps) > 0){
 						foreach ($allIps as $allIp){
-							echo '<option value="' . $allIp . '">' . $allIp . '</option>';
+							$select .= '<option value="' . $allIp . '">' . $allIp . '</option>';
 						}
 					} else {
-						echo '<option>-</option>';
+						return '<option>-</option>';
 					}
-					break;
+					return $select;
 				case 'free':
 					$useIps = ArrayHelper::map(Ip::find()->where(['subnet_id' => $subnet])->all(), 'ip', 'ip');
 					$freeIps = array_diff($allIps, $useIps);
-					
+					$select = '';
 					if(isset($ip)){
 						//$a = [$ip => $ip];
 // 						var_dump($ip); exit();
@@ -139,27 +141,27 @@ class IpController extends Controller
 					if(array_count_values($freeIps) > 0){
 						foreach ($freeIps as $freeIp){
 							if($freeIp == $ip)
-								echo '<option value="' . $freeIp . '" selected="selected">' . $freeIp . '</option>';
-							echo '<option value="' . $freeIp . '">' . $freeIp . '</option>';
+								$select = '<option value="' . $freeIp . '" selected="selected">' . $freeIp . '</option>';
+							$select .= '<option value="' . $freeIp . '">' . $freeIp . '</option>';
 						}
 					} else {
-						echo '<option>-</option>';
+						$select = '<option>-</option>';
 					}
-					break;
+					return $select;
 				case 'use':
 					$useIps = ArrayHelper::map(Ip::find()->where(['subnet' => $subnet])->all(), 'ip', 'ip');
-					
+					$select = '';
 					if(!ksort($useIps, SORT_NATURAL | SORT_FLAG_CASE))
 						return '<option>-</option>';
 					
 					if(array_count_values($useIps) > 0){
 						foreach ($useIps as $useIp){
-							echo '<option value="' . $useIp . '">' . $useIp . '</option>';
+							$select .= '<option value="' . $useIp . '">' . $useIp . '</option>';
 						}
 					} else {
-						echo '<option>-</option>';
+						return '<option>-</option>';
 					}
-					break;
+					return $select;
 			}
 		} else {
 			echo '<option>-</option>';
