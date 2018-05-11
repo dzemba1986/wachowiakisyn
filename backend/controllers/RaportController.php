@@ -9,10 +9,6 @@ use backend\modules\task\models\InstallTaskSearch;
 
 class RaportController extends Controller
 {
-    /**
-     * Lists all Modyfication models.
-     * @return mixed
-     */
     public function actionConnection()
     { 	
     	$request = \Yii::$app->request;
@@ -81,10 +77,11 @@ class RaportController extends Controller
     	$searchModel = new InstallTaskSearch();
     	$dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
     	
+    	$dataProvider->sort->defaultOrder = ['end' => SORT_ASC];
     	$dataProvider->query->andWhere([
     		'and',
-    		['paid_psm' => true],
-    		['task.status' => true],
+    	    ['task.status' => true],
+    	    ['or', ['task.type_id' => 3], ['and', ['task.type_id' => [1,2]], ['>', 'cost', 0]]],
     		['is not', 'close', null]	
     	]);
     	

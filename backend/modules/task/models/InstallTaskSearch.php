@@ -10,7 +10,7 @@ class InstallTaskSearch extends InstallTask
     {
         return [
         		[['start', 'end', 'color', 'description', 'installer', 'street', 'house', 'house_detail', 'minClose', 'maxClose',
-              'flat', 'flat_detail', 'type_id', 'cost', 'status', 'category_id', 'add_user', 'close_user'], 'safe']
+              'flat', 'flat_detail', 'type_id', 'cost', 'status', 'category_id', 'add_user', 'close_user', 'paid_psm'], 'safe']
         ];
     }
     
@@ -41,7 +41,8 @@ class InstallTaskSearch extends InstallTask
 				'type_id',
 				'category_id',
 				'add_user',
-				'close_user',	
+				'close_user',
+			    'paid_psm',
 				'street' => [
 					'asc' => ['t_ulica' => SORT_ASC],
 					'desc' => ['t_ulica' => SORT_DESC],
@@ -75,8 +76,9 @@ class InstallTaskSearch extends InstallTask
 			'lokal' => $this->flat,
         	'add_user' => $this->add_user,
         	'close_user' => $this->close_user,
-        	self::tableName() . '.status' => $this->status,	
-            'type_id' => $this->type_id,
+            'paid_psm' => $this->paid_psm,
+        	'task.status' => $this->status,	
+            'task.type_id' => $this->type_id,
             'category_id' => $this->category_id
         ]);
 

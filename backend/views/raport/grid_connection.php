@@ -77,6 +77,7 @@ $this->params['breadcrumbs'][] = 'Podłączenia';
 		],        
 		[
 			'attribute' => 'start_date',
+		    'format' => ['date', 'php:Y-m-d'],
 			'filterType' => GridView::FILTER_DATE,
 			'filterWidgetOptions' => [
 				'model' => $searchModel,

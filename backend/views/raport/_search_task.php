@@ -3,7 +3,6 @@
 use kartik\date\DatePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use backend\modules\task\models\InstallTaskSearch;
 
 /**
  * @var View $this
