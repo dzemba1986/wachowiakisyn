@@ -30,9 +30,6 @@ return [
     'components' => [
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
-        	'rules' => [
-        		'class' => 'app\components\DeviceUrlRule'	
-        	]	
         ],
     	'assetManager' => [
     		'bundles' => [
