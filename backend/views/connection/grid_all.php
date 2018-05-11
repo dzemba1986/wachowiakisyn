@@ -1,7 +1,7 @@
 <?php 
-use app\models\Package;
 use backend\models\AddressShort;
 use backend\models\ConnectionType;
+use backend\models\Package;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
@@ -14,9 +14,8 @@ use yii\helpers\Url;
  */
 
 $this->params['breadcrumbs'][] = 'Wszystkie';
-?>
 
-<?= GridView::widget([
+echo GridView::widget([
 	'id' => 'connection-grid',
 	'dataProvider' => $dataProvider,
 	'filterModel' => $searchModel,
@@ -205,39 +204,59 @@ $this->params['breadcrumbs'][] = 'Wszystkie';
             'template' => '{view} {update} {history} {tree}',
             'options' => ['style' => 'width:6%;'],
         	'buttons' => [
-        		'tree' => function ($url, $model, $key) {
-                    if($model->canConfigure()){
-        				$url = Url::toRoute(['tree/add-host', 'connectionId' => $key]);
-        				return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
-        					'title' => \Yii::t('yii', 'Zamontuj'),
-        					'data-pjax' => '0',
-        				]);
-        			} elseif($model->host_id){
-        				$url = Url::toRoute(['tree/index', 'id' => $model->host_id . '.0']);
-        				return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
-        					'title' => \Yii::t('yii', 'SEU'),
-        					'data-pjax' => '0',
-        				]);
-        			} else
-        				return null;
-        		},
+        	    'view' => function($url, $model, $key) {
+            	    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+            	        'title' => \Yii::t('yii', 'Podgląd'),
+            	        'onclick' => "
+                            $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+            	        
+                            return false;
+                        "
+            	    ]);
+        	    },
+        	    'update' => function($url, $model, $key) {
+            	    return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+            	        'title' => \Yii::t('yii', 'Edycja'),
+            	        'onclick' => "
+                            $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+            	        
+                            return false;
+                        "
+            	    ]);
+        	    },
+        	    'tree' => function ($url, $model, $key) {
+            	    if($model->canConfigure()) {
+            	        $url = Url::to(['tree/add-host', 'connectionId' => $key]);
+            	        return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
+            	            'title' => \Yii::t('yii', 'Konfiguracja'),
+            	            'onclick' => "
+                                $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+            	            
+                                return false;
+                            "
+            	        ]);
+            	    } elseif ($model->host_id) {
+            	        $url = Url::to(['tree/index', 'id' => $model->host_id . '.0']);
+            	        return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
+            	            'title' => \Yii::t('yii', 'SEU'),
+            	            'target'=>'_blank',
+            	        ]);
+            	    } else
+            	        return null;
+        	    },
         		'history' => function ($url, $model, $key) {
-                    return Html::a('<span class="glyphicon glyphicon-menu-hamburger"></span>', Url::to(['connection/history', 'id' => $key]), ['class' => 'history', 'title' => \Yii::t('yii', 'Historia')]);
+                    $url = Url::to(['connection/history', 'id' => $key]);
+                    return Html::a('<span class="glyphicon glyphicon-menu-hamburger"></span>', $url, [
+                        'title' => \Yii::t('yii', 'Historia'),
+                        'onclick' => "
+                            $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+    
+                            return false;
+                        "
+                    ]);
         		}
         	]
         ],            
     ]
 ]);
-
-$this->registerJs(
-"$(function(){
-	$('body').on('click', '.history', function(event){
-		$('#modal-connection-view').modal('show')
-			.find('#modal-content-connection-view')
-			.load($(this).attr('href'));
-    
-        return false;
-	});
-});"
-);
 ?>
