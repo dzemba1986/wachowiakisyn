@@ -101,3 +101,42 @@ a.desc:after {
     width: 1870px;
   }
 }
+
+/* mniejsze litery w pokazywanych błędach */
+ .help-block {
+	font-size: 10px;
+}
+
+/* grid kartik - przycisk all page w panelu */
+a[title="Show all data"] {
+	display: none;
+}
+
+/* grid view */
+
+#connection-grid .pay:nth-child(odd) {
+	background-color: #d7ffd7;
+}
+
+#connection-grid .pay:nth-child(even) {
+	background-color: #a6ffa6;
+}
+
+#connection-grid .inactiv:nth-child(odd) {
+	background-color: #ebebeb;
+}
+
+#connection-grid .inactiv:nth-child(even) {
+	background-color: #e1e1e1;
+}
+
+#connection-grid .sevendays {
+	background-color: #FFc9cC;
+}
+/* #connection-grid .after-date:nth-child(even) { */
+/* 	background-color: #c5c5c5; */
+/* } */
+
+/* #connection-grid .after-date:nth-child(odd) { */
+/* 	background-color: #d6d6d6; */
+/* } */
