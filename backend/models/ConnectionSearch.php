@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use backend\modules\task\models\InstallTask;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 
@@ -60,8 +59,8 @@ class ConnectionSearch extends Connection
 				'socket',
 				'again',	
 				'task_id' => [
-					'asc' => ['task.start' => SORT_ASC],
-					'desc' => ['task.start' => SORT_DESC]
+					'asc' => ['start' => SORT_ASC],
+					'desc' => ['start' => SORT_DESC]
 				],	
 				'street' => [
 					'asc' => ['t_ulica' => SORT_ASC],
@@ -86,41 +85,43 @@ class ConnectionSearch extends Connection
 			]
 		]);
 		
-        if (!($this->load($params) && $this->validate())) {
+		if (!($this->load($params) && $this->validate())) {
 			return $dataProvider;
 		}
 			
 		$query->FilterWhere([
 			'ara_id' => $this->ara_id,
 			'soa_id' => $this->soa_id,	
-			//'start_date' => $this->start_date,
+			'"date"(start_date)' => $this->start_date,
 			'conf_date' => $this->conf_date,
 			'pay_date' => $this->pay_date,
+		    '"date"(synch_date)' => $this->synch_date,
 			'close_date' => $this->close_date,
 			'phone_date' => $this->phone_date,
 			'connection.type_id' => $this->type_id,
 			'package_id' => $this->package_id,
 			't_ulica' => $this->street,
 			'dom' => $this->house,
+		    'upper(dom_szczegol)' => strtoupper($this->house_detail),
 			'lokal' => $this->flat,	
             'connection.nocontract' => $this->nocontract,
-			'wire' => $this->wire,
+			//'wire' => $this->wire,
 			'again' => $this->again,
 		    'vip' => $this->vip,
-			InstallTask::tableName().'.start' => $this->task_id,	
+			'"date"(task.start)' => $this->task_id,	
 		]);
 		
-		if (isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '1'){
-			$query->andFilterWhere(['>', 'socket', 0]);
-		} elseif(isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '0')
-			$query->andFilterWhere(['socket' => 0]);
-	
-		$query->andFilterWhere(['like', 'dom_szczegol', $this->house_detail])
-			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail]);
+		if (isset($params['ConnectionSearch']['wire'])) {
+		    if ($params['ConnectionSearch']['wire'] == '1') $query->andFilterWhere(['>', 'wire', 0]);
+            elseif ($params['ConnectionSearch']['wire'] == '0') $query->andFilterWhere(['wire' => 0]);
+		}
 		
-		//gdy filtr jest pusty bez if'a zapytanie daje zerowy wynik
-		if (!empty($this->synch_date)) $query->andFilterWhere(['like', '{{synch_date}}::text', $this->synch_date.'%', false]);
-		if (!empty($this->start_date)) $query->andFilterWhere(['like', '{{start_date}}::text', $this->start_date.'%', false]);
+		if (isset($params['ConnectionSearch']['socket'])) {
+		    if ($params['ConnectionSearch']['socket'] == '1') $query->andFilterWhere(['>', 'socket', 0]);
+		    elseif ($params['ConnectionSearch']['socket'] == '0') $query->andFilterWhere(['socket' => 0]);
+		}
+		
+		$query->andFilterWhere(['like', 'lower(lokal_szczegol)', strtolower($this->flat_detail)]);
 
 		return $dataProvider;
 	}

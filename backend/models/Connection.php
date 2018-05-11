@@ -2,12 +2,11 @@
 
 namespace backend\models;
 
-use app\models\Package;
 use backend\modules\task\models\InstallTask;
 use common\models\User;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
-use yii\db\ActiveRecord;
 use yii\base\Exception;
+use yii\db\ActiveRecord;
 
 /**
  * @property integer $id
