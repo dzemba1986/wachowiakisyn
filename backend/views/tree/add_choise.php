@@ -52,11 +52,11 @@ $(function() {
 
     $('.next').click(function() {
         if ($('input[name="host"]:checked').val() == 'new')
-            $('#modal-content-connection-add-tree').load('{$url}&hostId=new');
+            $('#modal-content').load('{$url}&hostId=new');
         else if ($('input[name="host"]:checked').attr('status') == 1)
-            $('#modal-content-connection-add-tree').load('{$url}&hostId=' + $('input[name="host"]:checked').val());
+            $('#modal-content').load('{$url}&hostId=' + $('input[name="host"]:checked').val());
         else if ($('input[name="host"]:checked').attr('status') == 0)
-            $('#modal-content-connection-add-tree').load('{$url}&hostId=' + $('input[name="host"]:checked').val());
+            $('#modal-content').load('{$url}&hostId=' + $('input[name="host"]:checked').val());
     });
 });
 JS;

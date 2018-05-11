@@ -72,6 +72,7 @@ $(function() {
       		form.serialize()
      	).done(function(result){
  			if(result){
+                $('#modal').modal('hide');
  			}
  			else{
  				alert(result);
