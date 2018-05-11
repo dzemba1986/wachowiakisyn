@@ -1,12 +1,11 @@
 <?php
 use backend\assets\AppAsset;
-use yii\helpers\Html;
+use backend\modules\task\models\DeviceTask;
+use yii\bootstrap\Alert;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use yii\helpers\Url;
-use yii\bootstrap\Alert;
-use backend\modules\task\models\DeviceTask;
 
 
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxcore.js');
@@ -79,11 +78,6 @@ $this->beginPage() ?>
         </div>
     </footer>
 
-    <?php $this->endBody() ?>
-</body>
-</html>
-<?php $this->endPage() ?>
-
 <script>
     
 $(document).ready(function () {
@@ -94,11 +88,7 @@ $(document).ready(function () {
             {"html":"<a href=/backend/index.php?r=address%2Flist>Dodaj</a>"}
         ]},
         {"html":"Połączenia","items":[
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=nopay&ConnectionSearch%5Bnocontract%5D=0>Niepłacący</a>"},
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=install>Bez kabla</a>"},
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=conf>Do konfiguracji</a>"},
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=off>Nieaktywne</a>"},
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=pay>Płacący</a>"},
+            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=todo>Do zrobienia</a>"},
             {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=all>Wszystkie</a>"}
         ]},
         {"html":"<a href=/backend/index.php?r=installation%2Findex>Instalacje</a>"},
@@ -116,10 +106,6 @@ $(document).ready(function () {
             {"html":"<a href=/backend/index.php?r=raport%2Fconnection>Podłączenia</a>"},
             {"html":"<a href=/backend/index.php?r=raport%2Finstallation>Instalacje</a>"},
             {"html":"<a href=/backend/index.php?r=raport%2Ftask>Montaże</a>"}
-        ]},
-        {"html":"Boa","items":[
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=noboa>Niezaksięgowane</a>"},
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=boa>Zaksiegowane</a>"}
         ]},
         {"id":"menu-separator"},
         {"html":"<a href=/backend/index.php?r=tree%2Findex>Drzewo urządzeń</a>"},
@@ -162,3 +148,8 @@ $(document).ready(function () {
 	});
 });
 </script>
+
+    <?php $this->endBody() ?>
+</body>
+</html>
+<?php $this->endPage() ?>

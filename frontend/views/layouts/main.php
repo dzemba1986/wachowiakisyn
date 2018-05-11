@@ -47,11 +47,11 @@ AppAsset::register($this);
             		'items' => [
             			[
             				'label' => 'Niezaksięgowane',
-            				'url' => ['boa/nopay']
+            				'url' => ['boa/index', 'mode' => 'noboa']
             			],
             			[
             				'label' => 'Zaksięgowane',
-            				'url' => ['boa/pay']
+            			    'url' => ['boa/index', 'mode' => 'boa']
             			]
             		]
             	],
