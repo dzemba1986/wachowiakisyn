@@ -1,8 +1,6 @@
 <?php
 
 use backend\models\Connection;
-use backend\models\Task;
-use yii\bootstrap\Modal;
 use yii\helpers\Url;
 
 /**
@@ -25,10 +23,9 @@ $this->registerCssFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/fullcalen
 ?> 
 <div id="calendar"></div>
 
-<script type="text/javascript">
+<script>
 
 $(function() {
-
 	$("#calendar").fullCalendar({
 		header : {
 			left : 'prev, next, today',
