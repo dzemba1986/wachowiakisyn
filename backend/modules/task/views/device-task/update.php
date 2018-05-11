@@ -1,6 +1,5 @@
 <?php
 
-use backend\modules\task\models\InstallTask;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -14,7 +13,7 @@ use yii\widgets\ActiveForm;
 <?php $form = ActiveForm::begin(['id'=>$task->formName()]); ?>
 
 	
-	<?= $form->field($task, 'status')->dropDownList([false => 'do wymiany']) ?>
+	<?= $form->field($task, 'status')->dropDownList([null => 'w trakcie', false => 'do wymiany']) ?>
 	
 	<div class="form-group">
         <?= Html::submitButton('Edytuj', ['class' => 'btn btn-primary']) ?>

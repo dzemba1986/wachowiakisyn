@@ -1,13 +1,14 @@
 <?php
 namespace frontend\controllers;
 
+use backend\models\Camera;
+use backend\modules\task\models\Comment;
+use backend\modules\task\models\DeviceTaskSearch;
 use frontend\models\TaskForm;
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
+use yii\filters\AjaxFilter;
 use yii\web\Controller;
-use backend\modules\task\models\DeviceTaskSearch;
-use backend\models\Camera;
 
 class TaskController extends Controller
 {
@@ -25,11 +26,9 @@ class TaskController extends Controller
                     ],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'create-task' => ['post'],
-                ],
+            [
+                'class' => AjaxFilter::className(),
+                'only' => ['create', 'get-comments']
             ],
         ];
     }
@@ -66,5 +65,14 @@ class TaskController extends Controller
     	return $this->renderAjax('create', [
     		'model' => $model,
     	]);
+    }
+    
+    function actionGetComments($taskId) {
+        
+        $comments = Comment::find()->where(['task_id' => $taskId])->orderBy('create')->all();
+        
+        return $this->renderAjax('comments', [
+            'comments' => $comments
+        ]);
     }
 }

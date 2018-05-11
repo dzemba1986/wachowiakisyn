@@ -24,7 +24,7 @@ class DeviceController extends Controller {
                 ['<>', 'address_id', 1],
                 ['is not', 'status', null], 
                 ['d.type_id' => Camera::TYPE]
-            ])->limit(50)->orderBy('d.alias');
+            ])->orderBy('d.alias');
             
             $command = $query->createCommand();
             $data = $command->queryAll();

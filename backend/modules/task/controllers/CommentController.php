@@ -3,8 +3,8 @@
 namespace backend\modules\task\controllers;
 
 use backend\modules\task\models\Comment;
-use backend\modules\task\models\Task;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class CommentController extends Controller{
 	

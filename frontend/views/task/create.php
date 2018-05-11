@@ -51,6 +51,8 @@ use yii\helpers\Url;
 <?php
 $js = <<<JS
 $(function(){
+    $('.modal-header h4').html('Dodaj usterkę');
+
 	$('#{$model->formName()}').on('beforeSubmit', function(e){
 
 	 	$.post(
@@ -60,7 +62,7 @@ $(function(){
 			
 	 		if(result == 1){
 	 			$(this).trigger('reset');
-				$('#modal-task').modal('hide');
+				$('#modal').modal('hide');
 	 			$.pjax.reload({container:'#task-grid-pjax'});
 	 		}
 	 		else{
