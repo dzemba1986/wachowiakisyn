@@ -14,6 +14,7 @@ use yii\helpers\Url;
  */
 
 $this->params['breadcrumbs'][] = 'Wszystkie';
+echo $this->renderFile('@backend/views/modal/modal.php');
 
 echo GridView::widget([
 	'id' => 'connection-grid',
