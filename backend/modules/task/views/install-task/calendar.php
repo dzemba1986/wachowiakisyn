@@ -68,6 +68,8 @@ $(function() {
 	$("body").bind("DOMNodeInserted", function() {
 	    $(this).find('tr[data-time="12:00:00"]').css("background-color", "#f2f2f2");
 	});
+
+	$('.modal-header h4').html('Kalendarz');
 });
 
 

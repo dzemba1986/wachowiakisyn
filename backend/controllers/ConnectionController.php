@@ -43,7 +43,7 @@ class ConnectionController extends Controller
         
         if ($mode == 'todo') {
             $dataProvider->sort->defaultOrder = ['start_date' => SORT_DESC];
-            $dataProvider->query->andWhere([
+            $dataProvider->query->joinWith('task')->andWhere([
                 'connection.nocontract' => false
             ])->andWhere([
                 'or',

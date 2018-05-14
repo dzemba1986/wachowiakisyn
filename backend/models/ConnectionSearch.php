@@ -59,8 +59,8 @@ class ConnectionSearch extends Connection
 				'socket',
 				'again',	
 				'task_id' => [
-					'asc' => ['start' => SORT_ASC],
-					'desc' => ['start' => SORT_DESC]
+					'asc' => ['task.start' => SORT_ASC],
+					'desc' => ['task.start' => SORT_DESC]
 				],	
 				'street' => [
 					'asc' => ['t_ulica' => SORT_ASC],

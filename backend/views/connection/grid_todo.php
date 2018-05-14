@@ -149,7 +149,13 @@ echo GridView::widget([
         	'value'=> function($model, $key){
         		if (!is_null($model->task_id)){
         			if (is_object($model->task))
-        				return Html::a(date('Y-m-d', strtotime($model->task->start)), Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), ['class' => 'task']);
+        				return Html::a(date('Y-m-d', strtotime($model->task->start)), Url::to(['task/install-task/view-calendar', 'connectionId' => $key]), [
+        				    'onclick' => "
+                                $('#modal-lg').modal('show').find('#modal-lg-content').load($(this).attr('href'));
+            				    
+                                return false;
+                            "
+        				]);
         		}
         		elseif ($model->socket > 0)
         			return null;
