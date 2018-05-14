@@ -24,6 +24,8 @@ use yii\widgets\ActiveForm;
 <?php
 $js = <<<JS
 $(function(){
+    $('.modal-header h4').html('Zmień status');
+
 	$('#{$task->formName()}').on('beforeSubmit', function(e){
 
 	 	$.post(
@@ -33,7 +35,7 @@ $(function(){
 			
 	 		if(result == 1){
 	 			$(this).trigger('reset');
-				$('#modal-task').modal('hide');
+				$('#modal-sm').modal('hide');
 	 			$.pjax.reload({container:'#task-grid-pjax'});
 	 		}
 	 		else{

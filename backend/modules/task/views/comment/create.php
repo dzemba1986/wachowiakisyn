@@ -1,8 +1,6 @@
 <?php
 
-use backend\modules\task\models\Comment;
 use yii\helpers\Html;
-use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /**
@@ -29,6 +27,8 @@ use yii\widgets\ActiveForm;
 <?php
 $js = <<<JS
 $(function(){
+    $('.modal-header h4').html('Dodaj komentarz');
+
 	$('#{$comment->formName()}').on('beforeSubmit', function(e){
 
 	 	$.post(
@@ -38,7 +38,7 @@ $(function(){
 			
 	 		if(result == 1){
 	 			$(this).trigger('reset');
-				$('#modal-comment').modal('hide');
+				$('#modal').modal('hide');
 	 			$.pjax.reload({container:'#task-grid-pjax'});
 	 		}
 	 		else{
