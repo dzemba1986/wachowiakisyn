@@ -530,6 +530,7 @@ class TreeController extends Controller
                 $destinationDevice->status = $sourceDevice->status;
                 $destinationDevice->name = $sourceDevice->name;
                 $destinationDevice->proper_name = $sourceDevice->proper_name;
+                if (array_key_exists('dhcp', $destinationDevice->attributes)) $destinationDevice->dhcp = $sourceDevice->dhcp;
                 if (array_key_exists('monitoring', $destinationDevice->attributes)) $destinationDevice->monitoring = $sourceDevice->monitoring;
                 if (array_key_exists('geolocation', $destinationDevice->attributes)) $destinationDevice->geolocation = $sourceDevice->geolocation;
                 
@@ -537,6 +538,7 @@ class TreeController extends Controller
                 $sourceDevice->status = null;
                 $sourceDevice->name = null;
                 $sourceDevice->proper_name = null;
+                if (array_key_exists('dhcp', $sourceDevice->attributes)) $sourceDevice->dhcp = false;
                 if (array_key_exists('geolocation', $sourceDevice->attributes)) $sourceDevice->geolocation = null;
                 if (array_key_exists('monitoring', $sourceDevice->attributes)) $sourceDevice->monitoring = null;
                 
