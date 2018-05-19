@@ -145,7 +145,7 @@ $(function() {
 	 	).done(function(result){
 	 		if(result == 1){
 	 			$(form).trigger('reset');	//TODO przy resecie wysyła ponowne zapytanie o ilość wolnych portów dla deviceId = null
-				$('#modal-create-installation').modal('hide');
+				$('#modal').modal('hide');
 	 			$.pjax.reload({container: '#connection-grid-pjax'});
 	 		}
 	 		else{
