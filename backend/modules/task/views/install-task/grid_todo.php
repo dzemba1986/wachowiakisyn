@@ -1,14 +1,11 @@
 <?php
 
-use backend\models\Address;
 use backend\models\AddressShort;
-use backend\modules\task\models\InstallTaskSearch;
 use backend\modules\task\models\TaskCategory;
 use backend\modules\task\models\TaskType;
 use common\models\User;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
-use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;

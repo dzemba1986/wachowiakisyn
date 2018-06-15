@@ -79,7 +79,9 @@ echo GridView::widget([
         [
             'attribute' => 'create',
             'label' => 'Godzina',
-            'format' => ['date', 'php:H:i'],
+            'value' => function ($model){
+                return date("H:i", strtotime($model->create));
+            },
             'filter' => false,
             'options' => ['style' => 'width:5%;'],
         ],

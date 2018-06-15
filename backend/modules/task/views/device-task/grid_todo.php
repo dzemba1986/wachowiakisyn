@@ -57,7 +57,7 @@ echo GridView::widget([
         [
             'attribute' => 'create',
             'label' => 'Dzień',
-            'format' => ['date', 'php:Y-m-d'],
+            'format' => ['date', 'yyyy-MM-dd'],
             'filterType' => GridView::FILTER_DATE,
             'filterWidgetOptions' => [
                 'model' => $searchModel,
@@ -75,7 +75,9 @@ echo GridView::widget([
         [
         	'attribute' => 'create',
         	'label' => 'Godzina',	
-            'format' => ['date', 'php:H:i'],
+            'value' => function ($model){
+                return date("H:i", strtotime($model->create));
+            },
         	'filter' => false,
         	'options' => ['style' => 'width:5%;'],
         ],
@@ -87,8 +89,11 @@ echo GridView::widget([
         ],
         [
         	'attribute' => 'device_id',
-        	'value' => function ($model){
-        		return $model->device->name . ' /' . $model->device->alias .  '/';
+        	'value' => function ($model) {
+                if ($model->device->name && $model->device->alias)
+                    return $model->device->name . ' /' . $model->device->alias .  '/';
+                else 
+                    return $model->device->serial;
         	},
         	'filterType' => GridView::FILTER_SELECT2,
         	'filterWidgetOptions' => [
