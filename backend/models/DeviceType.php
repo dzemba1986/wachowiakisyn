@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property boolean $list
  * @property boolean $children
+ * @property string $controller
  */
 
 class DeviceType extends ActiveRecord
