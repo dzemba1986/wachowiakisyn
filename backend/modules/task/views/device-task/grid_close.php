@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             			'allowClear' => true,
             			'minimumInputLength' => 2,
             			'ajax' => [
-            				'url' => Url::to(['/device/list']),
+            				'url' => Url::to(['/camera/list-from-tree']),
             				'dataType' => 'json',
             				'data' => new JsExpression("function(params) {
 			    				return {

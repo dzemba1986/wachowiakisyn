@@ -246,7 +246,7 @@ echo GridView::widget([
         	    },
         		'tree' => function ($url, $model, $key) {
         			if($model->canConfigure()){
-        				$url = Url::to(['tree/add-host', 'connectionId' => $key]);
+        				$url = Url::to(['host/add-on-tree', 'connectionId' => $key]);
 	        			return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
 	        				'title' => \Yii::t('yii', 'Konfiguracja'),
 	        			    'onclick' => "
