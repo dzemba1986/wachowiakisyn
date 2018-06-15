@@ -10,7 +10,7 @@ class DeviceQuery extends ActiveQuery
 	public function prepare($builder)
 	{
 		if ($this->type_id !== null) {
-			$this->andWhere(['type_id' => $this->type_id]);
+			$this->andWhere(['device.type_id' => $this->type_id]);
 		}
 		return parent::prepare($builder);
 	}
