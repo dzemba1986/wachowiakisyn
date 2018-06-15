@@ -103,7 +103,7 @@ class Device extends ActiveRecord
 		    ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 		    ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
 		        return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-		    }, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
+		    }, 'filter' => ['status' => true], 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
 		    ['mac', 'trim', 'skipOnEmpty' => true],
 		    
 		    ['serial', 'filter', 'filter' => 'strtoupper', 'skipOnEmpty' => true],
