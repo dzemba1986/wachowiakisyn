@@ -27,7 +27,7 @@ class IpController extends Controller
 			return null;
 	}
 	
-	public function actionUpdate($deviceId) {  //FIXME zapomniałem o generowaniu DHCP
+	public function actionUpdate($deviceId) {
 	    
 	    $request = \Yii::$app->request;
 	    $transaction = \Yii::$app->db->beginTransaction();
@@ -90,6 +90,7 @@ class IpController extends Controller
             } else {
                 return $this->renderAjax('update', [
                     'ips' => $ips,
+                    'deviceId' => $deviceId
                 ]);
             }
 	    }
