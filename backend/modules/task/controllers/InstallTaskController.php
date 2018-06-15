@@ -7,11 +7,11 @@ use backend\models\Connection;
 use backend\models\Installation;
 use backend\modules\task\models\InstallTask;
 use backend\modules\task\models\InstallTaskSearch;
-use backend\modules\task\models\Task;
 use common\models\User;
 use Yii;
 use yii\base\Exception;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class InstallTaskController extends Controller
 {
@@ -212,7 +212,7 @@ class InstallTaskController extends Controller
     			$connection = Connection::find()->where(['task_id' => $task->id])->one();
     			
     			if (is_object($connection)){	//zadanie z LP
-    				if ($task->status == true){
+    				if ($task->status == true) {
     					$installation = null;
     					//przeszukaj instalacje których typ odpowiada typowi połączenia
     					foreach ($connection->getInstallations(true)->all() as $ins){
@@ -226,6 +226,7 @@ class InstallTaskController extends Controller
     						$installation->scenario = Installation::SCENARIO_SOCKET;
     						
     						try {
+    						    $connection->pay_date = date('Y-m-d');
     							$installation->socket_date = date('Y-m-d');
     							$installation->socket_user = implode(",", $task->installer);
     						
@@ -244,6 +245,7 @@ class InstallTaskController extends Controller
     				
     				try {
     					$connection->task_id = null;
+    					
     					if (!$connection->save())
     						throw new Exception('Problem z zapisem połączenia');
     				} catch (Exception $e) {
