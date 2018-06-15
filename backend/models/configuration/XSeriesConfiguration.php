@@ -5,6 +5,7 @@ namespace backend\models\configuration;
 use backend\models\Camera;
 use backend\models\GatewayVoip;
 use backend\models\Host;
+use backend\models\Virtual;
 
 class XSeriesConfiguration extends Configuration {
     
@@ -138,6 +139,27 @@ class XSeriesConfiguration extends Configuration {
             $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
             $add .= "exit\n";
             $add .= "wr\n";
+        } elseif ($this->device instanceof Virtual) {
+            $add = "interface {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "no switchport port-security\n";
+            $add .= "switchport port-security violation protect\n";
+            $add .= "switchport port-security maximum 0\n";
+            $add .= "switchport port-security\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree portfast bpdu-guard enable\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "egress-rate-limit 508032k\n";
+            $add .= "service-policy input iptv-user-501M\n";
+            $add .= "access-group iptv-user\n";
+            $add .= "no ip igmp trusted all\n";
+            $add .= "ip igmp trusted report\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+            $add .= "exit\n";
+            $add .= "wr\n";
         }
 
     return $add;
@@ -197,6 +219,23 @@ class XSeriesConfiguration extends Configuration {
             $drop .= "switchport access vlan 555\n";
             $drop .= "no shutdown\n";
             $drop .= "exit\n";
+            $drop .= "exit\n";
+            $drop .= "wr\n";
+        } elseif ($this->device instanceof Virtual) {
+            $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+            $drop .= "int {$this->parentPortName}\n";
+            $drop .= "no switchport port-security\n";
+            $drop .= "no service-policy input internet-user-501M\n";
+            $drop .= "no service-policy input iptv-user-501M\n";
+            $drop .= "no service-policy input iptv-only-501M\n";
+            $drop .= "no egress-rate-limit\n";
+            $drop .= "no ip igmp trust all\n";
+            $drop .= "no access-group internet-user\n";
+            $drop .= "no access-group iptv-user\n";
+            $drop .= "no access-group iptv-only\n";
+            $drop .= "switchport access vlan 555\n";
+            $drop .= "exit\n";
+            $drop .= "do clear ip dhcp snooping binding interface {$this->parentPortName}\n";
             $drop .= "exit\n";
             $drop .= "wr\n";
         }

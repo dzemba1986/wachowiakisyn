@@ -5,6 +5,7 @@ namespace backend\models\configuration;
 use backend\models\Camera;
 use backend\models\GatewayVoip;
 use backend\models\Host;
+use backend\models\Virtual;
 
 class GSSeriesConfiguration extends Configuration {
     
@@ -92,6 +93,37 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "exit\n";
             $add .= "cop r s\n";
             $add .= "y\n";
+        } elseif ($this->device instanceof Virtual) {
+            $add = "interface ethernet {$this->parentPortName}\n";
+            $add .= "no service-acl input\n";
+            $add .= "exit\n";
+            $add .= "no ip access-list user{$this->parentPortNumber}\n";
+            $add .= "interface vlan {$this->vlanId}\n";
+            $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
+            $add .= "exit\n";
+            $add .= "ip access-list user{$this->parentPortNumber}\n";
+            $add .= "deny-udp any any any 68\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 any\n";
+            $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+            $add .= "exit\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "switchport trunk allowed vlan remove all\n";
+            $add .= "switchport mode access\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "service-acl input user{$this->parentPortNumber}\n";
+            $add .= "traffic-shape 520000 5200000\n";
+            $add .= "rate-limit 800000\n";
+            $add .= "port security mode lock\n";
+            $add .= "port security discard\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree bpduguard\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "exit\n";
+            $add .= "copy r s\n";
+            $add .= "y\n";
         }
     return $add;
     }
@@ -142,6 +174,23 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "no ip access-list cam{$this->parentPortNumber}\n";
             $drop .= "exit\n";
             $drop .= "cop r s\n"; 
+            $drop .= "y\n";
+        } elseif ($this->device instanceof Virtual) {
+            $drop = "interface vlan {$this->vlanId}\n";
+            $drop .= "no bridge address {$this->mac}\n";
+            $drop .= "exit\n";
+            $drop .= "interface ethernet {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "no service-acl input\n";
+            $drop .= "no traffic-shape\n";
+            $drop .= "no rate-limit\n";
+            $drop .= "no port security\n";
+            $drop .= "sw a v 555\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "no ip access-list user{$this->parentPortNumber}\n";
+            $drop .= "exit\n";
+            $drop .= "copy r s\n";
             $drop .= "y\n";
         }
     return $drop;

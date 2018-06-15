@@ -2,6 +2,9 @@
 
 namespace backend\models;
 
+use backend\models\configuration\ECSeriesConfiguration;
+use backend\models\configuration\GSSeriesConfiguration;
+use backend\models\configuration\XSeriesConfiguration;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
 
@@ -12,6 +15,7 @@ use yii\helpers\ArrayHelper;
 class Virtual extends Device {
     
 	const TYPE = 7;
+	private $conf;
 	
 	public function init() {
 	    
@@ -81,5 +85,53 @@ class Virtual extends Device {
 	            'dhcp' => 'DHCP',
 	        ]
         );
+	}
+	
+	public function configurationAdd() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
+	    
+	    return $this->conf->add();
+	}
+	
+	public function configurationDrop() {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
+	    
+	    return $this->conf->drop();
+	}
+	
+	public function configurationChangeMac($newMac) {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    $parentModelConfType = $parentDevice->model->config;
+	    
+	    if (!empty($this->ips)) {
+	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
+	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        else return ' ';
+	    } else return ' ';
+	    
+	    return $this->conf->changeMac($newMac);
 	}
 }
