@@ -27,6 +27,7 @@ class DeviceTaskController extends Controller
         	])->orderBy('status DESC, create DESC');
         	
         } elseif ($mode == 'close') {
+            $dataProvider->sort->defaultOrder = ['close' => SORT_DESC];
         	$dataProvider->query->joinWith([
         		'closeUser' => function ($q) {
         			$q->from(['u' => User::tableName()]);
@@ -35,14 +36,9 @@ class DeviceTaskController extends Controller
         		'and',	
         		['task.status' => true],
         		['is not', 'device_id', null]
-        		//'is not', 'close_user', null,
         	]);
-        	
-        	$dataProvider->query->orderBy('close DESC');
         }
         
-        //$dataProvider->query->orderBy('start_date, start_time');
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
