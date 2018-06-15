@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use backend\models\Connection;
 use backend\models\ConnectionSearch;
-use backend\models\History;
 use Exception;
 use Yii;
 use yii\filters\AccessControl;
@@ -107,15 +106,6 @@ class ConnectionController extends Controller
                 'allConnections' => $allConnections,
             ]);
         }
-    }
-    
-    function actionHistory($id) {
-        
-        $histories = History::find()->joinWith('user')->select('history.created_at, created_by, last_name, desc')->where(['connection_id' => $id])->asArray()->all();
-        
-        return $this->renderAjax('history', [
-            'histories' => $histories
-        ]);
     }
     
     function actionClose($id) {
