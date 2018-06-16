@@ -45,12 +45,11 @@ use yii\widgets\ActiveForm;
     				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     			],
     			'ajax' => [
-    				'url' => Url::toRoute('device/list-from-tree'),
+    			    'url' => $connection->type_id == 2 ? Url::to(['gateway-voip/list-from-tree']) : Url::to(['swith/list-from-tree']),
     				'dataType' => 'json',
     				'data' => new JsExpression("function(params) {
     					return {
     						q : params.term,
-    						type_id : $connection->type_id == 1 || $connection->type_id == 3 ? [2] : [3],
 						}; 
 					}")
 	    		],
