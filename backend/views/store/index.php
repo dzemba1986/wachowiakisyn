@@ -96,7 +96,7 @@ echo GridView::widget([
             'options' => ['style' => 'width:6%;'],
             'buttons' => [
                 'tree' => function ($url, $model, $key) {
-                    $url = Url::to(['tree/add', 'deviceId' => $key]);
+                    $url = Url::to([$model->type->controller . '/add-on-tree', 'id' => $key]);
                     return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
                                 'title' => \Yii::t('yii', 'Zamontuj'),
                                 'data-pjax' => '0',
