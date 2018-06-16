@@ -6,9 +6,8 @@ use yii\helpers\Url;
  * @var $this yii\web\View
  */ 
 
-require_once '_modal_tree.php';
-require_once '_modal_change_mac.php';
-require_once '_modal_replace.php';
+echo $this->renderFile('@backend/views/modal/modal.php');
+echo $this->renderFile('@backend/views/modal/modal_sm.php');
 
 $this->registerJsFile('@web/js/jstree/dist/jstree.min.js');
 $this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');
@@ -24,14 +23,10 @@ echo '<div id="device_tree" class="sidebar"></div>';
 echo '</div>';
 echo '<div id="device_desc" style="position: fixed; right:-2%;" class="col-sm-8 tabbable tabs-left"></div>';
 
-$urlGetChildren = Url::to(['tree/get-children']);
-$urlSearch = Url::to(['tree/search']);
-$urlUpdate = Url::to(['device/tabs-update']);
-$urlView = Url::to(['device/tabs-view']);
-$urlMove = Url::to(['tree/move']);
-$urlCopy = Url::to(['tree/copy']);
-$urlReplace = Url::to(['tree/replace']);
-$urlToStore = Url::to(['tree/to-store']);
+$urlGetChildren = Url::to(['get-children']);
+$urlSearch = Url::to(['search']);
+$urlMove = Url::to(['move']);
+$urlCopy = Url::to(['copy']);
 
 $js = <<<JS
 $(function() {
@@ -115,8 +110,7 @@ $(function() {
                     'Update': {
                         'label' : 'Edytuj',
                         'action' : function () {
-    
-                			$('#device_desc').load('{$urlUpdate}&id=' + getId(node.id));	
+                			$('#device_desc').load('?r=' + node.original.controller + '/tabs-update&id=' + getId(node.id));	
                         }
                     },
                     'Store' : {
@@ -130,7 +124,7 @@ $(function() {
     							'label' : 'Zamień z magazynu',
     							'action' : function () {
                                     if (node.original.type == 5) return false;
-    							    $('#modal-replace').modal('show').find('#modal-content-replace').load('{$urlReplace}&deviceId=' + getId(node.id));	
+    							    $('#modal-replace').modal('show').find('#modal-content-replace').load('?r=' + node.original.controller + '/replace&id=' + getId(node.id));	
                                 }
     						}
                         }    
@@ -151,7 +145,26 @@ $(function() {
                                 'action': function (obj) { tree.paste(node); }
                             }
                         }
-                    }                     
+                    },
+                    'Add': {
+                        'label' : 'Dodaj',
+                        'submenu' : {
+                            'virtual' : {
+                                'label' : 'Virtualka',
+                                'action' : function () {
+                                    if (node.original.type != 2) return false;
+    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=virtual/add-on-tree&id=' + getId(node.id));	
+                                }
+                            },
+                            'host' : {
+                                'label' : 'Nieaktywny host',
+                                'action' : function () {
+                                    if (node.original.type != 2) return false;
+    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=host/add-inactive-on-tree&id=' + getId(node.id));	
+                                }
+                            }
+                        }
+                    }                             
             	}    
             }
         },
@@ -183,34 +196,32 @@ $(function() {
     	   data.instance.select_node(data.res); 
         })
 
-        .on('select_node.jstree', function(node, event) {
-            // The clicked node is "event.node"
-            var node = event.node;
+        .on('select_node.jstree', function(e, data) {
+            var node = data.node;
 
-            $('#device_desc').load('{$urlView}&id=' + getId(node.id));                    
+            $('#device_desc').load('?r=' + node.original.controller + '/tabs-view&id=' + getId(node.id));                    
         })
 
-        .on('move_node.jstree', function(obj, par) {
+        .on('move_node.jstree', function(e, data) {
             
-            var deviceId = getId(par.node.id);
-            var port = getPort(par.node.id);
-            var newParentId = getId(par.parent);
-            $('#modal-tree').modal('show').find('#modal-content-tree').load('{$urlMove}&deviceId=' + deviceId + '&port=' + port + '&newParentId=' + newParentId);
+            var deviceId = getId(data.node.id);
+            var port = getPort(data.node.id);
+            var newParentId = getId(data.parent);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlMove}&deviceId=' + deviceId + '&port=' + port + '&newParentId=' + newParentId);
         })
 
-        .on('copy_node.jstree', function(obj, par) {
+        .on('copy_node.jstree', function(e, data) {
             
-            console.log(par);
-            var deviceId = getId(par.original.id);
-            var parentId = getId(par.parent);
-            $('#modal-tree').modal('show').find('#modal-content-tree').load('{$urlCopy}&deviceId=' + deviceId + '&parentId=' + parentId);
+            var deviceId = getId(data.original.id);
+            var parentId = getId(data.parent);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlCopy}&deviceId=' + deviceId + '&parentId=' + parentId);
         })
 
-        .on('delete_node.jstree', function(obj, par) {
-            
-            var deviceId = getId(par.node.id);
-            var port = getPort(par.node.id);
-            $('#modal-tree').modal('show').find('#modal-content-tree').load('{$urlToStore}&deviceId=' + deviceId + '&port=' + port);
+        .on('delete_node.jstree', function(e, data) {
+            var node = data.node;
+            var deviceId = getId(data.node.id);
+            var port = getPort(data.node.id);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=' + node.original.controller + '/add-to-store&id=' + deviceId + '&port=' + port);
         });      
 });
 JS;
