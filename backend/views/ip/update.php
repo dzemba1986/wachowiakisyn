@@ -144,11 +144,9 @@ $form = ActiveForm::begin([
 		<button type="button" class="btn btn-default add-network-button"><i class="glyphicon glyphicon-plus"></i></button>
 	
 	<?php else : ?>
-	
 		
 			<button type="button" class="btn btn-default add-network-button"><i class="glyphicon glyphicon-plus"></i></button>
   		
-	
 	<?php endif; ?>
 
 	<?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>	
@@ -157,38 +155,37 @@ $form = ActiveForm::begin([
 
 </div>
 
-<script>
+<?php
+$ipsList = json_encode($ipsList);
 
+$js = <<<JS
 $(function() {
 
-	var networkIndex = <?= $key; ?>;
-
-	var ips = <?php echo json_encode($ipsList) ?>;
-
+    var networkIndex = {$key};
+    
+	var ips = {$ipsList};
+    console.log(ips);
     $.each(ips, function(key, value) {
     	$(new Option(value, value)).appendTo("select[name='network[" + key + "][ip]']");
     });	
     
-
     $('#ip')
-
         // Add button click handler
         .on('click', '.add-network-button', function() {
             networkIndex++;
-            var $template = $('#network-template'),
-                $clone    = $template
+            var template = $('#network-template'),
+                clone    = template
                                 .clone()
                                 .css('display', 'flex')
                                 .removeAttr('id')
                                 .attr('data-network-index', networkIndex)
                                 .insertBefore('.add-network-button');
 
-            if($('#ip').children('.network-group').length > 1){
-
-				$clone.children().children('label').remove();
+            if ($('#ip').children('.network-group').length > 1) {
+				clone.children().children('label').remove();
             }
             // Update the name attributes
-            $clone
+            clone
                 .find('[name="vlan"]').attr('name', 'network[' + networkIndex + '][vlan]').end()
                 .find('[name="subnet"]').attr('name', 'network[' + networkIndex + '][subnet]').end()
                 .find('[name="ip"]').attr('name', 'network[' + networkIndex + '][ip]').end();
@@ -197,27 +194,21 @@ $(function() {
         // Remove button click handler
         .on('click', '.remove-button', function() {
             var row  = $(this).parents('.network-group');
-                //index = row.attr('data-network-index');
-			//console.log(row);
+
             row.remove();
         })
 
-    	.on('beforeSubmit', function(e){
+    	.on('beforeSubmit', function(e) {
 
     		var form = $(this);
 	     	$.post(
 	      		form.attr("action"), //action url form
 	      		form.serialize() + "&save=yes"  // serialize Yii2 form
-	     	).done(function(result){
-    		
-//     			console.log(result);
-     			if(result == 1){
+	     	).done(function(result) {
+     			if (result == 1) {
      				$("#device_tree").jstree(true).refresh();
-//     				$('#modal-update-net').modal('hide');
-//      			$.pjax.reload({container: '#subnet-grid-pjax'});
      			}
-     			else{
-    		
+     			else {
      				$('#message').html(result);
      			}
      		}).fail(function(){
@@ -226,4 +217,7 @@ $(function() {
     		return false;				
     	});
 });
-</script>
+JS;
+
+$this->registerJs($js);
+?>
