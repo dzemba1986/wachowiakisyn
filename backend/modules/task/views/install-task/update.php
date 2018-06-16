@@ -1,13 +1,12 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
+use backend\modules\task\models\TaskCategory;
+use backend\modules\task\models\TaskType;
 use kartik\date\DatePicker;
 use kartik\time\TimePicker;
-use backend\modules\task\models\InstallTask;
-use backend\modules\task\models\TaskType;
-use backend\modules\task\models\TaskCategory;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
