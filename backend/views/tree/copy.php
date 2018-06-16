@@ -10,20 +10,24 @@ use yii\widgets\ActiveForm;
 $form = ActiveForm::begin([
     'id' => 'copy',
 ])?>
-	<?= Html::label('Port urządzenia przenoszonego') ?>
+	<?= Html::label('Port urządzenia kopiowanego') ?>
 	
 	<?= Html::dropDownList('localPort', null, [], ['class' => 'form-control']) ?>
+	
+	<div class="help-block"></div>
 
 	<?= Html::label('Port rodzica') ?>
 
 	<?= Html::dropDownList('parentPort', null, [], ['class' => 'form-control']) ?>
+	
+	<div class="help-block"></div>
 
 	<?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
 
 <?php ActiveForm::end() ?>
 
 <?php
-$urlPortList = Url::to(['tree/list-port']);
+$urlPortList = Url::to(['list-port']);
 
 $js = <<<JS
 $(function(){
@@ -35,6 +39,8 @@ $(function(){
     	$("select[name='parentPort']").html(data);
     } );
 
+    $('.modal-header h4').html('Kopiuj');
+
     $('#copy').on('beforeSubmit', function(e){
 		
 		var form = $(this);
@@ -45,7 +51,7 @@ $(function(){
 	 		if(result == 1){
                 var tree = $("#device_tree").jstree(true);
 
-				$('#modal-tree').modal('hide');
+				$('#modal-sm').modal('hide');
                 tree.refresh();
 	 		}
 	 		else{

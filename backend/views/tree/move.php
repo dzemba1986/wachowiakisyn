@@ -14,18 +14,22 @@ $form = ActiveForm::begin([
     
     <?= Html::dropDownList('newParentPort', null, [], ['class' => 'form-control']) ?>
     
+    <div class="help-block"></div>
+    
     <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
 
 <?php ActiveForm::end() ?>
 
 <?php
-$urlPortList = Url::to(['tree/list-port']);
+$urlPortList = Url::to(['list-port']);
 
 $js = <<<JS
 $(function(){
     $.get('{$urlPortList}&deviceId={$newParentId}', function(data){
     	$("select[name='newParentPort']").html(data);
     } );
+
+    $('.modal-header h4').html('Przenieś');
 
     $('#move').on('beforeSubmit', function(e){
 		
@@ -37,7 +41,7 @@ $(function(){
 	 		if(result == 1){
                 var tree = $("#device_tree").jstree(true);
 
-				$('#modal-tree').modal('hide');
+				$('#modal-sm').modal('hide');
                 tree.refresh();
 	 		}
 	 		else{
