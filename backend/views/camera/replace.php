@@ -71,6 +71,14 @@ $urlView = Url::to(['tabs-view']);
 $js = <<<JS
 $(function(){
     var clipboard = new Clipboard('.script');
+
+    clipboard
+        .on('success', function(e) {
+            $.growl.notice({ message: 'Skrypt w schowku'});
+        })
+        .on('error', function(e) {
+            $.growl.error({ message: 'Brak skryptu w schowku'});
+        });
     
     $('#replace').on('beforeSubmit', function(e){
 		
@@ -80,7 +88,7 @@ $(function(){
 	  		form.serialize()
 	 	).done(function(result){
 	 		if(result == 1){
-				$('#modal-replace').modal('hide');
+				$('#modal').modal('hide');
                 var tree = $("#device_tree").jstree(true);
                 tree.refresh();
                 $('#device_desc').load('{$urlView}&id=' + $('#device-select').val());  

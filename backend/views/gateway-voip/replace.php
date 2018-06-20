@@ -66,6 +66,14 @@ $urlView = Url::to(['gateway-voip/tabs-view']);
 $js = <<<JS
 $(function(){
     var clipboard = new Clipboard('.script');
+
+    clipboard
+        .on('success', function(e) {
+            $.growl.notice({ message: 'Skrypt w schowku'});
+        })
+        .on('error', function(e) {
+            $.growl.error({ message: 'Brak skryptu w schowku'});
+        });
     
     $('#replace').on('beforeSubmit', function(e){
 		
