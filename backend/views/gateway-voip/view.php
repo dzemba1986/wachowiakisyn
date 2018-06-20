@@ -54,7 +54,7 @@ echo DetailView::widget([
         ],
         [
             'label' => 'Skrypty',
-            'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]) . ' ' . Html::tag('p', '', ['id' => 'message']),
+            'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]),
             'format' => 'raw',
         ]
 	]
@@ -75,4 +75,38 @@ foreach ($device->ips as $ip) {
 echo '</tbody>';
 echo '</table>';
 echo '</div>';
+
+$js = <<<JS
+$(function(){
+	var clipboard = new Clipboard('.copy');
+	
+	clipboard
+        .on('success', function(e) {
+            $.growl.notice({ message: 'Skrypt w schowku'});
+        })
+        .on('error', function(e) {
+            $.growl.error({ message: 'Brak skryptu w schowku'});
+        });
+    
+    
+    $('.change-mac').on('click', function(event) {
+    
+		$('#modal-sm').modal('show')
+			.find('#modal-sm-content')
+			.load($(this).attr('href'));
+			
+        return false;
+	});
+	
+    $('.close-connection').on('click', function(event) {
+    
+		$('#modal-change-mac').modal('show')
+			.find('#modal-content-change-mac')
+			.load($(this).attr('href'));
+			
+        return false;
+	});
+});
+JS;
+$this->registerJs($js);
 ?>

@@ -108,13 +108,12 @@ $(function() {
       		form.attr("action"), // serialize Yii2 form
       		form.serialize()
      	).done(function(result){
-    		
-     		if(result == 1){
+    		if(result == 1){
      			$('#device_desc').load('{$urlView}&id=' + {$device->id});
+                $.growl.notice({ message: 'Zaktualizowano serwer'});
      		}
      		else{
-    		
-     			$('#message').html(result);
+     			$.growl.error({ message: 'Błąd edycji serwera'});
      		}
      	}).fail(function(){
      		console.log('server error');

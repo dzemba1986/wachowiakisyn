@@ -55,7 +55,7 @@ echo DetailView::widget([
 		],
 		[
 		    'label' => 'Skrypty',
-		    'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]) . ' ' . Html::tag('div', '', ['id' => 'message']),
+		    'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]),
 		    'format' => 'raw',
 		    'visible' => $device->status
 		]
@@ -96,14 +96,13 @@ $js = <<<JS
 $(function(){
 	var clipboard = new Clipboard('.copy');
 	
-	clipboard.on('success', function(e) {
-		if(e.trigger.textContent == 'Dodaj')
-			$('#message').text('Skopiowano ADD');
-		else if(e.trigger.textContent == 'Usuń')
-			$('#message').text('Skopiowano DROP');
-	}).on('error', function(e) {
-        $('#message').text('NIE SKOPIOWANO');
-    });
+	clipboard
+        .on('success', function(e) {
+            $.growl.notice({ message: 'Skrypt w schowku'});
+        })
+        .on('error', function(e) {
+            $.growl.error({ message: 'Brak skryptu w schowku'});
+        });
 
 
     $('.change-mac').on('click', function(event) {
