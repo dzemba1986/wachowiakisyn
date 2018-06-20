@@ -12,8 +12,7 @@ echo Tabs::widget([
 	    ],
 		[
 			'label' => 'Historia',
-			'content' => 'wkrótce',
-			'linkOptions' => ['data-url' => Url::to(['device/history', 'id' => $id])]
+			'linkOptions' => ['data-url' => Url::to(['history/history-by-device', 'id' => $id])]
 		],
 	]
 ]);
