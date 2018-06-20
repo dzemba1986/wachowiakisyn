@@ -55,6 +55,7 @@ echo DetailView::widget([
 // 	        'label' => 'Skrypty',
 // 	        'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]) . ' ' . Html::tag('p', '', ['id' => 'message']),
 // 	        'format' => 'raw',
+//             'visible' => $device->status && $device->ips
 // 	    ]
 	]
 ]);
