@@ -40,4 +40,9 @@ class DeviceType extends ActiveRecord
 		
 	    return self::find()->select(['id', 'name'])->where(['list' => true])->orderBy('name');
 	}
+	
+	public static function findByController(){
+	    
+	    return self::find()->select(['controller', 'name'])->where(['list' => true])->orderBy('name');
+	}
 }
