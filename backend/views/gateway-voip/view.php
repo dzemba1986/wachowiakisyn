@@ -84,12 +84,12 @@ $(function(){
 	clipboard
         .on('success', function(e) {
             $.growl.notice({ message: 'Skrypt w schowku'});
+            clipboard.destroy();
         })
         .on('error', function(e) {
             $.growl.error({ message: 'Brak skryptu w schowku'});
         });
-    
-    
+
     $('.change-mac').on('click', function(event) {
     
 		$('#modal-sm').modal('show')
