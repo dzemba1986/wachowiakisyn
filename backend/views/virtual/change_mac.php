@@ -39,6 +39,15 @@ $(function(){
 
     var clipboard = new Clipboard('.save');
 
+    clipboard
+        .on('success', function(e) {
+            $.growl.notice({ message: 'Skrypt w schowku'});
+            e.clearSelection();
+        })
+        .on('error', function(e) {
+            $.growl.error({ message: 'Brak skryptu w schowku'});
+        });
+
     $('.modal-header h4').html('Zmień MAC');
 	
     $('#{$virtual->formName()}').on('beforeSubmit', function(e) {

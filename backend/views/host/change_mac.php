@@ -39,6 +39,15 @@ $(function(){
 
     var clipboard = new Clipboard('.save');
 
+    clipboard
+        .on('success', function(e) {
+            $.growl.notice({ message: 'Skrypt w schowku'});
+            e.clearSelection();
+        })
+        .on('error', function(e) {
+            $.growl.error({ message: 'Brak skryptu w schowku'});
+        });
+
     $('.modal-header h4').html('Zmień MAC');
 	
     $('#{$host->formName()}').on('beforeSubmit', function(e) {
@@ -50,10 +59,11 @@ $(function(){
      	).done(function(result){
      		if(result == 1){
                 $('#modal-sm').modal('hide');
+                $.growl.notice({ message: 'Zaktualizowano MAC'});
     			$('#device_desc').load('{$urlView}&id=' + {$host->id});
      		}
      		else{
-     			console.log(result);
+     			$.growl.error({ message: 'Błąd edycji MAC'});
      		}
      	}).fail(function(){
      		console.log('server error');
