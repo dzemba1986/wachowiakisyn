@@ -246,7 +246,7 @@ echo GridView::widget([
             	        return null;
         	    },
         		'history' => function ($url, $model, $key) {
-                    $url = Url::to(['connection/history', 'id' => $key]);
+                    $url = Url::to(['history/history-by-connection', 'id' => $key]);
                     return Html::a('<span class="glyphicon glyphicon-menu-hamburger"></span>', $url, [
                         'title' => \Yii::t('yii', 'Historia'),
                         'onclick' => "

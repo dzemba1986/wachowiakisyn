@@ -221,7 +221,7 @@ echo GridView::widget([
             ]),
             'class' => 'kartik\grid\ActionColumn',
             'mergeHeader' => true,
-            'template' => '{view} {update} {tree}',
+            'template' => '{view} {update} {tree} {history}',
             //'options' => ['style' => 'width:6%;'],
         	'buttons' => [
         	    'view' => function($url, $model, $key) {
@@ -264,6 +264,17 @@ echo GridView::widget([
         			} else
         				return null;
         		},
+        		'history' => function ($url, $model, $key) {
+            		$url = Url::to(['history/history-by-connection', 'id' => $key]);
+            		return Html::a('<span class="glyphicon glyphicon-menu-hamburger"></span>', $url, [
+            		    'title' => \Yii::t('yii', 'Historia'),
+            		    'onclick' => "
+                                $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+            		    
+                                return false;
+                            "
+            		]);
+        		}
         	]
         ],            
     ]

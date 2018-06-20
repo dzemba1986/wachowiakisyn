@@ -14,8 +14,8 @@ use yii\helpers\Url;
  * @var yii\data\ActiveDataProvider $dataProvider
  */ 
 
-require_once '_modal_store.php';
-require_once '_modal_add_tree.php';
+echo $this->renderFile('@backend/views/modal/modal_sm.php');
+echo $this->renderFile('@backend/views/modal/modal.php');
 require_once '_add_device_form.php';
 
 $this->title = 'Magazyn';
@@ -95,50 +95,41 @@ echo GridView::widget([
             'template' => '{update} {tree} {delete}',
             'options' => ['style' => 'width:6%;'],
             'buttons' => [
-                'tree' => function ($url, $model, $key) {
+                'update' => function($url, $model, $key) {
+                    $url = Url::to([$model->type->controller . '/update-store', 'id' => $key]);
+                    return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                        'title' => \Yii::t('yii', 'Dodaj na drzewo'),
+                        'onclick' => "
+                            $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('href'));
+                        
+                            return false;
+                        "
+                    ]);
+                },
+                'tree' => function($url, $model, $key) {
                     $url = Url::to([$model->type->controller . '/add-on-tree', 'id' => $key]);
                     return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
-                                'title' => \Yii::t('yii', 'Zamontuj'),
-                                'data-pjax' => '0',
+                        'title' => \Yii::t('yii', 'Dodaj na drzewo'),
+                        'onclick' => "
+                            $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+                    
+                            return false;
+                        "
+                    ]);
+                },
+                'delete' => function($url, $model, $key) {
+                    $url = Url::to([$model->type->controller . '/delete-from-store', 'id' => $key]);
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                        'title' => \Yii::t('yii', 'Usuń'),
+                        'onclick' => "
+                            $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('href'));
+                        
+                            return false;
+                        "
                     ]);
                 },
             ]
         ],  
     ]                
 ]);
-
-$js = <<<JS
-$(function() {
-    
-    $("a[title='Update']").click(function(event){
-        
-		$('#modal-store').modal('show')
-			.find('#modal-content-store')
-			.load($(this).attr('href'));
-    
-        return false;
-	});
-
-	$("a[title='Zamontuj']").click(function(event){
-        
-		$('#modal_add_tree').modal('show')
-			.find('#modal_content_add_tree')
-			.load($(this).attr('href'));
-    
-        return false;
-	});
-    
-    $('body').on('click', "a[title='Delete']", function(event){
-        
-        event.preventDefault();
-        
-        $('#modal_delete_store').modal('show')
-		.find('#modal_content_delete_store')
-		.load($(this).attr('href'));
-
-    	return false;       		
-	});
-});
-JS;
-$this->registerJs($js);
 ?>

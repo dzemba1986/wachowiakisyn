@@ -124,7 +124,7 @@ $(function() {
     							'label' : 'Zamień z magazynu',
     							'action' : function () {
                                     if (node.original.type == 5) return false;
-    							    $('#modal-replace').modal('show').find('#modal-content-replace').load('?r=' + node.original.controller + '/replace&id=' + getId(node.id));	
+    							    $('#modal').modal('show').find('#modal-content').load('?r=' + node.original.controller + '/replace&id=' + getId(node.id));	
                                 }
     						}
                         }    
@@ -221,7 +221,7 @@ $(function() {
             var node = data.node;
             var deviceId = getId(data.node.id);
             var port = getPort(data.node.id);
-            $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=' + node.original.controller + '/add-to-store&id=' + deviceId + '&port=' + port);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=' + node.original.controller + '/delete-from-tree&id=' + deviceId + '&port=' + port);
         });      
 });
 JS;
