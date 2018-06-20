@@ -20,7 +20,7 @@ $form = ActiveForm::begin([
 ?>
 <div class="row">
 	<?= $form->field($model, 'deviceId', [
-	    'options' => ['class' => 'col-sm-7', 'style' => 'padding-right: 0px;'],
+	    'options' => ['class' => 'col-sm-6', 'style' => 'padding-right: 0px;'],
     	])->widget(Select2::classname(), [
     		'language' => 'pl',
            	'options' => [
@@ -28,6 +28,9 @@ $form = ActiveForm::begin([
            		'onchange' => new JsExpression("
 					$.get('" . Url::to(['tree/list-port']) . "&deviceId=' + $(this).val(), function(data){
 						$('select[name=\"AddHostForm[port]\"]').html(data);
+					});
+                    $.get('" . Url::to(['swith/get-ip-link']) . "&id=' + $(this).val(), function(data){
+						$('.ssh').html(data);
 					});
 				")
             ],
@@ -38,7 +41,7 @@ $form = ActiveForm::begin([
 	    			'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
 	    		],
 	    		'ajax' => [
-	    		    'url' => $model->typeId == 2 ? Url::to(['gateway-voip/list-from-tree']) : Url::to(['swith/list-from-tree']),
+	    		    'url' => Url::to(['swith/list-from-tree']),
 	    			'dataType' => 'json',
 	    			'data' => new JsExpression("function(params) { return {
 	    				q : params.term,
@@ -49,6 +52,8 @@ $form = ActiveForm::begin([
 		    	'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
 	    	]
     	]) ?>
+    
+    <div class="col-sm-1 ssh"></div>
     	
 	<?= $form->field($model, 'port', [
 	    'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
@@ -103,7 +108,7 @@ $deviceId = json_encode($model->deviceId);
 $port = json_encode($model->port);
 $deviceListUrl = Url::to(['device/list-from-tree', 'id' => $model->deviceId]);
 $portListUrl = Url::to(['tree/list-port', 'deviceId' => $model->deviceId, 'selected' => $model->port]);
-//$urlAction = Url::to(['tree/add-host', 'connectionId' => $connectionId]);
+$ipLinkUrl = Url::to(['swith/get-ip-link']);
 
 $js = <<<JS
 $(function() {
@@ -116,6 +121,10 @@ $(function() {
 		$.getJSON('{$deviceListUrl}', function(data) {
 			$('#select2-addhostform-deviceid-container').html(data.results.concat);
 		});
+
+        $.get('{$ipLinkUrl}&id={$deviceId}', function(data){
+            $('.ssh').html(data);
+        });
 	
         if (port !== null) {
             $.get('{$portListUrl}', function(data) {

@@ -40,7 +40,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$url = Url::to(['tree/add-host', 'connectionId' => $connection->id]);
+$url = Url::to(['add-on-tree', 'connectionId' => $connection->id]);
 
 $js = <<<JS
 $(function() {
