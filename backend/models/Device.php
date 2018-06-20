@@ -88,7 +88,7 @@ class Device extends ActiveRecord
             
             ['status', 'boolean'],
 			['status', 'default', 'value' => null],
-            ['status', 'required', 'message' => 'Wartość wymagana', 'on' => [self::SCENARIO_UPDATE]],
+		    ['status', 'required', 'message' => 'Wartość wymagana', 'on' => [self::SCENARIO_UPDATE], 'when' => function ($model) { return $model->address_id <> 1; }],
                       
 		    ['name', 'string', 'min' => 3, 'max' => 40, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 		    
@@ -220,33 +220,5 @@ class Device extends ActiveRecord
 	function isParent() {
 	    
 	    return Tree::find()->where(['parent_device' => $this->id])->count() > 0 ? true : false;
-	}
-	
-	public static function create($typeId) {
-	    switch($typeId) {
-	        case Swith::TYPE:
-	            return new Swith();
-	            break;
-	        case Router::TYPE:
-	            return new Router();
-	            break;
-	        case GatewayVoip::TYPE:
-	            return new GatewayVoip();
-	            break;
-	        case Camera::TYPE:
-	            return new Camera();
-	            break;
-	        case MediaConverter::TYPE:
-	            return new MediaConverter();
-	            break;
-	        case Server::TYPE:
-	            return new Server();
-	            break;
-	        case Virtual::TYPE:
-	            return new Virtual();
-	            break;
-	        default :
-	            return new Device();
-	    }
 	}
 }
