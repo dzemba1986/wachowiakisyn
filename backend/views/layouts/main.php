@@ -1,7 +1,6 @@
 <?php
 use backend\assets\AppAsset;
 use backend\modules\task\models\DeviceTask;
-use yii\bootstrap\Alert;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
@@ -11,6 +10,8 @@ use yii\widgets\Breadcrumbs;
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxcore.js');
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxmenu.js');
 $this->registerCssFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/styles/jqx.base.css');
+$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/growl/jquery.growl.js');
+$this->registerCssFile(Yii::$app->request->BaseUrl . '/js/growl/jquery.growl.css');
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -66,7 +67,6 @@ $this->beginPage() ?>
                     'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
                 ]) ?>
             </span>
-            <?= Alert::widget() ?>
             <?= $content ?>
         </div>
     </div>
