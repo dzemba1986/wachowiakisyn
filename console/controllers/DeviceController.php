@@ -2,9 +2,10 @@
 
 namespace console\controllers;
 
+use backend\models\Camera;
 use backend\models\Device;
+use yii\base\Exception;
 use yii\console\Controller;
-use backend\models\Swith;
 
 class DeviceController extends Controller {
 	
@@ -261,27 +262,84 @@ class DeviceController extends Controller {
 		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x510-10", "w");
 		fwrite($file, $ipsList);
 		fclose($file);
+		
+		//ec
+		$ecDevices = Device::find()->joinWith(['ips', 'model'])->
+		where(['and', ['like', 'model.name', 'EC'],['<>', 'address_id', 1],['main' => true]])->orderBy('ip.ip')->all();
+		
+		$ipsList = '';
+		
+		foreach ($ecDevices as $ecDevice){
+		    $ipsList .= $ecDevice->ips[0]->ip . "\n";
+		}
+		
+		$file = fopen(\Yii::getAlias('@console') . "/device/lists/ec", "w");
+		fwrite($file, $ipsList);
+		fclose($file);
+		
+		//ec-172
+		$ecDevices172 = Device::find()->joinWith(['ips', 'model'])->
+		where(['and', ['like', 'model.name', 'EC'],['<>', 'address_id', 1],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '172.20.%', false],['main' => true]])->orderBy('ip.ip')->all();
+		
+		$ipsList = '';
+		
+		foreach ($ecDevices172 as $ecDevice172){
+		    $ipsList .= $ecDevice172->ips[0]->ip . "\n";
+		}
+		
+		$file = fopen(\Yii::getAlias('@console') . "/device/lists/ec-172", "w");
+		fwrite($file, $ipsList);
+		fclose($file);
+		
+		//ec-10
+		$ecDevices10 = Device::find()->joinWith(['ips', 'model'])->
+		where(['and', ['like', 'model.name', 'EC'],['<>', 'address_id', 1],['like', new \yii\db\Expression('CAST(ip AS varchar)'), '10.%', false],['main' => true]])->orderBy('ip.ip')->all();
+		
+		$ipsList = '';
+		
+		foreach ($ecDevices10 as $ecDevice10){
+		    $ipsList .= $ecDevice10->ips[0]->ip . "\n";
+		}
+		
+		$file = fopen(\Yii::getAlias('@console') . "/device/lists/ec-10", "w");
+		fwrite($file, $ipsList);
+		fclose($file);
 	}
 	
 	function actionIcingaAdd() {
 	    
-	    $switches = Swith::find()->joinWith(['mainIp', 'model'])->andWhere(['model.name' => 'AT-8000GS/24'])->orderBy('device.name')->limit(1)->all();
+// 	    $switches = Swith::find()->joinWith(['mainIp', 'model'])->andWhere(['and', ['monitoring' => null], ['<>', 'address_id', 1]])->orderBy('device.name')->limit(100)->all();
 	    
-	    foreach ($switches as $switch) {
-	        echo \Yii::$app->apiIcingaClient->put('objects/hosts/' . $switch->mixName, [
-	            "templates" => [ $switch->model->name ],
-	            "attrs" => [
-	                "address" => $switch->mainIp->ip,
-	                'vars.device' => 'switch',
-	                'vars.model' => $switch->model->name,
-	                'vars.geolocation' => $switch->geolocation,
-	            ]
-	        ], [
-	            'Content-Type' => 'application/json',
-	            'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
-	            'Accept' => 'application/json'
-	        ])->send()->content;
-	    }
+// 	    foreach ($switches as $switch) {
+	    $switch = Camera::findOne(7547);
+	        echo $switch->mixName;
+	        try {
+	            echo \Yii::$app->apiIcingaClient->put('objects/hosts/' . $switch->id, [
+	                "templates" => [ $switch->model->name ],
+	                "attrs" => [
+	                    'display_name' => $switch->mixName,
+	                    'address' => $switch->mainIp->ip,
+	                    'vars.geolocation' => '52.4314987, 16.9251145',
+	                    'vars.device' => 'Switch',
+	                    'vars.model' => $switch->model->name,
+	                ]
+	            ], [
+	                'Content-Type' => 'application/json',
+	                'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+	                'Accept' => 'application/json'
+	            ])->send()->content;
+	            
+	            $switch->monitoring = true;
+	            $switch->geolocation = '52.4314987, 16.9251145';
+	            if (!$switch->save()) { throw new Exception('Błąd zapisu urządzenia'); }
+	        } catch (\Throwable $t) {
+	            echo ' - ' . $t->getMessage();
+	            exit();
+	        }
+	        
+	        echo " - OK\n";
+	        //sleep(5);
+// 	    }
 	}
 	
 	function actionIcingaDel() {
