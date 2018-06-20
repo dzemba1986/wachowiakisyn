@@ -29,7 +29,7 @@ class GatewayVoipController extends DeviceController
             );
     }
     
-    function actionAddToStore($id, $port) {
+    function actionDeleteFromTree($id, $port) {
         
         $request = Yii::$app->request;
         $gv = $this->findModel($id);
@@ -71,7 +71,7 @@ class GatewayVoipController extends DeviceController
                 exit();
             }
         } else
-            return $this->renderAjax('@app/views/device/add_to_store', [
+            return $this->renderAjax('@app/views/device/delete-from-tree', [
                 'device' => $gv,
             ]);
     }

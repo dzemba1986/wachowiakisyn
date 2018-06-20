@@ -28,8 +28,8 @@ class DeviceController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'tabs-view', 'tabs-update', 'view', 'update', 'validation', 'list-from-tree', 'list-from-store', 'add-on-tree', 'add-to-store',
-                            'replace', 'replace-port'
+                            'tabs-view', 'tabs-update', 'view', 'update', 'validation', 'list-from-tree', 'list-from-store', 'add-on-tree', 'delete-from-tree', 
+                            'add-on-store', 'update-store', 'delete-from-store', 'replace', 'replace-port'
                         ],
                         'roles' => ['@']
                     ]
@@ -37,7 +37,7 @@ class DeviceController extends Controller
             ],
             [
                 'class' => AjaxFilter::className(),
-                'only' => ['view', 'update', 'list-from-tree']
+                'only' => ['view', 'update', 'list-from-tree', 'update-store']
             ],
         ];
     }
@@ -109,7 +109,6 @@ class DeviceController extends Controller
 	                exit();
 	            }
 	        }
-	        
 	        return 1;
 	    } else {
 	        return $this->renderAjax('update', [
@@ -241,7 +240,7 @@ class DeviceController extends Controller
 	    }
 	}
 	
-	function actionAddToStore($id, $port) {
+	function actionDeleteFromTree($id, $port) {
 	    
 	    $request = Yii::$app->request;
 	    $device = $this->findModel($id);
@@ -281,7 +280,71 @@ class DeviceController extends Controller
 	            exit();
 	        }
 	    } else
-	        return $this->renderAjax('@app/views/device/add_to_store');
+	        return $this->renderAjax('@app/views/device/delete_from_tree');
+	}
+	
+	public function actionAddOnStore() {
+	    
+	    $device = static::getModel();
+	    $device->scenario = get_class($device)::SCENARIO_CREATE;
+	    
+	    $request = Yii::$app->request;
+	    
+	    if ($device->load($request->post())) {
+	        
+	        $device->status = null;
+	        $device->address_id = 1;
+	        
+	        try {
+	            if(!$device->save()) throw new Exception('Błąd zapisu urządzenia');
+	            
+	            return 1;
+	        } catch (Exception $e) {
+	            var_dump($device->errors);
+	            var_dump($e->getMessage());
+	            exit();
+	        }
+	        
+	    } else {
+            return $this->renderAjax('add_on_store', [
+                'device' => $device,
+            ]);
+	    }
+	}
+	
+	public function actionUpdateStore($id)
+	{
+	    $device = $this->findModel($id);
+	    $device->scenario = get_class($device)::SCENARIO_UPDATE;
+	    
+	    $request = Yii::$app->request;
+	    
+        if($device->load($request->post())){
+            try {
+                if(!$device->save()) throw new Exception('Problem z zapisem urządzenia');
+                
+                return 1;
+            } catch (Exception $e) {
+                var_dump($device->errors);
+                exit();
+            }
+        } else {
+            return $this->renderAjax('update_store', [
+                'device' => $device
+            ]);
+        }
+	}
+	
+	public function actionDeleteFromStore($id)
+	{
+	    $request = Yii::$app->request;
+	    
+        if($request->isPost){
+            if (!$this->findModel($id)->delete()) return 'Błąd usuwania urządzenia';
+            return 1;
+        } else{
+            return $this->renderAjax('@app/views/device/delete_from_store');
+        }
 	}
 	
 	protected static function getModel() {

@@ -30,7 +30,7 @@ class CameraController extends DeviceController
             );
     }
     
-    function actionAddToStore($id, $port) {
+    function actionDeleteFromTree($id, $port) {
         
         $request = Yii::$app->request;
         $camera = $this->findModel($id);
@@ -75,7 +75,7 @@ class CameraController extends DeviceController
                 exit();
             }
         } else
-            return $this->renderAjax('@app/views/device/add_to_store', [
+            return $this->renderAjax('@app/views/device/delete-from-tree', [
                 'device' => $camera,
             ]);
     }

@@ -6,10 +6,35 @@ use backend\models\Swith;
 use backend\models\Tree;
 use Yii;
 use yii\base\Exception;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 class SwithController extends DeviceController
 {	
-    function actionAddToStore($id, $port) {
+    public function behaviors() {
+        
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            ['access' => [
+                'class' => AccessControl::className(),
+                'rules'	=> [
+                    [
+                        'allow' => true,
+                        'actions' => ['get-ip-link'],
+                        'roles' => ['@']
+                    ]
+                ]
+            ]]
+            );
+    }
+    
+    function actionGetIpLink($id) {
+        
+        return Html::a('ssh', "ssh://{$this->findModel($id)->ips[0]->ip}:22222");
+    }
+    
+    function actionDeleteFromTree($id, $port) {
         
         $request = Yii::$app->request;
         $switch = $this->findModel($id);
@@ -51,7 +76,7 @@ class SwithController extends DeviceController
                 exit();
             }
         } else
-            return $this->renderAjax('@app/views/device/add_to_store', [
+            return $this->renderAjax('@app/views/device/delete-from-tree', [
                 'device' => $switch,
             ]);
     }
