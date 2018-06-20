@@ -62,7 +62,7 @@ $form = ActiveForm::begin([
     <div class="row">
 
     <?= $form->field($link, 'parent_device', [
-    		'options' => ['class' => 'col-md-7', 'style' => 'padding-right: 3px;'],
+    		'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
     	])->widget(Select2::classname(), [
     		'language' => 'pl',
@@ -107,7 +107,7 @@ $form = ActiveForm::begin([
     ?>
     
     <?= $form->field($link, 'port', [
-    		'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 3px;'],
+    		'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 3px;'],
     		'template' => "{input}\n{hint}\n{error}",
     	])->dropDownList([''], ['prompt' => $link->getAttributeLabel('port')]) 
     ?>

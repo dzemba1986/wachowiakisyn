@@ -5,6 +5,7 @@ use common\models\User;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 
@@ -13,6 +14,8 @@ use yii\web\JsExpression;
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var app\models\ModyficationSearch $searchModel
  */
+
+echo $this->renderFile('@backend/views/modal/modal.php');
 
 $this->params['breadcrumbs'][] = 'Zrobione';
 ?>
@@ -179,19 +182,44 @@ $this->params['breadcrumbs'][] = 'Zrobione';
             	'filter' => false,
             	'options' => ['style' => 'width:5%;'],
             ],
-            [   
+            [
                 'header' => PageSize::widget([
                     'defaultPageSize' => 100,
+                    'pageSizeParam' => 'per-page',
                     'sizes' => [
                         10 => 10,
                         100 => 100,
                         500 => 500,
                         1000 => 1000,
-                        5000 => 5000,
                     ],
-                    'template' => '{list}',
+                    'label' => 'Ilość',
+                    'template' => '{label}{list}',
+                    'options' => ['class' => 'form-control'],
                 ]),
-            ],     
+                'class' => 'kartik\grid\ActionColumn',
+                'mergeHeader' => true,
+                'template' => '{comments}',
+                'options' => ['style' => 'width:6%;'],
+                'buttons' => [
+                    'comments' => function ($url, $model) {
+                    
+                        if ($model->getComments()->count() == 0){
+                            return null;
+                        } else {
+                            $url = Url::to(['comment/index', 'taskId' => $model->id]);
+                            
+                            return Html::a('<span class="glyphicon glyphicon-comment"></span>', $url, [
+                                'title' => \Yii::t('yii', 'Komentarze'),
+                                'onclick' => "
+                                    $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+                                
+                                    return false;
+                                "
+                            ]);
+                        }
+                    },
+                ]
+            ],
         ],
     ]); ?>
 
