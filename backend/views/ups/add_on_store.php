@@ -1,8 +1,8 @@
 <?php
 
 use backend\models\Manufacturer;
-use backend\models\MediaConverter;
 use backend\models\Model;
+use backend\models\Ups;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
                 $('.field-ups-serial').removeAttr('style');
                 $('.field-ups-mac').removeAttr('style');
                 $('.field-ups-desc').removeAttr('style');
-                $.get('" . Url::to(['model/list']) . "&typeId=" . MediaConverter::TYPE . "&manufacturerId=' + $(this).val(), function(data) {
+                $.get('" . Url::to(['model/list']) . "&typeId=" . Ups::TYPE . "&manufacturerId=' + $(this).val(), function(data) {
                     $('select#ups-model_id').html(data);
                 });
             ")
@@ -80,7 +80,7 @@ $(function() {
 	 	).done(function(result){
 	 		if(result == 1){
 	 			$(form).trigger('reset');
-				$('#modal-store').modal('hide');
+				$('#modal-sm').modal('hide');
 	 			$.pjax.reload({container: '#store-grid-pjax'});
 	 		}
 	 		else{

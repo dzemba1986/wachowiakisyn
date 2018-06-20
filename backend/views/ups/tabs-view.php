@@ -8,7 +8,7 @@ echo Tabs::widget([
 	    [
 	        'label' => 'Dane',
 	    	'active' => true,	
-			'linkOptions' => ['data-url' => Url::to(['media-converter/view', 'id' => $id])]
+			'linkOptions' => ['data-url' => Url::to(['ups/view', 'id' => $id])]
 	    ],
 		[
 			'label' => 'Historia',
