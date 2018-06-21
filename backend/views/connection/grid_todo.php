@@ -35,7 +35,14 @@ echo GridView::widget([
 		'nullDisplay' => ''
 	],
 	'summary' => 'Widoczne {count} z {totalCount}',
-	'export' => false,
+    'export' => [
+        'label' => 'PDF',
+        'showConfirmAlert' => false,
+        
+    ],
+    'exportConfig' => [
+        'pdf' => ['label' => 'Wygeneruj PDF']
+    ],
 	'panel' => [
 		'before' => $this->renderAjax('_search', [
 			'searchModel' => $searchModel,
@@ -115,6 +122,8 @@ echo GridView::widget([
 	        'value' => 'package.name',
             'filter' => ArrayHelper::map(Package::find()->all(), 'id', 'name'),
 	        'options' => ['style'=>'width:7%;'],
+            'headerOptions' => ['class' => 'skip-export'],
+            'contentOptions' => ['class' => 'skip-export']
         ],
         [
             'attribute' => 'wire',
@@ -188,6 +197,8 @@ echo GridView::widget([
 				]
 			],
 			'options' => ['style'=>'width:8%;'],
+            'headerOptions' => ['class' => 'skip-export'],
+            'contentOptions' => ['class' => 'skip-export']
 		],
 		[
 		    'attribute' => 'pay_date',
@@ -204,6 +215,8 @@ echo GridView::widget([
 		        ]
 		    ],
 		    'options' => ['style'=>'width:8%;'],
+		    'headerOptions' => ['class' => 'skip-export'],
+		    'contentOptions' => ['class' => 'skip-export']
 		],
         [   
             'header' => PageSize::widget([

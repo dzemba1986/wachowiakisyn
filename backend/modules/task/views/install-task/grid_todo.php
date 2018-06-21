@@ -42,10 +42,12 @@ require_once '_modal_task.php';
     		'nullDisplay' => ''
     	],
         'export' => [
-            'fontAwesome' => true,
+            'label' => 'PDF',
             'showConfirmAlert' => false,
-            'target'=>GridView::TARGET_BLANK,
-            'exportConfig' => ['pdf' => TRUE],
+            
+        ],
+        'exportConfig' => [
+            'pdf' => ['label' => 'Wygeneruj PDF']
         ],
         'panel' => [
             'before' => '',
@@ -143,16 +145,6 @@ require_once '_modal_task.php';
                 'options' => ['style'=>'width:5%;'],
             ],
             [
-	            'class'=>'kartik\grid\BooleanColumn',
-	            'header'=>'Umowa',
-	            'attribute'=>'nocontract',
-	            'trueLabel' => 'Nie',
-	            'falseLabel' => 'Tak',
-	            'trueIcon' => GridView::ICON_INACTIVE,
-	            'falseIcon' => GridView::ICON_ACTIVE,
-	            'options' => ['style'=>'width:5%;'],
-            ],
-            [
             	'attribute' => 'add_user',
             	'value' => 'addUser.last_name',
             	'filterType' => GridView::FILTER_SELECT2,
@@ -162,12 +154,10 @@ require_once '_modal_task.php';
             	],
             	'filterInputOptions' => ['placeholder' => ''],
             	'format' => 'raw',
-            	'options' => ['style'=>'width:10%;']
+            	'options' => ['style'=>'width:10%;'],
+                'headerOptions' => ['class' => 'skip-export'],
+                'contentOptions' => ['class' => 'skip-export']
             ],
-//             [
-//                 'attribute' => 'add_user',
-//                 'value' => 'addUser.last_name'
-//             ],
             [   
                 'header' => PageSize::widget([
                     'defaultPageSize' => 100,
