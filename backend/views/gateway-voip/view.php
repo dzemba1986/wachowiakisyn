@@ -88,6 +88,7 @@ $(function(){
         })
         .on('error', function(e) {
             $.growl.error({ message: 'Brak skryptu w schowku'});
+            clipboard.destroy();
         });
 
     $('.change-mac').on('click', function(event) {
