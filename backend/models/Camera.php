@@ -132,7 +132,7 @@ class Camera extends Device
                 ['monitoring', 'boolean'],
                 
                 ['geolocation', 'required', 'message' => 'Wartość nie może być pusta', 'when' => function($model) { return $model->monitoring; },
-                    'whenClient' => "function(attribute, value) { return $('#swith-monitoring').is(':checked') == true; }"
+                    'whenClient' => "function(attribute, value) { return $('#camera-monitoring').is(':checked') == true; }"
                 ],
                 ['geolocation', 'trim'],
                 ['geolocation', 'match', 'pattern' => '/^[\d]{2}\.[\d]{7}, [\d]{2}\.[\d]{7}$/', 'message' => 'Niewłaściwy format (12.1234567, 12.1234567)'],
