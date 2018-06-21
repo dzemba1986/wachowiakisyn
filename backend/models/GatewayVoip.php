@@ -137,8 +137,20 @@ class GatewayVoip extends Device
 	    $scenarios = parent::scenarios();
 	    $scenarios[self::SCENARIO_CREATE] = ArrayHelper::merge($scenarios[self::SCENARIO_CREATE],['mac', 'serial', 'manufacturer_id', 'model_id']);
 	    $scenarios[self::SCENARIO_UPDATE] = ArrayHelper::merge($scenarios[self::SCENARIO_UPDATE], ['mac', 'serial', 'monitoring', 'geolocation']);
+	    $scenarios[self::SCENARIO_REPLACE] = ArrayHelper::merge($scenarios[self::SCENARIO_REPLACE], ['monitoring', 'geolocation']);
 	    
 	    return $scenarios;
+	}
+	
+	public function attributeLabels() {
+	    
+	    return ArrayHelper::merge(
+	        parent::attributeLabels(),
+	        [
+	            'geolocation' => 'Geolokacja',
+	            'monitoring' => 'Monitorować',
+	        ]
+	        );
 	}
 	
 	public function configurationAdd() {
