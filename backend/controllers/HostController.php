@@ -27,7 +27,7 @@ class HostController extends DeviceController
                 'rules'	=> [
                     [
                         'allow' => true,
-                        'actions' => ['change-mac', 'get-change-mac-script', 'add-inactive-on-tree'],
+                        'actions' => ['change-mac', 'get-change-mac-script', 'add-inactive-on-tree', 'add-host-validation'],
                         'roles' => ['@']
                     ]
                 ]
