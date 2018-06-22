@@ -3,10 +3,12 @@ use backend\models\AddressShort;
 use backend\models\ConnectionType;
 use backend\models\Package;
 use kartik\grid\GridView;
+use kartik\select2\Select2;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
@@ -15,6 +17,78 @@ use yii\helpers\Url;
 
 $this->params['breadcrumbs'][] = 'Wszystkie';
 echo $this->renderFile('@backend/views/modal/modal.php');
+
+// wyszukiwanie globalne
+$form = ActiveForm::begin([
+    'action' => ['connection/index', 'mode' => 'all'],
+    'method' => 'get',
+    'id' => 'global-search-form',
+]); ?>
+
+    <div class="row">
+        
+        <?= $form->field($searchModel, 'street', [
+                'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 15px; padding-right: 3px;'], 
+                'template' => "{input}\n{hint}\n{error}",
+            ])->widget(Select2::className(), [
+                'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
+            	'options' => ['placeholder' => 'Ulica'],
+            	'pluginOptions' => [
+            		'allowClear' => true
+            	],
+        	])
+        ?>
+
+        <?= $form->field($searchModel, 'house', [
+                'options' => ['class' => 'col-md-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+                'template' => "{input}\n{hint}\n{error}",
+            ])->textInput(['placeholder' => $searchModel->getAttributeLabel('house')]) 
+        ?>
+
+        <?= $form->field($searchModel, 'flat', [
+                'options' => ['class' => 'col-md-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+                'template' => "{input}\n{hint}\n{error}",
+            ])->textInput(['placeholder' => $searchModel->getAttributeLabel('flat')]) 
+        ?>
+        
+        <?= $form->field($searchModel, 'house_detail', [
+                'options' => ['class' => 'col-md-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+                'template' => "{input}\n{hint}\n{error}",
+            ])->textInput(['placeholder' => $searchModel->getAttributeLabel('house_detail')]) 
+        ?>
+
+        <?= $form->field($searchModel, 'type_id', [
+                'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 3px; padding-right: 3px;'], 
+                'template' => "{input}\n{hint}\n{error}",
+            ])->dropDownList((ArrayHelper::map(ConnectionType::find()->all(), 'id', 'name')), ['prompt' => $searchModel->getAttributeLabel('type_id')]) 
+        ?>
+        
+        <?= $form->field($searchModel, 'ara_id', [
+                'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+                'template' => "{input}\n{hint}\n{error}",
+            ])->textInput(['placeholder' => $searchModel->getAttributeLabel('ara_id')]) 
+        ?>
+        
+        <?= $form->field($searchModel, 'soa_id', [
+                'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+                'template' => "{input}\n{hint}\n{error}",
+            ])->textInput(['placeholder' => $searchModel->getAttributeLabel('soa_id')]) 
+        ?>
+        
+        <?= $form->field($searchModel, 'nocontract', [
+	        'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+	    ])->checkbox(['uncheck' => null, 'checked' => 1]) ?>  
+	        
+	    <?= $form->field($searchModel, 'vip', [
+	        'options' => ['class' => 'col-xs-1', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+	    ])->checkbox(['uncheck' => null, 'checked' => 1]) ?> 
+        
+        <div style="padding-left: 3px; padding-right: 15px;" class="col-xs-1" ><?= Html::submitButton('Szukaj', ['class' => 'btn btn-danger', 'style' => 'width:100%']) ?></div>
+        
+    </div>
+        
+    <?php ActiveForm::end();
+// wyszukiwanie globalne - koniec
 
 echo GridView::widget([
 	'id' => 'connection-grid',
@@ -28,17 +102,11 @@ echo GridView::widget([
 		]
 	],
 	'resizableColumns' => false,
-	'export' => false,
     'formatter' => [
         'class' => 'yii\i18n\Formatter',
         'nullDisplay' => ''
     ],
 	'summary' => 'Widoczne {count} z {totalCount}',
-	'panel' => [
-			'before' => $this->renderAjax('_search', [
-					'searchModel' => $searchModel,
-			]),
-	],
 	'rowOptions' => function($model){
     	if ($model->exec_date) {
     	    return ['class' => 'sevendays'];
