@@ -264,7 +264,7 @@ class XSeriesConfiguration extends Configuration {
         $change .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
         $change .= "mac address-table static {$newMac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
         $change .= "exit\n";
-        $change .= "clear ip dhcp snooping binding {$this->ip}\n";
+        $change .= "clear ip dhcp snooping binding interface {$this->parentPortName}\n";
         $change .= "configure terminal\n";
         $change .= "interface {$this->parentPortName}\n";
         $change .= "switchport port-security\n";
