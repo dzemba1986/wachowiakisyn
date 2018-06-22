@@ -51,7 +51,9 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "copy r s\n";
             $add .= "y\n";
         } elseif ($this->device instanceof GatewayVoip) {
-            $add = "ip access-list voip{$this->parentPortNumber}\n";
+            $add = "interface vlan {$this->vlanId}\n";
+            $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
+            $add .= "ip access-list voip{$this->parentPortNumber}\n";
             $add .= "deny-udp any any any 68\n";
             $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
             $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
@@ -67,6 +69,8 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "spanning-tree portfast\n";
             $add .= "spanning-tree bpduguard\n";
             $add .= "service-acl input voip{$this->parentPortNumber}\n";
+            $add .= "port security mode lock\n";
+            $add .= "port security discard\n";
             $add .= "no shutdown\n";
             $add .= "exit\n";
             $add .= "exit\n";
@@ -79,12 +83,17 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "deny-udp any any any 68\n";
             $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
             $add .= "permit any {$this->ip} 0.0.0.0 192.168.5.0 0.0.0.255\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 10.111.0.0 0.0.255.255\n";
             $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
             $add .= "exit\n";
             $add .= "interface ethernet {$this->parentPortName}\n";
             $add .= "shutdown\n";
+            $add .= "switchport trunk allowed vlan remove all\n";
+            $add .= "switchport mode access\n";
             $add .= "description {$this->desc}\n";
             $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree bpduguard\n";
             $add .= "service-acl input cam{$this->parentPortNumber}\n";
             $add .= "port security mode lock\n";
             $add .= "port security discard\n";

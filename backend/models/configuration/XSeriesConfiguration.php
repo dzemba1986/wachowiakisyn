@@ -119,10 +119,14 @@ class XSeriesConfiguration extends Configuration {
             $add .= "description {$this->desc}\n";
             $add .= "switchport access vlan {$this->vlanId}\n";
             $add .= "access-group voip{$this->parentPortNumber}\n";
+            $add .= "switchport port-security violation protect\n";
+            $add .= "switchport port-security maximum 0\n";
+            $add .= "switchport port-security\n";
             $add .= "spanning-tree portfast\n";
             $add .= "spanning-tree portfast bpdu-guard enable\n";
             $add .= "no shutdown\n";
             $add .= "exit\n";
+            $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
             $add .= "exit\n";
             $add .= "wr\n";
         } elseif ($this->device instanceof Camera) {
@@ -134,6 +138,8 @@ class XSeriesConfiguration extends Configuration {
             $add .= "switchport port-security violation protect\n";
             $add .= "switchport port-security maximum 0\n";
             $add .= "switchport port-security\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree portfast bpdu-guard enable\n";
             $add .= "no shutdown\n";
             $add .= "exit\n";
             $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
