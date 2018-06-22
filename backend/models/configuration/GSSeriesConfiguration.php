@@ -53,6 +53,10 @@ class GSSeriesConfiguration extends Configuration {
         } elseif ($this->device instanceof GatewayVoip) {
             $add = "interface vlan {$this->vlanId}\n";
             $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "no service-acl input\n";
+            $add .= "exit\n";
+            $add .= "no ip access-list voip{$this->parentPortNumber}\n";
             $add .= "ip access-list voip{$this->parentPortNumber}\n";
             $add .= "deny-udp any any any 68\n";
             $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
@@ -158,13 +162,15 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "copy r s\n";
             $drop .= "y\n";
         } elseif ($this->device instanceof GatewayVoip) {
-            $drop = "interface ethernet {$this->parentPortName}\n";
+            $drop = "interface vlan {$this->vlanId}\n";
+            $drop .= "no bridge address {$this->mac}\n";
+            $drop .= "interface ethernet {$this->parentPortName}\n";
             $drop .= "shutdown\n";
             $drop .= "switchport access vlan 555\n";
             $drop .= "no service-acl input\n";
+            $drop .= "no port security\n";
             $drop .= "no shutdown\n";
             $drop .= "exit\n";
-            $drop .= "no ip access-list voip{$this->parentPortNumber}\n";
             $drop .= "no ip access-list voip{$this->parentPortNumber}\n";
             $drop .= "exit\n";
             $drop .= "copy r s\n";
@@ -174,7 +180,6 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "no bridge address {$this->mac}\n";
             $drop .= "interface ethernet {$this->parentPortName}\n";
             $drop .= "shutdown\n";
-            $drop .= "no description\n";
             $drop .= "switchport access vlan 555\n";
             $drop .= "no service-acl input\n";
             $drop .= "no port security\n";

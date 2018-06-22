@@ -106,7 +106,11 @@ class XSeriesConfiguration extends Configuration {
                 }
             }
         } elseif ($this->device instanceof GatewayVoip) {
-            $add = "access-list hardware voip{$this->parentPortNumber}\n";
+            $add = "interface {$this->parentPortName}\n";
+            $add .= "no access-group voip{$this->parentPortNumber}\n";
+            $add .= "exit\n";
+            $add .= "no access-list hardware voip{$this->parentPortNumber}\n";
+            $add .= "access-list hardware voip{$this->parentPortNumber}\n";
             $add .= "deny udp any any eq 68\n";
             $add .= "permit ip {$this->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
             $add .= "permit ip {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
@@ -206,9 +210,11 @@ class XSeriesConfiguration extends Configuration {
             }
 
         } elseif ($this->device instanceof GatewayVoip) {
-            $drop = "interface {$this->parentPortName}\n";
+            $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+            $drop .= "interface {$this->parentPortName}\n";
             $drop .= "shutdown\n";
             $drop .= "no access-group voip{$this->parentPortNumber}\n";
+            $drop .= "no switchport port-security\n";
             $drop .= "switchport access vlan 555\n";
             $drop .= "no shutdown\n";
             $drop .= "exit\n";
@@ -220,12 +226,12 @@ class XSeriesConfiguration extends Configuration {
             $drop .= "interface {$this->parentPortName}\n";
             $drop .= "shutdown\n";
             $drop .= "no access-group camera\n";
-            $drop .= "no description\n";
             $drop .= "no switchport port-security\n";
             $drop .= "switchport access vlan 555\n";
             $drop .= "no shutdown\n";
             $drop .= "exit\n";
             $drop .= "exit\n";
+            $drop .= "clear ip dhcp snooping binding interface {$this->parentPortName}\n";
             $drop .= "wr\n";
         } elseif ($this->device instanceof Virtual) {
             $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
