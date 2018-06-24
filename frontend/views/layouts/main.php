@@ -62,8 +62,17 @@ AppAsset::register($this);
             } else {
                 $menuItems[] = [
                     'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
+                    'items' => [
+                        [
+                            'label' => 'Wyloguj',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']
+                        ],
+                        [
+                            'label' => 'Zmień hasło',
+                            'url' => ['/site/change-password'],
+                        ],
+                    ]
                 ];
             }
             echo Nav::widget([
