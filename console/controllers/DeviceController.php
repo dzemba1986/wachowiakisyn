@@ -4,8 +4,12 @@ namespace console\controllers;
 
 use backend\models\Camera;
 use backend\models\Device;
+use backend\models\Host;
+use backend\models\Swith;
 use yii\base\Exception;
 use yii\console\Controller;
+use backend\models\GatewayVoip;
+
 
 class DeviceController extends Controller {
 	
@@ -420,6 +424,135 @@ class DeviceController extends Controller {
 		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.17.1", "i", "4");
 		
 		//snmpset  -c 1nn3c0mmun1ty -v2c -OvQ $x 1.3.6.1.4.1.89.87.2.1.3.1 i 1  1.3.6.1.4.1.89.87.2.1.9.1 a 172.20.4.18 1.3.6.1.4.1.89.87.2.1.7.1 i 3 1.3.6.1.4.1.89.87.2.1.8.1 i 3   1.3.6.1.4.1.89.87.2.1.11.1 s "8000gs-$x.rtf" 1.3.6.1.4.1.89.87.2.1.17.1 i 4 >> $path_to_logs/log8000GS
+	}
+	
+	public function actionGenerateConfFile() {
+	    
+	    $pathConf = \Yii::getAlias('@console/device/conf');
+	    
+	    $dev8000s = Swith::find()->select('id')->where(['model_id' => [2, 21]])->andWhere(['status' => true])->all();
+	    
+	    foreach ($dev8000s as $dev8000) {
+	        
+// 	        $hosts = Host::find()->joinWith('links')->where("id in (select device from agregation where parent_device = {$dev8000->id})")->andWhere(['status' => true])->orderBy('parent_port')->all();
+// 	        $cameras = Camera::find()->joinWith('links')->where("id in (select device from agregation where parent_device = {$dev8000->id})")->orderBy('parent_port')->all();
+	        $gws = GatewayVoip::find()->joinWith('links')->where("id in (select device from agregation where parent_device = {$dev8000->id})")->orderBy('parent_port')->all();
+	        $data = '';
+// 	        foreach ($hosts as $host) {
+// 	            $port = $host->links[0]->parent_port + 1;
+// 	            $data .= "interface ethernet g{$port}\n";
+// 	            $data .= "rate-limit 938000\n";
+//                 $data .= "traffic-shape 830000 8300000\n";
+//                 //$data .= "description {$host->getMixName(false)}\n";
+//                 $data .= "exit\n";
+// 	        }
+	        
+// 	        foreach ($cameras as $camera) {
+// 	            $port = $camera->links[0]->parent_port + 1;
+// 	            $data .= "interface ethernet g{$port}\n";
+// 	            $data .= "no service-acl input\n";
+// 	            $data .= "exit\n";
+// 	            $data .= "no ip access-list cam{$port}\n";
+// 	            $data .= "ip access-list cam{$port}\n";
+// 	            $data .= "deny-udp any any any 68\n";
+// 	            $data .= "permit any {$camera->ips[0]->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
+// 	            $data .= "permit any {$camera->ips[0]->ip} 0.0.0.0 192.168.5.0 0.0.0.255\n";
+// 	            $data .= "permit any {$camera->ips[0]->ip} 0.0.0.0 10.111.0.0 0.0.255.255\n";
+// 	            $data .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+// 	            $data .= "exit\n";
+// 	            $data .= "interface ethernet g{$port}\n";
+// 	            $data .= "service-acl input cam{$port}\n";
+// 	            $data .= "exit\n";
+// 	        }
+	        
+	        foreach ($gws as $gw) {
+	            $port = $gw->links[0]->parent_port + 1;
+	            
+	            $data .= "interface vlan 3\n";
+	            $data .= "bridge address {$gw->mac} permanent ethernet g{$port}\n";
+	            $data .= "interface ethernet g{$port}\n";
+	            $data .= "no service-acl input\n";
+	            $data .= "exit\n";
+	            $data .= "no ip access-list voip{$port}\n";
+	            $data .= "ip access-list voip{$port}\n";
+	            $data .= "deny-udp any any any 68\n";
+	            $data .= "permit any {$gw->ips[0]->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
+	            $data .= "permit any {$gw->ips[0]->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
+	            $data .= "permit any {$gw->ips[0]->ip} 0.0.0.0 10.111.0.0 0.0.255.255\n";
+	            $data .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+	            $data .= "exit\n";
+	            $data .= "interface ethernet g{$port}\n";
+	            $data .= "shutdown\n";
+	            $data .= "switchport trunk allowed vlan remove all\n";
+	            $data .= "switchport mode access\n";
+	            $data .= "description {$gw->getMixName(false)}\n";
+	            $data .= "switchport access vlan 3\n";
+	            $data .= "spanning-tree portfast\n";
+	            $data .= "spanning-tree bpduguard\n";
+	            $data .= "service-acl input voip{$port}\n";
+	            $data .= "port security mode lock\n";
+	            $data .= "port security discard\n";
+	            $data .= "no shutdown\n";
+	            $data .= "exit\n";
+	        }  
+	        
+	        $fileConf = $pathConf . '/8000gs/' . $dev8000->ips[0]->ip . '.cfg';
+	        file_put_contents($fileConf, $data);
+	    }
+	    
+	    $devXs = Swith::find()->select('id')->where(['model_id' => [47, 60, 46, 72, 73, 74, 58, 59]])->andWhere(['status' => true])->all();
+	    
+	    foreach ($devXs as $devX) {
+	        
+// 	        $hosts = Host::find()->joinWith('links')->where("id in (select device from agregation where parent_device = {$devX->id})")->andWhere(['status' => true])->orderBy('parent_port')->all();
+	        $gws = GatewayVoip::find()->joinWith('links')->where("id in (select device from agregation where parent_device = {$devX->id})")->orderBy('parent_port')->all();
+	        
+	        $data = '';
+	        $data .= "enable\n";
+	        $data .= "configure terminal\n";
+	        foreach ($gws as $gw) {
+	            $port = $host->links[0]->parent_port + 1;
+	            
+	            $data .= "interface port1.0.{$port}\n";
+	            $data .= "no access-group voip{$port}\n";
+	            $data .= "exit\n";
+	            $data .= "no access-list hardware voip{$port}\n";
+	            $data .= "access-list hardware voip{$port}\n";
+	            $data .= "deny udp any any eq 68\n";
+	            $data .= "permit ip {$gw->ips[0]->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
+	            $data .= "permit ip {$gw->ips[0]->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
+	            $data .= "permit ip {$gw->ips[0]->ip} 0.0.0.0 10.111.0.0 0.0.255.255\n";
+	            $data .= "permit udp 0.0.0.0 0.0.0.0 eq 68 any eq 67\n";
+	            $data .= "deny ip any any\n";
+	            $data .= "exit\n";
+	            $data .= "interface port1.0.{$port}\n";
+	            $data .= "shutdown\n";
+	            $data .= "description {$gw->getMixName(false)}\n";
+	            $data .= "switchport access vlan 3\n";
+	            $data .= "access-group voip{$port}\n";
+	            $data .= "switchport port-security violation protect\n";
+	            $data .= "switchport port-security maximum 0\n";
+	            $data .= "switchport port-security\n";
+	            $data .= "spanning-tree portfast\n";
+	            $data .= "spanning-tree portfast bpdu-guard enable\n";
+	            $data .= "no shutdown\n";
+	            $data .= "exit\n";
+	            
+	            $mac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $gw->mac));
+	            
+	            $data .= "mac address-table static {$mac} forward interface port1.0.{$port} vlan 3\n";
+	            
+// 	            $data .= "interface port1.0.{$port}\n";
+// 	            $data .= "no service-policy input 501M\n";
+// 	            $data .= "service-policy input 800M\n";
+// 	            $data .= "egress-rate-limit 820032\n";
+// 	            $data .= "description {$host->getMixName(false)}\n";
+	        }
+	        $data .= "end\n";
+	        $data .= "wr\n";
+	        $fileConf = $pathConf . '/xSeries/' . $devX->ips[0]->ip . '.cfg';
+	        file_put_contents($fileConf, $data);
+	    }
 	}
 	
 	public function actionInfo() {
