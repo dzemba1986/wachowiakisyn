@@ -41,6 +41,7 @@ use yii\db\ActiveRecord;
  * @property integer $soa_id
  * @property integer $replaced_id
  * @property string $exec_date
+ * @property string phone_desc
  * @property array $installations
  * @property backend\models\Address $address
  * @property backend\models\Package $package
@@ -122,7 +123,7 @@ class Connection extends ActiveRecord
 			[
 				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'again',
-				'address_id', 'phone', 'phone2', 'info', 'info_boa',
+				'address_id', 'phone', 'phone2', 'info', 'info_boa', 'phone_desc',
 				'port', 'device_id', 'mac', 'type_id', 'package_id', 'task_id'],
 				'safe'
 			],	
@@ -136,7 +137,7 @@ class Connection extends ActiveRecord
 				'phone', 'phone2', 'info_boa', 'device_id', 'package_id', 'address_id', 'type_id', 'phone_date'
 		];
 		$scenarios[self::SCENARIO_UPDATE] = ['conf_date', 'pay_date', 'phone_date', 'close_date', 'nocontract', 'vip', 'port',
-				'mac', 'phone', 'phone2', 'info', 'info_boa', 'device_id', 'wire', 'socket'
+				'mac', 'phone', 'phone2', 'info', 'info_boa', 'device_id', 'wire', 'socket', 'phone_desc'
 		];
 		$scenarios[self::SCENARIO_CLOSE] = ['close_date', 'close_user'];
 		$scenarios[self::SCENARIO_CREATE_INSTALLATION] = ['port', 'device_id', 'info'];
@@ -183,6 +184,7 @@ class Connection extends ActiveRecord
 			'house_detail' => 'Klatka',	
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
+		    'phone_desc' => 'Mac/port'
 		];
 	}
 	
@@ -322,7 +324,14 @@ class Connection extends ActiveRecord
     
                     }
                 }
-            } 
+            }
+            
+            if ($this->type_id == 2 && (array_key_exists('device_id', $changedAttributes) || array_key_exists('port', $changedAttributes)) && 
+                $this->device_id && $this->port) {
+                
+                $this->phone_desc = Device::findOne($this->device_id)->mac . '/p' . $this->port;
+                if (!$this->save()) throw new Exception('Błąd zapisu pola "mac/port"');
+            }
         }
     }
 }

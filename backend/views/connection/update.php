@@ -53,6 +53,7 @@ use yii\web\JsExpression;
     </div>
     
     <?php if (($allConnections == 0 && empty($connection->host_id)) || $connection->type_id == 2) : ?>
+    
     <div class="row">
         
         <?= $form->field($connection, 'device_id', [
@@ -60,6 +61,7 @@ use yii\web\JsExpression;
     	])->widget(Select2::classname(), [
     		'language' => 'pl',
            	'options' => [
+           	    'disabled' => $connection->type_id == 2 and (Yii::$app->user->id == 24 or Yii::$app->user->id == 22) ? false : true,
            	    'placeholder' => 'Urządzenie nadrzędne',
            		'onchange' => new JsExpression("
 					$.get('" . Url::to(['tree/list-port']) . "&deviceId=' + $(this).val(), function(data){
@@ -88,7 +90,7 @@ use yii\web\JsExpression;
     
 		<?= $form->field($connection, 'port', [
 			'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-		])->dropDownList([], ['prompt'=>'port']) ?>
+		])->dropDownList([], ['prompt'=>'port', 'disabled' => $connection->type_id == 2 and (Yii::$app->user->id == 24 or Yii::$app->user->id == 22) ? false : true]) ?>
 		
 		<?= $form->field($connection, 'close_date', [
 			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px;'],

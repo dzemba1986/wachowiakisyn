@@ -190,6 +190,11 @@ echo GridView::widget([
             'options' => ['style'=>'width:7%;'],
         ],
         [
+            'attribute' => 'phone_desc',
+            'options' => ['style'=>'width:10%;'],
+            'visible' => Yii::$app->user->id <> 19 ? false : true
+        ],
+        [
 	        'attribute' => 'package_id',
 	        'value' => 'package.name',
             'filter' => ArrayHelper::map(Package::find()->all(), 'id', 'name'),
@@ -270,7 +275,8 @@ echo GridView::widget([
 			],
 			'options' => ['style'=>'width:8%;'],
             'headerOptions' => ['class' => 'skip-export'],
-            'contentOptions' => ['class' => 'skip-export']
+            'contentOptions' => ['class' => 'skip-export'],
+            'visible' => Yii::$app->user->id <> 19 ? true : false
 		],
 		[
 		    'attribute' => 'pay_date',
@@ -288,7 +294,8 @@ echo GridView::widget([
 		    ],
 		    'options' => ['style'=>'width:8%;'],
 		    'headerOptions' => ['class' => 'skip-export'],
-		    'contentOptions' => ['class' => 'skip-export']
+		    'contentOptions' => ['class' => 'skip-export'],
+		    'visible' => Yii::$app->user->id <> 19 ? true : false
 		],
         [   
             'header' => PageSize::widget([

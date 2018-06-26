@@ -27,10 +27,11 @@ use yii\widgets\ActiveForm;
     <?php $labelDevice = $connection->type_id == 1 || $connection->type_id == 3 ? 'przełącznik dostępowy' : 'bramkę'; ?>
     
     <?= $form->field($connection, 'device_id', [
-    		'options' => ['class' => 'col-md-9', 'style' => 'padding-right: 5px;'],
+        'options' => ['class' => 'col-md-9', 'style' => 'padding-right: 5px;'],
     	])->label("Wybierz $labelDevice")->widget(Select2::classname(), [
     		'language' => 'pl',
             'options' => [
+                'disabled' => $connection->type_id <> 2 ? false : true,
             	'placeholder' => 'Urządzenie nadrzędne',
             	'onchange' => new JsExpression("
             		$.get('" . Url::to(['tree/list-port']) . "&deviceId=' + $(this).val() + '&install=true', function(data){
@@ -62,7 +63,7 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($connection, 'port', [
     	'options' => ['class' => 'col-md-3', 'style' => 'padding-left: 5px;']
-    ])->dropDownList([], ['prompt'=>'port']) ?>
+    ])->dropDownList([], ['prompt'=>'port', 'disabled' => $connection->type_id <> 2 ? false : true,]) ?>
     
     </div>
     
