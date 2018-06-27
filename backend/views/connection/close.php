@@ -39,7 +39,7 @@ $(function(){
 	  		form.serialize()
 	 	).done(function(result){
 	 		if(result == 1){
-				$('#modal-change-mac').modal('hide');
+				$('#modal-sm').modal('hide');
     			$('#device_desc').load('{$urlView}&id=' + {$hostId});
 	 		}
 	 		else{

@@ -117,8 +117,8 @@ $(function(){
 
     $('.close-connection').on('click', function(event) {
         
-		$('#modal-change-mac').modal('show')
-			.find('#modal-content-change-mac')
+		$('#modal-sm').modal('show')
+			.find('#modal-sm-content')
 			.load($(this).attr('href'));
 
         return false;
