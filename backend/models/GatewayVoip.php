@@ -60,7 +60,7 @@ class GatewayVoip extends Device
 	                    'display_name' => $this->mixName,
 	                    'address' => $this->mainIp->ip,
 	                    'vars.geolocation' => $this->geolocation,
-	                    'vars.device' => $this->type->name,
+	                    'vars.device' => 'Voip',
 	                    'vars.model' => $this->model->name,
 	                ]
 	            ], [
