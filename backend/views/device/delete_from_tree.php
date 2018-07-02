@@ -23,7 +23,7 @@ $(function(){
     $('.no').click(function() {
         var tree = $("#device_tree").jstree(true);
 
-		$('#modal-tree').modal('hide');
+		$('#modal-sm').modal('hide');
         tree.refresh();
     });
 
