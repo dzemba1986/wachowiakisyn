@@ -75,7 +75,7 @@ class CameraController extends DeviceController
                 exit();
             }
         } else
-            return $this->renderAjax('@app/views/device/delete-from-tree', [
+            return $this->renderAjax('@app/views/device/delete_from_tree', [
                 'device' => $camera,
             ]);
     }
