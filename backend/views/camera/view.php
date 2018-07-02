@@ -101,23 +101,6 @@ $(function(){
             $.growl.error({ message: 'Brak skryptu w schowku'});
             clipboard.destroy();
         });
-    
-    $('.change-mac').on('click', function(event) {
-    
-		$('#modal-sm').modal('show')
-			.find('#modal-sm-content')
-			.load($(this).attr('href'));
-			
-        return false;
-	});
-	
-    $('.close-connection').on('click', function(event) {
-    
-		$('#modal-change-mac').modal('show')
-			.find('#modal-content-change-mac')
-			.load($(this).attr('href'));
-			
-        return false;
 	});
 });
 JS;
