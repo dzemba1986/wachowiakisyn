@@ -35,7 +35,7 @@ $(function(){
 	  		form.serialize()
 	 	).done(function(result){
 	 		if(result == 1){
-				$('#modal-tree').modal('hide');
+				$('#modal-sm').modal('hide');
                 $('#device_desc').text('Usunięto urządzenie');
 	 		}
 	 		else{
