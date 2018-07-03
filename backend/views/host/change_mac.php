@@ -20,14 +20,14 @@ $form = ActiveForm::begin([
 	
 	<?= $form->field($host, 'mac') ?>
 
-    <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary save', 'data-clipboard-text' => '', 'disabled' => true]) ?>
-    
     <?= Html::button('Skrypt', ['class' => 'btn change', 'onclick' => new JsExpression("
         $.get('" . Url::to(['get-change-mac-script']) . "&id=" . $host->id . "&newMac=' + $('#host-mac').val(), function(data){
             $('.save').attr('disabled', false);
 			$('.save').attr('data-clipboard-text', data);
 		});    
     ")]) ?>
+    
+    <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary save', 'data-clipboard-text' => '', 'disabled' => true]) ?>
 
 <?php ActiveForm::end() ?>
 
