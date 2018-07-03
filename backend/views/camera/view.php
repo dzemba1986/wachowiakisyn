@@ -68,6 +68,12 @@ echo DetailView::widget([
 	        'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]),
 	        'format' => 'raw',
 	        'visible' => $device->status && $device->ips
+	    ],
+	    [
+	        'label' => 'Opcje',
+	        'value' => $device->getUrlImage() . ' | ' . $device->getUrlReboot(),
+	        'format' => 'raw',
+	        'visible' => $device->status && $device->ips
 	    ]
 	]
 ]);

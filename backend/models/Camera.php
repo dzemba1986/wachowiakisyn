@@ -7,6 +7,7 @@ use backend\models\configuration\GSSeriesConfiguration;
 use backend\models\configuration\XSeriesConfiguration;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * @property integer $id
@@ -219,5 +220,15 @@ class Camera extends Device
 	    } else return ' ';
 	    
 	    return $this->conf->changeMac($newMac);
+	}
+	
+	function getUrlImage() {
+	    
+	    return Html::a('Podgląd', 'http://' . $this->getMainIp()->one()->ip . '/image', ['target'=>'_blank']);
+	}
+	
+	function getUrlReboot() {
+	    
+	    return Html::a('Reboot', 'http://' . $this->getMainIp()->one()->ip . '/command/main.cgi?System=reboot', ['target'=>'_blank']);
 	}
 }
