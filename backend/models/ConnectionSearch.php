@@ -96,7 +96,7 @@ class ConnectionSearch extends Connection
 			'conf_date' => $this->conf_date,
 			'pay_date' => $this->pay_date,
 		    '"date"(synch_date)' => $this->synch_date,
-			'close_date' => $this->close_date,
+			'"date"(close_date)' => $this->close_date,
 			'phone_date' => $this->phone_date,
 			'connection.type_id' => $this->type_id,
 			'package_id' => $this->package_id,
