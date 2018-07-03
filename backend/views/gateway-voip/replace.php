@@ -61,7 +61,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end(); ?>
 
 <?php
-$urlView = Url::to(['gateway-voip/tabs-view']);
+$urlView = Url::to(['tabs-view']);
 
 $js = <<<JS
 $(function(){
@@ -75,6 +75,8 @@ $(function(){
             $.growl.error({ message: 'Brak skryptu w schowku'});
         });
     
+    $('.modal-header h4').html('Podmień bramkę');
+
     $('#replace').on('beforeSubmit', function(e){
 		
 		var form = $(this);
@@ -83,7 +85,7 @@ $(function(){
 	  		form.serialize()
 	 	).done(function(result){
 	 		if(result == 1){
-				$('#modal-replace').modal('hide');
+				$('#modal').modal('hide');
                 var tree = $("#device_tree").jstree(true);
                 tree.refresh();
                 $('#device_desc').load('{$urlView}&id=' + $('#device-select').val());  

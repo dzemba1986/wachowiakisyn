@@ -80,6 +80,8 @@ $(function(){
             $.growl.error({ message: 'Brak skryptu w schowku'});
         });
     
+    $('.modal-header h4').html('Podmień kamerę');
+
     $('#replace').on('beforeSubmit', function(e){
 		
 		var form = $(this);
