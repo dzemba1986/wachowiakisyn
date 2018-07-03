@@ -58,10 +58,10 @@ echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->ips as $ip) {
     
-    $url = Html::a($ip->ip, "ssh://{$ip->ip}");
+    $link = Html::a($ip->ip, Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['id' => 'check-dhcp','target'=>'_blank']);
     echo '<tr>';
     echo "<th>VLAN {$ip->subnet->vlan->id}</th>";
-    echo "<td>{$url}</td>";
+    echo "<td>{$link}</td>";
     echo '</tr>';
 }
 echo '</tbody>';
