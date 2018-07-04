@@ -50,7 +50,7 @@ class DeviceSearch extends Device
 		$query->andFilterWhere(['like', 'desc', $this->desc])
 			->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'serial', $this->serial])
-            ->andFilterWhere(['like', new \yii\db\Expression('CAST(mac AS varchar)') , $this->mac]);    
+            ->andFilterWhere(['like', '"mac"::text' , preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1:$2:$3:$4:$5:$6', str_replace([':', '.', '-'], '', $this->mac))]);    
 	
 		return $dataProvider;
 	}

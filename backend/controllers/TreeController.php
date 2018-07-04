@@ -114,7 +114,7 @@ class TreeController extends Controller
 	    	if ($validatorIp->validate($str)){
 				$devices = Ip::find()->select('device_id AS id')->where(['ip' => $str])->asArray()->all();
 	    	} elseif ($validatorMac->validate($str)){
-	    	    $devices = Device::find()->select('id')->where(['and', ["CAST(mac AS varchar)" => $str], ['status' => true]])->asArray()->all();
+	    	    $devices = Device::find()->select('id')->where(['and', ['"mac"::text' => $str], ['status' => true]])->asArray()->all();
 	    	} else {
 	    	    $devices = Device::find()->select('id')->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false]])->andWhere(['is not', 'status', null])->asArray()->all();
 	    	}
