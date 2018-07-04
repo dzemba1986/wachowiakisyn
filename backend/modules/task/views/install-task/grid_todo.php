@@ -49,7 +49,9 @@ require_once '_modal_task.php';
         'exportConfig' => [
             'pdf' => ['label' => 'Wygeneruj PDF']
         ],
-        'panel' => [],
+        'panel' => [
+            'before' => '',
+        ],
         'columns' => [
             [
                 'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', Url::to(['install-task/view-calendar']), ['class' => 'add-task']),
