@@ -91,12 +91,28 @@ class Camera extends Device
 	        
 	        if ((array_key_exists('geolocation', $this->dirtyAttributes) || array_key_exists('name', $this->dirtyAttributes) || array_key_exists('proper_name', $this->dirtyAttributes)) && $this->monitoring) {
 	            
-	            \Yii::$app->apiIcingaClient->post('objects/hosts/' . $this->id, [
+	            \Yii::$app->apiIcingaClient->delete("objects/hosts/{$this->id}?cascade=1", null, [
+	                'Content-Type' => 'application/json',
+	                'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+	                'Accept' => 'application/json'
+	            ])->send();
+	            
+	            \Yii::$app->apiIcingaClient->put('objects/hosts/' . $this->id, [
+	                "templates" => [ $this->model->name ],
 	                "attrs" => [
-	                    'vars.display_name' => $this->mixName,
+	                    'display_name' => $this->mixName,
+	                    'address' => $this->mainIp->ip,
 	                    'vars.geolocation' => $this->geolocation,
+	                    'vars.device' => 'Camera',
+	                    'vars.model' => $this->model->name,
 	                ]
 	            ], [
+	                'Content-Type' => 'application/json',
+	                'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
+	                'Accept' => 'application/json'
+	            ])->send();
+	            
+	            \Yii::$app->apiIcingaClient->post('actions/restart-process', null, [
 	                'Content-Type' => 'application/json',
 	                'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
 	                'Accept' => 'application/json'
