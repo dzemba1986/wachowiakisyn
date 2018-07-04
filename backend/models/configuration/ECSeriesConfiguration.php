@@ -178,7 +178,7 @@ class ECSeriesConfiguration extends Configuration {
             $drop .= "switchport mode access\n";
             $drop .= "switchport native vlan 555\n";
             $drop .= "switchport allowed vlan remove 1\n";
-            $add .= "spanning-tree spanning-disabled\n";
+            $drop .= "spanning-tree spanning-disabled\n";
             $drop .= "queue mode strict\n";
             $drop .= "no ip access-group iptv-user{$this->parentPortNumber} in\n";
             $drop .= "no ip access-group iptv-user-smtp{$this->parentPortNumber} in\n";
@@ -225,7 +225,7 @@ class ECSeriesConfiguration extends Configuration {
             $drop .= "switchport mode access\n";
             $drop .= "switchport native vlan 555\n";
             $drop .= "switchport allowed vlan remove 1\n";
-            $add .= "spanning-tree spanning-disabled\n";
+            $drop .= "spanning-tree spanning-disabled\n";
             $drop .= "queue mode strict\n";
             $drop .= "no ip access-group iptv-user{$this->parentPortNumber} in\n";
             $drop .= "no ip access-group iptv-user-smtp{$this->parentPortNumber} in\n";
