@@ -11,11 +11,21 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+	'modules' => [
+		'gridview' => [
+			'class' => '\kartik\grid\Module',
+			'i18n' => [
+				'class' => 'yii\i18n\PhpMessageSource',
+				'basePath' => '@kvgrid/messages',
+				'forceTranslation' => true,
+				'sourceLanguage' => 'pl',
+			]
+		],
+	],
     'components' => [
-        'urlManagerBackEnd' => [
+        'urlManagerBackend' => [
             'class' => 'yii\web\urlManager',
-            'baseUrl' => '@backend',
-            'enablePrettyUrl' => true,
+            'baseUrl' => '/backend/',
             'showScriptName' => false,
         ],
         'user' => [

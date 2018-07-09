@@ -3,47 +3,57 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+/**
+ * @var $this yii\web\View
+ * @var $subnet backend\models\Subnet
+ * @var $form yii\widgets\ActiveForm
+ */
+
 $form = ActiveForm::begin([
-	'id' => $modelSubnet->formName(),
-])?>
+	'id' => $subnet->formName()
+]); ?>
 
-    <?= $form->field($modelSubnet, 'ip') ?>
+    <?= $form->field($subnet, 'ip'); ?>
     
-    <?= $form->field($modelSubnet, 'desc') ?>
+    <?= $form->field($subnet, 'desc'); ?>
 
-    <?= $form->field($modelSubnet, 'dhcp')->checkbox() ?>
+    <?= $form->field($subnet, 'dhcp')->checkbox(); ?>
     
-    <div class="form-group">
 	<?= Html::submitButton('Dodaj', ['class' => 'btn btn-primary']) ?>
-	</div>
 	
-<?php ActiveForm::end() ?>
+<?php ActiveForm::end(); ?>
 
-<script>
+<?php
+$js = <<<JS
 
-$('#<?= $modelSubnet->formName(); ?>').on('beforeSubmit', function(e){
+$(function() {
 
-	var form = $(this);
- 	$.post(
-  		form.attr("action"), // serialize Yii2 form
-  		form.serialize()
- 	).done(function(result){
-		
-// 		console.log(result);
- 		if(result == 1){
- 			$(form).trigger('reset');
-			$('#modal-update-net').modal('hide');
- 			$.pjax.reload({container: '#subnet-grid-pjax'});
- 		}
- 		else{
-		
- 			$('#message').html(result);
- 		}
- 	}).fail(function(){
- 		console.log('server error');
- 	});
-	return false;				
+    $('.modal-header h4').html('Dodaj podsieć');
+
+    $('#{$subnet->formName()}').on('beforeSubmit', function(e){
+
+    	var form = $(this);
+     	$.post(
+      		form.attr("action"), // serialize Yii2 form
+      		form.serialize()
+     	).done(function(result){
+    		
+     		if(result == 1){
+     			$(form).trigger('reset');
+                $('#modal-update-net').modal('hide');
+ 			    $.pjax.reload({container: '#subnet-grid-pjax'});
+     		}
+     		else{
+    		
+     			$('#message').html(result);
+     		}
+     	}).fail(function(){
+     		console.log('server error');
+     	});
+    	return false;				
+    });
 });
+JS;
 
-</script>
-
+$this->registerJs($js);
+?>

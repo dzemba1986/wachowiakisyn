@@ -90,7 +90,7 @@ a.desc:after {
     margin: 0 0 15px 0;
 } 
 
-/* mniejsze litery w pokazywanych b��dach */
+/* mniejsze litery w pokazywanych błędach */
  .help-block {
 	font-size: 10px;
 }
@@ -98,18 +98,6 @@ a.desc:after {
 /* grid kartik - przycisk all page w panelu */
 a[title="Show all data"] {
 	display: none;
-}
-
-@media (min-width: 1500px) {
-  .container {
-    width: 1470px;
-  }
-}
-
-@media (min-width: 1900px) {
-  .container {
-    width: 1870px;
-  }
 }
 
 /* grid view */
@@ -130,6 +118,9 @@ a[title="Show all data"] {
 	background-color: #e1e1e1;
 }
 
+#connection-grid .sevendays {
+	background-color: #FFc9cC;
+}
 /* #connection-grid .after-date:nth-child(even) { */
 /* 	background-color: #c5c5c5; */
 /* } */

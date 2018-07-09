@@ -68,7 +68,7 @@ use yii\helpers\Url;
     
     <?= $form->field($model, 'config', [
     	'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-    ])->dropDownList([1 => 'Winogrady', 2 => 'Reszta']) ?>
+    ])->dropDownList([1 => 'Winogrady', 2 => 'Reszta'], ['prompt' => '']) ?>
     
     </div>
     

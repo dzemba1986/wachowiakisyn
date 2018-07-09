@@ -23,13 +23,12 @@ use backend\models\Connection;
 			])->widget(DatePicker::className(), [
             	'model' => $modelInstallation,
                 'attribute' => 'wire_date',
-                'language'=>'pl',
-				'removeButton' => FALSE,
-				//'disabled' => $modelConnection->socket > 0 ? false : true,
+				'pickerButton' => false,
+				'language' => 'pl',
                 'pluginOptions' => [
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
-                    //'endDate' => '0d', //wybór daty max do dziś
+                    'endDate' => '0d',
                 ]
             ])?>
 		    
@@ -54,13 +53,12 @@ use backend\models\Connection;
 			])->widget(DatePicker::className(), [
             	'model' => $modelInstallation,
                 'attribute' => 'socket_date',
-                'language'=>'pl',
-				'removeButton' => FALSE,
-				//'disabled' => $modelConnection->socket > 0 ? false : true,
+				'pickerButton' => false,
+				'language' => 'pl',
                 'pluginOptions' => [
                 	'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
-                    //'endDate' => '0d', //wybór daty max do dziś
+                    'endDate' => '0d',
                 ]
             ])?>
             

@@ -5,12 +5,12 @@ use yii\db\ActiveQuery;
 
 class DeviceQuery extends ActiveQuery
 {
-	public $type;
+	public $type_id;
 
 	public function prepare($builder)
 	{
-		if ($this->type !== null) {
-			$this->andWhere(['type' => $this->type]);
+		if ($this->type_id !== null) {
+			$this->andWhere(['device.type_id' => $this->type_id]);
 		}
 		return parent::prepare($builder);
 	}

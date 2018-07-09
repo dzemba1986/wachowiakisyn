@@ -2,19 +2,10 @@
 
 namespace backend\models;
 
-use backend\models\AddressShort;
 use yii\data\ActiveDataProvider;
 
-/**
- * AddressSearch represents the model behind the search form about `app\models\AddressShort`.
- */
 class AddressShortSearch extends AddressShort
 {
-	/**
-	 * 
-	 * {@inheritDoc}
-	 * @see \backend\models\AddressShort::rules()
-	 */
     public function rules() : array {
     	
         return [
@@ -22,11 +13,6 @@ class AddressShortSearch extends AddressShort
         ];
     }
 
-    /**
-     * 
-     * @param array $params
-     * @return \yii\data\ActiveDataProvider
-     */
     public function search($params)
     {
         $query = AddressShort::find();
@@ -42,7 +28,6 @@ class AddressShortSearch extends AddressShort
 
         $dataProvider->setSort([
        		'attributes' => [
-       			't_gmi',
        			'ulica_prefix',	
         		'ulica',
         	]	
@@ -50,7 +35,7 @@ class AddressShortSearch extends AddressShort
         
         $query->andFilterWhere([
             'ulica_prefix' => $this->ulica_prefix,
-        	'ulica' => $this->ulica,	
+        	't_ulica' => $this->ulica,	
         ]);
 
         return $dataProvider;

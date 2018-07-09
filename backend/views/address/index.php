@@ -1,12 +1,9 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use kartik\grid\GridView;
-use backend\models\Address;
-use yii\base\Widget;
-use yii\helpers\Url;
 use backend\models\AddressShort;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * @var $this yii\web\View
@@ -16,10 +13,8 @@ use backend\models\AddressShort;
 
 $this->title = 'Adresy';
 $this->params['breadcrumbs'][] = $this->title;
-
-require_once '_modal_update.php';
-
 ?>
+
 <div class="address-index">
 
     <?= GridView::widget([
@@ -35,14 +30,14 @@ require_once '_modal_update.php';
             [
             	'class' => 'yii\grid\SerialColumn',
             ],
-        	'id', //TODO kolumna powinna być dostępna tylko dla administratora	
+        	'id', //FIXME kolumna powinna być dostępna tylko dla administratora	
             [
             	'attribute' => 'ulica_prefix',
             	'options' => ['style'=>'width:5%'],
             	'filter' => Html::activeDropDownList(
             		$searchModel, 
             		'ulica_prefix', 
-            		ArrayHelper::map(AddressShort::listByPrefix(), 'ulica_prefix', 'ulica_prefix'), 
+            		ArrayHelper::map(AddressShort::findGroupByPrefix(), 'ulica_prefix', 'ulica_prefix'), 
             		['prompt'=>'', 'class'=>'form-control']
             	),	
     		],
@@ -50,7 +45,7 @@ require_once '_modal_update.php';
         		'attribute' => 'ulica',
         		'value' => 'ulica',
         		'filterType' => GridView::FILTER_SELECT2,
-        		'filter' => ArrayHelper::map(AddressShort::listByStreetName(), 'ulica', 'ulica'),
+        		'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
         		'filterWidgetOptions' => [
         			'pluginOptions' => ['allowClear' => true],
         		],
@@ -63,37 +58,7 @@ require_once '_modal_update.php';
             'lokal',
         	'pietro',        		
             'lokal_szczegol',
-            [
-            	'class' => 'yii\grid\ActionColumn',
-            	'template' => '{update}',
-            	'buttons' => [
-					'update' => function ($url){
-						return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-							'title' => \Yii::t('yii', 'Edycja'),
-// 							'data-pjax' => '0',
-							'class' => ['update-button']	
-						]);
-        			}
-        		]	
-        	]
         ]
     ]); ?>
 
 </div>
-
-<?php 
-$js = <<<JS
-$(document).ready(function() {
-        
-    $('body').on('click', '.update-button', function(event){
-        
-		$('#modal-update').modal('show')
-			.find('#modal-content')
-			.load($(this).attr('href'));
-
-        return false;
-	});
-});
-JS;
-$this->registerJs($js);
-?>

@@ -2,38 +2,33 @@
 
 namespace backend\models;
 
-use Yii;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "subnet".
- *
- * The followings are the available columns in table 'subnet':
  * @property integer $id
  * @property string $ip
  * @property string $desc
- * @property integer $vlan
+ * @property integer $vlan_id
+ * @property boolean $dhcp
  * @property integer $dhcp_group
+ * @property \IPv4Block $blockIp
  */
-class Subnet extends \yii\db\ActiveRecord
+
+class Subnet extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	
-	/**
-	 * @return string the associated database table name
-	 */
+	
+	
 	public static function tableName()
 	{
 		return '{{subnet}}';
 	}
 	
-	/**
-	 * @return array validation rules for model attributes.
-	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return [
 			['ip', 'required', 'message' => 'Wartość wymagana'],
 			['ip', 'ip', 'subnet' => true, 'ipv6' => false, 'message' => 'Zły format adresu ip', 'wrongCidr' => 'Niewłasciwy prefix', 'noSubnet' => 'Brak prefiksu'],
@@ -41,60 +36,55 @@ class Subnet extends \yii\db\ActiveRecord
 			['desc', 'required', 'message' => 'Wartość wymagana'],
 			['desc', 'string'],
 				
-			['vlan', 'required', 'message' => 'Wartość wymagana'],
-			['vlan', 'integer', 'min' => 1, 'max' => 4096, 'tooSmall' => 'Wartość za mała', 'tooBig' => 'Wartość za duża', 'message' => 'Wartość liczbowa'],
-				
-// 			['dhcp_group', 'required', 'message' => 'Wartość wymagana'],
+			['vlan_id', 'required', 'message' => 'Wartość wymagana'],
+			['vlan_id', 'integer', 'min' => 1, 'max' => 4096, 'tooSmall' => 'Wartość za mała', 'tooBig' => 'Wartość za duża', 'message' => 'Wartość liczbowa'],
+			
+		    ['dhcp', 'boolean'],
+		    ['dhcp', 'required', 'message' => 'Wartość wymagana'],
+		    
 			['dhcp_group', 'integer', 'message' => 'Wartość liczbowa'],
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			[['id', 'ip', 'desc', 'device'], 'safe'],
+
+		    [['ip', 'desc', 'vlan_id', 'dhcp', 'dhcp_group'], 'safe'],
 		];
 	}
 	
 	public function scenarios(){
 	
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ['ip', 'desc', 'vlan', 'dhcp'];
+		$scenarios[self::SCENARIO_CREATE] = ['ip', 'desc', 'vlan_id', 'dhcp'];
 		$scenarios[self::SCENARIO_UPDATE] = ['desc', 'dhcp'];
 	
 		return $scenarios;
 	}
 	
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return [
 			'ip' => 'Podsieć',	
 			'desc' => 'Opis',
-			'vlan' => 'Vlan',
-		);
+			'vlan_id' => 'Vlan',
+		    'dhcp' => 'DHCP',
+		    'dhcp_group' => 'Grupa DHCP'
+		];
 	}
 	
-	public function getModelVlan(){
+	public function getVlan(){
 	
-		//Connection ma tylko 1 Address
-		return $this->hasOne(Vlan::className(), ['id' => 'vlan']);
+		return $this->hasOne(Vlan::className(), ['id' => 'vlan_id']);
 	}
 	
-	public function getModelIps(){
+	public function getIps(){
 	
-		//Connection ma tylko 1 Address
-		return $this->hasMany(Ip::className(), ['subnet' => 'id']);
+		return $this->hasMany(Ip::className(), ['subnet_id' => 'id']);
 	}
 	
-	private function getModelsDhcpValueForSubnet(){
+	private function getDhcpValueForSubnet(){
 	
-// 		return DhcpValue::find()->select('option, value, weight')->where(['subnet' => $this->id])->orWhere(['dhcp_group' => $this->dhcp_group])->asArray()->all();
-		return $this->hasMany(DhcpValue::className(), ['subnet' => 'id'])->select('option, value, weight')->asArray()->all();
+		return $this->hasMany(DhcpValue::className(), ['subnet_id' => 'id'])->select('option, value, weight')->asArray()->all();
 	}
 	
-	private function getModelsDhcpValueForGroup(){
+	private function getDhcpValueForGroup(){
 	
-// 		return DhcpValue::find()->select('option, value, weight')->where(['subnet' => $this->id])->orWhere(['dhcp_group' => $this->dhcp_group])->asArray()->all();
 		return $this->hasMany(DhcpValue::className(), ['dhcp_group' => 'dhcp_group'])->select('option, value, weight')->asArray()->all();
 	}
 	
@@ -110,40 +100,61 @@ class Subnet extends \yii\db\ActiveRecord
 	
 	public function getIPFreeCount(){
 		
-		return $this->getSize() - Ip::find()->where(['subnet' => $this->id])->count();
+		return $this->getSize() - Ip::find()->where(['subnet_id' => $this->id])->count();
 	}
 	
-	public function generateOptionsDhcp(){
+	/**
+	 * Metoda generuje opcje DHCP dla wybranej podsieci.
+	 * Na początku są ustawiane domyślne opcje w tablicy $options[].
+	 * Jeżeli chcemy przysłonić te ocje to w tabeli `dhcp_value` ustawiamy odpowiednią opcję dla grupy lub dla pojedyńczej podsieci
+	 * z wagą > 1 (wagę 1 mają domyslne ocje) według reguły:
+	 * waga 3 dla opcji dla pojedyńczej podsieci
+	 * waga 2 dla opcji dla grupy podsieci
+	 */
+	public function generateOptionsDhcp() {
 		
 		$options = [
 			1 => ['option' => 1, 'value' => (string) $this->blockIp->getMask(), 'weight' => 1],
 			3 => ['option' => 3, 'value' => (string) $this->blockIp[1], 'weight' => 1],
 			6 => ['option' => 6, 'value' => '213.5.208.3, 213.5.208.35', 'weight' => 1],
 			28 => ['option' => 28, 'value' => (string) $this->blockIp->getLastIp(), 'weight' => 1],
-			49 => ['option' => 49, 'value' => 7200, 'weight' => 1]
+			//49 => ['option' => 49, 'value' => 7200, 'weight' => 1]
 		];
 		
-		
-		foreach ($this->getModelsDhcpValueForGroup() as $group_option){
-			
-			if($group_option['option'] == $options[$group_option['option']]['option']){
-                if($group_option['weight'] > $options[$group_option['option']]['weight'])
-                	$options[$group_option['option']] = $group_option;
-              }
-             else
-                $options[$group_option['option']] = $group_option;
+		//jeżeli znajdzie opcje z wyższą wagą wśród opcji dla grupy DHCP to podmienia
+		foreach ($this->getDhcpValueForGroup() as $groupOption) {
+		    if (array_key_exists($groupOption['option'], $options)) {
+		        if($groupOption['weight'] > $options[$groupOption['option']]['weight'])
+		            $options[$groupOption['option']] = $groupOption; 
+		    } else 
+		        $options[$groupOption['option']] = $groupOption;
 		}
-
-		foreach ($this->getModelsDhcpValueForSubnet() as $subnet_option){
-				
-			if($subnet_option['option'] == $options[$subnet_option['option']]['option']){
-				if($subnet_option['weight'] > $options[$subnet_option['option']]['weight'])
-					$options[$subnet_option['option']] = $subnet_option;
-			}
-			else
-				$options[$subnet_option['option']] = $subnet_option;
+        
+		//jeżeli znajdzie opcje z wyższą wagą wśród opcji dla podsieci to podmienia
+		foreach ($this->getDhcpValueForSubnet() as $subnetOption) {
+		    if(array_key_exists($subnetOption['option'], $options)) {
+				if($subnetOption['weight'] > $options[$subnetOption['option']]['weight'])
+					$options[$subnetOption['option']] = $subnetOption;
+			} else 
+			    $options[$subnetOption['option']] = $subnetOption;
 		}
 		
-		return $options;
+		//TODO sprawdzić w DB bo nie wszystkie opcje mają nazwy
+		$dhcpOptions = ArrayHelper::map(DhcpOption::find(array_keys($options))->select(['id', 'name'])->all(), 'id', 'name');
+		
+		$data = '';
+		
+		foreach ($options as $option) {
+		    $data .= "\t{$dhcpOptions[$option['option']]} {$option['value']};\n";
+		}
+		
+		//TODO tymczasowo tak, potem do poprawki by można było pojedyńczą podsieć skonfigurować indywidualnie
+		$data .= "\tdefault-lease-time 86400;\n";
+		$data .= "\tmax-lease-time 86400;\n";
+		$data .= "\tmin-lease-time 86400;\n";
+		//$data .= "\tdefault-lease-time" . $option['value'] . ";\n";
+		$data .= "\n";
+		
+		return $data;
 	}
 }

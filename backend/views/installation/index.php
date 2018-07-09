@@ -1,13 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
+use backend\models\AddressShort;
+use backend\models\InstallationType;
 use kartik\grid\GridView;
-use kartik\date\DatePicker;
-use backend\models\Address;
-use backend\models\Type;
 use nterms\pagesize\PageSize;
 use yii\bootstrap\Modal;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\InstallationSearch */
@@ -24,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'header' => '<center><h4>Edycja instalacji</h4></center>',
 		'size' => 'modal-sm',
 		'options' => [
-				'tabindex' => false // important for Select2 to work properly
+				'tabindex' => false
 		],
 	]);
 	
@@ -59,72 +57,72 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'columns' => [
             [
-                'header'=>'Lp.',
-                'class'=>'yii\grid\SerialColumn',
-                'options'=>['style'=>'width: 4%;'],
+                'header' => 'Lp.',
+                'class' => 'kartik\grid\SerialColumn',
+                'options' => ['style'=>'width: 4%;'],
+                'mergeHeader' => true
             ],
             [	
-                'attribute'=>'street',
-                'value'=>'modelAddress.ulica',
-                'filter'=> Html::activeDropDownList($searchModel, 'street', ArrayHelper::map(Address::find()->select('ulica')->groupBy('ulica')->orderBy('ulica')->all(), 'ulica', 'ulica'), ['prompt'=>'', 'class'=>'form-control']),
+                'attribute' => 'street',
+                'value' => 'address.ulica',
+                'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
                 'options' => ['style'=>'width:12%;'],
             ],	
             [
-                'attribute'=>'house',
-                'value'=>'modelAddress.dom',
+                'attribute' => 'house',
+                'value' => 'address.dom',
+                'options'  => ['style'=>'width:5%;'],
+            ],
+            [
+                'attribute' => 'house_detail',
+                'value' => 'address.dom_szczegol',
                 'options' => ['style'=>'width:5%;'],
             ],
             [
-                'attribute'=>'house_detail',
-                'value'=>'modelAddress.dom_szczegol',
+                'attribute' => 'flat',
+                'value' => 'address.lokal',
                 'options' => ['style'=>'width:5%;'],
             ],
             [
-                'attribute'=>'flat',
-                'value'=>'modelAddress.lokal',
-                'options' => ['style'=>'width:5%;'],
+                'attribute' => 'type_id',
+                'value' => 'type.name',
+                'filter' => ArrayHelper::map(InstallationType::find()->all(), 'id', 'name'),
+                'options' => ['style'=>'width:10%;'],
             ],
-            [
-                'attribute'=>'type',
-                'value'=>'modelType.name',
-                'filter'=> Html::activeDropDownList($searchModel, 'type', ArrayHelper::map(Type::find()->all(), 'id', 'name'), ['prompt'=>'', 'class'=>'form-control']),
-                'options' => ['style'=>'width:5%;'],
-            ],
-            [
-                'attribute'=>'wire_date',
-                'value'=>'wire_date',
-                'format'=>'raw',
-                'filter'=>	DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'wire_date',
-                    'removeButton' => FALSE,
-                    'language'=>'pl',	
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true,
-                        'endDate' => '0d', //wybór daty max do dziś
-                    ]
-                ]),
-                'options' => ['id'=>'start', 'style'=>'width:8%;'],
-            
-            ],
-            [
-                'attribute'=>'socket_date',
-                'value'=>'socket_date',
-                'format'=>'raw',
-                'filter'=>	DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'socket_date',
-                    'removeButton' => FALSE,
-                    'language'=>'pl',	
-                    'pluginOptions' => [
-                        'format' => 'yyyy-mm-dd',
-                        'todayHighlight' => true,
-                        'endDate' => '0d', //wybór daty max do dziś
-                    ]
-                ]),
-                'options' => ['id'=>'start', 'style'=>'width:8%;'],
-            ],
+        	[
+        		'attribute' => 'wire_date',
+        		'value'=> 'wire_date',
+        		'filterType' => GridView::FILTER_DATE,
+        		'filterWidgetOptions' => [
+        			'model' => $searchModel,
+        			'attribute' => 'wire_date',
+        			'pickerButton' => false,
+        			'language' => 'pl',
+        			'pluginOptions' => [
+        				'format' => 'yyyy-mm-dd',
+        				'todayHighlight' => true,
+        				'endDate' => '0d',
+        			]
+        		],
+        		'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        	],
+        	[
+        		'attribute' => 'socket_date',
+        		'value'=> 'socket_date',
+        		'filterType' => GridView::FILTER_DATE,
+        		'filterWidgetOptions' => [
+        			'model' => $searchModel,
+        			'attribute' => 'socket_date',
+        			'pickerButton' => false,
+        			'language' => 'pl',
+        			'pluginOptions' => [
+        				'format' => 'yyyy-mm-dd',
+        				'todayHighlight' => true,
+        				'endDate' => '0d',
+        			]
+        		],
+        		'options' => ['id'=>'start', 'style'=>'width:10%;'],
+        	],
             [
                 'attribute' => 'wire_length',
                 'options' => ['style'=>'width:5%;'],
@@ -135,25 +133,27 @@ $this->params['breadcrumbs'][] = $this->title;
         		'class'=>'kartik\grid\BooleanColumn',
         		'attribute' => 'status',
         		'trueLabel' => 'Istnieje',
-        		'falseLabel' => 'Brak',
-//         		'trueIcon' => GridView::ICON_INACTIVE,
-//         		'falseIcon' => GridView::ICON_ACTIVE,
+        		'falseLabel' => 'Nieistnieje',
         		'options' => ['style'=>'width:5%;'],
         	],
             [   
-            'header' => PageSize::widget([
-                'defaultPageSize' => 100,
-                'sizes' => [
-                    10 => 10,
-                    100 => 100,
-                    500 => 500,
-                    1000 => 1000,
-                    //5000 => 5000,
-                ],
-                'template' => '{list}',
-            ]),
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{update}',
+                'header' => PageSize::widget([
+                    'defaultPageSize' => 100,
+                    'pageSizeParam' => 'per-page',
+                    'sizes' => [
+                        10 => 10,
+                        100 => 100,
+                        500 => 500,
+                        1000 => 1000,
+                    ],
+                    'label' => 'Ilość',
+                    'template' => '{label}{list}',
+                    'options' => ['class'=>'form-control'],
+                ]),
+                'class' => 'kartik\grid\ActionColumn',
+                'mergeHeader' => true,
+                'options' => ['style' => 'width:6%;'],
+                'template' => '{update}',
         ],     
         ],
     ]); ?>
@@ -174,19 +174,6 @@ $(document).ready(function() {
 	        return false;
 		});
 	});
-
-    //reinicjalizacja kalendarza z datami po użyciu pjax'a
-    $("#installation-grid-pjax").on("pjax:complete", function() {
-        
-        if ($('#installationsearch-wire_date').data('kvDatepicker')) { $('#installationsearch-wire_date').kvDatepicker('destroy'); }
-        $('#installationsearch-wire_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-        initDPAddon('installationsearch-wire_date');
-        if ($('#installationsearch-socket_date').data('kvDatepicker')) { $('#installationsearch-socket_date').kvDatepicker('destroy'); }
-        $('#installationsearch-socket_date-kvdate').kvDatepicker(kvDatepicker_d5532c14);
-
-        initDPAddon('task-start');
-    });
 });
 
 </script>

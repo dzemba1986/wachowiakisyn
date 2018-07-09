@@ -2,9 +2,10 @@
 
 namespace backend\controllers;
 
+use backend\models\Model;
 use Yii;
 use yii\web\Controller;
-use backend\models\Model;
+use yii\web\NotFoundHttpException;
 
 class ModelController extends Controller
 {
@@ -21,11 +22,10 @@ class ModelController extends Controller
     
     public function actionList($typeId, $manufacturerId)
     {
-        $countModels = Model::find()->where(['type' => $typeId])->andWhere(['manufacturer' => $manufacturerId])->count();
-        $models = Model::find()->where(['type' => $typeId])->andWhere(['manufacturer' => $manufacturerId])->all();
+        $models = Model::find()->where(['type_id' => $typeId])->andWhere(['manufacturer_id' => $manufacturerId])->all();
         
         echo '<option></option>';
-        if($countModels > 0){
+        if(!empty($models)){
             foreach ($models as $model){
                 echo '<option value="' . $model->id . '">' . $model->name . '</option>';
             }

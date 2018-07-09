@@ -1,298 +1,229 @@
 <?php
 
 use yii\helpers\Url;
-use yii\bootstrap\Modal;
-use yii\widgets\Pjax;
-/* @var $this yii\web\View */
-/* @var $searchModel backend\models\AddressSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+
+/** 
+ * @var $this yii\web\View
+ */ 
+
+echo $this->renderFile('@backend/views/modal/modal.php');
+echo $this->renderFile('@backend/views/modal/modal_sm.php');
+
+$this->registerJsFile('@web/js/jstree/dist/jstree.min.js');
+$this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');
+$this->registerJsFile('@web/js/clipboard.min.js');
+$this->registerJsFile('@web/js/jquery-url-min.js');
 
 $this->title = 'SEU';
 $this->params['breadcrumbs'][] = $this->title;
-//var_dump(Yii::$app->request->BaseUrl);
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/jstree.min.js');
-$this->registerCssFile(Yii::$app->request->BaseUrl . '/js/jstree/dist/themes/default/style.min.css');
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/clipboard.min.js');
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jquery-url-min.js');
 
-?>
+echo '<div class="col-sm-4">';
+echo '<input class="search form-control"></input>';
+echo '<div id="device_tree" class="sidebar"></div>';
+echo '</div>';
+echo '<div id="device_desc" style="position: fixed; right:-2%;" class="col-sm-8 tabbable tabs-left"></div>';
 
-<!-------------------------------------------- otwórz port select okno modal ------------------------------------------>
+$urlGetChildren = Url::to(['get-children']);
+$urlSearch = Url::to(['search']);
+$urlMove = Url::to(['move']);
+$urlCopy = Url::to(['copy']);
 
-	<?php Modal::begin([
-		'id' => 'modal-port-select',	
-		'header' => '<center><h4>Wyberz port</h4></center>',
-		'size' => 'modal-sm',	
-	]);
-	
-	echo "<div id='modal-content-port-select'></div>";
-	
-	Modal::end(); ?>
-
-<!--------------------------------------------------------------------------------------------------------------------->
-
-<!-------------------------------------------- otwórz replace from store okno modal ------------------------------------------>
-
-	<?php Modal::begin([
-		'id' => 'modal-replace-store',	
-		'header' => '<center><h4>Zamień</h4></center>',
-		'size' => 'modal-lg',
-		'options' => [
-			'tabindex' => false, // important for Select2 to work properly
-		],
-	]);
-	
-	echo "<div id='modal-content-replace-store'></div>";
-	
-	Modal::end(); ?>
-
-<!--------------------------------------------------------------------------------------------------------------------->  
-
-<div class="col-sm-4">
-<input class="search-input form-control"></input>
-<div id="device_tree" class="sidebar"></div>
-</div>
-<?php Pjax::begin(['id' => 'device-desc-pjax']); ?>
-<div id="device_desc" style="position: fixed; right:-2%;" class="col-sm-8 tabbable tabs-left"></div>  
-<?php Pjax::end()?>
-<script>
-    
+$js = <<<JS
 $(function() {
 
-	function getId(id) {
-      	return id.substr(0, id.indexOf("."));
+    function getId(id) {
+      	return id.substr(0, id.indexOf('.'));
     }
 
-	$(".search-input").keyup(function(e) {
+    function getPort(id) {
+      	return id.substr(id.indexOf('.') + 1);
+    }
+
+    $('.search').keyup(function(e) {
 		// gdy wcisnieto [enter]
 		if (e.which == 13) {
 	        var searchString = $(this).val();
-// 	        console.log(searchString);
 	        $('#device_tree').jstree('search', searchString);
 		}
-    });       
-        
-        //tworzymy drzewo urządzeń
-        $("#device_tree").jstree({
-        	'core' : {
-        		'themes' : {
-            		//'name' : 'default-dark',	
-        		    'variant' : 'large'
-        		},
-        		'data' : {
-        			'url' : '<?= Url::toRoute('tree/get-children') ?>',
-        		    'data' : function (node) {
-        		    	return { 
-            		    	'id' : function (obj, callback) {
-                		    	if (node.id == '#') 
-                		    		return 1;
-                		    	else 
-                		    		return getId(node.id);
-                		    } 
-        		    	};
-        		    }
-        		},
-        		'check_callback': true
-        	},
-	   		 // Configuring the search plugin
-	   		 'search' : {
-	   			 // As this has been a common question - async search
-	   			 // Same as above - the `ajax` config option is actually jQuery's AJAX object
-	   			 'ajax' : {
-	   				 'url' : '<?= Url::toRoute('tree/search') ?>',
-	   				'dataType' : 'json',
-	   				 // You get the search string as a parameter
-// 	   				 "data" : function (str) {
-// 	   					 return { 
-// 	   						 "operation" : "search", 
-// 	   						 "search_str" : str 
-// 	   					 }; 
-// 	   				 }
-	   			 },
-	   			'search_callback' : function (str, node) {
-// 	   				console.log(node.original.name);
-   		            if(node.id == str || node.original.name.includes(str.toUpperCase()) || node.original.mac == str.toLowerCase() || node.original.ip == str.toLowerCase()) {
-	   		            //console.log('warunek');
-	   		    		return true; 
-	   		    	}
-   		        }
-	   		 },
-        	'contextmenu' : {
-                "items": function (node) {
+    });
 
-                	var tree = $("#device_tree").jstree(true);
-                    
-                    return {
-                        "Update": {
-                            "label": "Edytuj",
-                            "action": function () {
+    $("#device_tree").jstree({
+    	'core' : {
+    		'themes' : {
+    		    'variant' : 'large'
+    		},
+    		'data' : {
+    			'url' : '{$urlGetChildren}',
+    		    'data' : function (node) {
+    		    	return { 
+        		    	'id' : function (obj, callback) {
+            		    	if (node.id == '#') 
+            		    		return 1;
+            		    	else 
+            		    		return getId(node.id);
+            		    } 
+    		    	};
+    		    }
+    		},
+    		'check_callback' : function (op, node, parent, position, more) {
 
-                    			$("#device_desc").load("<?= Url::toRoute('device/tabs-update') ?>&id=" + getId(node.id));	
+                if (op === "copy_node") {   
+                    //tylko routery i przełączniki
+                    if (node.original.type == 1 || node.original.type == 2) return true;
+                    else return false;    
+                }
+
+                if (op === "delete_node") {   
+                    if (this.is_parent(node)) return false;
+                    if (node.original.type == 5) return false;
+                }
+            }
+    	},
+        'search' : {
+            'ajax' : {
+                'url' : '{$urlSearch}',
+   				'dataType' : 'json',
+            },
+            'search_callback' : function (str, node) {
+                var test = false;
+	            
+                if(node.id == str || node.original.name.includes(str.toUpperCase()) || node.original.network.mac == str.toLowerCase()) {
+                    test = true; 
+                }
+	         	
+                var ips = node.original.network.ips;
+	         	ips.forEach(function(element){
+   		         	if(element.ip == str){
+   	   		         	test = true;
+   		         	} 	
+   		        });
+
+                return test;
+	        }
+        },
+        'contextmenu' : {
+            'items': function (node) {
+
+            	var tree = $("#device_tree").jstree(true);
+                        
+                return {
+                    'Update': {
+                        'label' : 'Edytuj',
+                        'action' : function () {
+                			$('#device_desc').load('?r=' + node.original.controller + '/tabs-update&id=' + getId(node.id));	
+                        }
+                    },
+                    'Store' : {
+                        'label' : 'Magazyn',
+                        'submenu' : {
+                            'tostore' : {
+    							'label' : 'Przenieś do magazynu',
+    							'action' : function (obj) { tree.delete_node(node); }
+    						},
+    						'replacestore' : {
+    							'label' : 'Zamień z magazynu',
+    							'action' : function () {
+                                    if (node.original.type == 5) return false;
+    							    $('#modal').modal('show').find('#modal-content').load('?r=' + node.original.controller + '/replace&id=' + getId(node.id));	
+                                }
+    						}
+                        }    
+                    },
+                    'Operation': {
+                        'label' : 'Operacje',
+                        'submenu' : {
+                            'cut' : {
+                                'label' : 'Wytnij',
+                                'action' : function (obj) { tree.cut(node); }
+                            },
+                            'copy' : {
+                                'label' : 'Kopiuj',
+                                'action' : function (obj) { tree.copy(node); }
+                            },
+                            'paste' : {
+                                'label' : 'Wklej',
+                                'action': function (obj) { tree.paste(node); }
                             }
-                        },
-                        "Store": {
-                            "label" : "Magazyn",
-                            "submenu" : {
-								"tostore" : {
-									"label" : "Przenieś do magazynu",
-									"action" : function (obj) { tree.delete_node(node); }
-								},
-								"replacestore" : {
-									"label" : "Zamień z magazynu",
-									"action" : function () {
-
-										$('#modal-replace-store').modal('show').find('#modal-content-replace-store').load("<?= Url::toRoute('tree/replace-from-store') ?>&device=" + getId(node.id));	
-		                            }
-								}
-                            }    
-                            
-                        },
-                        "operation": {
-                            "label": "Operacje",
-                            "submenu" : {
-                                "cut" : {
-                                    "label" : "Wytnij",
-                                    "action": function (obj) { tree.cut(node); }
-                                },
-                                "copy" : {
-                                    "label" : "Kopiuj",
-                                    "action": function (obj) { tree.copy(node); }
-                                },
-                                "paste" : {
-                                    "label" : "Wklej",
-                                    "action": function (obj) { tree.paste(node); }
+                        }
+                    },
+                    'Add': {
+                        'label' : 'Dodaj',
+                        'submenu' : {
+                            'virtual' : {
+                                'label' : 'Virtualka',
+                                'action' : function () {
+                                    if (node.original.type != 2) return false;
+    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=virtual/add-on-tree&id=' + getId(node.id));	
+                                }
+                            },
+                            'host' : {
+                                'label' : 'Nieaktywny host',
+                                'action' : function () {
+                                    if (node.original.type != 2) return false;
+    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=host/add-inactive-on-tree&id=' + getId(node.id));	
                                 }
                             }
-                        }                     
-                	}    
-                }
-            },
-
-            "types" : {
-                "valid_children" : [ "web" ],
-                "types" : {
-                    "web" : {
-                        "icon" : { 
-                            "image" : "/arco/Menu/images/web.png" 
-                        },
+                        }
+                    }                             
+            	}    
+            }
+        },
+        'types' : {
+            'valid_children' : [ 'web' ],
+            'types' : {
+                'web' : {
+                    'icon' : { 
+                        'image' : '/arco/Menu/images/web.png' 
                     },
-                    "default" : {
-                    	"icon" : { 
-                            "image" : "/arco/Menu/images/web.png" 
-                        },
-                    }
+                },
+                'default' : {
+                	'icon' : { 
+                        'image' : '/arco/Menu/images/web.png' 
+                    },
                 }
-            },
+            }
+        },
+    	'plugins' : ['contextmenu', 'search', 'types']    	
+    });
+
+	$('#device_tree')
+        //przejscie z LP do SEU
+        .on('ready.jstree', function(e, data) {
+        	data.instance.search($.url("?id")); 
+        })
+
+        .on('search.jstree', function (e, data) {
+    	   data.instance.select_node(data.res); 
+        })
+
+        .on('select_node.jstree', function(e, data) {
+            var node = data.node;
+
+            $('#device_desc').load('?r=' + node.original.controller + '/tabs-view&id=' + getId(node.id));                    
+        })
+
+        .on('move_node.jstree', function(e, data) {
             
-        	'plugins' : ['contextmenu', 'search', 'types']    	
-        });
+            var deviceId = getId(data.node.id);
+            var port = getPort(data.node.id);
+            var newParentId = getId(data.parent);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlMove}&deviceId=' + deviceId + '&port=' + port + '&newParentId=' + newParentId);
+        })
 
-//         $("#searchTree").click(function() {
-//             $("#device_tree").jstree("search", $("#device_tree_q").val());
-//             return false;
-//         });
+        .on('copy_node.jstree', function(e, data) {
+            
+            var deviceId = getId(data.original.id);
+            var parentId = getId(data.parent);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlCopy}&deviceId=' + deviceId + '&parentId=' + parentId);
+        })
 
-		//przejscie z LP do SEU
-		$("#device_tree").on(
-            "ready.jstree",
-            function(e, data) {
-            	data.instance.search($.url("?id")); 
-//             	console.log(decodeURI($.url('?id').replace(/%2F/, "/")));   
-            }
-        );
-
-      	$('#device_tree').on('search.jstree', function (e, data) {
-        	data.instance.select_node(data.res); 
-        });
-    
-        //lewy przycisk dla węzła
-        $("#device_tree").on(
-            "select_node.jstree",
-            function(node, event) {
-                // The clicked node is "event.node"
-                var node = event.node;
-
-                $("#device_desc").load('<?= Url::toRoute('device/tabs-view') ?>&id=' + getId(node.id));                    
-            }
-        );
-
-        $("#device_tree").on(
-        	"paste.jstree",
-            function(e, data) {
-
-        		var tree = $("#device_tree").jstree(true);
-
-        		//alert('Dupa');
-				var device = getId(data.node[0].original.id);
-				var port = data.node[0].original.port;
-				var newParentDevice = getId(data.parent);
-        		var mode = data.mode;
-
-//         		console.log(mode);
-				if (mode == 'move_node') {
-				
-	        		$('#modal-port-select').modal('show').find('#modal-content-port-select').load('<?= Url::toRoute(['tree/port-select', 'mode' => 'move']) ?>');
-	        		$('#modal-port-select').data({
-	            		device : device,
-	            		port : port,
-	            		newParentDevice : newParentDevice,
-	            	});
-				} else if (mode == 'copy_node'){
-// 					console.log(mode);
-					$('#modal-port-select').modal('show').find('#modal-content-port-select').load('<?= Url::toRoute(['tree/port-select', 'mode' => 'copy']) ?>');
-	        		$('#modal-port-select').data({
-	            		device : device,
-	            		newParentDevice : newParentDevice,
-	            	});
-				}
-				//}
-      		}
-       	); 
-
-        $("#device_tree").on(
-        	"delete_node.jstree",
-            function(e, data) {
-
-        		var tree = $("#device_tree").jstree(true);
-        		var node = data.node; 
-        		var port = data.node.original.port;
-
-				if (tree.is_parent(node)){
-                	alert("Nie można usunąć urządzenia do którego jest coś podłączone");
-					tree.refresh();
-				}
-				else {
-
-					$.get(
-	                	'<?= Url::toRoute('tree/to-store') ?>',
-	                	{'id' : getId(node.id), 'port' : port}
-	                ).done(function(result){
-	                			
-//	                	console.log(result);
-	                	if(result == 1){
-	                		tree.refresh();
-	                	}
-	                	else{
-	                		$('#message').html(result);
-	                	}
-	                }).fail(function(){
-	                	console.log('server error');
-	               	});
-				}                  
-            }
-       	);
-//         $("#device_tree").on(
-//             "ready.jstree",
-//             function(e, data) {
-
-//             	$('.jstree-anchor').each(function(){
-//             		$(this).children(":first").before($(this).text().substr(0, $(this).text().indexOf(":")+1));
-//             		//$(this).text($(this).text().substring($(this).text().indexOf(":"), 3));	
-//             	});                 
-//         	}
-// 		);
+        .on('delete_node.jstree', function(e, data) {
+            var node = data.node;
+            var deviceId = getId(data.node.id);
+            var port = getPort(data.node.id);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=' + node.original.controller + '/delete-from-tree&id=' + deviceId + '&port=' + port);
+        });      
 });
-    
-</script>
-
-
+JS;
+$this->registerJs($js);
+?>

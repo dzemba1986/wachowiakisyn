@@ -1,12 +1,8 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
-use backend\models\Address;
-use backend\models\Type;
-use kartik\select2\Select2;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ConnectionSearch */
@@ -21,39 +17,39 @@ use kartik\select2\Select2;
     ]); ?>    
     
     <div class="row">
-    <?= $form->field($searchModel, 'minConfDate', [
-        'options' => ['class' => 'col-xs-2', 'style' => 'padding-left: 15px; padding-right: 5px;'], 
-        'template' => "{input}\n{hint}\n{error}",
-    ])->widget(DatePicker::className(), [
-            'model' => $searchModel,                    
-            'attribute' => 'minConfDate',
-            //'removeButton' => FALSE,
-            'language'=>'pl',
-            'options' => ['placeholder' => 'Od'],
-            'pluginOptions' => [
-                'format' => 'yyyy-mm-dd',
-                'todayHighlight' => true,
-                'endDate' => '0d', //wybór daty max do dziś
-            ]
-    ]) ?>
-
-    <?= $form->field($searchModel, 'maxConfDate', [
-        'options' => ['class' => 'col-xs-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
-        'template' => "{input}\n{hint}\n{error}",
-    ])->widget(DatePicker::className(), [
-            'model' => $searchModel,
-            'attribute' => 'maxConfDate',
-            //'removeButton' => FALSE,
-            'language'=>'pl',
-            'options' => ['placeholder' => 'Do'],
-            'pluginOptions' => [
-                'format' => 'yyyy-mm-dd',
-                'todayHighlight' => true,
-                'endDate' => '0d', //wybór daty max do dziś
-            ]
-    ]) ?>
-    
-    <?= Html::submitButton('Szukaj', ['class' => 'btn btn-primary col-xs-1']) ?>
+	    <?= $form->field($searchModel, 'minConfDate', [
+	        'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 15px; padding-right: 5px;'], 
+	        'template' => "{input}\n{hint}\n{error}",
+	    ])->widget(DatePicker::className(), [
+	            'model' => $searchModel,                    
+	            'attribute' => 'minConfDate',
+	            'pickerButton' => false,
+	            'options' => ['placeholder' => 'Od'],
+	    		'language'=>'pl',
+	            'pluginOptions' => [
+	                'format' => 'yyyy-mm-dd',
+	                'todayHighlight' => true,
+	                'endDate' => '0d',
+	            ]
+	    ]) ?>
+	
+	    <?= $form->field($searchModel, 'maxConfDate', [
+	        'options' => ['class' => 'col-md-2', 'style' => 'padding-left: 5px; padding-right: 5px;'],
+	        'template' => "{input}\n{hint}\n{error}",
+	    ])->widget(DatePicker::className(), [
+	            'model' => $searchModel,
+	            'attribute' => 'maxConfDate',
+	            'pickerButton' => FALSE,
+	            'options' => ['placeholder' => 'Do'],
+	    		'language'=>'pl',
+	            'pluginOptions' => [
+	                'format' => 'yyyy-mm-dd',
+	                'todayHighlight' => true,
+	                'endDate' => '0d',
+	            ]
+	    ]) ?>
+	    
+	    <?= Html::submitButton('Szukaj', ['class' => 'btn btn-primary col-xs-1']) ?>
     </div>
         
     <?php ActiveForm::end(); ?>

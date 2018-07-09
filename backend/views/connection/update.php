@@ -6,169 +6,161 @@ use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use yii\helpers\Url;
 use yii\web\JsExpression;
-use yii\bootstrap\Modal;
-use backend\models\Connection;
-use backend\models\Device;
-/* @var $this yii\web\View */
-/* @var $modelConnection backend\models\Connection */
 
-//echo '<center><h4>'.$modelConnection->modelAddress->fullAddress.'</h4></center>';
+/**
+ * @var yii\web\View $this
+ * @var backend\models\Connection $connection 
+ */
 ?>
+
 <div class="connection-update">
 
-    	<?php $form = ActiveForm::begin([
-            'id'=>$modelConnection->formName(),
-    	])?>
+    <?php $form = ActiveForm::begin([
+		'id'=>$connection->formName(),
+    ])?>
         
-        <div style="display: flex">
-		    
-		    <?= $form->field($modelConnection, 'phone', [
-		    	'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-		    ]) ?>
-		    
-		    <?= $form->field($modelConnection, 'phone2', [
-		    	'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
-		    ]) ?>
-		    
-		    <?php if(!$modelConnection->host && $modelConnection->wire >= 1 && $modelConnection->socket >= 1) :?>
-		    
-		    <?= Html::a('Czysc instalacje', Url::to(['installation/crash', 'connectionId' => $modelConnection->id]), ['class' => 'crash-installation']); ?>
-		
-			<?php endif; ?>
-		</div>
-		
-		<div style="display: flex">
+    <div class="row">
+    
+    	<?= $form->field($connection, 'pay_date', [
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-right: 3px;'],
+		])->widget(DatePicker::className(), [
+        	'model' => $connection,
+            'attribute' => 'pay_date',
+			'pickerButton' => false,
+			'disabled' => $connection->socket > 0 ? false : true,
+			'language' => 'pl',
+            'pluginOptions' => [
+            	'format' => 'yyyy-mm-dd',
+                'todayHighlight' => true,
+                'endDate' => '0d',
+            ]
+        ])?>
             
-            <?= $form->field($modelConnection, 'pay_date', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-			])->widget(DatePicker::className(), [
-            	'model' => $modelConnection,
-                'attribute' => 'pay_date',
-                'language'=>'pl',
-				'removeButton' => FALSE,
-				'disabled' => $modelConnection->socket > 0 ? false : true,
-                'pluginOptions' => [
-                	'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ])?>
-            
-            <?= $form->field($modelConnection, 'close_date', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'color : red; padding-left: 3px; padding-right: 0px;'],
-			])->widget(DatePicker::className(), [
-            	'model' => $modelConnection,
-                'attribute' => 'close_date',
-                'language'=>'pl',
-				'removeButton' => FALSE,
-                'pluginOptions' => [
-                	'format' => 'yyyy-mm-dd',
-                    'todayHighlight' => true,
-                    'endDate' => '0d', //wybór daty max do dziś
-                ]
-            ])?>
-		
-		</div>
-		
-		<div style="display: flex">
-		
-			<?= $form->field($modelConnection, 'device', [
-    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 3px;'],
-    		])->widget(Select2::classname(), [
-    			//'initValueText' => 'OP 120/ - OP120 - [172.20.4.44]', //$concatInit,
-    			'language' => 'pl',
-            	'options' => [
-            		//'id' => 'select2-connection-update',	
-            		
-            		'onchange' => new JsExpression("
-
-						$.get('" . Url::toRoute('tree/select-list-port') . "&device=' + $(this).val() + '&mode=free', function(data){
-							$('#connection-port').html(data).val('" . $modelConnection->port . "');
-						});
-					")
-            	],
-	    		'pluginOptions' => [
-	    			'placeholder' => 'Urządzenie nadrzędne',
-	    			'allowClear' => true,
-	    			'minimumInputLength' => 1,
-	    			'language' => [
-	    				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
-	    			],
-	    			'ajax' => [
-	    				'url' => Url::toRoute('device/list'),
-	    				'dataType' => 'json',
-	    				'data' => new JsExpression("function(params) { return {
-	    					q : params.term, 
-	    					type : $modelConnection->type == 1 || $modelConnection->type == 3 ? [2] : [3],
-    						distribution : $modelConnection->type == 1 ? false : null
-						}; 
-					}")
-		    		],
-		    		'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-		    		'templateResult' => new JsExpression('function(device) { return device.concat; }'),
-		    		'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
-	    		]
-    		]) ?>
-    		
-    		<?php $port = isset($modelConnection->port) ? $modelConnection->port : null?>
-    		
-			<?= $form->field($modelConnection, 'port', [
-				'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 0px;'],
-			])->dropDownList([$port], ['prompt'=>'port']) ?>
-			
-		</div>
-		
-		<?php if($modelConnection->type == 1 || $modelConnection->type == 3) :?>
-		
-		<div style="display: flex">
-		
-		<?= $form->field($modelConnection, 'mac', [
-				'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+        <?= $form->field($connection, 'phone', [
+    		'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+    	]) ?>
+	    
+	    <?= $form->field($connection, 'phone2', [
+	    	'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+	    ]) ?>
+		    
+	    <?php if($connection->type_id == 1 || $connection->type_id == 3) :?>
+			<?= $form->field($connection, 'mac', [
+				'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px;'],
 			]) ?>
-			
-		</div>
+		<?php endif; ?>
 		
-		<?php endif; ?>	
+    </div>
+    
+    <?php if (($allConnections == 0 && empty($connection->host_id)) || $connection->type_id == 2) : ?>
+    
+    <div class="row">
         
-		<?= $form->field($modelConnection, 'info')->textarea(['style' => 'resize: vertical']) ?>
-        
-        <?= $form->field($modelConnection, 'info_boa')->textarea(['style' => 'resize: vertical']) ?>
-        
-        <?= Html::submitButton($modelConnection->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
-        
-        <?php ActiveForm::end() ?>
-        
+        <?= $form->field($connection, 'device_id', [
+			'options' => ['class' => 'col-sm-7', 'style' => 'padding-right: 3px;'],
+    	])->widget(Select2::classname(), [
+    		'language' => 'pl',
+           	'options' => [
+           	    'disabled' => $connection->type_id == 2 and (Yii::$app->user->id == 24 or Yii::$app->user->id == 22) ? false : true,
+           	    'placeholder' => 'Urządzenie nadrzędne',
+           		'onchange' => new JsExpression("
+					$.get('" . Url::to(['tree/list-port']) . "&deviceId=' + $(this).val(), function(data){
+						$('select#connection-port').html(data);
+					});
+				")
+            ],
+	    	'pluginOptions' => [
+	    		'allowClear' => true,
+	    		'minimumInputLength' => 1,
+	    		'language' => [
+	    			'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
+	    		],
+	    		'ajax' => [
+	    		    'url' => $connection->type_id == 2 ? Url::to(['gateway-voip/list-from-tree']) : Url::to(['swith/list-from-tree']),
+	    			'dataType' => 'json',
+	    			'data' => new JsExpression("function(params) { return {
+	    				q : params.term,
+					};}")
+		    	],
+		    	'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+		    	'templateResult' => new JsExpression('function(device) { return device.concat; }'),
+		    	'templateSelection' => new JsExpression('function (device) { return device.concat; }'),
+	    	]
+    	]) ?>
+    
+		<?= $form->field($connection, 'port', [
+			'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+		])->dropDownList([], ['prompt'=>'port', 'disabled' => $connection->type_id == 2 and (Yii::$app->user->id == 24 or Yii::$app->user->id == 22) ? false : true]) ?>
+		
+		<?= $form->field($connection, 'close_date', [
+			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px;'],
+		    'labelOptions' => ['style' => 'color:red']
+		])->widget(DatePicker::className(), [
+        	'model' => $connection,
+            'attribute' => 'close_date',
+			'pickerButton' => false,
+			'language' => 'pl',
+            'pluginOptions' => [
+            	'format' => 'yyyy-mm-dd',
+                'todayHighlight' => true,
+                'endDate' => '0d',
+            ]
+        ])?>
+
+	</div>
+	<?php elseif ($allConnections > 0 || !empty($connection->host_id)) : ?>
+		<h4>Host już istneje</h4>
+	<?php endif; ?>
 	
+	<div class="row">			
+			<?= $form->field($connection, 'info', [
+				'options' => ['class' => 'col-sm-6', 'style' => 'padding-right: 3px;'],
+			])->textarea(['rows' => "7", 'style' => 'resize: vertical']) ?>
+			
+			<?= $form->field($connection, 'info_boa', [
+	        	'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px;'],
+	        ])->textarea(['rows' => "7", 'style' => 'resize: vertical']) ?>
+    </div>
+    
+    <?= Html::submitButton($connection->isNewRecord ? 'Dodaj' : 'Zapisz', ['class' => 'btn btn-primary']) ?>
+    
+    <?php ActiveForm::end() ?>
 </div>
 
-<script>
+<?php 
+$deviceId = json_encode($connection->device_id);
+$deviceListUrl = Url::to(['device/list-from-tree', 'id' => $connection->device_id]);
+$port = json_encode($connection->port);
+$portListUrl = Url::to(['tree/list-port', 'deviceId' => $connection->device_id, 'selected' => $connection->port, 'install' => true]);
 
+$js = <<<JS
 $(function(){
-	
-	var device = <?= json_encode($modelConnection->device); ?>
+    var deviceId = {$deviceId}; //jeżeli urządzenie jest ustawione pobiera jego wartość id
+    var port = {$port}; //jeżeli port jest ustawiony pobiera jego wartość
 
-	if (device){
-		$.getJSON("<?= Url::toRoute(['device/list', 'id' => $modelConnection->device])?>", function(data){
-			$('#select2-connection-device-container').html(data.results.concat);
+    $('.modal-header h4').html('{$connection->address->toString()}');
+
+    if (deviceId) {
+		$.getJSON('{$deviceListUrl}', function(data){
+			$('#select2-connection-device_id-container').html(data.results.concat);
 		});
-	
-		$("#connection-device").trigger("change");
+        
+        if (port !== null) {
+            $.get('{$portListUrl}', function(data){
+                $('select#connection-port').html(data);
+            });
+        }
 	}
 
-	$(".modal-header h4").html("<?= $modelConnection->modelAddress->fullAddress ?>");
-
-	$("#<?= $modelConnection->formName(); ?>").on('beforeSubmit', function(e){
+	$('#{$connection->formName()}').on('beforeSubmit', function(e){
 		
 		var form = $(this);
 	 	$.post(
-	  		form.attr("action"), // serialize Yii2 form
+	  		form.attr('action'), // serialize Yii2 form
 	  		form.serialize()
 	 	).done(function(result){
-			
-//	 		console.log(result);
 	 		if(result == 1){
-	 			//$(form).trigger('reset');
-				$('#modal-connection-update').modal('hide');
+				$('#modal').modal('hide');
 	 			$.pjax.reload({container: '#connection-grid-pjax'});
 	 		}
 	 		else{
@@ -179,21 +171,9 @@ $(function(){
 	 		console.log('server error');
 	 	});
 		return false;				
-	});
+	});	
+});
+JS;
 
-	$("body").on('click', '.crash-installation', function(event){
-        
-		$.get($(this).attr('href'), function(data) {
-
-        	alert('Wyczyszczono !');
-		});
-    
-        return false;
-	});
-
-// 	if (!($("#connection-device").val()) && !($("#connection-mac").val())){
-// 		$(".add-to-tree").hide();
-// 	}	
-})
-
-</script>
+$this->registerJs($js);
+?>

@@ -2,14 +2,14 @@
 
 namespace backend\models;
 
-use backend\models\Installation;
-use yii\db\ActiveQueryInterface;
+use backend\modules\task\models\InstallTask;
 use yii\db\ActiveRecord;
+
 /**
- * This is the model class for table "tbl_address".
+ * This is the model class for table 'address'.
  *
- * The followings are the available columns in table 'tbl_localization':
- * @property integer $id
+ * The followings are the available columns in table 'address':
+ * @property integer $id PK
  * @property string $t_woj
  * @property string $t_pow
  * @property string $t_gmi
@@ -23,67 +23,36 @@ use yii\db\ActiveRecord;
  * @property string $lokal
  * @property string $lokal_szczegol
  * @property string $pietro
- * @property string $shortAddress
- * 
+ * @property Installation[] $installations
+ * @property Device[] $devices
+ * @property InstallTask[] $tasks
+ * @property Connection[] $connections
  */
+
 class Address extends ActiveRecord
 {
-	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
-	const SCENARIO_DELETE = 'delete';
-	/**
-	 * @return string the associated database table name
-	 */
+	
 	public static function tableName() : string {
 		
 		return '{{address}}';
 	}
 	
 	public function rules() : array {
-		
-		return [
-			['t_woj', 'string', 'min' => 1, 'max' => 2],
-			['t_woj', 'default', 'value' => '30'],
-			['t_woj', 'trim'],				
+
+	    return [
+			['t_ulica', 'required', 'message' => 'Wartość wymagana'],
 				
-			['t_pow', 'string', 'min' => 1, 'max' => 2],
-			['t_pow', 'default', 'value' => '64'],
-			['t_pow', 'trim'],
-				
-			['t_gmi', 'string', 'min' => 1, 'max' => 2],
-			['t_gmi', 'default', 'value' => '05'],
-			['t_gmi', 'trim'],
-				
-			['t_rodz', 'string', 'min' => 1, 'max' => 1],
-			['t_rodz', 'default', 'value' => '9'],
-			['t_rodz', 'trim'],
-				
-			['t_miasto', 'string', 'min' => 7, 'max' => 7],
-			['t_miasto', 'default', 'value' => '0970224'],
-			['t_miasto', 'trim'],
-				
-			['t_ulica', 'string', 'min' => 7, 'max' => 7],
-			['t_ulica', 'default', 'value' => function (){ return $this->getTUlica(); }],
-			//['t_ulica', 'trim'],
-			
-			['ulica_prefix', 'string', 'min' => 1, 'max' => 3],
-			['ulica_prefix', 'default', 'value' => function (){ return $this->getUlicaPrefix(); }],
-			['ulica_prefix', 'trim'],
-				
-			['ulica', 'string', 'min' => 2, 'max' => 255],
-			['ulica', 'required', 'message' => 'Wartość wymagana'],
-			['ulica', 'trim'],	
-				
-			['dom', 'string', 'min' => 1, 'max' => 20],
+			['dom', 'string', 'min' => 1, 'max' => 10],
 			['dom', 'required', 'message' => 'Wartość wymagana'],
 			['dom', 'trim'],				
 				
 			['dom_szczegol', 'string', 'min' => 1, 'max' => 50],
 			['dom_szczegol', 'default', 'value' => ''],
-			['dom_szczegol', 'filter', 'filter'=>'strtoupper'],
+			['dom_szczegol', 'filter', 'filter' => 'strtoupper'],
 			['dom_szczegol', 'trim'],
 			
-			['lokal', 'string', 'min' => 1, 'max' => 20],
+			['lokal', 'string', 'min' => 1, 'max' => 10],
 			['lokal', 'default', 'value' => ''],
 			['lokal', 'trim'],
 			
@@ -102,17 +71,12 @@ class Address extends ActiveRecord
 	public function scenarios() : array {
 	
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_CREATE] = ['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 
-			'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'
-		];
-		$scenarios[self::SCENARIO_UPDATE] = ['t_ulica', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'];
+		//TODO jeżeli WTVK wyjdzie poza Poznań, trzeba to uaktualnić
+		$scenarios[self::SCENARIO_UPDATE] = ['t_miasto', 't_ulica', 't_gmi', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_szczegol', 'pietro'];
 	
 		return $scenarios;
 	}
 	
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels() : array {
 		
 		return [
@@ -126,164 +90,122 @@ class Address extends ActiveRecord
 		];
 	}
 	
+	public function beforeSave($insert){
+		
+		if ($insert){
+			$shortAddress = AddressShort::findOne(['t_ulica' => $this->t_ulica]);
+			
+			$this->t_miasto = $shortAddress->t_miasto;
+			$this->t_woj = $shortAddress->t_woj;
+			$this->t_pow = $shortAddress->t_pow;
+			$this->t_gmi = $shortAddress->t_gmi;
+			$this->t_rodz = $shortAddress->t_rodz;
+			$this->ulica_prefix = $shortAddress->ulica_prefix;
+			$this->ulica = $shortAddress->ulica;
+			
+			if (!$this->pietro)
+				$this->pietro = '';
+		}
+		
+		if (!parent::beforeSave($insert)){
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public function save($runValidation = true, $attributeNames = null){
 		
 		if ($this->getIsNewRecord()) {
-			if ($this->validate() && !$this->exist()){
+			
+			if ($this->validate() && !is_object($existAddress = $this->exist())){
 				return $this->insert($runValidation, $attributeNames);
 			}
 			else {
 				$this->setIsNewRecord(false);
-				$this->id = $this->getModelExist()->id;
+				$this->id = $existAddress->id;
 				
 				return true;
-			}	
+			}
 		} else {
 			return $this->update($runValidation, $attributeNames) !== false;
 		}
 	}
 	
-	public function __toString() : string {
+	public function toString($short = false){
 		
-		if (empty($this->pietro))
-			if ($this->lokal)
-				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol;
+		if ($short){
+			if (empty($this->pietro))
+				if ($this->lokal)
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
+				else
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol;
 			else
-				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol);
-		else
-			if ($this->lokal)
-				return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
+				if ($this->lokal)
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol . 'p' . $this->pietro;
+				else
+					return $this->getShortAddress()->name . $this->dom . $this->dom_szczegol . 'p' . $this->pietro;
+				
+		} else {
+			if (empty($this->pietro))
+				if ($this->lokal)
+					return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
+				else
+					return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol;
 			else
-				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . ' (piętro ' . $this->pietro . ')';
+				if ($this->lokal)
+					return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
+				else
+					return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . ' (piętro ' . $this->pietro . ')';
+		}
 	}
 	
-	/**
-	 * @return string full name address 
-	 */
-	//TODO remove this function if not use
-	public function getFullAddress(){
-		
-		return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
-	}
-	
-	//TODO remove this function if not use
-	public function getShortAddress(){
-	
-		return $this->modelShortStreet->name . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol;
-	}
-	
-	/**
-	 * @return array of floor number
-	 */
 	public static function getFloor() : array {
-	
-		return ['-1' => '-1', '0' => '0', '1' => '1', '2' => '2', '3' => '3', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '11' => '11'];
-	}
-	
-	//TODO remove this function if not use
-	public function getFullDeviceAddress(){
-	
-		//var_dump($this->pietro); exit();
 		
-		if (!empty($this->pietro))
-			if ($this->lokal)
-				return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
-			else 
-				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . ' (piętro ' . $this->pietro . ')';
-		else 
-			if ($this->lokal)
-				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol;
-			else 
-				return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . strtoupper($this->dom_szczegol);				
+		for ($i = -2; $i <= 16; $i++) {
+			$array[$i] = $i;
+		}
+	
+		return $array;
 	}
 	
-	//TODO rename function to "getShostAddress"
-	public function getFullDeviceShortAddress() : string {
-	
-		if (!empty($this->pietro))
-			if ($this->lokal)
-				return $this->modelShortStreet->name . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
-			else
-				return $this->modelShortStreet->name . $this->dom . strtoupper($this->dom_szczegol) . ' (piętro ' . $this->pietro . ')';
-		else
-			if ($this->lokal)
-				return $this->modelShortStreet->name . $this->dom . strtoupper($this->dom_szczegol) . '/' . $this->lokal . $this->lokal_szczegol;
-			else
-				return $this->modelShortStreet->name . $this->dom . strtoupper($this->dom_szczegol);
+	public function getConfigMode(){
+		
+		return $this->getShortAddress()->config;
 	}
 	
-	/**
-	 * @return ActiceQueryInterface the relational query object
-	 */
-	public function getInstallations() : ActiveQueryInterface {
+	public function getInstallations(){
 	
-		//Wiele instalacji na danym adresie
 		return $this->hasMany(Installation::className(), ['address'=>'id']);
 	}
 	
-	/**
-	 * @return ActiceQueryInterface the relational query object
-	 */
 	public function getConnections(){
 	
-		//Wiele umów na danym adresie
 		return $this->hasMany(Connection::className(), ['address'=>'id']);
 	}
 	
-	/**
-	 * @return ActiceQueryInterface the relational query object
-	 */
-	public function getModelsDevice(){
+	public function getDevices(){
 	
-		//Wiele urządzeń na danym adresie
 		return $this->hasMany(Device::className(), ['address'=>'id']);
 	}
 	
-	/**
-	 * @return ActiceQueryInterface the relational query object
-	 */
-	public function getModelsTask(){
+	public function getTasks(){
 	
-		//Wiele zadań na danym adresie
-		return $this->hasMany(Task::className(), ['address'=>'id']);
+		return $this->hasMany(InstallTask::className(), ['address'=>'id']);
 	}
 	
-	/**
-	 * @return ActiceQueryInterface the relational query object
-	 */
-	public function getModelShortStreet(){
-	
-		//Powiązanie dla krótkich adresów
-		return $this->hasOne(AddressShort::className(), ['t_ulica'=>'t_ulica']);
-	}
-	
-	private function getTUlica(){
+	private function getShortAddress(){
 		
-		return self::find()->select('t_ulica')->where(['ulica' => $this->ulica])->one()->t_ulica;
-	}
-	
-	private function getUlicaPrefix(){
-	
-		return self::find()->select('ulica_prefix')->where(['ulica' => $this->ulica])->one()->ulica_prefix;
+		return $this->hasOne(AddressShort::className(), ['t_ulica'=>'t_ulica'])->one();
 	}
 
 	private function exist(){
 	
-		return  Address::find()->where(['ulica' => $this->ulica, 
-			'dom' => $this->dom , 
+		return  self::find()->where(['t_ulica' => $this->t_ulica, 
+			'dom' => $this->dom, 
 			'dom_szczegol' => $this->dom_szczegol, 
 			'lokal' => $this->lokal,
-			'pietro' => $this->pietro	
-		])->exists();
-	}
-	
-	private function getModelExist() {
-		
-		return Address::find()->where(['ulica' => $this->ulica, 
-			'dom' => $this->dom , 
-			'dom_szczegol' => $this->dom_szczegol, 
-			'lokal' => $this->lokal,
-			'pietro' => $this->pietro
+			'pietro' => is_null($this->pietro) ? '' : $this->pietro
 		])->one();
 	}
 }

@@ -26,16 +26,35 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => 'Serwis WTvK',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
             $menuItems = [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Contact', 'url' => ['/site/contact']],
+                [
+                	'label' => 'Monitoring', 
+                	'items' => [
+                		[
+                			'label' => 'Wyświetl/dodaj zgłoszenia',
+                			'url' => ['task/index']
+                		]
+                	]	
+                ],
+            	[
+            		'label' => 'BOA',
+            		'items' => [
+            			[
+            				'label' => 'Niezaksięgowane',
+            				'url' => ['boa/index', 'mode' => 'noboa']
+            			],
+            			[
+            				'label' => 'Zaksięgowane',
+            			    'url' => ['boa/index', 'mode' => 'boa']
+            			]
+            		]
+            	],
             ];
             if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
@@ -43,8 +62,17 @@ AppAsset::register($this);
             } else {
                 $menuItems[] = [
                     'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
+                    'items' => [
+                        [
+                            'label' => 'Wyloguj',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']
+                        ],
+                        [
+                            'label' => 'Zmień hasło',
+                            'url' => ['/site/change-password'],
+                        ],
+                    ]
                 ];
             }
             echo Nav::widget([
@@ -65,7 +93,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Wachowiak&amp;Syn <?= date('Y') ?></p>
         <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>

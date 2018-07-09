@@ -3,13 +3,10 @@
 namespace backend\models;
 
 use yii\data\ActiveDataProvider;
-use backend\models\Connection;
 use yii\db\Expression;
 
 class ConnectionSearch extends Connection
 {	
-	// public $socketDate;
-	// public $wireDate;
 	public $street;
 	public $house;
 	public $house_detail;
@@ -22,10 +19,10 @@ class ConnectionSearch extends Connection
 	{
 		return $rules = [
 			[	
-				['ara_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date', 'synch_date',
-				'add_user', 'conf_user', 'close_user', 'vip', 'nocontract', 'task',
-				'address', 'phone', 'phone2', 'info', 'info_boa', 'socket', 'again', 'wire', 'socket',
-				'port', 'device', 'mac', 'type', 'package', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
+				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
+				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id', 'vip',
+				'socket', 'again', 'wire',
+				'type_id', 'package_id', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
 				'minConfDate', 'maxConfDate'],
 				'safe'
 			]		
@@ -41,7 +38,7 @@ class ConnectionSearch extends Connection
             'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],				
 		]);
 	
-		$query->joinWith(['modelAddress', 'modelType']);
+		$query->joinWith(['address', 'type', 'package']);
 		
 		$dataProvider->setSort([
 			'defaultOrder' => [
@@ -50,24 +47,24 @@ class ConnectionSearch extends Connection
 				'house' => new Expression('case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end, dom'), 
 				'flat' => new Expression('case when substring(lokal from \'^\d+$\') is null then 9999 else cast(lokal as integer) end, lokal')
 			],
-			//'enableMultiSort' => true,	
 			'attributes' => [
 				'start_date',
 				'conf_date',
 				'pay_date',
-				'close_date',	
-				'type',
-				'package',	
+				'close_date',
+				'synch_date',	
+				'type_id',
+				'package_id',	
 				'nocontract',
 				'socket',
 				'again',	
-				'task' => [
-					'asc' => ['task.start_date' => SORT_ASC],
-					'desc' => ['task.start_date' => SORT_DESC]
+				'task_id' => [
+					'asc' => ['task.start' => SORT_ASC],
+					'desc' => ['task.start' => SORT_DESC]
 				],	
 				'street' => [
-					'asc' => ['ulica' => SORT_ASC],
-					'desc' => ['ulica' => SORT_DESC]
+					'asc' => ['t_ulica' => SORT_ASC],
+					'desc' => ['t_ulica' => SORT_DESC]
 				],
 				'house' => [
 						'asc' => ['dom' => new Expression(
@@ -88,40 +85,44 @@ class ConnectionSearch extends Connection
 			]
 		]);
 		
-        if (!($this->load($params) && $this->validate())) {
+		if (!($this->load($params) && $this->validate())) {
 			return $dataProvider;
 		}
 			
 		$query->FilterWhere([
-			'connection.id' => $this->id,
 			'ara_id' => $this->ara_id,
-			'connection.start_date' => $this->start_date,
+			'soa_id' => $this->soa_id,	
+			'"date"(start_date)' => $this->start_date,
 			'conf_date' => $this->conf_date,
 			'pay_date' => $this->pay_date,
-			'close_date' => $this->close_date,
+		    '"date"(synch_date)' => $this->synch_date,
+			'"date"(close_date)' => $this->close_date,
 			'phone_date' => $this->phone_date,
-			'connection.type' => $this->type,
-			'package' => $this->package,
-			'ulica' => $this->street,
+			'connection.type_id' => $this->type_id,
+			'package_id' => $this->package_id,
+			't_ulica' => $this->street,
 			'dom' => $this->house,
+		    'upper(dom_szczegol)' => strtoupper($this->house_detail),
 			'lokal' => $this->flat,	
             'connection.nocontract' => $this->nocontract,
-			'wire' => $this->wire,
-            'vip' => $this->vip,
-			'again' => $this->again,	
-			'task.start_date' => $this->task,	
+			//'wire' => $this->wire,
+			'again' => $this->again,
+		    'vip' => $this->vip,
+			'"date"(task.start)' => $this->task_id,	
 		]);
 		
-		if (isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '1'){
-			$query->andFilterWhere(['>', 'socket', 0]);
-		} elseif(isset($params['ConnectionSearch']['socket']) && $params['ConnectionSearch']['socket'] == '0')
-			$query->andFilterWhere(['socket' => 0]);
-	
-		$query->andFilterWhere(['like', 'dom_szczegol', $this->house_detail])
-			->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail]);
-			//->andFilterWhere(['like', 'synch_date', $this->synch_date]) @todo operacja like na polu date niedozwolona
-
+		if (isset($params['ConnectionSearch']['wire'])) {
+		    if ($params['ConnectionSearch']['wire'] == '1') $query->andFilterWhere(['>', 'wire', 0]);
+            elseif ($params['ConnectionSearch']['wire'] == '0') $query->andFilterWhere(['wire' => 0]);
+		}
 		
+		if (isset($params['ConnectionSearch']['socket'])) {
+		    if ($params['ConnectionSearch']['socket'] == '1') $query->andFilterWhere(['>', 'socket', 0]);
+		    elseif ($params['ConnectionSearch']['socket'] == '0') $query->andFilterWhere(['socket' => 0]);
+		}
+		
+		$query->andFilterWhere(['like', 'lower(lokal_szczegol)', strtolower($this->flat_detail)]);
+
 		return $dataProvider;
 	}
 }

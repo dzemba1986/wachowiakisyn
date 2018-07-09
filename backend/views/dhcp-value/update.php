@@ -46,7 +46,7 @@ use backend\models\DhcpValue;
 
 <?php 
 $key = 0;
-$ips = [];
+$ipsList = [];
 $form = ActiveForm::begin([
 		'id' => 'ip',
 ]);
@@ -57,7 +57,7 @@ $form = ActiveForm::begin([
 	
 	<?php foreach ($modelDhcpValues as $key => $modelDhcpValue) : 
 	
-		$ips[] = $modelDhcpValue->ip;
+		$ipsList[] = $modelDhcpValue->ip;
 	?>
 	
 		<div class="network-group" data-network-index="<?= $key; ?>" style="display: flex">
@@ -140,7 +140,7 @@ $(function() {
 
 	var networkIndex = <?= $key; ?>;
 
-	var ips = <?php echo json_encode($ips) ?>;
+	var ips = <?php echo json_encode($ipsList) ?>;
 
     $.each(ips, function(key, value) {
     	$(new Option(value, value)).appendTo("select[name='network[" + key + "][ip]']");

@@ -1,62 +1,45 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
-use Yii;
-use yii\data\ActiveDataProvider;
-use app\models\connection\Connection;
+use yii\db\ActiveRecord;
 /**
- * This is the model class for table "tbl_package".
- *
- * The followings are the available columns in table 'tbl_package':
  * @property integer $id
  * @property string $name
- * @property intiger $type
+ * @property intiger $type_id
  * @property string $download
  * @property string $upload
-
  */
-class Package extends \yii\db\ActiveRecord
+
+class Package extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
 	public static function tableName()
 	{
 		return '{{package}}';
 	}
 
-	/**
-	 * @return Connection object array for same address
-	 */
-	public function getConnections(){
-	
-		//Wiele umów na danym adresie
-		return $this->hasMany(Connection::className(), ['package'=>'id']);
-	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return [
-			[['name', 'type'], 'required'],
+		    ['name', 'string'],
+		    ['name', 'requred'],
+		    
+		    ['type_id', 'integer'],
+		    ['type_id', 'requred'],
+		    
+		    ['download', 'integer'],
+		    
+		    ['upload', 'integer'],
+		    
 			[['name', 'type', 'download', 'upload'], 'safe'],
 		];
 	}
 	
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
 			'name' => 'Nazwa',
-			'type' => 'Typ',
+			'type_id' => 'Typ',
 			'download' => 'Download',
 			'upload' => 'Upload',
 		);

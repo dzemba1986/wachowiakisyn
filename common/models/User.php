@@ -81,6 +81,11 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
+    
+    public static function findOrderByLastName()
+    {
+    	return static::find()->select(['id', 'last_name'])->where(['status' => self::STATUS_ACTIVE])->orderBy('last_name');
+    }
 
     /**
      * Finds user by password reset token

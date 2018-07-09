@@ -2,36 +2,85 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\widgets\ActiveForm;
 use backend\models\Router;
+use backend\models\Tree;
+use Yii;
+use yii\base\Exception;
 
 class RouterController extends DeviceController
-{	
-	public function actionValidation($id = null){
-		 
-		$modelDevice = is_null($id) ? new Router() : $this->findModel($id);
-		
-		$request = Yii::$app->request;
-		
-		if ($request->isAjax && $modelDevice->load($request->post())) {
-			
-//  				var_dump($modelDevice); exit();
-	           	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-	               	return ActiveForm::validate($modelDevice, 'mac');
-
-              	Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return ActiveForm::validate($modelDevice, 'serial');
-
-		}
-	}
-    
-    protected function findModel($id)
-    {
-        if (($model = Router::findOne($id)) !== null) {
-            return $model;
+{
+    public function actionReplace($id) {
+        
+        $request = Yii::$app->request;
+        
+        if($request->isPost) {
+            $transaction = Yii::$app->getDb()->beginTransaction();
+            $sRouter = $this->findModel($id);
+            $sRouter->scenario = Router::SCENARIO_REPLACE;
+            $dRouter = $this->findModel($request->post('destinationDeviceId'));
+            $dRouter->scenario = Router::SCENARIO_REPLACE;
+            
+            $map = $request->post('map');
+            
+            try {
+                foreach ($map as $oldPort => $newPort) {
+                    $link = Tree::findOne(['parent_device' => $id, 'parent_port' => $oldPort]);
+                    
+                    if (is_object($link)) {
+                        $link->parent_device = $dRouter->id;
+                        $link->parent_port = $newPort;
+                        
+                    } else {
+                        $link = Tree::findOne(['device' => $id, 'port' => $oldPort]);
+                        if (!is_object($link)) throw new Exception('Nie znalazł linku');
+                        
+                        $link->device = $dRouter->id;
+                        $link->port = $newPort;
+                    }
+                    
+                    if (!$link->save()) throw new Exception('Błąd zapisu linku');
+                }
+                
+                foreach ($sRouter->ips as $ip) {
+                    $ip->device_id = $dRouter->id;
+                    if (!$ip->save()) throw new Exception('Błąd zapisu ip');
+                }
+                
+                $dRouter->address_id = $sRouter->address_id;
+                $dRouter->status = $sRouter->status;
+                $dRouter->name = $sRouter->name;
+                $dRouter->proper_name = $sRouter->proper_name;
+                $dRouter->monitoring = $sRouter->monitoring;
+                $dRouter->geolocation = $sRouter->geolocation;
+                
+                $sRouter->address_id = 1;
+                $sRouter->status = null;
+                $sRouter->name = null;
+                $sRouter->proper_name = null;
+                $sRouter->monitoring = false;
+                $sRouter->geolocation = null;
+                
+                if (!($sRouter->save() && $dRouter->save())) throw new Exception('Błąd zapisu urządzenia');
+                
+            } catch (\Throwable $t) {
+                $transaction->rollBack();
+                echo $t->getMessage();
+                var_dump($dRouter->errors);
+                var_dump($sRouter->errors);
+                exit();
+            }
+            
+            $transaction->commit();
+            return 1;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            return $this->renderAjax('replace', [
+                'id' => $id
+            ]);
         }
+    }
+    
+    protected static function getModel() {
+        
+        return new Router();
     }
 }

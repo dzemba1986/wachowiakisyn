@@ -2,17 +2,15 @@
 
 namespace backend\models;
 
-class DhcpOption extends \yii\db\ActiveRecord
+use yii\db\ActiveRecord;
+
+class DhcpOption extends ActiveRecord
 {
-	public static function tableName()
-	{
+	public static function tableName() {
 		return '{{dhcp_option}}';
 	}
 	
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
+	public function rules() {
 		return [
 			['code', 'required', 'message' => 'Wartość wymagana'],
 			['code', 'integer', 'message' => 'Wartość musi być liczbą'],
@@ -29,23 +27,13 @@ class DhcpOption extends \yii\db\ActiveRecord
 			['type', 'required', 'message' => 'Wartość wymagana'],
 			['type', 'string'],
 				
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			[['code', 'subcode', 'rfc_name', 'name', 'type'], 'safe'],
 		];
 	}
     
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-    
-	public function attributeLabels()
-	{
-        return ArrayHelper::merge(
-            parent::attributeLabels(),
-            [
-                'rfc_name' => 'Nazwa RFC',
-            ]
-        ); 
+	public function attributeLabels() {
+        return [
+            'rfc_name' => 'Nazwa RFC',
+        ];
 	}
 }

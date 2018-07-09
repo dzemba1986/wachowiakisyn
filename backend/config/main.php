@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
 	'defaultRoute' => 'connection/index',
+    'timeZone' => 'Europe/Warsaw',
     'bootstrap' => ['log'],
     'modules' => [
     	'gridview' => [
@@ -21,15 +22,22 @@ return [
     			'forceTranslation' => true,
                 'sourceLanguage' => 'pl',
     		]
+    	],
+    	'task' => [
+    		'class' => 'backend\modules\task\Module'	
     	]	
     ],
     'components' => [
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
-        	'rules' => [
-        		'class' => 'app\components\DeviceUrlRule'	
-        	]	
         ],
+    	'assetManager' => [
+    		'bundles' => [
+    			'yii\web\JqueryAsset' => [
+    				'jsOptions' => ['position' => \yii\web\View::POS_BEGIN],
+    			],
+    		],
+    	],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

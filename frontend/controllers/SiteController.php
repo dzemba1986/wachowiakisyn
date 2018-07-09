@@ -1,19 +1,18 @@
 <?php
 namespace frontend\controllers;
 
-use Yii;
 use common\models\LoginForm;
+use frontend\models\ChangePasswordForm;
+use frontend\models\ContactForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use Yii;
 use yii\base\InvalidParamException;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use yii\helpers\Url;
-use yii\helpers\BaseHtml;
 
 /**
  * Site controller
@@ -130,6 +129,25 @@ class SiteController extends Controller
         }
 
         return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+    
+    public function actionChangePassword()
+    {
+        $id = \Yii::$app->user->id;
+        
+        try {
+            $model = new ChangePasswordForm($id);
+        } catch (InvalidParamException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+        
+        if ($model->load(\Yii::$app->request->post()) && $model->validate() && $model->changePassword()) {
+            \Yii::$app->session->setFlash('success', 'Hasło zmienione!');
+        }
+        
+        return $this->render('change_password', [
             'model' => $model,
         ]);
     }

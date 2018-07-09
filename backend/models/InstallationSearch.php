@@ -17,9 +17,7 @@ class InstallationSearch extends Installation
 	public function rules()
 	{
 		return [
-		// The following rule is used by search().
-		// @todo Please remove those attributes that should not be searched.
-		[['address', 'wire_length', 'type', 'status',
+		[['address', 'wire_length', 'type_id', 'status',
 		 'wire_date', 'socket_date', 'minSocketDate', 'maxSocketDate',
 		 'wire_user', 'socket_user', 'invoice_date', 'street', 'house', 'house_detail', 'flat', 'flat_detail'], 
 		 'safe'],
@@ -31,13 +29,11 @@ class InstallationSearch extends Installation
 		$query = Installation::find();
 	
 		$dataProvider = new ActiveDataProvider([
-				'query' => $query,
-                'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
-				]);
+			'query' => $query,
+            'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,1000]],
+		]);
 	
-		$query->joinWith(['modelAddress',
-						  'modelType'
-        ]);
+		$query->joinWith(['address', 'type']);
 		
 		$dataProvider->setSort([
 			'defaultOrder' => ['socket_date' => SORT_ASC, 'street' => SORT_ASC, 'house' => SORT_ASC, 'flat' => SORT_ASC],
@@ -48,10 +44,10 @@ class InstallationSearch extends Installation
 				'wire_user',
 				'socket_user',
 				'invoice_date',
-                'type',
+                'type_id',
                 'street' => [
-					'asc' => ['ulica' => SORT_ASC],
-					'desc' => ['ulica' => SORT_DESC],
+					'asc' => ['t_ulica' => SORT_ASC],
+					'desc' => ['t_ulica' => SORT_DESC],
 				],	
 				'house' => [
 						'asc' => ['dom' => SORT_ASC],
@@ -73,17 +69,17 @@ class InstallationSearch extends Installation
 		}
 	
 		$query->andFilterWhere([
-				'tbl_installation.id' => $this->id,
-				'wire_length' => $this->wire_length,
-				'wire_date' => $this->wire_date,
-				'socket_date' => $this->socket_date,
-				'type' => $this->type,
-				'ulica' => $this->street,
-				'dom' => $this->house,
-				'lokal' => $this->flat,
-				'invoiced' => $this->invoice_date,
-				'status' => $this->status
-				]);
+			'tbl_installation.id' => $this->id,
+			'wire_length' => $this->wire_length,
+			'wire_date' => $this->wire_date,
+			'socket_date' => $this->socket_date,
+			'type_id' => $this->type_id,
+			't_ulica' => $this->street,
+			'dom' => $this->house,
+			'lokal' => $this->flat,
+			'invoiced' => $this->invoice_date,
+			'status' => $this->status
+		]);
 		
 		
 	
