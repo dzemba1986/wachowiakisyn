@@ -282,6 +282,17 @@ class DeviceController extends Controller {
 		fclose($file);
 	}
 	
+	function actionSave() {
+	    //8000GS
+	    $gss = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+	    ->where(['and', ['like', 'model.name', '8000GS'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+	    // snmpset  -c 1nn3c0mmun1ty -v2c -t 10 $x 1.3.6.1.4.1.89.87.2.1.3.1 i 1 1.3.6.1.4.1.89.87.2.1.7.1 i 2 1.3.6.1.4.1.89.87.2.1.8.1 i 1 1.3.6.1.4.1.89.87.2.1.12.1 i 3 1.3.6.1.4.1.89.87.2.1.17.1 i 4 > $path_to_logs/log8000GS
+	    foreach ($gss as $gs) {
+	        snmp2_set('172.20.7.254', '1nn3c0mmun1ty', "1.3.6.1.4.1.89.87.2.1.3.1 i 1 1.3.6.1.4.1.89.87.2.1.9.1 a 172.20.4.18 1.3.6.1.4.1.89.87.2.1.7.1 i 3 1.3.6.1.4.1.89.87.2.1.8.1 i 3 1.3.6.1.4.1.89.87.2.1.11.1 s 8000gs-testowy 1.3.6.1.4.1.89.87.2.1.17.1 i 4");
+	    }
+	}
+	
+	
 	function actionIcingaAdd() {
 	    
 // 	    $switches = Swith::find()->joinWith(['mainIp', 'model'])->andWhere(['and', ['monitoring' => null], ['<>', 'address_id', 1]])->orderBy('device.name')->limit(100)->all();
