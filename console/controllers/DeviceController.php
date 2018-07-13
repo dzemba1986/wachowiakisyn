@@ -4,11 +4,10 @@ namespace console\controllers;
 
 use backend\models\Camera;
 use backend\models\Device;
-use backend\models\Host;
+use backend\models\GatewayVoip;
 use backend\models\Swith;
 use yii\base\Exception;
 use yii\console\Controller;
-use backend\models\GatewayVoip;
 
 
 class DeviceController extends Controller {
@@ -282,13 +281,68 @@ class DeviceController extends Controller {
 		fclose($file);
 	}
 	
-	function actionSave() {
+	function actionSaveRunToStartup() {
 	    //8000GS
 	    $gss = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
-	    ->where(['and', ['like', 'model.name', '8000GS'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-	    // snmpset  -c 1nn3c0mmun1ty -v2c -t 10 $x 1.3.6.1.4.1.89.87.2.1.3.1 i 1 1.3.6.1.4.1.89.87.2.1.7.1 i 2 1.3.6.1.4.1.89.87.2.1.8.1 i 1 1.3.6.1.4.1.89.87.2.1.12.1 i 3 1.3.6.1.4.1.89.87.2.1.17.1 i 4 > $path_to_logs/log8000GS
+	       ->where(['and', ['config' => 1], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    foreach ($gss as $gs) {
-	        snmp2_set('172.20.7.254', '1nn3c0mmun1ty', "1.3.6.1.4.1.89.87.2.1.3.1 i 1 1.3.6.1.4.1.89.87.2.1.9.1 a 172.20.4.18 1.3.6.1.4.1.89.87.2.1.7.1 i 3 1.3.6.1.4.1.89.87.2.1.8.1 i 3 1.3.6.1.4.1.89.87.2.1.11.1 s 8000gs-testowy 1.3.6.1.4.1.89.87.2.1.17.1 i 4");
+	        snmpset($gs['ip'], '1nn3c0mmun1ty', 
+	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1 1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'], 
+	            ['i', 'i', 'i', 'i', 'i'], 
+	            [1, 2, 1, 3, 4],
+	            10
+            );
+	    }
+	    
+	    //X-series
+	    $methods = [
+	        'hostkey'=>'ssh-rsa',
+	        'client_to_server' => [
+	            'crypt' => 'aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc,blowfish-cbc',
+	            'comp' => 'none'
+	        ],
+	        'server_to_client' => [
+	            'crypt' => 'aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc,blowfish-cbc',
+	            'comp' => 'none'
+	        ]
+        ];
+	    
+	    $xs = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+            ->where(['and', ['config' => 2], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+	    
+        foreach ($xs as $x) {
+            if (!($connection = ssh2_connect($x['ip'], 22222, $methods))) {
+                echo "[FAILED]\n";
+                exit(1);
+            } else {
+                echo "[OK]\n";
+                if(!ssh2_auth_password($connection, 'ra-daniel', 'Mustang1986.')){
+                    echo "Błąd autoryzacji\n";
+                    exit(1);
+                }
+                
+                if (!($shell = ssh2_shell($connection, 'xterm'))) {
+                    echo 'Nie zestawiono powłoki';
+                    exit(1);
+                }
+                fwrite( $shell, "en" . PHP_EOL);
+                sleep(1);
+                fwrite( $shell, "cop r s" . PHP_EOL);
+                sleep(5);
+                fclose($shell);
+            }
+        }
+	    
+	    //EC
+	    $ecs = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+            ->where(['and', ['config' => 5], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+	    
+	    foreach ($ecs as $ec){
+	        snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'p@j@kp@j@k', 'DES', 'k1tk@k1tk@',
+	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
+	            ['i', 'i', 's', 'i'],
+	            [2, 3, 'startup1.cfg', 2]
+            );
 	    }
 	}
 	
@@ -371,25 +425,25 @@ class DeviceController extends Controller {
 			//$shell = ssh2_exec($connection, $cmd);
 			//fwrite( $shell, "en\n");
 			//sleep(1);
-			fwrite( $shell, "sh mac address-table");
-			sleep(1);
-			//fwrite( $shell, "interface port1.0.1\n");
+			//fwrite( $shell, "sh mac address-table");
 			//sleep(1);
-			//fwrite( $shell, "desc ssh2-php-test\n");
+			fwrite( $shell, "interface port1.0.1\n");
+			sleep(1);
+			fwrite( $shell, "desc ssh2-php-test\n");
 			
 			//$read = fgets($shell, 4096);
 			//echo $read;
 			//fclose($shell);
 			//stream_set_blocking($shell, true);
-			$stream_out = ssh2_fetch_stream($shell, SSH2_STREAM_STDIO);
-			echo stream_get_contents($stream_out);
+			//$stream_out = ssh2_fetch_stream($shell, SSH2_STREAM_STDIO);
+			//echo stream_get_contents($stream_out);
 			
 			//echo "Output: " . stream_get_contents($shell);
 			//$data = "";
-			while ($buf = fgets($shell)) {
-				flush();
-				echo $buf;
-			}
+// 			while ($buf = fgets($shell)) {
+// 				flush();
+// 				echo $buf;
+// 			}
 			//echo $data;
 			
 			fclose($shell);
@@ -399,6 +453,30 @@ class DeviceController extends Controller {
 	
 	function actionSnmp(){
 		
+	    $tftpToRunning = snmpset(
+	        "172.20.7.254",
+	        "1nn3c0mmun1ty",
+	        ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.4.1', '1.3.6.1.4.1.89.87.2.1.6.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+	        ['i', 'a', 's', 'i', 'i', 'i'],
+	        [3, '172.20.4.18', 'test.txt', 1, 2, 4]
+	        );
+	    
+	    if ($tftpToRunning) {
+	        sleep(1);
+	        
+	        $runningToStartup = snmpset(
+	            "172.20.7.254",
+	            "1nn3c0mmun1ty",
+	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+	            ['i', 'i', 'i', 'i', 'i'],
+	            [1, 2, 1, 3, 4]
+	            );
+	        
+	        if ($runningToStartup) echo "Zrobione\n";
+	        else echo "Błąd\n";
+	    } else echo "Błąd\n";
+	    
+	    
 		snmp2_set("172.20.7.254", "1nn3c0mmun1ty", "1.3.6.1.4.1.89.87.2.1.3.1 i 1 1.3.6.1.4.1.89.87.2.1.9.1 a 172.20.4.18 1.3.6.1.4.1.89.87.2.1.7.1 i 3 1.3.6.1.4.1.89.87.2.1.8.1 i 3 1.3.6.1.4.1.89.87.2.1.11.1 s 8000gs-testowy 1.3.6.1.4.1.89.87.2.1.17.1 i 4");
 		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.9.1", "a", "172.20.4.18");
 		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.7.1", "i", "3");
