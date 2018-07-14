@@ -86,7 +86,7 @@ class DeviceController extends Controller {
 		
 		//x900-10
 		$x900s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->all();
+            ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
 		
