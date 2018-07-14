@@ -1,0 +1,3 @@
+00 1  * * *   root  php /var/www/wachowiakisyn/yii device/list
+30 1  * * *   root  php /var/www/wachowiakisyn/yii device/save
+00 2  * * *   root  php /var/www/wachowiakisyn/yii device/backup
