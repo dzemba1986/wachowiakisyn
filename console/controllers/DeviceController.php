@@ -15,7 +15,7 @@ class DeviceController extends Controller {
 	public function actionList() {
 		
 		//L3
-		$l3s = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$l3s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['<>', 'address_id', 1], ['layer3' => true]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -29,7 +29,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//L3-172
-		$l3s_172= Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$l3s_172= Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['<>', 'address_id', 1], ['layer3' => true], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -43,7 +43,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//L3-10
-		$l3s_10 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$l3s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['<>', 'address_id', 1], ['layer3' => true], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -57,7 +57,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x900
-		$x900s = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x900s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -71,7 +71,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x900-172
-		$x900s_172 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x900s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -85,7 +85,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x900-10
-		$x900s_10 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x900s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->all();
 		
 		$ips = '';
@@ -99,7 +99,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//8000GS
-		$gss = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', '8000GS'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -113,7 +113,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//8000GS-24p
-		$gss24 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$gss24 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', '8000GS/24'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -127,7 +127,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//8000GS-48p
-		$gss48 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$gss48 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', '8000GS/48'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -141,7 +141,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x210
-		$x210s = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x210s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x210'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -155,7 +155,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x210-172
-		$x210s_172 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x210s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x210'], ['is not', 'address_id', null], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -169,7 +169,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x210-10
-		$x210s_10 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x210s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x210'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -183,7 +183,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x230
-		$x230s = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x230s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x230'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -197,7 +197,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x230-172
-		$x230s_172 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x230s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x230'], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -211,7 +211,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x230-10
-		$x230s_10 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x230s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x230'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -225,7 +225,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x510
-		$x510s = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x510s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x510'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -239,7 +239,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x510-172
-		$x510s_172 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x510s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x510'], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ipsList = '';
@@ -253,7 +253,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//x510-10
-		$x510s_10 = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$x510s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'x510'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ipsList = '';
@@ -267,7 +267,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//ec
-		$ecs = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+		$ecs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['like', 'model.name', 'EC'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 		
 		$ipsList = '';
@@ -281,17 +281,24 @@ class DeviceController extends Controller {
 		fclose($file);
 	}
 	
-	function actionSaveRunToStartup() {
+	function actionSave() {
+	    
+	    $pathAutoSave = \Yii::getAlias('@console/device/autosave');
+	    $log = '';
+	    
 	    //8000GS
-	    $gss = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+	    $gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
 	       ->where(['and', ['config' => 1], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    foreach ($gss as $gs) {
-	        snmpset($gs['ip'], '1nn3c0mmun1ty', 
+	        if (!snmpset($gs['ip'], '1nn3c0mmun1ty', 
 	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1 1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'], 
 	            ['i', 'i', 'i', 'i', 'i'], 
 	            [1, 2, 1, 3, 4],
-	            10
-            );
+	            4000000
+            )) {
+                $log .= $gs['ip'] . " - Błąd SNMP\n";
+                continue;
+            }
 	    }
 	    
 	    //X-series
@@ -306,46 +313,117 @@ class DeviceController extends Controller {
 	            'comp' => 'none'
 	        ]
         ];
-	    
-	    $xs = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['config' => 2], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+	    //nie uwzględnia PLIX'a
+	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	       ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['<>', 'device.id', 19663]])->orderBy('ip')->asArray()->all();
 	    
         foreach ($xs as $x) {
             if (!($connection = ssh2_connect($x['ip'], 22222, $methods))) {
-                echo "[FAILED]\n";
-                exit(1);
+                $log .=  $x['ip'] . " - Nie zestawiono połączenia\n";
+                continue;
             } else {
-                echo "[OK]\n";
                 if(!ssh2_auth_password($connection, 'ra-daniel', 'Mustang1986.')){
-                    echo "Błąd autoryzacji\n";
-                    exit(1);
+                    $log .= $x['ip'] . " - Błąd autoryzacji\n";
+                    continue;
                 }
                 
                 if (!($shell = ssh2_shell($connection, 'xterm'))) {
-                    echo 'Nie zestawiono powłoki';
-                    exit(1);
+                    $log .= $x['ip'] . " - Nie zestawiono powłoki\n";
+                    continue;
                 }
                 fwrite( $shell, "en" . PHP_EOL);
                 sleep(1);
                 fwrite( $shell, "cop r s" . PHP_EOL);
-                sleep(5);
+                sleep(4);
                 fclose($shell);
             }
         }
-	    
+        
 	    //EC
-	    $ecs = Device::find()->select('ip')->joinWith(['mainIp', 'model'])
+	    $ecs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['config' => 5], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    
 	    foreach ($ecs as $ec){
-	        snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'p@j@kp@j@k', 'DES', 'k1tk@k1tk@',
+	        $log .= $ec['ip'] . ' - ';
+	        if (snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'p@j@kp@j@k', 'AES', 'k1tk@k1tk@',
 	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
 	            ['i', 'i', 's', 'i'],
-	            [2, 3, 'startup1.cfg', 2]
-            );
+	            [2, 3, 'startup1.cfg', 2],
+	            4000000
+            )) {
+                $log .= $ec['ip'] . " - Błąd SNMP\n";
+                continue;
+            }
 	    }
+	    
+	    $fileAutoSave = $pathAutoSave . '/save.log';
+	    file_put_contents($fileAutoSave, $log);
 	}
 	
+	function actionBackup() {
+	    
+	    $pathAutoBackup = \Yii::getAlias('@console/device/autobackup');
+	    $log = '';
+	    
+	    //8000GS
+	    $gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    ->where(['and', ['config' => 1], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+	    foreach ($gss as $gs) {
+	        if (!snmpset($gs['ip'], '1nn3c0mmun1ty',
+	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.9.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.11.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+	            ['i', 'a', 'i', 'i', 's', 'i'],
+	            [1, '172.20.4.18', 3, 3, '8000GS' . '_' . $gs['ip'] . '.rtf', 4]
+	            )) {
+	                $log .= $gs['ip'] . " - Błąd SNMP\n";
+	                continue;
+                }
+	    }
+	    
+	    //X-series
+	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+            ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
+	    foreach ($xs as $x) {
+	        if (!snmpset($x['ip'], '1nn3c0mmun1ty',
+	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
+	            ['a', 'i', 's', 'i', 's', 's'],
+	            ['172.20.4.18', 1, 'default.cfg', 4, $x['model']['name'] . '_' . $x['ip'] . '.rtf', 1]
+	            )) {
+	                $log .= $x['ip'] . " - Błąd SNMP\n";
+	                continue;
+	            }
+	    }
+	    
+	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+            ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
+	    foreach ($xs as $x) {
+	        if (!snmpset($x['ip'], '1nn3c0mmun1ty',
+	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
+	            ['a', 'i', 's', 'i', 's', 's'],
+	            ['172.20.4.18', 1, 'default.cfg', 4, $x['model']['name'] . '_' . $x['ip'] . '.rtf', 1]
+	            )) {
+	                $log .= $x['ip'] . " - Błąd SNMP\n";
+	                continue;
+	            }
+	    }
+	    
+	    //EC
+	    $ecs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    ->where(['and', ['config' => 5], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+	    
+	    foreach ($ecs as $ec){
+	        if (!snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'k1tk@k1tk@', 'AES', 'p@j@kp@j@k',
+	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.20.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.21.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
+	            ['i', 'i', 's', 'i', 'x', 'i'],
+	            [3, 4, $ec['model']['name'] . '_' . $ec['ip'] . '.rtf', 1, '0A6FE904', 2]
+	            )) {
+	                $log .= $ec['ip'] . " - Błąd SNMP\n";
+	                continue;
+	            }
+	    }
+	    
+	    $fileAutoBackup = $pathAutoBackup . '/backup.log';
+	    file_put_contents($fileAutoBackup, $log);
+	}
 	
 	function actionIcingaAdd() {
 	    
