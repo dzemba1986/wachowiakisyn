@@ -423,6 +423,11 @@ class DeviceController extends Controller {
 	    
 	    $fileAutoBackup = $pathAutoBackup . '/backup.log';
 	    file_put_contents($fileAutoBackup, $log);
+	    
+	    shell_exec('mkdir /var/tftp/$(date +%Y-%m-%d)');
+	    sleep(2);
+	    shell_exec('mv /var/tftp/*.rtf /var/tftp/$(date +%Y-%m-%d)');
+	    shell_exec('lftp -e "set ssl:verify-certificate no; mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 2121 -u backup,b@c4@p 10.111.233.2');
 	}
 	
 	function actionIcingaAdd() {
