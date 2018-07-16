@@ -295,10 +295,8 @@ class DeviceController extends Controller {
 	            ['i', 'i', 'i', 'i', 'i'], 
 	            [1, 2, 1, 3, 4],
 	            4000000
-            )) {
-                $log .= $gs['ip'] . " - Błąd SNMP\n";
-                continue;
-            }
+            )) $log .= $gs['ip'] . " - Błąd SNMP\n";
+            
 	    }
 	    
 	    //X-series
@@ -318,24 +316,17 @@ class DeviceController extends Controller {
 	       ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['<>', 'device.id', 19663]])->orderBy('ip')->asArray()->all();
 	    
         foreach ($xs as $x) {
-            if (!($connection = ssh2_connect($x['ip'], 22222, $methods))) {
-                $log .=  $x['ip'] . " - Nie zestawiono połączenia\n";
-                continue;
-            } else {
-                if(!ssh2_auth_password($connection, 'ra-daniel', 'Mustang1986.')){
-                    $log .= $x['ip'] . " - Błąd autoryzacji\n";
-                    continue;
-                }
-                
-                if (!($shell = ssh2_shell($connection, 'xterm'))) {
-                    $log .= $x['ip'] . " - Nie zestawiono powłoki\n";
-                    continue;
-                }
+            try {
+                $connection = ssh2_connect($x['ip'], 22222, $methods);
+                ssh2_auth_password($connection, 'ra-daniel', 'Mustang1986.');
+                $shell = ssh2_shell($connection, 'xterm');
                 fwrite( $shell, "en" . PHP_EOL);
                 sleep(1);
                 fwrite( $shell, "cop r s" . PHP_EOL);
                 sleep(4);
                 fclose($shell);
+            } catch (\Throwable $t) {
+                $log .= $x['ip'] . ' - ' . $t->getMessage() . "\n";    
             }
         }
         
@@ -345,15 +336,12 @@ class DeviceController extends Controller {
 	    
 	    foreach ($ecs as $ec){
 	        $log .= $ec['ip'] . ' - ';
-	        if (snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'p@j@kp@j@k', 'AES', 'k1tk@k1tk@',
+	        if (snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'k1tk@k1tk@', 'AES', 'p@j@kp@j@k',
 	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
 	            ['i', 'i', 's', 'i'],
 	            [2, 3, 'startup1.cfg', 2],
 	            4000000
-            )) {
-                $log .= $ec['ip'] . " - Błąd SNMP\n";
-                continue;
-            }
+            )) $log .= $ec['ip'] . " - Błąd SNMP\n";
 	    }
 	    
 	    $fileAutoSave = $pathAutoSave . '/save.log';
@@ -373,10 +361,7 @@ class DeviceController extends Controller {
 	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.9.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.11.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
 	            ['i', 'a', 'i', 'i', 's', 'i'],
 	            [1, '172.20.4.18', 3, 3, '8000GS_' . $gs['ip'] . '.rtf', 4]
-	            )) {
-	                $log .= $gs['ip'] . " - Błąd SNMP\n";
-	                continue;
-                }
+            )) $log .= $gs['ip'] . " - Błąd SNMP\n";
 	    }
 	    
 	    //X-series
@@ -387,10 +372,7 @@ class DeviceController extends Controller {
 	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
 	            ['a', 'i', 's', 'i', 's', 's'],
 	            ['172.20.4.18', 1, 'default.cfg', 4, 'xSeries_' . $x['ip'] . '.rtf', 1]
-	            )) {
-	                $log .= $x['ip'] . " - Błąd SNMP\n";
-	                continue;
-	            }
+            )) $log .= $x['ip'] . " - Błąd SNMP\n";
 	    }
 	    
 	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
@@ -400,10 +382,7 @@ class DeviceController extends Controller {
 	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
 	            ['a', 'i', 's', 'i', 's', 's'],
 	            ['172.20.4.18', 1, 'default.cfg', 4, 'xSeries_' . $x['ip'] . '.rtf', 1]
-	            )) {
-	                $log .= $x['ip'] . " - Błąd SNMP\n";
-	                continue;
-	            }
+            )) $log .= $x['ip'] . " - Błąd SNMP\n";
 	    }
 	    
 	    //EC
@@ -415,19 +394,16 @@ class DeviceController extends Controller {
 	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.20.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.21.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
 	            ['i', 'i', 's', 'i', 'x', 'i'],
 	            [3, 4, 'EC_' . $ec['ip'] . '.rtf', 1, '0A6FE904', 2]
-	            )) {
-	                $log .= $ec['ip'] . " - Błąd SNMP\n";
-	                continue;
-	            }
+            )) $log .= $ec['ip'] . " - Błąd SNMP\n";
 	    }
 	    
 	    $fileAutoBackup = $pathAutoBackup . '/backup.log';
 	    file_put_contents($fileAutoBackup, $log);
 	    
-	    shell_exec('mkdir /var/tftp/$(date +%Y-%m-%d)');
+	    exec('mkdir /var/tftp/$(date +%Y-%m-%d)');
 	    sleep(2);
-	    shell_exec('mv /var/tftp/*.rtf /var/tftp/$(date +%Y-%m-%d)');
-	    shell_exec('lftp -e "set ssl:verify-certificate no; mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 2121 -u backup,b@c4@p 10.111.233.2');
+	    exec('mv /var/tftp/*.rtf /var/tftp/$(date +%Y-%m-%d)');
+	    exec('lftp -e "set ssl:verify-certificate no; mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 2121 -u backup,b@c4@p 10.111.233.2');
 	}
 	
 	function actionIcingaAdd() {
