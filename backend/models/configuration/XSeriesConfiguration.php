@@ -175,7 +175,7 @@ class XSeriesConfiguration extends Configuration {
     return $add;
     }
 
-    function drop() {
+    function drop($auto) {
         $drop = ' '; 
         if ($this->device instanceof Host) {
             if (strpos($this->device->parentIp, '172.') === 0) {

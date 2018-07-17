@@ -161,7 +161,7 @@ class ECSeriesConfiguration extends Configuration {
     return $add;
     }
 
-    function drop() {
+    function drop($auto) {
         $drop = ' ';        
         if ($this->device instanceof Host) {
             $drop = "no mac-address-table static {$this->mac} vlan {$this->vlanId}\n";
