@@ -187,7 +187,7 @@ class Host extends Device {
 	    return $this->conf->add();
 	}
 	
-	public function configurationDrop() {
+	public function configurationDrop($auto = false) {
 	    
 	    $parentId = $this->links[0]->parent_device;
 	    $parentDevice = Device::findOne($parentId);
@@ -200,7 +200,7 @@ class Host extends Device {
     	    else return ' ';
 	    } else return ' ';
 	    
-	    return $this->conf->drop();
+	    return $this->conf->drop($auto);
 	}
 	
 	public function configurationChangeMac($newMac) {
