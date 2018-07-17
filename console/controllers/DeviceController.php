@@ -509,7 +509,7 @@ class DeviceController extends Controller {
 			//echo $data;
 		}
 	}
-	
+
 	function actionSnmp(){
 		
 	    $tftpToRunning = snmpset(
@@ -534,16 +534,6 @@ class DeviceController extends Controller {
 	        if ($runningToStartup) echo "Zrobione\n";
 	        else echo "Błąd\n";
 	    } else echo "Błąd\n";
-	    
-	    
-		snmp2_set("172.20.7.254", "1nn3c0mmun1ty", "1.3.6.1.4.1.89.87.2.1.3.1 i 1 1.3.6.1.4.1.89.87.2.1.9.1 a 172.20.4.18 1.3.6.1.4.1.89.87.2.1.7.1 i 3 1.3.6.1.4.1.89.87.2.1.8.1 i 3 1.3.6.1.4.1.89.87.2.1.11.1 s 8000gs-testowy 1.3.6.1.4.1.89.87.2.1.17.1 i 4");
-		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.9.1", "a", "172.20.4.18");
-		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.7.1", "i", "3");
-		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.8.1", "i", "3");
-		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.11.1", "s", "8000gs-testowy");
-		//snmp2_set("172.20.7.254", "1nn3c0mmun1ty", ".1.3.6.1.4.1.89.87.2.1.17.1", "i", "4");
-		
-		//snmpset  -c 1nn3c0mmun1ty -v2c -OvQ $x 1.3.6.1.4.1.89.87.2.1.3.1 i 1  1.3.6.1.4.1.89.87.2.1.9.1 a 172.20.4.18 1.3.6.1.4.1.89.87.2.1.7.1 i 3 1.3.6.1.4.1.89.87.2.1.8.1 i 3   1.3.6.1.4.1.89.87.2.1.11.1 s "8000gs-$x.rtf" 1.3.6.1.4.1.89.87.2.1.17.1 i 4 >> $path_to_logs/log8000GS
 	}
 	
 	public function actionGenerateConfFile() {
@@ -679,5 +669,51 @@ class DeviceController extends Controller {
 		
 		phpinfo();
 	}
+	
+	public function actionApiIcinga() {
+		
+		//$cmd = <<<EOT
+		//curl -k -s -u api:apipass -H 'Accept: application/json' -X PUT 'https://localhost:5665/v1/objects/hosts/test8000v4' -d '{ "templates": [ "generic-host" ], "attrs": { "address": "172.20.7.254", "check_command": "hostalive", "vars.device" : "switch" } }' | python -m json.tool
+		//EOT;
+		//$out = shell_exec($cmd);
+		
+		//echo '1';
+		
+		$data = [
+				'templates' => [ 'generic-host' ],
+				'attrs' => [
+						'address' => '172.20.7.254',
+						'check_command' => 'hostalive',
+						'vars.device' => 'switch'
+				]
+		];
+		$data_json = json_encode($data);
+		
+		//echo '2';
+		
+		$hand = curl_init();
+		curl_setopt($hand, CURLOPT_URL, 'https://10.111.233.4:5665/v1/objects/hosts/test8000v5');
+		curl_setopt($hand, CURLOPT_CUSTOMREQUEST, "PUT");
+		curl_setopt($hand, CURLOPT_USERPWD, 'api:apipass');
+		curl_setopt($hand, CURLOPT_HTTPHEADER, ['Accept : application/json']);
+		curl_setopt($hand, CURLOPT_POSTFIELDS,$data_json);
+		curl_setopt($hand, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($hand, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($hand, CURLOPT_SSL_VERIFYHOST, false);
+		
+		//echo '3';
+		
+		if (!curl_exec($hand))
+			echo curl_error($hand);
+		else	
+			echo 'TAK';
+		
+		curl_close($hand);
+			
+			
+			
+			
+	}
+	
 }
 ?>

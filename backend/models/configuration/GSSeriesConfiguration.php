@@ -145,7 +145,7 @@ class GSSeriesConfiguration extends Configuration {
     return $add;
     }
 
-    function drop() {
+    function drop($auto) {
         $drop = ' '; 
         if ($this->device instanceof Host) {
             $drop = "interface vlan {$this->vlanId}\n";
@@ -160,11 +160,12 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "sw a v 555\n";
             $drop .= "no shutdown\n";
             $drop .= "exit\n";
+            $drop .= "ip access-list user{$this->parentPortNumber}\n";
             $drop .= "no ip access-list user{$this->parentPortNumber}\n";
             if ($this->device->smtp) $drop .= "no ip access-list user{$this->parentPortNumber}smtp\n";
             $drop .= "exit\n";
-            $drop .= "copy r s\n";
-            $drop .= "y\n";
+            if (!$auto) $drop .= "copy r s\n";
+            if (!$auto) $drop .= "y\n";
         } elseif ($this->device instanceof GatewayVoip) {
             $drop = "interface vlan {$this->vlanId}\n";
             $drop .= "no bridge address {$this->mac}\n";

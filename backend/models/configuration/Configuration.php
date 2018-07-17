@@ -25,6 +25,6 @@ abstract class Configuration {
         $this->desc = $device->getMixName(false);
     }
     abstract function add();
-    abstract function drop();
+    abstract function drop($auto);
 //     abstract function changeMac($newMac); 
 }

@@ -12,6 +12,7 @@ use backend\models\forms\AddHostForm;
 use Yii;
 use yii\base\Exception;
 use yii\filters\AccessControl;
+use yii\filters\AjaxFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -22,16 +23,22 @@ class HostController extends DeviceController
         
         return ArrayHelper::merge(
             parent::behaviors(),
-            ['access' => [
-                'class' => AccessControl::className(),
-                'rules'	=> [
-                    [
-                        'allow' => true,
-                        'actions' => ['change-mac', 'get-change-mac-script', 'add-inactive-on-tree', 'add-host-validation'],
-                        'roles' => ['@']
+            [   
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules'	=> [
+                        [
+                            'allow' => true,
+                            'actions' => ['change-mac', 'get-change-mac-script', 'add-inactive-on-tree', 'add-host-validation', 'send-config'],
+                            'roles' => ['@']
+                        ]
                     ]
-                ]
-            ]]
+                ],
+                [
+                    'class' => AjaxFilter::className(),
+                    'only' => ['send-config']
+                ],
+            ]
         );
     }
     
@@ -242,6 +249,47 @@ class HostController extends DeviceController
         }
     }
     
+    function actionSendConfig($id) {
+        
+        $request = Yii::$app->request;
+        $host = $this->findModel($id);
+        
+        if ($request->isPost) {
+            try {
+                $drop = $host->configurationDrop(true);
+                $fileName = rand(1000, 9999) . '.txt';
+                $fileConf = '/var/tftp/' . $fileName;
+                file_put_contents($fileConf, $drop);
+//                 snmpset(
+//                     $host->parentIp,
+//                     "1nn3c0mmun1ty",
+//                     ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.4.1', '1.3.6.1.4.1.89.87.2.1.6.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+//                     ['i', 'a', 's', 'i', 'i', 'i'],
+//                     [3, '172.20.4.18', $fileName, 1, 2, 4],
+//                     4000000
+//                 );
+//                 sleep(1);
+//                 snmpset(
+//                     $host->parentIp,
+//                     "1nn3c0mmun1ty",
+//                     ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+//                     ['i', 'i', 'i', 'i', 'i'],
+//                     [3, 2, 1, 3, 4],
+//                     4000000
+//                 );
+                exec('rm ' . $fileConf);
+                
+                return 1;
+            } catch (\Throwable $t) {
+                return 0;    
+            }
+        } else {
+            return $this->renderAjax('send_config', [
+                'host' => $host,
+            ]);
+        }
+    }
+    
     public function actionChangeMac($id) {
         
         $request = Yii::$app->request;
@@ -266,7 +314,6 @@ class HostController extends DeviceController
     
     public function actionGetChangeMacScript($id, $newMac) {
         
-        $request = Yii::$app->request;
         $host = $this->findModel($id);
         
         Yii::$app->response->format = Response::FORMAT_JSON;
