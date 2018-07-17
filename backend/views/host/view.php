@@ -5,8 +5,8 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /**
- * @var backend\models\Host $host
- * @var backend\models\Connection $connection
+ * @var backend\models\Host $device
+ * @var yii\base\View $this
  */
 
 echo $this->renderFile('@backend/views/modal/modal_sm.php');
@@ -55,7 +55,19 @@ echo DetailView::widget([
 		],
 		[
 		    'label' => 'Skrypty',
-		    'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]),
+		    'value' => Html::button('Dodaj', [
+		        'class' => 'copy',
+		        'data-clipboard-text' => $add
+		    ]) . Html::button('Usuń', [
+		        'class' => 'copy',
+		        'link' => Url::to(['send-config', 'id' => $device->id]),
+		        'data-clipboard-text' => $drop,
+// 		        'onclick' => "
+//                     $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('link'));
+		        
+//                     return false;
+//                 "
+		    ]),
 		    'format' => 'raw',
 		    'visible' => $device->status && $device->ips
 		]
