@@ -9,9 +9,9 @@ use backend\models\Virtual;
 
 class GSSeriesConfiguration extends Configuration {
     
-    function __construct($device, $parentDevice) {
+    function __construct($device) {
         
-        parent::__construct($device, $parentDevice);
+        parent::__construct($device);
         $this->mac = $device->mac;
     }
     
@@ -166,6 +166,34 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "exit\n";
             if (!$auto) $drop .= "copy r s\n";
             if (!$auto) $drop .= "y\n";
+            
+            if ($auto) {
+                $fileName = rand(1000, 9999) . '.txt';
+                $fileConf = '/var/tftp/' . $fileName;
+                file_put_contents($fileConf, $drop);
+                
+//                 if (snmpset(
+//                     $this->device->parentIp,
+//                     "1nn3c0mmun1ty",
+//                     ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.4.1', '1.3.6.1.4.1.89.87.2.1.6.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+//                     ['i', 'a', 's', 'i', 'i', 'i'],
+//                     [3, '172.20.4.18', $fileName, 1, 2, 4],
+//                     4000000
+//                 )) {
+//                     sleep(1);
+//                     snmpset(
+//                         $this->device->parentIp,
+//                         "1nn3c0mmun1ty",
+//                         ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+//                         ['i', 'i', 'i', 'i', 'i'],
+//                         [3, 2, 1, 3, 4],
+//                         4000000
+//                     );
+//                 }
+                
+                exec('rm ' . $fileConf);
+            }
+            
         } elseif ($this->device instanceof GatewayVoip) {
             $drop = "interface vlan {$this->vlanId}\n";
             $drop .= "no bridge address {$this->mac}\n";

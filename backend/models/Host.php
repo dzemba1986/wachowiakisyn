@@ -162,25 +162,23 @@ class Host extends Device {
 	
 	function getConnectionsType() : array {
 	    
+	    $types = [];
+	    
 	    if (empty($this->connections)) {
     	    foreach ($this->connections as $connection) {
                 $types[] = $connection->type_id;
     	    }
-	    } else $types = [];
+	    }
 	    
 	    return $types;
 	}
 	
 	public function configurationAdd() {
 	    
-	    $parentId = $this->links[0]->parent_device;
-	    $parentDevice = Device::findOne($parentId);
-	    $parentModelConfType = $parentDevice->model->config;
-	    
 	    if (!empty($this->ips)) {
-    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+    	    if ($this->parentConfigType == 1) $this->conf = new GSSeriesConfiguration($this);
+    	    elseif ($this->parentConfigType == 2) $this->conf = new XSeriesConfiguration($this);
+    	    elseif ($this->parentConfigType == 5) $this->conf = new ECSeriesConfiguration($this);
     	    else return ' ';
 	    } else return ' ';
 	    
@@ -189,15 +187,11 @@ class Host extends Device {
 	
 	public function configurationDrop($auto = false) {
 	    
-	    $parentId = $this->links[0]->parent_device;
-	    $parentDevice = Device::findOne($parentId);
-	    $parentModelConfType = $parentDevice->model->config;
-	    
 	    if (!empty($this->ips)) {
-    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
-    	    else return ' ';
+	        if ($this->parentConfigType == 1) $this->conf = new GSSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 2) $this->conf = new XSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 5) $this->conf = new ECSeriesConfiguration($this);
+	        else return ' ';
 	    } else return ' ';
 	    
 	    return $this->conf->drop($auto);
@@ -205,16 +199,12 @@ class Host extends Device {
 	
 	public function configurationChangeMac($newMac) {
 	    
-	    $parentId = $this->links[0]->parent_device;
-	    $parentDevice = Device::findOne($parentId);
-	    $parentModelConfType = $parentDevice->model->config;
-	    
 	    if (!empty($this->ips)) {
-    	    if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-    	    elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-    	    elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
-    	    else return ' ';
-        } else return ' ';
+	        if ($this->parentConfigType == 1) $this->conf = new GSSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 2) $this->conf = new XSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 5) $this->conf = new ECSeriesConfiguration($this);
+	        else return ' ';
+	    } else return ' ';
         
 	    return $this->conf->changeMac($newMac);
 	}

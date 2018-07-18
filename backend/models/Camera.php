@@ -192,46 +192,34 @@ class Camera extends Device
 	
 	public function configurationAdd() {
 	    
-	    $parentId = $this->links[0]->parent_device;
-	    $parentDevice = Device::findOne($parentId);
-	    $parentModelConfType = $parentDevice->model->config;
-	    
 	    if (!empty($this->ips)) {
-	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        if ($this->parentConfigType == 1) $this->conf = new GSSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 2) $this->conf = new XSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 5) $this->conf = new ECSeriesConfiguration($this);
 	        else return ' ';
 	    } else return ' ';
 	    
 	    return $this->conf->add();
 	}
 	
-	public function configurationDrop() {
-	    
-	    $parentId = $this->links[0]->parent_device;
-	    $parentDevice = Device::findOne($parentId);
-	    $parentModelConfType = $parentDevice->model->config;
+	public function configurationDrop($auto = false) {
 	    
 	    if (!empty($this->ips)) {
-	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        if ($this->parentConfigType == 1) $this->conf = new GSSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 2) $this->conf = new XSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 5) $this->conf = new ECSeriesConfiguration($this);
 	        else return ' ';
 	    } else return ' ';
 	    
-	    return $this->conf->drop();
+	    return $this->conf->drop($auto);
 	}
 	
 	public function configurationChangeMac($newMac) {
 	    
-	    $parentId = $this->links[0]->parent_device;
-	    $parentDevice = Device::findOne($parentId);
-	    $parentModelConfType = $parentDevice->model->config;
-	    
 	    if (!empty($this->ips)) {
-	        if ($parentModelConfType == 1) $this->conf = new GSSeriesConfiguration($this, $parentDevice);
-	        elseif ($parentModelConfType == 2) $this->conf = new XSeriesConfiguration($this, $parentDevice);
-	        elseif ($parentModelConfType == 5) $this->conf = new ECSeriesConfiguration($this, $parentDevice);
+	        if ($this->parentConfigType == 1) $this->conf = new GSSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 2) $this->conf = new XSeriesConfiguration($this);
+	        elseif ($this->parentConfigType == 5) $this->conf = new ECSeriesConfiguration($this);
 	        else return ' ';
 	    } else return ' ';
 	    

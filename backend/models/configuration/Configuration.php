@@ -14,12 +14,11 @@ abstract class Configuration {
     protected $ip;
     protected $desc;
     
-    function __construct(Device $device, Device $parentDevice) {
+    function __construct(Device $device) {
         
         $this->device = $device;
-        $parentPortIndex = $device->links[0]->parent_port;
-        $this->parentPortNumber = $parentPortIndex + 1;
-        $this->parentPortName = $parentDevice->model->port[$parentPortIndex];
+        $this->parentPortNumber = $device->parentPortIndex;
+        $this->parentPortName = $device->parentPortName;
         $this->vlanId = $device->ips[0]->subnet->vlan->id;
         $this->ip = $device->ips[0]->ip;
         $this->desc = $device->getMixName(false);
