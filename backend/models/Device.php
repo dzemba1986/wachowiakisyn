@@ -198,6 +198,11 @@ class Device extends ActiveRecord
 	        return $this->proper_name ? $this->type->prefix . strtr($this->name,  $trans) . '_' . strtr($this->proper_name, $trans) : $this->type->prefix . strtr($this->name, $trans);
         }
     }
+    
+    public function getParentPortIndex() {
+        
+        return $this->links[0]->parent_port + 1;
+    }
 	
 	public function getParentPortName() {
 	    
@@ -217,8 +222,29 @@ class Device extends ActiveRecord
 	    else return 'Brak ip';
 	}
 	
-	function isParent() {
+	function isParent() : bool {
 	    
 	    return Tree::find()->where(['parent_device' => $this->id])->count() > 0 ? true : false;
+	}
+	
+	function getParentConfigType() : int {
+	    
+	    $parentId = $this->links[0]->parent_device;
+	    $parentDevice = Device::findOne($parentId);
+	    
+	    return $parentDevice->model->config;
+	}
+	
+	function getSnmpDesc() : string {
+	    
+	    if ($this->parentConfigType == 1) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
+	    elseif ($this->parentConfigType == 2) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
+	    elseif ($this->parentConfigType == 5) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
+	    else return ' ';
+	}
+	
+	function getSnmpVlan() : string {
+	    
+	    return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.17.7.1.4.5.1.1.' . $this->parentPortIndex), 7);
 	}
 }
