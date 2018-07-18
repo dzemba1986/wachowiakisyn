@@ -249,43 +249,21 @@ class HostController extends DeviceController
         }
     }
     
-    function actionSendConfig($id) {
+    function actionSendConfig($id, $type) {
         
         $request = Yii::$app->request;
         $host = $this->findModel($id);
         
         if ($request->isPost) {
             try {
-                $drop = $host->configurationDrop(true);
-                $fileName = rand(1000, 9999) . '.txt';
-                $fileConf = '/var/tftp/' . $fileName;
-                file_put_contents($fileConf, $drop);
-//                 snmpset(
-//                     $host->parentIp,
-//                     "1nn3c0mmun1ty",
-//                     ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.4.1', '1.3.6.1.4.1.89.87.2.1.6.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
-//                     ['i', 'a', 's', 'i', 'i', 'i'],
-//                     [3, '172.20.4.18', $fileName, 1, 2, 4],
-//                     4000000
-//                 );
-//                 sleep(1);
-//                 snmpset(
-//                     $host->parentIp,
-//                     "1nn3c0mmun1ty",
-//                     ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
-//                     ['i', 'i', 'i', 'i', 'i'],
-//                     [3, 2, 1, 3, 4],
-//                     4000000
-//                 );
-                exec('rm ' . $fileConf);
-                
+                if ($type == 'drop') $host->configurationDrop(true);
                 return 1;
             } catch (\Throwable $t) {
                 return 0;    
             }
         } else {
             return $this->renderAjax('send_config', [
-                'host' => $host,
+                'host' => $host
             ]);
         }
     }

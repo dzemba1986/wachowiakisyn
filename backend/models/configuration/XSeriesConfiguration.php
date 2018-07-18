@@ -9,9 +9,9 @@ use backend\models\Virtual;
 
 class XSeriesConfiguration extends Configuration {
     
-    function __construct($device, $parentDevice) {
+    function __construct($device) {
         
-        parent::__construct($device, $parentDevice);
+        parent::__construct($device);
         $this->mac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $device->mac));
     }
     
@@ -175,7 +175,7 @@ class XSeriesConfiguration extends Configuration {
     return $add;
     }
 
-    function drop() {
+    function drop($auto) {
         $drop = ' '; 
         if ($this->device instanceof Host) {
             if (strpos($this->device->parentIp, '172.') === 0) {

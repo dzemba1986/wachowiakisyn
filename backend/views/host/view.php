@@ -60,13 +60,13 @@ echo DetailView::widget([
 		        'data-clipboard-text' => $add
 		    ]) . Html::button('Usuń', [
 		        'class' => 'copy',
-		        'link' => Url::to(['send-config', 'id' => $device->id]),
+		        'link' => Url::to(['send-config', 'id' => $device->id, 'type' => 'drop']),
 		        'data-clipboard-text' => $drop,
-// 		        'onclick' => "
-//                     $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('link'));
+		        'onclick' => "
+                    $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('link'));
 		        
-//                     return false;
-//                 "
+                    return false;
+                "
 		    ]),
 		    'format' => 'raw',
 		    'visible' => $device->status && $device->ips

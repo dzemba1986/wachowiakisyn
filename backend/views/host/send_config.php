@@ -5,12 +5,13 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\base\View $this
+ * @var backend\models\Host $host
  */
 
 ActiveForm::begin([
 	'id' => 'send-config'
 ]) ?>
-    <p>Czy na pewno wysłać konfigurację na przełącznik?</p>
+    <p>Na przełączniku opis portu to <?= $host->snmpDesc ?>. Czy na pewno wysłać konfigurację na przełącznik?</p>
     
     <?= Html::submitButton('Tak', ['class' => 'btn btn-success']) ?>
   

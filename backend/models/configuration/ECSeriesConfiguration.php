@@ -9,9 +9,9 @@ use backend\models\Virtual;
 
 class ECSeriesConfiguration extends Configuration {
     
-    function __construct($device, $parentDevice) {
+    function __construct($device) {
         
-        parent::__construct($device, $parentDevice);
+        parent::__construct($device);
         $this->mac = preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace([':', '.', '-'], '', $device->mac));
     }
     
@@ -161,7 +161,7 @@ class ECSeriesConfiguration extends Configuration {
     return $add;
     }
 
-    function drop() {
+    function drop($auto) {
         $drop = ' ';        
         if ($this->device instanceof Host) {
             $drop = "no mac-address-table static {$this->mac} vlan {$this->vlanId}\n";
