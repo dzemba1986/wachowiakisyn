@@ -255,10 +255,12 @@ class HostController extends DeviceController
         $host = $this->findModel($id);
         
         if ($request->isPost) {
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             try {
                 if ($type == 'drop') $host->configurationDrop(true);
-                return 1;
+                return [1, $host->snmpVlan];
             } catch (\Throwable $t) {
+                var_dump($t->getMessage());
                 return 0;    
             }
         } else {
