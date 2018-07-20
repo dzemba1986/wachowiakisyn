@@ -176,10 +176,32 @@ class XSeriesConfiguration extends Configuration {
     }
 
     function drop($auto) {
-        $drop = ' '; 
+        $drop = ''; 
         if ($this->device instanceof Host) {
+            
+            if($auto) {
+                $methods = [
+                    'hostkey'=>'ssh-rsa',
+                    'client_to_server' => [
+                        'crypt' => 'aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc,blowfish-cbc',
+                        'comp' => 'none'
+                    ],
+                    'server_to_client' => [
+                        'crypt' => 'aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc,blowfish-cbc',
+                        'comp' => 'none'
+                    ]
+                ];
+                
+                $connection = ssh2_connect($this->device->parentIp, 22222, $methods);
+                ssh2_auth_password($connection, 'ra-daniel', 'Mustang1986.');
+                $shell = ssh2_shell($connection, 'xterm');
+                stream_set_blocking($shell, true);
+            }
+            
             if (strpos($this->device->parentIp, '172.') === 0) {
-                $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+                if ($auto) $drop .= "en\n";
+                if ($auto) $drop .= "conf t\n";
+                $drop .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
                 $drop .= "interface {$this->parentPortName}\n";
                 $drop .= "no switchport port-security\n";
                 $drop .= "no service-policy input 800M\n";
@@ -190,8 +212,18 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "do clear ip dhcp snooping binding int {$this->parentPortName}\n";
                 $drop .= "exit\n";
                 $drop .= "wr\n";
+                
+                if ($auto) {
+                    $lines = explode("\n", $drop);
+                    foreach ($lines as $line) {
+                        fwrite($shell, $line . PHP_EOL);
+                        $line == 'wr' ? sleep(5) : usleep(750000);
+                    }
+                }
             } else {
-                $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+                if ($auto) $drop .= "en\n";
+                if ($auto) $drop .= "conf t\n";
+                $drop .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
                 $drop .= "int {$this->parentPortName}\n";
                 $drop .= "no switchport port-security\n";
                 $drop .= "no service-policy input internet-user-800M\n";
@@ -207,8 +239,19 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "do clear ip dhcp snooping binding interface {$this->parentPortName}\n";
                 $drop .= "exit\n";
                 $drop .= "wr\n";
+                
+                if ($auto) {
+                    $lines = explode("\n", $drop);
+                    foreach ($lines as $line) {
+                        fwrite($shell, $line . PHP_EOL);
+                        $line == 'wr' ? sleep(5) : usleep(750000);
+                    }
+                }
             }
-
+            
+            if ($auto) {
+                fclose($shell);
+            }
         } elseif ($this->device instanceof GatewayVoip) {
             $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
             $drop .= "interface {$this->parentPortName}\n";
