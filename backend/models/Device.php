@@ -237,14 +237,13 @@ class Device extends ActiveRecord
 	
 	function getSnmpDesc() : string {
 	    
-	    if ($this->parentConfigType == 1) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
-	    elseif ($this->parentConfigType == 2) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
-	    elseif ($this->parentConfigType == 5) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
-	    else return ' ';
+	    if ($this->parentConfigType == 1) return substr(snmpget('172.20.7.254', 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->parentPortIndex), 7);
+	    elseif ($this->parentConfigType == 2) return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.0.8802.1.1.2.1.3.7.1.4.' . $this->parentPortIndex), 7);
+	    else return 'Brak opisu';
 	}
 	
 	function getSnmpVlan() : string {
 	    
-	    return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.17.7.1.4.5.1.1.' . $this->parentPortIndex), 7);
+	    return substr(snmpget($this->parentIp, 'wymyslj@k12spr0st3', '1.3.6.1.2.1.17.7.1.4.5.1.1.' . $this->parentPortIndex), 9);
 	}
 }

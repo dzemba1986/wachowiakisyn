@@ -21,7 +21,7 @@ ActiveForm::begin([
 
 <?php
 $js = <<<JS
-$(function(){
+$(function() {
 
     $('.modal-header h4').html('Wyślij konfigurację');
         
@@ -29,21 +29,21 @@ $(function(){
 		$('#modal-sm').modal('hide');
     });
 
-    $('#send-config').on('beforeSubmit', function(e){
+    $('#send-config').on('beforeSubmit', function(e) {
 		
 		var form = $(this);
 	 	$.post(
 	  		form.attr('action'),
 	  		form.serialize()
-	 	).done(function(result){
-	 		if(result == 1){
+	 	).done(function(result) {
+	 		if(result[0] == 1) {
 				$('#modal-sm').modal('hide');
-                $.growl.notice({ message: 'Wysłano konfigurację'});
+                $.growl.notice({ message: 'Wysłano konfigurację - ustawiono vlan ' + result[1]});
 	 		}
-	 		else{
+	 		else {
 	 			$.growl.error({ message: 'Nie wysłano konfiguracji'});
 	 		}
-	 	}).fail(function(){
+	 	}).fail(function() {
 	 		console.log('server error');
 	 	});
 		return false;				
