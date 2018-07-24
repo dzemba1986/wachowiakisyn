@@ -283,7 +283,7 @@ class DeviceController extends Controller {
 	
 	function actionSave() {
 	    
-	    $pathAutoSave = \Yii::getAlias('@console/device/autosave');
+	    $pathAutoSave = \Yii::getAlias('@console/device/save');
 	    $log = '';
 	    
 	    //8000GS
@@ -350,39 +350,57 @@ class DeviceController extends Controller {
 	
 	function actionBackup() {
 	    
-	    $pathAutoBackup = \Yii::getAlias('@console/device/autobackup');
+	    $pathAutoBackup = \Yii::getAlias('@console/device/backup');
 	    $log = '';
 	    
 	    //8000GS
 	    $gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
 	    ->where(['and', ['config' => 1], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    foreach ($gss as $gs) {
-	        if (!snmpset($gs['ip'], '1nn3c0mmun1ty',
-	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.9.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.11.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
-	            ['i', 'a', 'i', 'i', 's', 'i'],
-	            [1, '172.20.4.18', 3, 3, '8000GS_' . $gs['ip'] . '.rtf', 4]
-            )) $log .= $gs['ip'] . " - Błąd SNMP\n";
+	        try {
+    	        if (!snmpset($gs['ip'], '1nn3c0mmun1ty',
+    	            ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.9.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.11.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
+    	            ['i', 'a', 'i', 'i', 's', 'i'],
+    	            [1, '172.20.4.18', 3, 3, '8000GS_' . $gs['ip'] . '.rtf', 4]
+                )) {
+                    $log .= $gs['ip'] . " - Błąd SNMP\n";
+                }
+	        } catch (\Throwable $t) {
+	            continue;
+	        }
 	    }
 	    
 	    //X-series
 	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 	    foreach ($xs as $x) {
-	        if (!snmpset($x['ip'], '1nn3c0mmun1ty',
-	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
-	            ['a', 'i', 's', 'i', 's', 's'],
-	            ['172.20.4.18', 1, 'default.cfg', 4, 'xSeries_' . $x['ip'] . '.rtf', 1]
-            )) $log .= $x['ip'] . " - Błąd SNMP\n";
+	        try {
+    	        if (!snmpset($x['ip'], '1nn3c0mmun1ty',
+    	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
+    	            ['a', 'i', 's', 'i', 's', 's'],
+    	            ['172.20.4.18', 1, 'default.cfg', 4, 'xSeries_' . $x['ip'] . '.rtf', 1]
+                )) {
+                    $log .= $x['ip'] . " - Błąd SNMP\n";
+                }
+	        } catch (\Throwable $t) {
+	            continue;
+	        }
 	    }
 	    
 	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 	    foreach ($xs as $x) {
-	        if (!snmpset($x['ip'], '1nn3c0mmun1ty',
-	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
-	            ['a', 'i', 's', 'i', 's', 's'],
-	            ['172.20.4.18', 1, 'default.cfg', 4, 'xSeries_' . $x['ip'] . '.rtf', 1]
-            )) $log .= $x['ip'] . " - Błąd SNMP\n";
+	        try {
+    	        if (!snmpset($x['ip'], '1nn3c0mmun1ty',
+    	            ['1.3.6.1.4.1.207.8.4.4.4.600.3.13.1.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.2.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.3.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.5.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.6.0', '1.3.6.1.4.1.207.8.4.4.4.600.3.7.0'],
+    	            ['a', 'i', 's', 'i', 's', 's'],
+    	            ['172.20.4.18', 1, 'default.cfg', 4, 'xSeries_' . $x['ip'] . '.rtf', 1]
+                )) {
+                    $log .= $x['ip'] . " - Błąd SNMP\n";
+    	        }
+	        } catch (\Throwable $t) {
+	            continue;
+	        }
 	    }
 	    
 	    //EC
@@ -390,11 +408,17 @@ class DeviceController extends Controller {
 	    ->where(['and', ['config' => 5], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    
 	    foreach ($ecs as $ec){
-	        if (!snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'k1tk@k1tk@', 'AES', 'p@j@kp@j@k',
-	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.20.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.21.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
-	            ['i', 'i', 's', 'i', 'x', 'i'],
-	            [3, 4, 'EC_' . $ec['ip'] . '.rtf', 1, '0A6FE904', 2]
-            )) $log .= $ec['ip'] . " - Błąd SNMP\n";
+	        try {
+    	        if (!snmp3_set($ec['ip'], 'julka', 'authPriv', 'MD5', 'k1tk@k1tk@', 'AES', 'p@j@kp@j@k',
+    	            ['1.3.6.1.4.1.259.10.1.45.1.24.1.1.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.3.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.4.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.20.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.21.0', '1.3.6.1.4.1.259.10.1.45.1.24.1.8.0'],
+    	            ['i', 'i', 's', 'i', 'x', 'i'],
+    	            [3, 4, 'EC_' . $ec['ip'] . '.rtf', 1, '0A6FE904', 2]
+                )) {
+                    $log .= $ec['ip'] . " - Błąd SNMP\n";
+    	        }
+	        } catch (\Throwable $t) {
+	            continue;
+	        }
 	    }
 	    
 	    $fileAutoBackup = $pathAutoBackup . '/backup.log';
