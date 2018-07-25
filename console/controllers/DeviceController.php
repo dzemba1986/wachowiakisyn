@@ -366,6 +366,7 @@ class DeviceController extends Controller {
                     $log .= $gs['ip'] . " - Błąd SNMP\n";
                 }
 	        } catch (\Throwable $t) {
+	            $log .= $gs['ip'] . " - Błąd SNMP\n";
 	            continue;
 	        }
 	    }
@@ -383,6 +384,7 @@ class DeviceController extends Controller {
                     $log .= $x['ip'] . " - Błąd SNMP\n";
                 }
 	        } catch (\Throwable $t) {
+	            $log .= $x['ip'] . " - Błąd SNMP\n";
 	            continue;
 	        }
 	    }
@@ -399,6 +401,7 @@ class DeviceController extends Controller {
                     $log .= $x['ip'] . " - Błąd SNMP\n";
     	        }
 	        } catch (\Throwable $t) {
+	            $log .= $x['ip'] . " - Błąd SNMP\n";
 	            continue;
 	        }
 	    }
@@ -417,6 +420,7 @@ class DeviceController extends Controller {
                     $log .= $ec['ip'] . " - Błąd SNMP\n";
     	        }
 	        } catch (\Throwable $t) {
+	            $log .= $ec['ip'] . " - Błąd SNMP\n";
 	            continue;
 	        }
 	    }
