@@ -5,6 +5,7 @@ namespace backend\models\configuration;
 use backend\models\Camera;
 use backend\models\GatewayVoip;
 use backend\models\Host;
+use backend\models\Ups;
 use backend\models\Virtual;
 
 class GSSeriesConfiguration extends Configuration {
@@ -86,7 +87,7 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "interface ethernet {$this->parentPortName}\n";
             $add .= "no service-acl input\n";
             $add .= "exit\n";
-            $add .= "no ip access-list voip{$this->parentPortNumber}\n";
+            $add .= "no ip access-list cam{$this->parentPortNumber}\n";
             $add .= "ip access-list cam{$this->parentPortNumber}\n";
             $add .= "deny-udp any any any 68\n";
             $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
@@ -103,6 +104,36 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "spanning-tree portfast\n";
             $add .= "spanning-tree bpduguard\n";
             $add .= "service-acl input cam{$this->parentPortNumber}\n";
+            $add .= "port security mode lock\n";
+            $add .= "port security discard\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "exit\n";
+            $add .= "cop r s\n";
+            $add .= "y\n";
+        } elseif ($this->device instanceof Ups) {
+            $add = "interface vlan {$this->vlanId}\n";
+            $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "no service-acl input\n";
+            $add .= "exit\n";
+            $add .= "no ip access-list ups{$this->parentPortNumber}\n";
+            $add .= "ip access-list ups{$this->parentPortNumber}\n";
+            $add .= "deny-udp any any any 68\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.0 0.0.0.63\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 213.5.208.128 0.0.0.63\n";
+            $add .= "permit any {$this->ip} 0.0.0.0 10.111.0.0 0.0.255.255\n";
+            $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
+            $add .= "exit\n";
+            $add .= "interface ethernet {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "switchport trunk allowed vlan remove all\n";
+            $add .= "switchport mode access\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree bpduguard\n";
+            $add .= "service-acl input ups{$this->parentPortNumber}\n";
             $add .= "port security mode lock\n";
             $add .= "port security discard\n";
             $add .= "no shutdown\n";
@@ -221,6 +252,20 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "no ip access-list cam{$this->parentPortNumber}\n";
             $drop .= "exit\n";
             $drop .= "cop r s\n"; 
+            $drop .= "y\n";
+        } elseif ($this->device instanceof Ups) {
+            $drop = "interface vlan {$this->vlanId}\n";
+            $drop .= "no bridge address {$this->mac}\n";
+            $drop .= "interface ethernet {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "switchport access vlan 555\n";
+            $drop .= "no service-acl input\n";
+            $drop .= "no port security\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "no ip access-list ups{$this->parentPortNumber}\n";
+            $drop .= "exit\n";
+            $drop .= "cop r s\n";
             $drop .= "y\n";
         } elseif ($this->device instanceof Virtual) {
             $drop = "interface vlan {$this->vlanId}\n";

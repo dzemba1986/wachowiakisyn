@@ -6,6 +6,7 @@ use backend\models\Camera;
 use backend\models\GatewayVoip;
 use backend\models\Host;
 use backend\models\Virtual;
+use backend\models\Ups;
 
 class XSeriesConfiguration extends Configuration {
     
@@ -74,7 +75,6 @@ class XSeriesConfiguration extends Configuration {
                         $add .= "service-policy input internet-user-800M\n";
                         $this->device->smtp ? $add .= "access-group internet-user-smtp\n" : $add .= "access-group internet-user\n";
                         $add .= "no ip igmp trusted all\n";
-                        $add .= "ip igmp trusted report\n";
                         $add .= "switchport access vlan {$this->vlanId}\n";
                         $add .= "no shutdown\n";
                         $add .= "exit\n";
@@ -149,6 +149,22 @@ class XSeriesConfiguration extends Configuration {
             $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
             $add .= "exit\n";
             $add .= "wr\n";
+        } elseif ($this->device instanceof Ups) {
+            $add = "interface {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "switchport access vlan {$this->vlanId}\n";
+            $add .= "access-group ups\n";
+            $add .= "switchport port-security violation protect\n";
+            $add .= "switchport port-security maximum 0\n";
+            $add .= "switchport port-security\n";
+            $add .= "spanning-tree portfast\n";
+            $add .= "spanning-tree portfast bpdu-guard enable\n";
+            $add .= "no shutdown\n";
+            $add .= "exit\n";
+            $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+            $add .= "exit\n";
+            $add .= "wr\n";
         } elseif ($this->device instanceof Virtual) {
             $add = "interface {$this->parentPortName}\n";
             $add .= "shutdown\n";
@@ -176,27 +192,10 @@ class XSeriesConfiguration extends Configuration {
     }
 
     function drop($auto) {
-        $drop = ''; 
+        $drop = '';
+        $user = 'ra-daniel';
+        $pass = 'Mustang1986.';
         if ($this->device instanceof Host) {
-            
-            if($auto) {
-                $methods = [
-                    'hostkey'=>'ssh-rsa',
-                    'client_to_server' => [
-                        'crypt' => 'aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc,blowfish-cbc',
-                        'comp' => 'none'
-                    ],
-                    'server_to_client' => [
-                        'crypt' => 'aes256-ctr,aes192-ctr,aes128-ctr,aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc,blowfish-cbc',
-                        'comp' => 'none'
-                    ]
-                ];
-                
-                $connection = ssh2_connect($this->device->parentIp, 22222, $methods);
-                ssh2_auth_password($connection, 'ra-daniel', 'Mustang1986.');
-                $shell = ssh2_shell($connection, 'xterm');
-                stream_set_blocking($shell, true);
-            }
             
             if (strpos($this->device->parentIp, '172.') === 0) {
                 if ($auto) $drop .= "en\n";
@@ -213,45 +212,30 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "exit\n";
                 $drop .= "wr\n";
                 
-                if ($auto) {
-                    $lines = explode("\n", $drop);
-                    foreach ($lines as $line) {
-                        fwrite($shell, $line . PHP_EOL);
-                        $line == 'wr' ? sleep(5) : usleep(750000);
-                    }
-                }
+                if ($auto) exec("sshpass -p$pass ssh -T -p22222 -o ConnectTimeout=1 -o ConnectionAttempts=1 -o StrictHostKeyChecking=no $user@{$this->device->parentIp} << DUPA $drop DUPA");
             } else {
-                if ($auto) $drop .= "en\n";
-                if ($auto) $drop .= "conf t\n";
-                $drop .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
-                $drop .= "int {$this->parentPortName}\n";
-                $drop .= "no switchport port-security\n";
-                $drop .= "no service-policy input internet-user-800M\n";
-                $drop .= "no service-policy input iptv-user-800M\n";
-                $drop .= "no service-policy input iptv-only-800M\n";
-                $drop .= "no egress-rate-limit\n";
-                $drop .= "no ip igmp trust all\n";
-                $this->device->smtp ? $drop .= "no access-group internet-user-smtp\n" : $drop .= "no access-group internet-user\n";
-                $this->device->smtp ? $drop .= "no access-group iptv-user-smtp\n" : $drop .= "no access-group iptv-user\n";
-                $drop .= "no access-group iptv-only\n";
-                $drop .= "switchport access vlan 555\n";
-                $drop .= "exit\n";
-                $drop .= "do clear ip dhcp snooping binding interface {$this->parentPortName}\n";
-                $drop .= "exit\n";
-                $drop .= "wr\n";
+                if ($auto) $drop .= "en"; 
+                if ($auto) $drop .= "conf t ";
+                $drop .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\r\n";
+                $drop .= "int {$this->parentPortName}\r\n";
+                $drop .= "no switchport port-security\r\n";
+                $drop .= "no service-policy input internet-user-800M\r\n";
+                $drop .= "no service-policy input iptv-user-800M\r\n";
+                $drop .= "no service-policy input iptv-only-800M\r\n";
+                $drop .= "no egress-rate-limit\r\n";
+                $drop .= "no ip igmp trust all\r\n";
+                $this->device->smtp ? $drop .= "no access-group internet-user-smtp\r\n" : $drop .= "no access-group internet-user\r\n";
+                $this->device->smtp ? $drop .= "no access-group iptv-user-smtp\r\n" : $drop .= "no access-group iptv-user\r\n";
+                $drop .= "no access-group iptv-only\r\n";
+                $drop .= "switchport access vlan 555\r\n";
+                $drop .= "exit\r\n";
+                $drop .= "do clear ip dhcp snooping binding interface {$this->parentPortName}\r\n";
+                $drop .= "exit\r\n";
+                $drop .= "wr\r\n";
                 
-                if ($auto) {
-                    $lines = explode("\n", $drop);
-                    foreach ($lines as $line) {
-                        fwrite($shell, $line . PHP_EOL);
-                        $line == 'wr' ? sleep(5) : usleep(750000);
-                    }
-                }
+                if ($auto) exec("sshpass -p$pass ssh -T -p22222 -o ConnectTimeout=1 -o ConnectionAttempts=1 -o StrictHostKeyChecking=no $user@{$this->device->parentIp} << DUPA $drop DUPA");
             }
             
-            if ($auto) {
-                fclose($shell);
-            }
         } elseif ($this->device instanceof GatewayVoip) {
             $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
             $drop .= "interface {$this->parentPortName}\n";
@@ -269,6 +253,18 @@ class XSeriesConfiguration extends Configuration {
             $drop .= "interface {$this->parentPortName}\n";
             $drop .= "shutdown\n";
             $drop .= "no access-group camera\n";
+            $drop .= "no switchport port-security\n";
+            $drop .= "switchport access vlan 555\n";
+            $drop .= "no shutdown\n";
+            $drop .= "exit\n";
+            $drop .= "exit\n";
+            $drop .= "clear ip dhcp snooping binding interface {$this->parentPortName}\n";
+            $drop .= "wr\n";
+        } elseif ($this->device instanceof Ups) {
+            $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
+            $drop .= "interface {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "no access-group ups\n";
             $drop .= "no switchport port-security\n";
             $drop .= "switchport access vlan 555\n";
             $drop .= "no shutdown\n";
