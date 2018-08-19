@@ -13,7 +13,7 @@ echo Tabs::widget([
 		    [
 		        'label' => 'Dane',
 		    	'active' => true,	
-				'linkOptions' => ['data-url' => Url::to(['media-converter/update', 'id' => $id])]
+				'linkOptions' => ['data-url' => Url::to(['ups/update', 'id' => $id])]
 		    ],
 		]
 		

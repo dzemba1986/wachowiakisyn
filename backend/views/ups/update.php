@@ -77,6 +77,20 @@ $form = ActiveForm::begin([
 		</div>	
 	</div>
 	
+	<div class="col-md-2">
+		
+		<?= Html::label('Opcje :') ?>
+	
+		<?= $form->field($device, 'dhcp', [
+		    'template' => "{label}{input}\n{hint}\n{error}",
+		])->checkbox(['label' => 'DHCP']) ?>
+		
+		<?= $form->field($device, 'monitoring', [
+			'template' => "{label}{input}\n{hint}\n{error}",
+		])->checkbox() ?>
+		
+	</div>
+	
 <?php ActiveForm::end() ?>
 
 <?php

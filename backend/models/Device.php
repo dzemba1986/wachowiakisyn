@@ -77,6 +77,8 @@ class Device extends ActiveRecord
 				return new Root();
 			case Server::TYPE:
 				return new Server();
+			case Ups::TYPE:
+			    return new Ups();
 			default:
 				return new self;
 		}
