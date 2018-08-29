@@ -25,19 +25,19 @@ use yii\db\ActiveRecord;
  * @property string $combinedName 
  */
 
-class Device extends ActiveRecord
+abstract class Device extends ActiveRecord
 {
 	const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	const SCENARIO_REPLACE = 'replace';
-	const ONE_TO_ONE_DEVICE = [3,6,7,10];
+	const ONE_TO_ONE_DEVICE = [3,6,7,10,11];
 	
-	public static function tableName(){
+	public static function tableName() {
 	    
 		return '{{device}}';
 	}
 	
-	public function attributes(){
+	public function attributes() {
 	    
 	    return [
 	        'id',
@@ -54,7 +54,7 @@ class Device extends ActiveRecord
 	    ];
 	}
 	
-	public static function instantiate($row){
+	public static function instantiate($row) {
 	    
 		switch ($row['type_id']) {
 			case Host::TYPE:
@@ -75,12 +75,10 @@ class Device extends ActiveRecord
 				return new Virtual();
 			case Root::TYPE:
 				return new Root();
-			case Server::TYPE:
-				return new Server();
 			case Ups::TYPE:
 			    return new Ups();
-			default:
-				return new self;
+			case Radio::TYPE:
+			    return new Radio();
 		}
 	}
 	
@@ -129,7 +127,7 @@ class Device extends ActiveRecord
 		];
 	}
     
-	public function scenarios(){
+	public function scenarios() {
 	    
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['desc', 'type_id'];
@@ -139,7 +137,7 @@ class Device extends ActiveRecord
 		return $scenarios;
 	}
 	
-	public function attributeLabels(){
+	public function attributeLabels() {
 	    
 		return array(
 			'id' => 'ID',
@@ -156,22 +154,22 @@ class Device extends ActiveRecord
 		);
 	}
 	
-	public function getAddress(){
+	public function getAddress() {
 	    
 	    return $this->hasOne(Address::className(), ['id' => 'address_id']);
 	}
 	
-	public function getType(){
+	public function getType() {
 	    
 	    return $this->hasOne(DeviceType::className(), ['id' => 'type_id']);
 	}
 	
-	public function getModel(){
+	public function getModel() {
 	    
 	    return $this->hasOne(Model::className(), ['id' => 'model_id']);
 	}
 	
-	public function getManufacturer(){
+	public function getManufacturer() {
 	    
 	    return $this->hasOne(Manufacturer::className(), ['id' => 'manufacturer_id']);
 	}
@@ -191,7 +189,7 @@ class Device extends ActiveRecord
 	    return $this->hasMany(Tree::className(), ['device' => 'id']);
 	}
 	
-	function getMixName($pl = true) {
+	function getMixName($pl = true) : string {
 	    
 	    if ($pl)
 	        return $this->proper_name ? $this->type->prefix . $this->name . '_' . $this->proper_name : $this->type->prefix . $this->name;
@@ -201,12 +199,42 @@ class Device extends ActiveRecord
         }
     }
     
-    public function getParentPortIndex() {
+    function addOnTree() {
         
-        return $this->links[0]->parent_port + 1;
+        $this->status = true;
+    }
+    
+    function deleteFromTree() {
+        
+        $this->address_id = 1;
+        $this->status = null;
+        $this->name = null;
+        $this->proper_name = null;
+    }
+    
+    function replace($destination) {
+        
+        $destination->address_id = $this->address_id;
+        $destination->status = $this->status;
+        $destination->name = $this->name;
+        $destination->proper_name = $this->proper_name;
+        
+        $this->address_id = 1;
+        $this->status = null;
+        $this->name = null;
+        $this->proper_name = null;
+    }
+    
+    public function getParentPortIndex() : int {
+        
+        $parentId = $this->links[0]->parent_device;
+        $parentModelId = Device::findOne($parentId)->model_id;
+        
+        if ($parentModelId <> 6) return $this->links[0]->parent_port + 1;
+        else return $this->links[0]->parent_port + 25;
     }
 	
-	public function getParentPortName() {
+	public function getParentPortName() : string {
 	    
 	    $parentId = $this->links[0]->parent_device;
 	    $parentDevice = Device::findOne($parentId);
@@ -215,7 +243,7 @@ class Device extends ActiveRecord
 	    return $parentDevice->model->port[$parentPortIndex];
 	}
 	
-	public function getParentIp() {
+	public function getParentIp() : string {
 	    
 	    $parentId = $this->links[0]->parent_device;
 	    $parentDevice = Device::findOne($parentId);

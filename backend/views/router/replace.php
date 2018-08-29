@@ -6,6 +6,7 @@ use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 
 /**
+ * @var integer $id
  * @var \yii\web\View $this
  * @var \yii\widgets\ActiveForm $form
  */

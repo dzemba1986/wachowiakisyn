@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 /**
  * @var \yii\web\View $this
  * @var \yii\widgets\ActiveForm $form
+ * @var backend\models\GatewayVoip $source
  */
 
 $form = ActiveForm::begin([
@@ -23,7 +24,7 @@ $form = ActiveForm::begin([
         'options' => [
         	'placeholder' => 'Urządzenie nadrzędne',
             'onchange' => new JsExpression("
-                $.get('" . Url::to(['get-change-mac-script']) . "&id=" . $id . "&destId=' + $(this).val(), function(data) {
+                $.get('" . Url::to(['get-change-mac-script']) . "&id=" . $source->id . "&destId=' + $(this).val(), function(data) {
                     $('.script').attr('data-clipboard-text', data);
                     $('.script').attr('disabled', false);
                 });

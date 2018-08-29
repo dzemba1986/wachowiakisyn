@@ -34,53 +34,6 @@ class SwithController extends DeviceController
         return Html::a('ssh', "ssh://{$this->findModel($id)->ips[0]->ip}:22222");
     }
     
-    function actionDeleteFromTree($id, $port) {
-        
-        $request = Yii::$app->request;
-        $switch = $this->findModel($id);
-        
-        if($request->isPost){
-            
-            $link = Tree::findOne(['device' => $id, 'port' => $port]);
-            $count = Tree::find()->where(['device' => $id])->count();
-            
-            try {
-                if (!$switch->isParent()) {
-                    $transaction = Yii::$app->getDb()->beginTransaction();
-                    
-                    if ($count == 1) {    //ostatnia kopia
-                        $switch->address_id = 1;
-                        $switch->status = null;
-                        $switch->name = null;
-                        $switch->proper_name = null;
-                        $switch->monitoring = false;
-                        $switch->geolocation = null;
-                        
-                        foreach ($switch->ips as $ip)
-                            if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
-                            
-                            if (!$link->delete()) throw new Exception('Błąd usuwania agregacji');
-                            if (!$switch->save()) throw new Exception('Błąd zapisu urządzenia');
-                    } else
-                        if(!$link->delete()) throw new Exception('Błąd usuwania agregacji');
-                        
-                } else return 'Urządzenie jest rodzicem';
-                
-                $transaction->commit();
-                return 1;
-                
-            } catch (\Throwable $t) {
-                $transaction->rollBack();
-                var_dump($switch->errors);
-                var_dump($t->getMessage());
-                exit();
-            }
-        } else
-            return $this->renderAjax('@app/views/device/delete_from_tree', [
-                'device' => $switch,
-            ]);
-    }
-    
     public function actionReplace($id) {
         
         $request = Yii::$app->request;

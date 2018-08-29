@@ -58,6 +58,8 @@ $urlView = Url::to(['tabs-view']);
 
 $js = <<<JS
 $(function(){
+    $('.modal-header h4').html('Podmień MC');
+
     $('#replace').on('beforeSubmit', function(e){
 		
 		var form = $(this);

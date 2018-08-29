@@ -176,6 +176,13 @@ class Swith extends Device
         ); 
 	}
 	
+	function deleteFromTree() {
+	    
+	    parent::deleteFromTree();
+	    $this->monitoring = false;
+	    $this->geolocation = null;
+	}
+	
 	public function configurationAdd() {
 	    
 	    $parentId = $this->links[0]->parent_device;

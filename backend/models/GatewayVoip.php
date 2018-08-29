@@ -20,6 +20,8 @@ use yii\helpers\ArrayHelper;
  * @property string $serial
  * @property integer $model_id
  * @property integer $manufacturer_id
+ * @property boolean $monitoring
+ * @property boolean $geolocation
  */
 
 class GatewayVoip extends Device
@@ -167,6 +169,23 @@ class GatewayVoip extends Device
 	            'monitoring' => 'Monitorować',
 	        ]
 	        );
+	}
+	
+	function deleteFromTree() {
+	    
+	    parent::deleteFromTree();
+	    $this->monitoring = false;
+	    $this->geolocation = null;
+	}
+	
+	function replace($destination) {
+	    
+	    parent::replace($destination);
+	    $destination->monitoring = $this->monitoring;
+	    $destination->geolocation = $this->geolocation;
+	    
+	    $this->monitoring = false;
+	    $this->geolocation = null;
 	}
 	
 	public function configurationAdd() {

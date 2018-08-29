@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 /**
  * @var \yii\web\View $this
  * @var \yii\widgets\ActiveForm $form
+ * @var backend\models\Camera $source
  */
 
 $form = ActiveForm::begin([
@@ -22,7 +23,7 @@ $form = ActiveForm::begin([
         'options' => [
         	'placeholder' => 'Urządzenie nadrzędne',
             'onchange' => new JsExpression("
-                $.get('" . Url::to(['get-change-mac-script']) . "&id=" . $sourceCamera->id . "&destId=' + $(this).val(), function(data) {
+                $.get('" . Url::to(['get-change-mac-script']) . "&id=" . $source->id . "&destId=' + $(this).val(), function(data) {
                     $('.script').attr('data-clipboard-text', data);
                     $('.script').attr('disabled', false);
                 });
@@ -51,7 +52,7 @@ $form = ActiveForm::begin([
     
     <div class="help-block"></div>
     
-    <?php if ($sourceCamera->model_id == 19) {
+    <?php if ($source->model_id == 19) {
         echo Html::checkbox('replaceMac', true, ['id' => 'replace-mac', 'label' => "RH164 (pozostaw mac na lokalizacji)"]);
     } ?>
     
