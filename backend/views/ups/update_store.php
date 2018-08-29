@@ -4,6 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\Ups $device
+ */
+
 $form = ActiveForm::begin([
     'id' => $device->formName(),
     'enableAjaxValidation' => true,

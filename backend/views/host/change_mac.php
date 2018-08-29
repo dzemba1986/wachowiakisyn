@@ -8,7 +8,7 @@ use yii\web\JsExpression;
 /**
  * @var yii\web\View $this
  * @var \yii\widgets\ActiveForm $form
- * @var backend\models\Host $device
+ * @var backend\models\Host $host
  */
 
 $form = ActiveForm::begin([

@@ -10,8 +10,8 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
+ * @var backend\models\Host $device
  * @var backend\models\Address $address
- * @var backend\models\Swith $switch
  */
 
 $form = ActiveForm::begin([

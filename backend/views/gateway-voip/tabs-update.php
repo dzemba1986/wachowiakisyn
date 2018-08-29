@@ -4,7 +4,7 @@ use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
- * @var backend\models\Device $device
+ * @var integer $id
  */
 
 echo Tabs::widget([

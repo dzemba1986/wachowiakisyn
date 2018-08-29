@@ -2,6 +2,11 @@
 use yii\bootstrap\Tabs;
 use yii\helpers\Url;
 
+/**
+ * @var yii\web\View $this
+ * @var integer $id Id Ups
+ */
+
 echo Tabs::widget([
 	'encodeLabels' => false,
 	'items'=> [

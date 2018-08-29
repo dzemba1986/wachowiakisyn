@@ -3,8 +3,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /**
- * @var backend\models\Swith $switch
+ * @var yii\web\View $this
+ * @var backend\models\Swith $device
  */
+
 // $add = $device->configurationAdd();
 // $drop = $device->configurationDrop();
 

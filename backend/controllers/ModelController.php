@@ -9,10 +9,6 @@ use yii\web\NotFoundHttpException;
 
 class ModelController extends Controller
 {
-    /**
-     * Lists all Modyfication models.
-     * @return mixed
-     */
     public function actionView($id)
     { 	
         return $this->render('view', [
@@ -24,20 +20,16 @@ class ModelController extends Controller
     {
         $models = Model::find()->where(['type_id' => $typeId])->andWhere(['manufacturer_id' => $manufacturerId])->all();
         
-        echo '<option></option>';
+        $out = '<option></option>';
         if(!empty($models)){
             foreach ($models as $model){
-                echo '<option value="' . $model->id . '">' . $model->name . '</option>';
+                $out .= '<option value="' . $model->id . '">' . $model->name . '</option>';
             }
-        } 
+        }
+        
+        return $out;
     }
 
-    /**
-     * Updates an existing Modyfication model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
         $modelDevice = $this->findModel($id);
@@ -53,12 +45,6 @@ class ModelController extends Controller
         }
     }
 
-    /**
-     * Deletes an existing Modyfication model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -66,13 +52,6 @@ class ModelController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Modyfication model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Modyfication the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Model::findOne($id)) !== null) {

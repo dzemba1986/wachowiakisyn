@@ -3,8 +3,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /**
+ * @var yii\web\View $this
  * @var backend\models\GatewayVoip $device
  */
+
 $add = $device->configurationAdd();
 $drop = $device->configurationDrop();
 

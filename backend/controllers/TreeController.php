@@ -47,6 +47,7 @@ class TreeController extends Controller
         
         $device = Device::findOne($id);
         $model = Model::findOne($device->model_id);
+        $children = [];
         
         $nodes = (new \yii\db\Query())
             ->select([
@@ -143,12 +144,14 @@ class TreeController extends Controller
         
         $device = Device::findOne($deviceId);
         $model = $device->model;
+        $out = '';
         
         if ($mode == 'free') {
             $links = Tree::find()->select('parent_port')->where(['parent_device' => $deviceId])
             ->union(Tree::find()->select('port AS parent_port')->where(['device' => $deviceId]))->all();
             
             if (!empty($links)) {
+                $usePorts = [];
                 foreach ($links as $link) {
                     $usePorts[$link->parent_port] = $link->parent_port;
                 }
@@ -156,24 +159,26 @@ class TreeController extends Controller
                 $freePorts = array_diff_key($model->port->getValue(), $usePorts);
                 
                 if ($install){
-                    echo '<option value="-1">Brak miejsca</option>';
+                    $out .= '<option value="-1">Brak miejsca</option>';
                 }
                 foreach ($freePorts as $key => $freePort ){
                     if ($selected == $key) {
-                        echo '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
+                        $out .= '<option value="' . ($key) . '" selected="1">' . $freePort . '</option>';
                         continue;
                     }
-                    echo '<option value="' . ($key) . '">' . $freePort . '</option>';
+                    $out .= '<option value="' . ($key) . '">' . $freePort . '</option>';
                 }
+                
             } else {
-                echo '<option value="-1">Brak miejsca</option>';
+                $out = '<option value="-1">Brak miejsca</option>';
             }
         } elseif ($mode == 'all') {
-            echo '<option></option>';
             foreach ($model->port as $key => $port){
-                echo '<option value="' . ($key) . '">' . $port . '</option>';
+                $out .= '<option value="' . ($key) . '">' . $port . '</option>';
             }
         }
+        
+        return $out;
     }
     
     public function actionMove($deviceId, $port, $newParentId) {

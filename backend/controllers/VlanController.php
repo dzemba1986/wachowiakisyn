@@ -2,14 +2,13 @@
 
 namespace backend\controllers;
 
+use backend\models\Vlan;
+use backend\models\VlanSearch;
 use Yii;
-use backend\models\Address;
+use yii\base\Exception;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use backend\models\VlanSearch;
-use backend\models\Vlan;
-use yii\base\Exception;
 
 /**
  * AddressController implements the CRUD actions for Address model.

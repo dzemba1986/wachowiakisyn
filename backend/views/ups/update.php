@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
 $form = ActiveForm::begin([
 	'id' => $device->formName(),
-    'validationUrl' => Url::to(['media-converter/validation', 'id' => $device->id])
+    'validationUrl' => Url::to(['validation', 'id' => $device->id])
 ])?>
 	
 	<div class="col-md-5">

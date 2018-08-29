@@ -22,6 +22,9 @@ use yii\helpers\Html;
  * @property integer $model_id
  * @property integer $manufacturer_id
  * @property integer $alias
+ * @property boolean $dhcp
+ * @property boolean $monitoring
+ * @property boolean $geolocation
  */
 
 class Camera extends Device
@@ -188,6 +191,35 @@ class Camera extends Device
 	            !empty($this->ips) ? Dhcp::generateFile($this->ips[0]->subnet) : null;
 	        }
 	    }
+	}
+	
+	function addOnTree() {
+	    
+	    parent::addOnTree();
+	    $this->dhcp = true;
+	}
+	
+	function deleteFromTree() {
+	    
+	    parent::deleteFromTree();
+	    $this->alias = null;
+	    $this->monitoring = false;
+	    $this->geolocation = null;
+	    $this->dhcp = null;
+	}
+	
+	function replace($destination) {
+	    
+	    parent::replace($destination);
+	    $destination->monitoring = $this->monitoring;
+	    $destination->geolocation = $this->geolocation;
+	    $destination->dhcp = $this->dhcp;
+	    $destination->alias = $this->alias;
+	    
+	    $this->monitoring = false;
+	    $this->geolocation = null;
+	    $this->dhcp = false;
+	    $this->alias = null;
 	}
 	
 	public function configurationAdd() {

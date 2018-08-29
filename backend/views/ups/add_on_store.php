@@ -9,6 +9,10 @@ use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
 
+/**
+ * @var yii\web\View $this
+ * @var backend\models\Ups $device
+ */ 
 ?>
 
 <div class="add-store-form">
@@ -84,7 +88,7 @@ $(function() {
 	 			$.pjax.reload({container: '#store-grid-pjax'});
 	 		}
 	 		else{
-	 			$.growl.error({ message: 'Błąd dodawania UPS'});
+	 			$.growl.error({ message: 'Błąd dodawania media konwertera'});
 	 		}
 	 	}).fail(function(){
 	 		console.log('server error');

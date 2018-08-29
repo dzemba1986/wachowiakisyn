@@ -99,10 +99,9 @@ class IpController extends Controller
 	public function actionSelectList($subnet, $ip = null, $mode = 'all')
 	{
 		if(is_numeric($subnet)){
-			 
 			$modelSubnet = Subnet::findOne($subnet);
-	
 			$blockIp = IPBlock::create($modelSubnet->ip);
+			$allIps = [];
 			
 			//ip block for subnet
 			foreach ($blockIp as $objIp){
@@ -172,8 +171,8 @@ class IpController extends Controller
     public function actionFreeIpBySubnet($subnet)
     {	    	
     	if(is_numeric($subnet)){
-    	
 	    	$modelSubnet = Subnet::findOne($subnet);
+	    	$allIps = [];
 	    	
 	    	$blockIps = IPBlock::create($modelSubnet->ip);
 	    	foreach ($blockIps as $blockIp){

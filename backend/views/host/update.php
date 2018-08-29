@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /**
  * @var yii\web\View $this
  * @var backend\models\Address $address
- * @var backend\models\Host $host
+ * @var backend\models\Host $device
  */
 
 $form = ActiveForm::begin([

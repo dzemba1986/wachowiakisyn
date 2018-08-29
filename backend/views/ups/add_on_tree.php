@@ -72,7 +72,7 @@ $form = ActiveForm::begin([
     						$('select#tree-parent_port').html(data);
     					});
                                             		
-                        $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$id} + '&mode=all', function(data){
+                        $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$device->id} + '&mode=all', function(data){
     						$('select#tree-port').html(data);
     					} );
                     ")
@@ -119,19 +119,21 @@ $form = ActiveForm::begin([
 
 <?php
 $js = <<<JS
-$(function(){
+$(function() {
+    $('.modal-header h4').html('Dodaj UPS');
+
 	$("#add-device-form").on('beforeSubmit', function(e){
 		var form = $(this);
      	$.post(
       		form.attr("action"),
       		form.serialize()
-     	).done(function(result){
- 			if(result == 1){
+     	).done(function(result) {
+ 			if(result == 1) {
 			}
  			else {
  				$('#message').html(result);
  			}
- 		}).fail(function(){
+ 		}).fail(function() {
  			console.log('server error');
  		});
 		return false;				

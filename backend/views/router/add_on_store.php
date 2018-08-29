@@ -9,9 +9,10 @@ use yii\helpers\Url;
 use backend\models\Swith;
 use backend\models\Router;
 
-/* @var $this yii\web\View */
-/* @var $model backend\models\Installation */
-/* @var $form yii\widgets\ActiveForm */
+/**
+ * @var yii\web\View $this
+ * @var backend\models\Router $device
+ */ 
 ?>
 
 <div class="add-store-form">

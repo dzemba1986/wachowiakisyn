@@ -5,6 +5,7 @@ use yii\widgets\DetailView;
 
 /**
  * @var backend\models\Virtual $device
+ * @var yii\web\View $this
  */
 
 $add = $device->configurationAdd();

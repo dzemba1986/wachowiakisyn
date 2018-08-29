@@ -104,7 +104,7 @@ class Ip extends ActiveRecord
     	        return true;
     	    } catch (\Throwable $e) {
     	        var_dump($historyIp->errors);
-    	        var_dump($t->getMessage());
+    	        var_dump($e->getMessage());
     	        exit();
     	    }
 	    }

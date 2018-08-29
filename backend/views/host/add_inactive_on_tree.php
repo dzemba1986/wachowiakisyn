@@ -12,6 +12,7 @@ use function yii\widgets\ActiveField\textInput;
  * @var yii\web\View $this
  * @var integer $id
  * @var backend\models\Tree $link
+ * @var backend\models\Address $address
  */ 
 
 $form = ActiveForm::begin([

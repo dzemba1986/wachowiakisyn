@@ -15,6 +15,7 @@ use yii\widgets\ActiveForm;
  * @var backend\models\Device $device
  * @var backend\models\Tree $link
  * @var backend\models\Address $address
+ * @var backend\models\Ip $ip
  */ 
 
 $form = ActiveForm::begin([
@@ -73,7 +74,7 @@ $form = ActiveForm::begin([
 						$('select#tree-parent_port').html(data);
 					});
                                         		
-                    $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$id} + '&mode=all', function(data){
+                    $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$device->id} + '&mode=all', function(data){
 						$('select#tree-port').html(data);
 					} );
                 ")

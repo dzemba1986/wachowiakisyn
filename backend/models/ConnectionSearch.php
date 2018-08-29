@@ -17,7 +17,7 @@ class ConnectionSearch extends Connection
 
     public function rules()
 	{
-		return $rules = [
+		return [
 			[	
 				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
 				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id', 'vip',

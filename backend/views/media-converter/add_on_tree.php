@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var backend\models\Device $device
+ * @var backend\models\MediaConverter $device
  * @var backend\models\Tree $link
  * @var backend\models\Address $address
  */ 
@@ -72,7 +72,7 @@ $form = ActiveForm::begin([
     						$('select#tree-parent_port').html(data);
     					});
                                             		
-                        $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$id} + '&mode=all', function(data){
+                        $.get('" . Url::to(['tree/list-port']) . "&deviceId=' + {$device->id} + '&mode=all', function(data){
     						$('select#tree-port').html(data);
     					} );
                     ")
@@ -120,6 +120,8 @@ $form = ActiveForm::begin([
 <?php
 $js = <<<JS
 $(function(){
+    $('.modal-header h4').html('Dodaj MC');
+
 	$("#add-device-form").on('beforeSubmit', function(e){
 		var form = $(this);
      	$.post(

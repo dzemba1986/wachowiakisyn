@@ -6,8 +6,9 @@ use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var integer $id
+ * @var backend\models\Virtual $virtual
  * @var backend\models\Tree $link
+ * @var integer $id Parent device ID
  */ 
 
 $form = ActiveForm::begin([
