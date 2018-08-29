@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use backend\models\Address;
 use backend\models\Connection;
-use backend\models\Device;
 use backend\models\Host;
 use backend\models\Ip;
 use backend\models\Tree;
@@ -207,7 +206,6 @@ class HostController extends DeviceController
     public function actionAddInactiveOnTree($id) {
         
         $request = Yii::$app->request;
-        $parent = Device::findOne($id);
         $host = new Host();
         $link = new Tree();
         $address = new Address();
@@ -311,6 +309,8 @@ class HostController extends DeviceController
             return ActiveForm::validate($model, 'mac');
         }
     }
+    
+    function actionReplace($id) {}
     
     protected static function getModel() {
         

@@ -29,13 +29,18 @@ class Host extends Device {
 	
 	public function attributes() {
 	    
-	    return ArrayHelper::merge(
-	        parent::attributes(),
-	        [
-	            'dhcp',
-	            'smtp'
-	        ]
-	    );
+	    return [
+	        'id',
+	        'status',
+	        'name',
+	        'proper_name',
+	        'desc',
+	        'mac',
+	        'address_id',
+	        'type_id',
+	        'dhcp',
+	        'smtp'
+	    ];
 	}
 	
 	public function rules() {
@@ -153,6 +158,16 @@ class Host extends Device {
 	        
 	        if (!$history->save()) throw new Exception('Błąd zapisu historii');
 	    }
+	}
+	
+	public function getModel() {
+	    
+	    return false;
+	}
+	
+	public function getManufacturer(){
+	    
+	    return false;
 	}
 	
 	public function getConnections() {
