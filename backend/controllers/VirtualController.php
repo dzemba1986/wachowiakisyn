@@ -54,7 +54,6 @@ class VirtualController extends DeviceController
     
     public function actionGetChangeMacScript($id, $newMac) {
         
-        $request = Yii::$app->request;
         $host = $this->findModel($id);
         
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -88,7 +87,6 @@ class VirtualController extends DeviceController
             } catch (\Exception $e) {
                 $transaction->rollBack();
                 var_dump($virtual->errors);
-                var_dump($address->errors);
                 var_dump($link->errors);
                 exit();
             }
@@ -100,6 +98,8 @@ class VirtualController extends DeviceController
             ]);
         }
     }
+    
+    function actionReplace($id) {}
     
     protected static function getModel() {
         
