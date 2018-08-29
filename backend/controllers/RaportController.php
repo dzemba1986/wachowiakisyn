@@ -81,7 +81,7 @@ class RaportController extends Controller
     	$dataProvider->query->andWhere([
     		'and',
     	    ['task.status' => true],
-    	    ['or', ['task.type_id' => 3], ['and', ['task.type_id' => [1,2]], ['>', 'cost', 0]]],
+    	    ['or', ['task.type_id' => 3], ['and', ['task.type_id' => [1,2]], ['>', 'cost', 0]], ['paid_psm' => true]],
     		['is not', 'close', null]	
     	]);
     	
