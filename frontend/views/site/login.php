@@ -6,24 +6,32 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \common\models\LoginForm */
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Aby się zalogować wypełni pola:</p>
-
-    <div class="row">
-        <div class="col-lg-3">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-                <?= $form->field($model, 'username') ?>
-                <?= $form->field($model, 'password')->passwordInput() ?>
+        <div class="col-lg-2 col-md-offset-5" style="margin-top: 100px" >
+            <?php $form = ActiveForm::begin([
+                'id' => 'login-form',
+                'options' => ['style' => 'border:1px solid black; padding:20px']
+            ]); ?>
+            
+                <?= $form->field($model, 'username', [
+                    'inputOptions' => [
+                        'placeholder' => 'Login',
+                    ]
+                ])->label(FALSE); ?>
+                
+                <?= $form->field($model, 'password', [
+                    'inputOptions' => [
+                        'placeholder' => 'Hasło',
+                    ]
+                ])->passwordInput()->label(FALSE) ?>
+                
                 <?= $form->field($model, 'rememberMe')->checkbox() ?>
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                
+                <div class="text-center">
+                    <?= Html::submitButton('Zaloguj', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
                 </div>
+                
             <?php ActiveForm::end(); ?>
         </div>
-    </div>
 </div>

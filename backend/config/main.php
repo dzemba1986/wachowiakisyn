@@ -25,7 +25,25 @@ return [
     	],
     	'task' => [
     		'class' => 'backend\modules\task\Module'	
-    	]	
+    	],
+        'address' => [
+            'class' => 'backend\modules\address\Module'
+        ],
+        'crm' => [
+            'class' => 'backend\modules\crm\Module'
+        ],
+        'history' => [
+            'class' => 'backend\modules\history\Module'
+        ],
+        'report' => [
+            'class' => 'backend\modules\report\Module'
+        ],
+        'seu' => [
+            'class' => 'backend\modules\seu\Module'
+        ],
+        'soa' => [
+            'class' => 'backend\modules\soa\Module'
+        ],
     ],
     'components' => [
         'urlManager' => [

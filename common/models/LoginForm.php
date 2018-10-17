@@ -4,29 +4,21 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 
-/**
- * Login form
- */
-class LoginForm extends Model
-{
+class LoginForm extends Model {
+    
     public $username;
     public $password;
     public $rememberMe = true;
 
     private $_user = false;
 
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
+    public function rules() {
+        
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
+            [['username', 'password'], 'required', 'message' => 'Wartość wymagana'],
+            
             ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
+
             ['password', 'validatePassword'],
         ];
     }
@@ -38,8 +30,8 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
-    {
+    public function validatePassword($attribute, $params) {
+        
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
@@ -53,8 +45,8 @@ class LoginForm extends Model
      *
      * @return boolean whether the user is logged in successfully
      */
-    public function login()
-    {
+    public function login() {
+        
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
@@ -67,8 +59,8 @@ class LoginForm extends Model
      *
      * @return User|null
      */
-    public function getUser()
-    {
+    public function getUser() {
+        
         if ($this->_user === false) {
             $this->_user = User::findByUsername($this->username);
         }
@@ -76,7 +68,7 @@ class LoginForm extends Model
         return $this->_user;
     }
     
-    public function attributeLabels(){
+    public function attributeLabels() {
     	
     	return array(
     		'username' => 'Login',

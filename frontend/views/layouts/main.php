@@ -1,17 +1,24 @@
 <?php
-use yii\helpers\Html;
+
+/**
+ * @var \yii\web\View $this
+ * @var string $content
+ */
+
+use backend\assets\AppAsset;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use frontend\assets\AppAsset;
-use frontend\widgets\Alert;
 
-/* @var $this \yii\web\View */
-/* @var $content string */
+$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/growl/jquery.growl.js');
+$this->registerCssFile(Yii::$app->request->BaseUrl . '/js/growl/jquery.growl.css');
 
-AppAsset::register($this);
-?>
-<?php $this->beginPage() ?>
+
+AppAsset::register($this); 
+
+$this->beginPage() ?>
+
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
@@ -32,73 +39,91 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
-            $menuItems = [
-                [
-                	'label' => 'Monitoring', 
-                	'items' => [
-                		[
-                			'label' => 'Wyświetl/dodaj zgłoszenia',
-                			'url' => ['task/index']
-                		]
-                	]	
-                ],
-            	[
-            		'label' => 'BOA',
-            		'items' => [
-            			[
-            				'label' => 'Niezaksięgowane',
-            				'url' => ['boa/index', 'mode' => 'noboa']
-            			],
-            			[
-            				'label' => 'Zaksięgowane',
-            			    'url' => ['boa/index', 'mode' => 'boa']
-            			]
-            		]
-            	],
-            ];
-            if (Yii::$app->user->isGuest) {
-                $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-                $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-            } else {
-                $menuItems[] = [
-                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                    'items' => [
-                        [
-                            'label' => 'Wyloguj',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']
-                        ],
-                        [
-                            'label' => 'Zmień hasło',
-                            'url' => ['/site/change-password'],
-                        ],
-                    ]
-                ];
-            }
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => $menuItems,
-            ]);
+                
+                if (Yii::$app->user->isGuest) $menuItems = [];
+                else
+                    $menuItems = [
+                        ['label' => 'SOA', 'items' => [
+                            ['label' => 'Umowy do zrobienia', 'url' => ['/soa/connection/index', 'mode' => 'todo']],
+                            ['label' => 'Wszystkie umowy', 'url' => ['/soa/connection/index', 'mode' => 'all']],
+                            ['label' => 'Umowy niezaksięgowane', 'url' => ['/soa/connection/index', 'mode' => 'noboa']],
+                            '<li class="divider"></li>',
+                            ['label' => 'Instalacje', 'url' => ['/soa/installation/index']],
+                        ]],
+                        ['label' => 'SEU', 'items' => [
+                            ['label' => 'Ethernet', 'url' => ['/seu/link/index']],
+                            ['label' => 'RFoG', 'url' => ['/seu/link/index2']],
+                            '<li class="divider"></li>',
+                            ['label' => 'Adresacja', 'url' => ['/seu/vlan/index']],
+                            '<li class="divider"></li>',
+                            ['label' => 'Magazyn', 'url' => ['/seu/store/index']],
+                        ]],
+                    	['label' => 'CRM', 'items' => [
+                    	    ['label' => 'Usterki', 'url' => ['/crm/boa-task/index']],
+                    	    ['label' => 'Montaże', 'url' => ['/crm/install-task/index']],
+                    	    ['label' => 'Kamery', 'url' => ['/crm/device-task/index']],
+                    	    ['label' => 'Serwis', 'url' => ['/crm/serwis-task/index']],
+                    	]],
+                        ['label' => 'Zestawienia', 'items' => [
+                            ['label' => 'Konfiguracje', 'url' => ['/report/report/connection']],
+                            ['label' => 'Instalacje', 'url' => ['/report/report/installation']],
+                            ['label' => 'Montaże', 'url' => ['/report/report/task']],
+                        ]],
+                    ];
+                
+                echo Nav::widget([
+                    'options' => ['class' => 'navbar-nav navbar-left'],
+                    'items' => $menuItems,
+                ]);
+                
+                $menuLogin = [];
+                if (Yii::$app->user->isGuest) {
+                    $menuLogin[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+                    $menuLogin[] = ['label' => 'Login', 'url' => ['/site/login']];
+                } else {
+                    $menuLogin[] = [
+                        'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                        'items' => [
+                            [
+                                'label' => 'Wyloguj',
+                                'url' => ['/site/logout'],
+                                'linkOptions' => ['data-method' => 'post']
+                            ],
+                            [
+                                'label' => 'Zmień hasło',
+                                'url' => ['/site/change-password'],
+                            ],
+                        ]
+                    ];
+                }
+                
+                echo Nav::widget([
+                    'options' => ['class' => 'navbar-nav navbar-right'],
+                    'items' => $menuLogin,
+                ]);
+                
             NavBar::end();
         ?>
 
         <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+            <span>
+                <?= Breadcrumbs::widget([
+                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                ]) ?>
+            </span>
+            <?= $content ?>
         </div>
     </div>
 
     <footer class="footer">
         <div class="container">
-        <p class="pull-left">&copy; Wachowiak&amp;Syn <?= date('Y') ?></p>
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-left"><?= Html::a('v3.0', \Yii::getAlias('@web/changelog.txt')) ?></p>
+        <p class="pull-right">&copy; Wachowiak&amp;Syn <?= date('Y') ?></p>
         </div>
     </footer>
 
-    <?php $this->endBody() ?>
+<?php
+$this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>

@@ -1,10 +1,10 @@
 <?php
 namespace frontend\controllers;
 
-use backend\models\Camera;
-use backend\modules\task\models\Comment;
-use backend\modules\task\models\DeviceTaskSearch;
-use frontend\models\TaskForm;
+use common\models\crm\Comment;
+use common\models\crm\DeviceTaskSearch;
+use common\models\seu\devices\Camera;
+use frontend\modules\crm\models\forms\TaskForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\AjaxFilter;

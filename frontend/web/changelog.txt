@@ -1,0 +1,6 @@
+Changelog
+
+v3.0
+ 
+issue#1501: cmd.php poller not stripping alpha from snmp get values
+feature: Obsługa RFoG'a

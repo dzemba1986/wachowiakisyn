@@ -42,7 +42,10 @@ $this->beginPage() ?>
             ]);
             $menuItems = [
                 ['label' => 'LP', 'url' => ['/connection/index']],
-                ['label' => 'SEU', 'url' => ['/tree/index']],
+                ['label' => 'SEU', 'url' => ['/tree/index'], 'items' => [
+                    ['label' => 'Ethernet', 'url' => ['/tree/index']],
+                    ['label' => 'RFoG', 'url' => ['/tree/index2']]
+                ]],
             	['label' => 'TASK' . '(' . DeviceTask::getCountOpenTask() . ')', 'url' => ['/task/device-task/index']],
             ];
             if (Yii::$app->user->isGuest) {
@@ -84,35 +87,35 @@ $(document).ready(function () {
     
     var source = [
         {"html":"Adresy","items":[
-            {"html":"<a href=/backend/index.php?r=address%2Findex>Lista</a>"},
-            {"html":"<a href=/backend/index.php?r=address%2Flist>Dodaj</a>"}
+            {"html":"<a href=/backend/index.php?r=address%2Faddress%2Findex>Lista</a>"},
+            {"html":"<a href=/backend/index.php?r=address%2Faddress%2Flist>Dodaj ulicę</a>"}
         ]},
         {"html":"Połączenia","items":[
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=todo>Do zrobienia</a>"},
-            {"html":"<a href=/backend/index.php?r=connection%2Findex&mode=all>Wszystkie</a>"}
+            {"html":"<a href=/backend/index.php?r=soa%2Fconnection%2Findex&mode=todo>Do zrobienia</a>"},
+            {"html":"<a href=/backend/index.php?r=soa%2Fconnection%2Findex&mode=all>Wszystkie</a>"}
         ]},
-        {"html":"<a href=/backend/index.php?r=installation%2Findex>Instalacje</a>"},
+        {"html":"<a href=/backend/index.php?r=soa%2Finstallation%2Findex>Instalacje</a>"},
         {"id":"menu-separator"},
         {"html":"Montaże","items":[
-            {"html":"<a href=/backend/index.php?r=task%2Finstall-task&mode=todo>Niewykonane</a>"},
-            {"html":"<a href=/backend/index.php?r=task%2Finstall-task&mode=close>Wykonane</a>"}
+            {"html":"<a href=/backend/index.php?r=crm%2Finstall-task&mode=todo>Niewykonane</a>"},
+            {"html":"<a href=/backend/index.php?r=crm%2Finstall-task&mode=close>Wykonane</a>"}
         ]},
         {"html":"Zadania","items":[
-            {"html":"<a href=/backend/index.php?r=task%2Fdevice-task&mode=todo>Niewykonane</a>"},
-            {"html":"<a href=/backend/index.php?r=task%2Fdevice-task&mode=close>Wykonane</a>"}
+            {"html":"<a href=/backend/index.php?r=crm%2Fdevice-task&mode=todo>Niewykonane</a>"},
+            {"html":"<a href=/backend/index.php?r=crm%2Fdevice-task&mode=close>Wykonane</a>"}
         ]},
         {"id":"menu-separator"},
         {"html":"Zestawienia","items":[
-            {"html":"<a href=/backend/index.php?r=raport%2Fconnection>Podłączenia</a>"},
-            {"html":"<a href=/backend/index.php?r=raport%2Finstallation>Instalacje</a>"},
-            {"html":"<a href=/backend/index.php?r=raport%2Ftask>Montaże</a>"}
+            {"html":"<a href=/backend/index.php?r=report%2Fraport%2Fconnection>Podłączenia</a>"},
+            {"html":"<a href=/backend/index.php?r=report%2raport%2Finstallation>Instalacje</a>"},
+            {"html":"<a href=/backend/index.php?r=report%2raport%2Ftask>Montaże</a>"}
         ]},
         {"id":"menu-separator"},
-        {"html":"<a href=/backend/index.php?r=tree%2Findex>Drzewo urządzeń</a>"},
-        {"html":"<a href=/backend/index.php?r=ip%2Fhistory>Historia IP</a>"},
+        {"html":"<a href=/backend/index.php?r=seu%2tree%2Findex>Drzewo urządzeń</a>"},
+        {"html":"<a href=/backend/index.php?r=seu%2ip%2Fhistory>Historia IP</a>"},
         {"html":"Sieć","items":[
-            {"html":"<a href=/backend/index.php?r=vlan%2Fgrid>Adresacja</a>"},
-            {"html":"<a href=/backend/index.php?r=dhcp%2Findex>DHCP</a>"}
+            {"html":"<a href=/backend/index.php?r=seu%2vlan%2Fgrid>Adresacja</a>"},
+            {"html":"<a href=/backend/index.php?r=seu%2dhcp%2Findex>DHCP</a>"}
         ]},
         {"html":"<a href=/backend/index.php?r=store%2Findex>Magazyn</a>"},
         
