@@ -7,17 +7,14 @@ $params = array_merge(
 );
 
 return [
-	'id' => 'rest-api',
+	'id' => 'api',
 	'basePath' => dirname(__DIR__),
 	'bootstrap' => ['log'],
 	'modules' => [
 		'v1' => [
-// 			'basePath' => dirname(__DIR__) . '/../../',
-			'class' => 'rest\versions\v1\RestModule' 
+			'basePath' => dirname(__DIR__) . '/../../',
+			'class' => 'app\versions\v1\RestModule' 
 			],
-// 		'v2' => [
-// 			'class' => 'rest\versions\v2\RestModule'
-// 		],
 	],
 	'components' => [
 		'user' => [
@@ -42,7 +39,6 @@ return [
 			'enableCookieValidation' => false,
 			'parsers' => [
 				'application/json' => 'yii\web\JsonParser',
-				'application/xml' => 'bobchengbin\Yii2XmlRequestParser\XmlRequestParser',
 			],
 		],
 		'urlManager' => [
@@ -50,11 +46,7 @@ return [
 			'enableStrictParsing' => true,
 			'showScriptName' => false,
 			'rules' => [
-				[
-					'class' => 'yii\rest\UrlRule', 
-					'controller' => 'v1/connection',
-// 					'pluralize'	=> false
-				],
+				['class' => 'yii\rest\UrlRule', 'controller' => 'v1/connection'],
 			],
 		],
 	],

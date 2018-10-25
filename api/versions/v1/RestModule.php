@@ -1,5 +1,5 @@
 <?php
-namespace rest\versions\v1;
+namespace app\versions\v1;
 
 use yii\base\Module;
 
