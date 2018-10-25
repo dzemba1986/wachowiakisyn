@@ -15,9 +15,9 @@ use common\models\seu\devices\Device;
  * @var yii\data\ActiveDataProvider $dataProvider
  */ 
 
-echo $this->renderFile('@backend/views/modal/modal_sm.php');
-echo $this->renderFile('@backend/views/modal/modal.php');
-require_once '_add_device_form.php';
+echo $this->render('@app/views/modal/modal_sm.php');
+echo $this->render('@app/views/modal/modal.php');
+echo $this->render('_add_device_form.php');
 
 $this->title = 'Magazyn';
 $this->params['breadcrumbs'][] = 'SEU';
@@ -103,17 +103,6 @@ echo GridView::widget([
                         'onclick' => "
                             $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('href'));
                         
-                            return false;
-                        "
-                    ]);
-                },
-                'tree' => function($url, $model, $key) {
-                    $url = Url::to([Device::getController($model->type_id) . '/add-on-tree', 'id' => $key]);
-                    return Html::a('<span class="glyphicon glyphicon-plus"></span>', $url, [
-                        'title' => \Yii::t('yii', 'Dodaj na drzewo'),
-                        'onclick' => "
-                            $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
-                    
                             return false;
                         "
                     ]);

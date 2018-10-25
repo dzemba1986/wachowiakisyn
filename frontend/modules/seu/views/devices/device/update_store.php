@@ -1,17 +1,20 @@
 <?php
 
+use kartik\growl\GrowlAsset;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 /**
  * @var yii\web\View $this
- * @var backend\models\Ups $device
+ * @var backend\models\Camera $device
  */
 
+GrowlAsset::register($this);
+
 $form = ActiveForm::begin([
-    'id' => $device->formName(),
-    'validationUrl' => Url::to(['validation', 'id' => $device->id])
+	'id' => $device->formName(),
+	'validationUrl' => Url::to(['validation', 'id' => $device->id])
 ])?>
     
     <?= $form->field($device, 'desc')->textarea()?>
@@ -35,9 +38,16 @@ $(function(){
 	 			$(form).trigger('reset');
     			$('#modal-sm').modal('hide');
      			$.pjax.reload({container: '#store-grid-pjax'});
+                $.notify('Zaktualizowano urządzenie.', {
+                    type: 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
 	 		}
 	 		else{
-	 			$.growl.error({ message: 'Błąd edycji ups'});
+	 			$.notify('Błąd aktualizacji urządzenia.', {
+                    type: 'danger',
+                    placement : { from : 'top', align : 'right'}, 
+                });
 	 		}
 	 	}).fail(function(){
 	 		console.log('server error');

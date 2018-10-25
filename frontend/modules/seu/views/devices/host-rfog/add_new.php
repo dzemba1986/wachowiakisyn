@@ -25,10 +25,7 @@ $form = ActiveForm::begin([
                	    'placeholder' => 'Urządzenie nadrzędne',
                		'onchange' => new JsExpression("
     					$.get('" . Url::to(['link/list-port']) . "&deviceId=' + $(this).val(), function(data) {
-    						$('select[name=\"AddHostForm[port]\"]').html(data);
-    					});
-                        $.get('" . Url::to(['optical-splitter/get-ip-link']) . "&id=' + $(this).val(), function(data) {
-    						$('.ssh').html(data);
+    						$('select[name=\"AddHostRfogForm[port]\"]').html(data);
     					});
     				")
                 ],
@@ -39,10 +36,11 @@ $form = ActiveForm::begin([
     	    			'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     	    		],
     	    		'ajax' => [
-    	    		    'url' => Url::to(['optical-splitter/list-from-tree']),
+    	    		    'url' => Url::to(['device/list-from-tree']),
     	    			'dataType' => 'json',
     	    			'data' => new JsExpression("function(params) { return {
     	    				q : params.term,
+                            type : " . $jsonType . "
     					};}")
     		    	],
     		    	'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),

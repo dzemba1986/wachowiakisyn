@@ -6,13 +6,8 @@ use common\models\seu\devices\MediaConverter;
 
 class MediaConverterController extends DeviceController {
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return MediaConverter::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new MediaConverter();
     }
 }

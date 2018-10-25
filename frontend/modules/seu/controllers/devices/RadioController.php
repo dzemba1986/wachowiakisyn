@@ -6,13 +6,8 @@ use common\models\seu\devices\Radio;
 
 class RadioController extends DeviceController {
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return Radio::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new Radio();
     }
 }

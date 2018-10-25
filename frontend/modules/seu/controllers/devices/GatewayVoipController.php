@@ -37,13 +37,8 @@ class GatewayVoipController extends DeviceController
         return $gv->configChangeMac($dGv->mac);
     }
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return GatewayVoip::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new GatewayVoip();
     }
 }

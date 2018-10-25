@@ -5,7 +5,7 @@ namespace frontend\modules\seu\controllers\devices;
 use backend\modules\address\models\Address;
 use common\models\seu\Link;
 use common\models\seu\devices\Device;
-use common\models\seu\network\Ip;
+use frontend\modules\seu\models\forms\AddDeviceOnTreeForm;
 use Yii;
 use yii\base\Exception;
 use yii\db\Expression;
@@ -16,6 +16,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+use common\models\seu\network\Ip;
 
 class DeviceController extends Controller {
     
@@ -47,10 +48,10 @@ class DeviceController extends Controller {
         ];
     }
     
-    function actionValidation($id = null) {
+    function actionValidation($id) {
         
         $request = Yii::$app->request;
-        $device = is_null($id) ? static::getModel() : $this->findModel($id);
+        $device = is_null($id) ? Yii::createObject(['class' => static::classNameModel()]) : $this->findModel($id);
         
         if ($device->load($request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -84,49 +85,44 @@ class DeviceController extends Controller {
 	public function actionUpdate($id) {
 	    
 	    $device = $this->findModel($id);
-	    $device->scenario = $device::className()::SCENARIO_UPDATE;
 	    $address = $device->address;
 	    
 	    $request = Yii::$app->request;
 	    
-	    if ($request->isPost) {
-	        if ($device->load($request->post())) {
-	            try {
-	                if(!$device->save())
-	                    throw new Exception('Problem z zapisem urządzenia');
-	            } catch (Exception $e) {
-	                var_dump($device->errors);
-	                var_dump($e->getMessage());
-	                exit();
-	            }
-	        }
-	        
-	        if ($address->load($request->post())) {
-	            
-	            $newAddress = new Address();
-	            $newAddress->t_ulica = $address->t_ulica;
-	            $newAddress->dom = $address->dom;
-	            $newAddress->dom_szczegol = $address->dom_szczegol;
-	            $newAddress->lokal = $address->lokal;
-	            $newAddress->lokal_szczegol = $address->lokal_szczegol;
-	            $newAddress->pietro = $address->pietro;
-	            
-	            try {
-	                if(!$newAddress->save())
-	                    throw new Exception('Problem z zapisem adresu');
-	                    
-	                    $device->address_id = $newAddress->id;
-	                    $device->name = $newAddress->toString(true);
-	                    if(!$device->save())
-	                        throw new Exception('Problem z zapisem urządzenia');
-	            } catch (Exception $e) {
-	                var_dump($address->errors);
-	                var_dump($e->getMessage());
-	                exit();
-	            }
-	        }
-	        return 1;
-	    } else {
+        if ($request->isPost && $device->load($request->post()) || $address->load($request->post())) {
+            $isValid = true;
+            
+            $addressChange = !empty($address->getDirtyAttributes()) ? true : false;
+            if ($addressChange) {
+                $newAddress = new Address();
+                $newAddress->t_ulica = $address->t_ulica;
+                $newAddress->dom = $address->dom;
+                $newAddress->dom_szczegol = $address->dom_szczegol;
+                $newAddress->lokal = $address->lokal;
+                $newAddress->lokal_szczegol = $address->lokal_szczegol;
+                $newAddress->pietro = $address->pietro;
+                
+                $isValid = $newAddress->validate();
+            }
+            $isValid = $device->validate() && $isValid;
+            
+            try {
+                if ($isValid) {
+                    $device->scenario = $device::className()::SCENARIO_UPDATE;
+                    $transaction = Yii::$app->getDb()->beginTransaction();
+                    if ($addressChange) $newAddress->save(false);
+                    $device->save(false);
+                    
+                    $transaction->commit();
+                    $out = 1;
+                } else $out = 'Błąd aktualizacji urządzenia';
+                
+                return $out;   
+            } catch (Exception $e) {
+                $transaction->rollBack();
+                echo $e->getMessage();
+            }
+        } else {
 	        return $this->renderAjax('update', [
 	            'device' => $device,
 	            'address' => $address,
@@ -174,7 +170,7 @@ class DeviceController extends Controller {
         return $out;
     }
     
-	public final function actionListFromStore($q = null, array $type) {
+	public final function actionListFromStore($q = null) {
 	
 	    $response = Yii::$app->response;
 	    $response->format = Response::FORMAT_JSON;
@@ -183,14 +179,14 @@ class DeviceController extends Controller {
 		 
 		if (!is_null($q)) {
 			$query = new Query();
-			$query->select(['d.id', new \yii\db\Expression("CONCAT(m.name, ' - ', d.mac, ' - ', d.serial)")])
+			$query->select(['d.id', new \yii\db\Expression("CASE WHEN mac IS NOT NULL THEN CONCAT(m.name, ' - ', d.mac, ' - ', d.serial) ELSE CONCAT(m.name, ' - ', d.serial) END")])
     	    	->from('device d')
     	    	->join('INNER JOIN', 'model m', 'm.id = d.model_id')
-    	    	->where(['and', ['address_id' => 1], ['d.type_id' => $type]])->andWhere([
-    	    	    'or', 
-    	    	    ['like', new Expression("CAST(mac AS varchar)"), $q], 
-    	    	    ['like', 'upper(d.serial)', strtoupper($q)], 
+    	    	->where(['address_id' => 1])->andWhere([
+    	    	    'or',
     	    	    ['like', 'lower(m.name)', strtolower($q)],
+    	    	    ['like', new Expression('lower("mac"::text)'), strtolower($q)], 
+    	    	    ['like', 'upper(d.serial)', strtoupper($q)], 
     	    	]);
 	
     		$command = $query->createCommand();
@@ -201,54 +197,32 @@ class DeviceController extends Controller {
 		return $out;
 	}
 	
-	public function actionAddOnTree($id) {
+	public function actionAddOnTree($parentId, $childId = null) {
 	    
-	    $device = $this->findModel($id);
-	    $link = new Link();
-	    $address = new Address();
-	    if ($device->canHasIp) $ip = new Ip();
-
 	    $request = Yii::$app->request;
 	    
-	    if ($link->load($request->post()) && $address->load($request->post())) {
-	        $device->load($request->post());
-	        $transaction = Yii::$app->getDb()->beginTransaction();
-	        try {
-	            if (!$address->save()) throw new Exception('Błąd zapisu adresu');
-	            
-	            $device->address_id = $address->id;
-	            $device->name = $address->toString(true);
-	            $device->addOnTree();
-	            if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
-	            
-	            $link->device = $id;
-	            if (!$link->save()) throw new Exception('Błąd zapisu drzewa');
-	            
-	            if ($device->canHasIp && $ip->load($request->post())) {
-	                $ip->main = true;
-	                $ip->device_id = $id;
-	                if (!$ip->save()) throw new Exception('Błąd zapisu ip');
-	            }
-	            
-	            $transaction->commit();
-	            $this->redirect(['link/index2', 'id' => $device->id . '.' . $link->port]);
-	        } catch (\Exception $e) {
-	            $transaction->rollBack();
-	            var_dump($device->errors);
-	            var_dump($address->errors);
-	            var_dump($link->errors);
-	            if ($device->canHasIp) var_dump($ip->errors);
-	            exit();
-	        }
+	    $model = new AddDeviceOnTreeForm();
+	    if ($request->isPost && $model->load($request->post())) {
+	        if ($model->add() === 1) {
+	            return 1;
+	        } else 
+               return 0;
 	    } else {
-	        $param = [
-	            'device' => $device,
-	            'link' => $link,
-	            'address' => $address,
-	        ];
-	        if ($device->canHasIp) $param['ip'] = $ip;
-	        
-	        return $this->renderAjax('add_on_tree', $param);
+	        //brak wybranego urządzenia
+	        if (!$childId) {
+	            return $this->renderAjax('select_device', [
+	                'model' => $model,
+	                'parentId' => $parentId
+	            ]);
+            //urządzenie wybrane
+	        } else {
+	            $childDevice = Device::find()->select('type_id')->where(['id' => $childId])->asArray()->one();
+	            
+    	        return $this->renderPartial('/devices/' . Device::getController($childDevice['type_id']) . '/add_on_tree', [
+    	            'model' => $model,
+    	            'parentId' => $parentId
+    	        ]);
+	        }
 	    }
 	}
 	
@@ -259,26 +233,23 @@ class DeviceController extends Controller {
 	    
 	    if($request->isPost) {
 	        try {
+	            $transaction = Yii::$app->getDb()->beginTransaction();
+	            
 	            if (!($device->canBeParent && $device->isParent())) {
-	                $link = Link::findOne(['device' => $id, 'port' => $port]);
+	                $out = 1;
 	                $count = Link::find()->where(['device' => $id])->count();
-	                $transaction = Yii::$app->getDb()->beginTransaction();
 	                
 	                if ($count == 1) {    //ostatnia kopia
-	                    $device->deleteFromTree();
-	                    
-	                    if ($device->canHasIp)
-	                        foreach ($device->ips as $ip) if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
-	                        
-                        if (!$link->delete()) throw new Exception('Błąd usuwania agregacji');
-                        if (!$device->save()) throw new Exception('Błąd zapisu urządzenia');
+	                    if ($device->canHasIp) Ip::deleteAll(['device_id' => $id]);
+	                    if (Link::deleteAll(['device' => $id, 'port' => $port]) == 0) $out = 'Nie usunięto połączenia';    
+                        $device->deleteFromTree();
+                        if (!$device->save()) $out = 'Błąd zapisu urządzenia';
 	                } else
-	                    if(!$link->delete()) throw new Exception('Błąd usuwania agregacji');
+	                    if (Link::deleteAll(['device' => $id, 'port' => $port]) == 0) $out = 'Nie usunięto połączenia';
 	                    
-	            } else $out = 'Urządzenie jest rodzicem';
-	            
-	            $transaction->commit();
-	            $out = 1;
+                    if ($out === 1) $transaction->commit();
+                    
+	            } else $out = 'urządzenie jest rodzicem';
 	            
 	            return $out;
 	            
@@ -288,7 +259,7 @@ class DeviceController extends Controller {
 	            exit();
 	        }
 	    } else
-	        return $this->renderAjax('@app/views/device/delete_from_tree');
+	        return $this->renderAjax('/devices/device/delete_from_tree');
 	}
 	
 	public function actionReplace($id) {
@@ -317,8 +288,8 @@ class DeviceController extends Controller {
 	
 	public function actionAddOnStore() {
 	    
-	    $device = static::getModel();
-	    $device->scenario = get_class($device)::SCENARIO_CREATE;
+	    $device = Yii::createObject(['class' => static::classNameModel()]);
+	    $device->scenario = $device::className()::SCENARIO_CREATE;
 	    
 	    $request = Yii::$app->request;
 	    
@@ -361,39 +332,33 @@ class DeviceController extends Controller {
                 exit();
             }
         } else {
-            return $this->renderAjax('update_store', [
+            return $this->renderAjax('/devices/device/update_store', [
                 'device' => $device
             ]);
         }
 	}
 	
-	public function actionDeleteFromStore($id)
-	{
+	public function actionDeleteFromStore($id) {
+	    
 	    $request = Yii::$app->request;
 	    
-        if($request->isPost){
-            if (!$this->findModel($id)->delete()) return 'Błąd usuwania urządzenia';
+        if($request->isPost) {
+            if (Device::deleteAll(['id' => $id]) === 0) return 'Błąd usuwania urządzenia';
             return 1;
-        } else{
-            return $this->renderAjax('@app/views/device/delete_from_store');
-        }
+        } else return $this->renderAjax('/devices/device/delete_from_store');
 	}
 	
     protected function findModel($id) {
         
-        if (($model = Device::findOne($id)) !== null) {
+        if (($model = static::classNameModel()::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
     
-    protected function findModelAsArray($id) {
+    protected static function classNameModel() {
         
-        if (($model = Device::find()->where(['id' => $id])->asArray()->one()) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
+        return Device::className();
     }
 }

@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
+
 class HostEthernetController extends HostController {
     
     public function behaviors() {
@@ -312,13 +313,8 @@ class HostEthernetController extends HostController {
         }
     }
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return HostEthernet::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new HostEthernet();
     }
 }

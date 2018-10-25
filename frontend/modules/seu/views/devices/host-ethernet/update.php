@@ -1,5 +1,6 @@
 <?php
 
+use kartik\growl\GrowlAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -9,6 +10,8 @@ use yii\widgets\ActiveForm;
  * @var backend\models\Address $address
  * @var backend\models\Host $device
  */
+
+GrowlAsset::register($this);
 
 $form = ActiveForm::begin([
 	'id' => $device->formName(),
@@ -69,10 +72,16 @@ $(function() {
      	).done(function(result){
     		if(result == 1){
      			$('#device_desc').load('{$urlView}&id=' + {$device->id});
-                $.growl.notice({ message: 'Zaktualizowano hosta'});
+                $.notify('Zaktualizowano hosta.', {
+                    type : 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
      		}
      		else{
-     			$.growl.error({ message: 'Błąd edycji hosta'});
+     			$.notify('Błąd aktualizacji urządzenia.', {
+                    type : 'danger',
+                    placement : { from : 'top', align : 'right'}, 
+                });
      		}
      	}).fail(function(){
      		console.log('server error');

@@ -6,13 +6,8 @@ use common\models\seu\devices\OpticalTransmitter;
 
 class OpticalTransmitterController extends DeviceController {
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return OpticalTransmitter::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new OpticalTransmitter();
     }
 }

@@ -133,6 +133,7 @@ class GatewayVoip extends BusinessDevice {
 	        parent::rules(),
 	        [
 	            ['monitoring', 'boolean'],
+	            ['monitoring', 'filter', 'filter' => 'boolval'],
 	            
 	            ['geolocation', 'required', 'message' => 'Wartość nie może być pusta', 'when' => function($model) { return $model->monitoring; },
 	               'whenClient' => "function(attribute, value) { return $('#gatewayvoip-monitoring').is(':checked') == true; }"

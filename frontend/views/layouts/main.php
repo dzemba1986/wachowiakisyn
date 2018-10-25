@@ -11,10 +11,6 @@ use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/growl/jquery.growl.js');
-$this->registerCssFile(Yii::$app->request->BaseUrl . '/js/growl/jquery.growl.css');
-
-
 AppAsset::register($this); 
 
 $this->beginPage() ?>
@@ -42,15 +38,18 @@ $this->beginPage() ?>
                 
                 if (Yii::$app->user->isGuest) $menuItems = [];
                 else
+                    $monitoring = Yii::$app->user->id == 23 ? true : false;
+                    $boa = Yii::$app->user->id == 18 ? true : false;
+                    
                     $menuItems = [
-                        ['label' => 'SOA', 'items' => [
+                        ['label' => 'SOA', 'visible' => !$monitoring, 'items' => [
                             ['label' => 'Umowy do zrobienia', 'url' => ['/soa/connection/index', 'mode' => 'todo']],
                             ['label' => 'Wszystkie umowy', 'url' => ['/soa/connection/index', 'mode' => 'all']],
                             ['label' => 'Umowy niezaksięgowane', 'url' => ['/soa/connection/index', 'mode' => 'noboa']],
                             '<li class="divider"></li>',
                             ['label' => 'Instalacje', 'url' => ['/soa/installation/index']],
                         ]],
-                        ['label' => 'SEU', 'items' => [
+                        ['label' => 'SEU', 'visible' => !$monitoring && !$boa, 'items' => [
                             ['label' => 'Ethernet', 'url' => ['/seu/link/index']],
                             ['label' => 'RFoG', 'url' => ['/seu/link/index2']],
                             '<li class="divider"></li>',
@@ -58,17 +57,19 @@ $this->beginPage() ?>
                             '<li class="divider"></li>',
                             ['label' => 'Magazyn', 'url' => ['/seu/store/index']],
                         ]],
-                    	['label' => 'CRM', 'items' => [
-                    	    ['label' => 'Usterki', 'url' => ['/crm/boa-task/index']],
+                        ['label' => 'CRM', 'visible' => !$monitoring && !$boa, 'items' => [
+                    	    ['label' => 'Kalendarz', 'url' => ['/crm/task/index']],
+                    	    ['label' => 'Usterki', 'url' => ['/crm/client-task/index']],
                     	    ['label' => 'Montaże', 'url' => ['/crm/install-task/index']],
                     	    ['label' => 'Kamery', 'url' => ['/crm/device-task/index']],
                     	    ['label' => 'Serwis', 'url' => ['/crm/serwis-task/index']],
                     	]],
-                        ['label' => 'Zestawienia', 'items' => [
+                        ['label' => 'Zestawienia', 'visible' => !$monitoring && !$boa, 'items' => [
                             ['label' => 'Konfiguracje', 'url' => ['/report/report/connection']],
                             ['label' => 'Instalacje', 'url' => ['/report/report/installation']],
                             ['label' => 'Montaże', 'url' => ['/report/report/task']],
                         ]],
+                        ['label' => 'Kamery', 'visible' => $monitoring, 'url' => ['/crm/device-task/index', 'mode' => 'monitoring']],
                     ];
                 
                 echo Nav::widget([

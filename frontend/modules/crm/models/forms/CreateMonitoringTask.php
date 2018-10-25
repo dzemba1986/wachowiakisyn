@@ -5,7 +5,7 @@ namespace frontend\modules\crm\models\forms;
 use common\models\crm\DeviceTask;
 use yii\base\Model;
 
-class CreateDeviceTask extends Model
+class CreateMonitoringTask extends Model
 {
     public $device_id;
     public $description;
@@ -28,7 +28,7 @@ class CreateDeviceTask extends Model
         ];
     }
 
-    public function createTask() {
+    public function create() {
         
     	if ($this->validate()) {
     		$task = new DeviceTask(['scenario' => DeviceTask::SCENARIO_CREATE]);

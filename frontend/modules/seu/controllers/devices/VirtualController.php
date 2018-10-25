@@ -101,13 +101,8 @@ class VirtualController extends DeviceController
     
     function actionReplace($id) {}
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return Virtual::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new Virtual();
     }
 }

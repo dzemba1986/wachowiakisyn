@@ -1,48 +1,54 @@
 {
-    "name": "yiisoft/yii2-app-advanced",
-    "description": "Yii 2 Advanced Project Template",
-    "keywords": ["yii2", "framework", "advanced", "project template"],
-    "homepage": "http://www.yiiframework.com/",
-    "type": "project",
-    "license": "BSD-3-Clause",
-    "support": {
-        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
-        "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "http://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii2"
-    },
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=5.4.0",
-        "yiisoft/yii2": ">=2.0.14",
-        "yiisoft/yii2-bootstrap": "*",
-        "yiisoft/yii2-swiftmailer": "*",
-        "kartik-v/yii2-grid": "@dev",
-        "kartik-v/yii2-widget-select2": "@dev",
-        "kartik-v/yii2-widget-datepicker": "@dev",
-        "kartik-v/yii2-field-range": "*",
-        "kartik-v/yii2-mpdf": "@dev",
-        "nterms/yii2-pagesize-widget": "*",
-        "kartik-v/yii2-widget-timepicker": "*",
-        "rlanvin/php-ip": "1.*",
-        "vakorovin/yii2-macaddress-validator": "dev-master",
-        "bobchengbin/yii2-xml-request-parser" : "*",
-		"yiisoft/yii2-httpclient": "^2.0",
-    },
-    "require-dev": {
-        "yiisoft/yii2-codeception": "*",
-        "yiisoft/yii2-debug": "*",
-        "yiisoft/yii2-gii": "*",
-        "yiisoft/yii2-faker": "*"
-    },
-    "config": {
-        "process-timeout": 1800
-    },
-    "extra": {
-        "asset-installer-paths": {
-            "npm-asset-library": "vendor/npm",
-            "bower-asset-library": "vendor/bower"
-        }
-    }
+	"name" : "yiisoft/yii2-app-advanced",
+	"description" : "Yii 2 Advanced Project Template",
+	"keywords" : [
+		"yii2",
+		"framework",
+		"advanced",
+		"project template"
+	],
+	"homepage" : "http://www.yiiframework.com/",
+	"type" : "project",
+	"license" : "BSD-3-Clause",
+	"support" : {
+		"issues" : "https://github.com/yiisoft/yii2/issues?state=open",
+		"forum" : "http://www.yiiframework.com/forum/",
+		"wiki" : "http://www.yiiframework.com/wiki/",
+		"irc" : "irc://irc.freenode.net/yii",
+		"source" : "https://github.com/yiisoft/yii2"
+	},
+	"minimum-stability" : "stable",
+	"require" : {
+		"php" : ">=5.4.0",
+		"yiisoft/yii2" : ">=2.0.14",
+		"yiisoft/yii2-bootstrap" : "*",
+		"yiisoft/yii2-swiftmailer" : "*",
+		"kartik-v/yii2-grid" : "@dev",
+		"kartik-v/yii2-widget-select2" : "@dev",
+		"kartik-v/yii2-widget-datepicker" : "@dev",
+		"kartik-v/yii2-field-range" : "*",
+		"kartik-v/yii2-mpdf" : "@dev",
+		"nterms/yii2-pagesize-widget" : "*",
+		"kartik-v/yii2-widget-timepicker" : "*",
+		"rlanvin/php-ip" : "1.*",
+		"vakorovin/yii2-macaddress-validator" : "dev-master",
+		"bobchengbin/yii2-xml-request-parser" : "*",
+		"yiisoft/yii2-httpclient" : "^2.0",
+		"kartik-v/yii2-widget-growl" : "~1.1"
+	},
+	"require-dev" : {
+		"yiisoft/yii2-codeception" : "*",
+		"yiisoft/yii2-debug" : "*",
+		"yiisoft/yii2-gii" : "*",
+		"yiisoft/yii2-faker" : "*"
+	},
+	"config" : {
+		"process-timeout" : 1800
+	},
+	"extra" : {
+		"asset-installer-paths" : {
+			"npm-asset-library" : "vendor/npm",
+			"bower-asset-library" : "vendor/bower"
+		}
+	}
 }

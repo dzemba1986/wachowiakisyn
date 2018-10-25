@@ -1,5 +1,6 @@
 <?php
 
+use kartik\growl\GrowlAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
@@ -9,7 +10,9 @@ use yii\widgets\DetailView;
  * @var backend\models\Host $device
  */
 
-echo $this->renderFile('@backend/views/modal/modal_sm.php');
+GrowlAsset::register($this);
+
+echo $this->renderFile('@app/views/modal/modal_sm.php');
 
 echo '<div class="col-md-5">';
 echo DetailView::widget([
@@ -107,11 +110,17 @@ $(function() {
 	
 	clipboard
         .on('success', function(e) {
-            $.growl.notice({ message: 'Skrypt w schowku'});
+            $.notify('Skrypt w schowku.', {
+                type : 'success',
+                placement : { from : 'top', align : 'right'},
+            });
             clipboard.destroy();
         })
         .on('error', function(e) {
-            $.growl.error({ message: 'Brak skryptu w schowku'});
+            $.notify('Niepowodzenie skopiowania skryptu.', {
+                type : 'danger',
+                placement : { from : 'top', align : 'right'},
+            });
             clipboard.destroy();
         });
 

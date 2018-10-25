@@ -11,8 +11,8 @@ $this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');
 $this->registerJsFile('@web/js/clipboard.min.js');
 $this->registerJsFile('@web/js/jquery-url-min.js');
 
-echo $this->renderFile('@backend/views/modal/modal.php');
-echo $this->renderFile('@backend/views/modal/modal_sm.php');
+echo $this->renderFile('@app/views/modal/modal.php');
+echo $this->renderFile('@app/views/modal/modal_sm.php');
 
 $this->title = 'SEU';
 $this->params['breadcrumbs'][] = $this->title;
@@ -149,6 +149,13 @@ $(function() {
                     'Add': {
                         'label' : 'Dodaj',
                         'submenu' : {
+                            'device' : {
+                                'label' : 'Urządzenie z magazynu',
+                                'action' : function () {
+                                    if (node.original.type != 2) return false;
+    							    $('#modal').modal('show').find('#modal-content').load('?r=seu/device/add-on-tree&parentId=' + getId(node.id));	
+                                }
+                            },
                             'virtual' : {
                                 'label' : 'Virtualka',
                                 'action' : function () {

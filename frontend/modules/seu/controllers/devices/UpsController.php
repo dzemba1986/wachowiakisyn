@@ -6,13 +6,8 @@ use common\models\seu\devices\Ups;
 
 class UpsController extends DeviceController {
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return Ups::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new Ups();
     }
 }

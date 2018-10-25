@@ -65,13 +65,8 @@ class CameraController extends DeviceController
         return $camera->configChangeMac($dCamera->mac);
     }
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return Camera::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new Camera();
     }
 }

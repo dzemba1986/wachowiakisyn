@@ -31,13 +31,8 @@ class SwithController extends DeviceController
         return Html::a('ssh', "ssh://{$this->findModel($id)->ips[0]->ip}:22222");
     }
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return Swith::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new Swith();
     }
 }

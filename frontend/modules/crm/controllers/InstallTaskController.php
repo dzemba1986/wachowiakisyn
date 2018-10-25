@@ -12,6 +12,7 @@ use Yii;
 use yii\base\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 class InstallTaskController extends Controller
 {
@@ -62,7 +63,7 @@ class InstallTaskController extends Controller
 	    	->andWhere(['or', ['status' => true], ['is', 'status', null]])
 	    	->orderBy('start')->asArray()->all();
         
-        $tasks = array_map(function($task) {
+        $taskss = array_map(function($task) {
             return array(
                 'id' => $task['id'],
                 'start' => $task['start'],
@@ -73,7 +74,7 @@ class InstallTaskController extends Controller
             );
         }, $tasks);
         
-        return $tasks;
+        return $taskss;
     }
     
     public function actionViewCalendar($connectionId = null){

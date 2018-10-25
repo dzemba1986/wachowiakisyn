@@ -37,15 +37,21 @@ $urlView = Url::to(['tabs-view']);
 $js = <<<JS
 $(function(){
 
-    var clipboard = new Clipboard('.save');
+    var clipboard = new ClipboardJS('.save');
 
     clipboard
         .on('success', function(e) {
-            $.growl.notice({ message: 'Skrypt w schowku'});
+            $.notify('Skrypt w schowku.', {
+                type : 'success',
+                placement : { from : 'top', align : 'right'},
+            });
             e.clearSelection();
         })
         .on('error', function(e) {
-            $.growl.error({ message: 'Brak skryptu w schowku'});
+            $.notify('Niepowodzenie skopiowania skryptu.', {
+                type : 'danger',
+                placement : { from : 'top', align : 'right'},
+            });
         });
 
     $('.modal-header h4').html('Zmień MAC');

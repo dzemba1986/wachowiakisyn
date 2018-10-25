@@ -6,19 +6,19 @@ use common\models\User;
 use common\models\crm\DeviceTask;
 use common\models\crm\DeviceTaskSearch;
 use common\models\seu\devices\Camera;
+use frontend\modules\crm\models\forms\CreateMonitoringTask;
 use Yii;
 use yii\base\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use frontend\modules\crm\models\forms\CreateDeviceTask;
 
 class DeviceTaskController extends Controller
 {
-    public function actionCreate()
-    {
-        $model = new CreateDeviceTask();
+    public function actionCreate() {
+        
+        $model = new CreateMonitoringTask();
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->createTask()) {
+            if ($task = $model->create()) {
                 return 1;
             } else
                 return 0;

@@ -2,6 +2,6 @@
 
 namespace frontend\modules\seu\controllers\devices;
 
-abstract class HostController extends DeviceController {
+class HostController extends DeviceController {
     
 }

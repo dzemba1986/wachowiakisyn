@@ -121,8 +121,10 @@ class Ups extends BusinessDevice {
 	            ['dhcp', 'boolean'],
 	            ['dhcp', 'default', 'value' => false],
 	            ['dhcp', 'required', 'message' => 'Wartość wymagana'],
+	            ['dhcp', 'filter', 'filter' => 'boolval'],
 	            
 	            ['monitoring', 'boolean'],
+	            ['monitoring', 'filter', 'filter' => 'boolval'],
 	            
 	            ['geolocation', 'required', 'message' => 'Wartość nie może być pusta', 'when' => function($model) { return $model->monitoring; },
 	               'whenClient' => "function(attribute, value) { return $('#swith-monitoring').is(':checked') == true; }"

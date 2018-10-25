@@ -149,7 +149,7 @@ abstract class Device extends ActiveRecord {
 	
 	public final function getAddress() {
 	    
-	    return $this->hasOne(Address::className(), ['id' => 'address_id'])->select('id, t_ulica, ulica_prefix, ulica, dom, dom_szczegol, lokal, lokal_szczegol');
+	    return $this->hasOne(Address::className(), ['id' => 'address_id'])->select('id, t_ulica, ulica_prefix, ulica, dom, dom_szczegol, lokal, lokal_szczegol, pietro');
 	}
 	
 	public final function getType() {

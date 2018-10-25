@@ -148,7 +148,8 @@ class HostRfogController extends HostController {
                 
                 return $this->renderAjax('add_new', [
                     'model' => $model,
-                    'connectionId' => $connectionId
+                    'connectionId' => $connectionId,
+                    'jsonType' => json_encode($connection->posibleParentTypeIds)
                 ]);
             
             //znalazł pasujące hosty i chce przypisać umowę do aktywnego/nieaktywnego
@@ -188,13 +189,8 @@ class HostRfogController extends HostController {
         }
     }
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return HostRfog::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new HostRfog();
     }
 }

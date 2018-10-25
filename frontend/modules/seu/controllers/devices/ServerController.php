@@ -6,13 +6,8 @@ use common\models\seu\devices\Server;
 
 class ServerController extends DeviceController
 {	
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return Server::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new Server();
     }
 }

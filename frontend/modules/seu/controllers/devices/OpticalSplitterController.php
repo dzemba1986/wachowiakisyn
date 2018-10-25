@@ -6,13 +6,8 @@ use common\models\seu\devices\OpticalSplitter;
 
 class OpticalSplitterController extends DeviceController {
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return OpticalSplitter::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new OpticalSplitter();
     }
 }

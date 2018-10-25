@@ -132,16 +132,19 @@ class Camera extends BusinessDevice {
             [
                 ['mac', 'unique', 'targetClass' => static::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
                 return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-                }, 'filter' => ['status' => TRUE], 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
+                }, 'filter' => ['status' => true], 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
                 
             	['alias', 'string', 'min' => 2, 'max' => 30],
                 ['alias', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model){ isset($model->status); }],
                 
-                ['dhcp', 'boolean'],
-                ['dhcp', 'default', 'value' => FALSE],
+                ['dhcp', 'boolean', 'trueValue' => true, 'falseValue' => false],
+                ['dhcp', 'default', 'value' => false],
                 ['dhcp', 'required', 'message' => 'Wartość wymagana'],
+                ['dhcp', 'filter', 'filter' => 'boolval'],
                 
-                ['monitoring', 'boolean'],
+                ['monitoring', 'boolean', 'trueValue' => true, 'falseValue' => false],
+                ['monitoring', 'filter', 'filter' => 'boolval'],
+                
                 
                 ['geolocation', 'required', 'message' => 'Wartość nie może być pusta', 'when' => function($model) { return $model->monitoring; },
                     'whenClient' => "function(attribute, value) { return $('#camera-monitoring').is(':checked') == true; }"

@@ -1,5 +1,6 @@
 <?php
 
+use common\models\crm\FullCalendarAsset;
 use common\models\soa\Connection;
 use yii\helpers\Url;
 
@@ -8,6 +9,8 @@ use yii\helpers\Url;
  * @var $model backend\models\Connection
  */
 require_once '_modal_task.php';
+
+//FullCalendarAsset::register($this);
 
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/lib/qtip/jquery.qtip.min.js', ['position' => \yii\web\View::POS_BEGIN]);
 $this->registerJsFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/lib/moment.min.js', ['position' => \yii\web\View::POS_BEGIN]);

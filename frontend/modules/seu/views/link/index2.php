@@ -67,10 +67,8 @@ $(function() {
     		},
     		'check_callback' : function (op, node, parent, position, more) {
 
-                if (op === "copy_node") return false;
-
                 if (op === "delete_node") {   
-                    if (this.is_parent(node)) return false;
+                    //if (this.is_parent(node)) return false;
                     if (node.original.type == 5) return false;
                 }
             }
@@ -132,10 +130,6 @@ $(function() {
                                 'label' : 'Wytnij',
                                 'action' : function (obj) { tree.cut(node); }
                             },
-                            'copy' : {
-                                'label' : 'Kopiuj',
-                                'action' : function (obj) { tree.copy(node); }
-                            },
                             'paste' : {
                                 'label' : 'Wklej',
                                 'action': function (obj) { tree.paste(node); }
@@ -145,6 +139,13 @@ $(function() {
                     'Add': {
                         'label' : 'Dodaj',
                         'submenu' : {
+                            'device' : {
+                                'label' : 'Urządzenie z magazynu',
+                                'action' : function () {
+                                    if (node.original.type == 5) return false;
+    							    $('#modal').modal('show').find('#modal-content').load('?r=seu/device/add-on-tree&parentId=' + getId(node.id));	
+                                }
+                            },
                             'virtual' : {
                                 'label' : 'Virtualka',
                                 'action' : function () {
@@ -204,13 +205,6 @@ $(function() {
             var port = getPort(data.node.id);
             var newParentId = getId(data.parent);
             $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlMove}&deviceId=' + deviceId + '&port=' + port + '&newParentId=' + newParentId);
-        })
-
-        .on('copy_node.jstree', function(e, data) {
-            
-            var deviceId = getId(data.original.id);
-            var parentId = getId(data.parent);
-            $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlCopy}&deviceId=' + deviceId + '&parentId=' + parentId);
         })
 
         .on('delete_node.jstree', function(e, data) {

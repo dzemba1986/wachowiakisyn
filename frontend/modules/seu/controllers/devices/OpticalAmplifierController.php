@@ -6,13 +6,8 @@ use common\models\seu\devices\OpticalAmplifier;
 
 class OpticalAmplifierController extends DeviceController {
     
-    protected static function getModelClassName() {
+    protected static function classNameModel() {
         
         return OpticalAmplifier::className();
-    }
-    
-    protected static function getModel() {
-        
-        return new OpticalAmplifier();
     }
 }

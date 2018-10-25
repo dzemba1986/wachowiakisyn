@@ -72,10 +72,12 @@ class HostEthernet extends Host {
 	            ['dhcp', 'boolean'],
 	            ['dhcp', 'default', 'value' => true],
 	            ['dhcp', 'required', 'message' => 'Wartość wymagana'],
+	            ['dhcp', 'filter', 'filter' => 'boolval'],
 	            
 	            ['smtp', 'boolean'],
 	            ['smtp', 'default', 'value' => false],
 	            ['smtp', 'required', 'message' => 'Wartość wymagana'],
+	            ['smtp', 'filter', 'filter' => 'boolval'],
 	            
 	            [['mac', 'dhcp', 'smtp'], 'safe'],
 	        ]

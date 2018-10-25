@@ -2,6 +2,7 @@
 
 use backend\modules\address\models\Address;
 use backend\modules\address\models\AddressShort;
+use kartik\growl\GrowlAsset;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -14,6 +15,8 @@ use yii\widgets\ActiveForm;
  * @var backend\models\Device $device
  */
 
+GrowlAsset::register($this);
+
 $form = ActiveForm::begin([
 	'id' => $device->formName(),
     'validationUrl' => Url::to(['validation', 'id' => $device->id])
@@ -21,16 +24,16 @@ $form = ActiveForm::begin([
 	
 	<div class="col-md-5">
 	
-		<div class="row">
+		<div class="row no-gutter">
 	    
 	    	<?= Html::label('Lokalizacja') ?>
 	    
 	    </div>
 	    
-	    <div class="row">
+	    <div class="row no-gutter">
 	    
     	    <?= $form->field($address, 't_ulica', [
-    				'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;'],
+    				'options' => ['class' => 'col-sm-6'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->widget(Select2::className(), [
         			'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
@@ -42,44 +45,44 @@ $form = ActiveForm::begin([
     	    ?>
     	    
     	    <?= $form->field($address, 'dom' , [
-    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+    	    		'options' => ['class' => 'col-sm-2'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->textInput(['placeholder' => $address->getAttributeLabel('dom')]) 
     	    ?>
     	    
     	    <?= $form->field($address, 'dom_szczegol' , [
-    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 3px;'],
+    	    		'options' => ['class' => 'col-sm-2'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->textInput(['placeholder' => $address->getAttributeLabel('dom_szczegol')]) 
     	    ?>
     	    
     	    <?= $form->field($address, 'pietro' , [
-    	    		'options' => ['class' => 'col-sm-2', 'style' => 'padding-left: 3px; padding-right: 0px;'],
+    	    		'options' => ['class' => 'col-sm-2'],
     	    		'template' => "{input}\n{hint}\n{error}",
     	    	])->dropDownList(Address::getFloor(), ['prompt' => $address->getAttributeLabel('pietro')]) 
     	    ?>
      	
      	</div>
     
-		<div class="row">
+		<div class="row no-gutter">
 		
     		<?= $form->field($device, 'proper_name', [
-    			'options' => ['class' => 'col-sm-3', 'style' => 'padding-left: 0px; padding-right: 3px;']
+    			'options' => ['class' => 'col-sm-3']
     		]) ?>
     		
     		<?= $form->field($device, 'alias', [
-    			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 3px; padding-right: 3px;']
+    			'options' => ['class' => 'col-sm-4']
     		]) ?>
 		
 			<?= $form->field($device, 'geolocation', [
-    			'options' => ['class' => 'col-sm-5', 'style' => 'padding-left: 3px; padding-right: 0px;']
+    			'options' => ['class' => 'col-sm-5']
     		]) ?>
 		</div>
 	
-		<div class="row">
+		<div class="row no-gutter">
 		
     		<?= $form->field($device, 'desc', [
-    			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    			'options' => ['class' => 'col-sm-13']
     		])->textarea() ?>	
     
             <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>
@@ -119,10 +122,16 @@ $(function() {
      	).done(function(result){
     		if(result == 1){
      			$('#device_desc').load('{$urlView}&id=' + {$device->id});
-                $.growl.notice({ message: 'Zaktualizowano kamerę'});
+                $.notify('Zaktualizowano urządzenie.', {
+                    type: 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
      		}
      		else{
-     			$.growl.error({ message: 'Błąd edycji kamery'});
+     			$.notify('Błąd aktualizacji urządzenia.', {
+                    type: 'danger',
+                    placement : { from : 'top', align : 'right'}, 
+                });
      		}
      	}).fail(function(){
      		console.log('server error');
