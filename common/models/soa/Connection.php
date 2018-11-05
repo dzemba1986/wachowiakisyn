@@ -273,7 +273,7 @@ class Connection extends ActiveRecord
     
     public function getTechnic() : int {
         
-        if (is_null($this->technic)) $this->technic = $this->package == 6 && $this->type_id == 3 ? 2 : 1;
+        if (is_null($this->technic)) $this->technic = $this->package_id == 6 && $this->type_id == 3 ? 2 : 1;
         
         return $this->technic;
     }
