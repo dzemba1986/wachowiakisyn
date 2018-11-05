@@ -308,8 +308,8 @@ class Connection extends ActiveRecord
     
     public function getTreeUrl() : string {
         
-        if ($this->type_id == 1 || ($this->type_id == 3 && $this->package_id != 6)) $url = Url::to(['/seu/link/index', 'id' => $this->id . '.0']);
-        elseif ($this->type_id == 3 && $this->package_id = 6) $url = Url::to(['/seu/link/index2', 'id' => $this->id . '.0']);
+        if ($this->type_id == 1 || ($this->type_id == 3 && $this->package_id != 6)) $url = Url::to(['/seu/link/index', 'id' => $this->host_id . '.0']);
+        elseif ($this->type_id == 3 && $this->package_id = 6) $url = Url::to(['/seu/link/index2', 'id' => $this->host_id . '.0']);
         
         return $url;
     }
