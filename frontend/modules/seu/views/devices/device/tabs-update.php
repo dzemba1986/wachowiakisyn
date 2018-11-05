@@ -17,7 +17,7 @@ echo Tabs::widget([
 		    ],
 			[
 				'label' => 'Adresacja',
-				'linkOptions' => ['data-url' => Url::to(['/ip/update', 'deviceId' => $id])]
+				'linkOptions' => ['data-url' => Url::to(['ip/update', 'deviceId' => $id])]
 			],
 		]
 		

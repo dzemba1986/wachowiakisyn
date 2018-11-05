@@ -15,6 +15,11 @@ use yii\web\NotFoundHttpException;
 
 class IpController extends Controller
 {  
+    public function getViewPath() {
+        
+        return Yii::getAlias('@app/modules/seu/views/network/' . $this->id);
+    }
+    
 	public function actionView($device)
 	{
 		$modelIps = !is_null($device) ? Device::findOne($device)->modelIps : [];
