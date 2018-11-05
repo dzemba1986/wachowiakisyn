@@ -8,14 +8,5 @@ class HostEthernetQuery extends HostQuery {
         
         return parent::getColumns() . ', mac, smtp, dhcp';
     }
-    
-    public function prepare($builder) {
-        
-        if ($this->technic !== NULL) {
-            $this->andWhere(['technic' => $this->technic]);
-        }
-        
-        return parent::prepare($builder);
-    }
 }
 ?>

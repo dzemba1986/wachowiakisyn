@@ -157,7 +157,7 @@ class HostEthernetController extends HostController {
             }
         } else {
             //znajdz wszystkie hosty z danego adresu i o danym systemie (ethernet czy rfog)
-            $allHosts = Host::find()->select('id, type_id, name, status')->where([
+            $allHosts = Host::find()->select('id, type_id, name, status, technic')->where([
                 'address_id' => $connection->address_id, 
                 'technic' => $connection->technic
             ])->all();
