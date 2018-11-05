@@ -29,7 +29,7 @@ class XSeriesConfiguration extends Configuration {
                 $add .= "description {$this->desc}\n";
                 $add .= "egress-rate-limit 820032\n";
                 $add .= "service-policy input 800M\n";
-                $this->device->smtp ? $add .= "access-group anyuser-smtp\n" : $add .= "access-group anyuser\n";
+                $this->smtp ? $add .= "access-group anyuser-smtp\n" : $add .= "access-group anyuser\n";
                 $add .= "switchport access vlan {$this->vlanId}\n";
                 $add .= "spanning-tree portfast\n";
                 $add .= "spanning-tree portfast bpdu-guard enable\n";
@@ -51,7 +51,7 @@ class XSeriesConfiguration extends Configuration {
                     $add .= "description {$this->desc}\n";
                     $add .= "egress-rate-limit 820032\n";
                     $add .= "service-policy input iptv-user-800M\n";
-                    $this->device->smtp ? $add .= "access-group iptv-user-smtp\n" : $add .= "access-group iptv-user\n";
+                    $this->smtp ? $add .= "access-group iptv-user-smtp\n" : $add .= "access-group iptv-user\n";
                     $add .= "no ip igmp trusted all\n";
                     $add .= "ip igmp trusted report\n";
                     $add .= "switchport access vlan {$this->vlanId}\n";
@@ -73,7 +73,7 @@ class XSeriesConfiguration extends Configuration {
                         $add .= "description {$this->desc}\n";
                         $add .= "egress-rate-limit 820032\n";
                         $add .= "service-policy input internet-user-800M\n";
-                        $this->device->smtp ? $add .= "access-group internet-user-smtp\n" : $add .= "access-group internet-user\n";
+                        $this->smtp ? $add .= "access-group internet-user-smtp\n" : $add .= "access-group internet-user\n";
                         $add .= "no ip igmp trusted all\n";
                         $add .= "switchport access vlan {$this->vlanId}\n";
                         $add .= "no shutdown\n";
