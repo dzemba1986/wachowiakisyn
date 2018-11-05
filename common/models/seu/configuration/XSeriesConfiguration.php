@@ -205,7 +205,7 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "no switchport port-security\n";
                 $drop .= "no service-policy input 800M\n";
                 $drop .= "no egress-rate-limit\n";
-                $this->device->smtp ? $drop .= "no access-group anyuser-smtp\n" : $drop .= "no access-group anyuser\n";
+                $this->smtp ? $drop .= "no access-group anyuser-smtp\n" : $drop .= "no access-group anyuser\n";
                 $drop .= "switchport access vlan 555\n";
                 $drop .= "exit\n";
                 $drop .= "do clear ip dhcp snooping binding int {$this->parentPortName}\n";
@@ -224,8 +224,8 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "no service-policy input iptv-only-800M\r\n";
                 $drop .= "no egress-rate-limit\r\n";
                 $drop .= "no ip igmp trust all\r\n";
-                $this->device->smtp ? $drop .= "no access-group internet-user-smtp\r\n" : $drop .= "no access-group internet-user\r\n";
-                $this->device->smtp ? $drop .= "no access-group iptv-user-smtp\r\n" : $drop .= "no access-group iptv-user\r\n";
+                $this->smtp ? $drop .= "no access-group internet-user-smtp\r\n" : $drop .= "no access-group internet-user\r\n";
+                $this->smtp ? $drop .= "no access-group iptv-user-smtp\r\n" : $drop .= "no access-group iptv-user\r\n";
                 $drop .= "no access-group iptv-only\r\n";
                 $drop .= "switchport access vlan 555\r\n";
                 $drop .= "exit\r\n";
