@@ -65,11 +65,17 @@ $(function(){
      	).done(function(result){
      		if(result == 1){
                 $('#modal-sm').modal('hide');
-                $.growl.notice({ message: 'Zaktualizowano MAC'});
+                $.notify('Zaktualizowano MAC.', {
+                    type : 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
     			$('#device_desc').load('{$urlView}&id=' + {$host->id});
      		}
      		else{
-     			$.growl.error({ message: 'Błąd edycji MAC'});
+                $.notify('Błąd edycji MAC.', {
+                    type : 'danger',
+                    placement : { from : 'top', align : 'right'},
+                });
      		}
      	}).fail(function(){
      		console.log('server error');
