@@ -20,7 +20,7 @@ class ECSeriesConfiguration extends Configuration {
         $add = ' ';        
         if ($this->typeId == Host::TYPE) {
 
-            if (count($this->device->connections) == 2) {
+            if ($this->connectionsCount == 2) {
                 $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
                 $add .= "access-list IP extended iptv-user{$this->parentPortNumber}\n";
                 $add .= "deny TCP any any destination-port 25\n";
@@ -53,8 +53,8 @@ class ECSeriesConfiguration extends Configuration {
                 $add .= "no shutdown\n";
                 $add .= "end\n";
                 $add .= "cop r s\n";
-            } elseif (count($this->device->connections) == 1) {
-                if ($this->device->connections[0]->type_id == 1) {
+            } elseif ($this->connectionsCount == 1) {
+                if ($this->connectionType == 1) {
                     $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
                     $add .= "access-list IP extended internet-user{$this->parentPortNumber}\n";
                     $add .= "deny TCP any any destination-port 25\n";
@@ -87,7 +87,7 @@ class ECSeriesConfiguration extends Configuration {
                     $add .= "no shutdown\n";
                     $add .= "end\n";
                     $add .= "cop r s\n";
-                } elseif ($this->device->connections[0]->type_id == 3) {
+                } elseif ($this->connectionType == 3) {
                     $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
                     $add .= "access-list IP extended iptv-only{$this->parentPortNumber}\n";
                     $add .= "deny any any\n";

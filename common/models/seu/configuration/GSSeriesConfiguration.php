@@ -19,6 +19,7 @@ class GSSeriesConfiguration extends Configuration {
     function add() {
         $add = ' ';
         if ($this->typeId == Host::TYPE) {
+            
             $add = "interface ethernet {$this->parentPortName}\n";
             $add .= "no service-acl input\n";
             $add .= "exit\n";

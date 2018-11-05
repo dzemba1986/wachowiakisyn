@@ -10,13 +10,10 @@ use common\models\seu\devices\Virtual;
 
 class XSeriesConfiguration extends Configuration {
     
-    private $parentIp;
-    
     function __construct($device) {
         
         parent::__construct($device);
         $this->mac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $device->mac));
-        $this->parentIp = $device->parent->firstIp;
     }
     
     function add() {
@@ -42,7 +39,7 @@ class XSeriesConfiguration extends Configuration {
                 $add .= "exit\n";
                 $add .= "wr\n";
             } else {
-                if (count($this->device->connections) == 2) {
+                if ($this->connectionsCount == 2) {
                     $add = "interface {$this->parentPortName}\n";
                     $add .= "shutdown\n";
                     $add .= "no switchport port-security\n";
@@ -63,8 +60,8 @@ class XSeriesConfiguration extends Configuration {
                     $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
                     $add .= "exit\n";
                     $add .= "wr\n";
-                } elseif (count($this->device->connections) == 1) {
-                    if ($this->device->connections[0]->type_id == 1) {
+                } elseif ($this->connectionsCount == 1) {
+                    if ($this->connectionType == 1) {
                         $add = "interface {$this->parentPortName}\n";
                         $add .= "shutdown\n";
                         $add .= "no switchport port-security\n";
@@ -84,7 +81,7 @@ class XSeriesConfiguration extends Configuration {
                         $add .= "mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
                         $add .= "exit\n";
                         $add .= "wr\n";
-                    } elseif ($this->device->connections[0]->type_id == 3) {
+                    } elseif ($this->connectionType == 3) {
                         $add = "interface {$this->parentPortName}\n";
                         $add .= "shutdown\n";
                         $add .= "no switchport port-security\n";
