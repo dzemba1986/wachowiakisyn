@@ -37,7 +37,7 @@ $this->beginPage() ?>
             ]);
                 
                 if (Yii::$app->user->isGuest) $menuItems = [];
-                else
+                else {
                     $monitoring = Yii::$app->user->id == 23 ? true : false;
                     $boa = Yii::$app->user->id == 18 ? true : false;
                     
@@ -71,6 +71,7 @@ $this->beginPage() ?>
                         ]],
                         ['label' => 'Kamery', 'visible' => $monitoring, 'url' => ['/crm/device-task/index', 'mode' => 'monitoring']],
                     ];
+                }
                 
                 echo Nav::widget([
                     'options' => ['class' => 'navbar-nav navbar-left'],
