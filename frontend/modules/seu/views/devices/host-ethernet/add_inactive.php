@@ -35,7 +35,7 @@ $form = ActiveForm::begin([
         	'prompt' => 'Vlan',
         	'onchange' => new JsExpression("
         		$.get('" . Url::to(['subnet/list']) . "&vlanId=' + $(this).val(), function(data){
-            		$('select[name=\"AddHostForm[subnetId]\"]').html(data).trigger('change');
+            		$('select[name=\"AddHostEthernetForm[subnetId]\"]').html(data).trigger('change');
         		});	
         	")  	
         ]) ?>
@@ -50,7 +50,7 @@ $form = ActiveForm::begin([
         	'prompt' => 'Podsieć',
         	'onchange' => new JsExpression("
         		$.get('" . Url::to(['ip/select-list']) . "&subnet=' + $(this).val() + '&mode=free', function(data){
-    				$('select[name=\"AddHostForm[ip]\"]').html(data);
+    				$('select[name=\"AddHostEthernetForm[ip]\"]').html(data);
     			});
         	")  	
         ]) ?>
