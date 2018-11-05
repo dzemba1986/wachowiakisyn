@@ -22,6 +22,9 @@ abstract class Configuration {
         $this->vlanId = $device->vlansToIps[0]['vlan'];
         $this->ip = $device->vlansToIps[0]['ip'];
         $this->typeId = $device->type_id;
+        $this->smtp = $device->smtp;
+        $this->parentIp = $device->parent->firstIp;
+        $this->device = $device;
     }
     abstract function add();
     abstract function drop($auto);

@@ -23,13 +23,13 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "no service-acl input\n";
             $add .= "exit\n";
             $add .= "no ip access-list user{$this->parentPortNumber}\n";
-            if ($this->device->smtp) $add .= "no ip access-list user{$this->parentPortNumber}smtp\n";
+            if ($this->smtp) $add .= "no ip access-list user{$this->parentPortNumber}smtp\n";
             $add .= "interface vlan {$this->vlanId}\n";
             $add .= "bridge address {$this->mac} permanent ethernet {$this->parentPortName}\n";
             $add .= "exit\n";
-            $this->device->smtp ? $add .= "ip access-list user{$this->parentPortNumber}smtp\n" : $add .= "ip access-list user{$this->parentPortNumber}\n";
+            $this->smtp ? $add .= "ip access-list user{$this->parentPortNumber}smtp\n" : $add .= "ip access-list user{$this->parentPortNumber}\n";
             $add .= "deny-udp any any any 68\n";
-            if (!$this->device->smtp) $add .= "deny-tcp any any any 25\n";
+            if (!$this->smtp) $add .= "deny-tcp any any any 25\n";
             $add .= "permit any {$this->ip} 0.0.0.0 any\n";
             $add .= "permit-udp 0.0.0.0 0.0.0.0 68 any 67\n";
             $add .= "exit\n";
@@ -39,7 +39,7 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "switchport mode access\n";
             $add .= "switchport access vlan {$this->vlanId}\n";
             $add .= "description {$this->desc}\n";
-            $this->device->smtp ? $add .= "service-acl input user{$this->parentPortNumber}smtp\n" : $add .= "service-acl input user{$this->parentPortNumber}\n";
+            $this->smtp ? $add .= "service-acl input user{$this->parentPortNumber}smtp\n" : $add .= "service-acl input user{$this->parentPortNumber}\n";
             $add .= "traffic-shape 830000 8300000\n";
             $add .= "rate-limit 938000\n";
             $add .= "port security mode lock\n";
@@ -193,7 +193,7 @@ class GSSeriesConfiguration extends Configuration {
             $drop .= "exit\n";
             $drop .= "ip access-list user{$this->parentPortNumber}\n";
             $drop .= "no ip access-list user{$this->parentPortNumber}\n";
-            if ($this->device->smtp) $drop .= "no ip access-list user{$this->parentPortNumber}smtp\n";
+            if ($this->smtp) $drop .= "no ip access-list user{$this->parentPortNumber}smtp\n";
             $drop .= "exit\n";
             if (!$auto) $drop .= "copy r s\n";
             if (!$auto) $drop .= "y\n";
@@ -204,7 +204,7 @@ class GSSeriesConfiguration extends Configuration {
                 file_put_contents($fileConf, $drop);
                 
                 if (snmpset(
-                    $this->device->parentIp,
+                    $this->parentIp,
                     "1nn3c0mmun1ty",
                     ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.4.1', '1.3.6.1.4.1.89.87.2.1.6.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
                     ['i', 'a', 's', 'i', 'i', 'i'],
@@ -213,7 +213,7 @@ class GSSeriesConfiguration extends Configuration {
                 )) {
                     sleep(1);
                     snmpset(
-                        $this->device->parentIp,
+                        $this->parentIp,
                         "1nn3c0mmun1ty",
                         ['1.3.6.1.4.1.89.87.2.1.3.1', '1.3.6.1.4.1.89.87.2.1.7.1', '1.3.6.1.4.1.89.87.2.1.8.1', '1.3.6.1.4.1.89.87.2.1.12.1', '1.3.6.1.4.1.89.87.2.1.17.1'],
                         ['i', 'i', 'i', 'i', 'i'],
