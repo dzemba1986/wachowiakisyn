@@ -47,7 +47,7 @@ foreach ($device->vlansToIps as $vlanToIp) {
     
     $url = Html::a($vlanToIp['ip'], "http://{$vlanToIp['ip']}", ['target'=>'_blank']);
     echo '<tr>';
-    echo "<th>VLAN {$vlanToIp['vlan']}</th>";
+    echo "<th>VLAN {$vlanToIp['vlan_id']}</th>";
     echo "<td>{$url}</td>";
     echo '</tr>';
 }

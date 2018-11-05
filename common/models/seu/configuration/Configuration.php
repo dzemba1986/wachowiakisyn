@@ -19,7 +19,7 @@ abstract class Configuration {
         $this->parentPortNumber = $device->parent->portNumber;
         $this->parentPortName = $device->parent->portName;
         $this->desc = $device->getMixName(false);
-        $this->vlanId = $device->vlansToIps[0]['vlan'];
+        $this->vlanId = $device->vlansToIps[0]['vlan_id'];
         $this->ip = $device->vlansToIps[0]['ip'];
         $this->typeId = $device->type_id;
         $this->smtp = $device->smtp;
