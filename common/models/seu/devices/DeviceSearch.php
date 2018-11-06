@@ -40,17 +40,15 @@ class DeviceSearch extends BusinessDevice {
 		}
 		
 		if ($this->mac) {
-		    $mac = str_replace([':', '.', '-'], '', $this->mac);
+		    $this->mac = preg_replace('/[^A-Za-z0-9]/', '', $this->mac);
 		    
-		    $count = strlen($mac);
-		    for($i=0;$count>$i;$i++){
-		        
-		        if($i%2==1){
-		            $newMac .=  $mac[$i].':';
-		        }else{
-		            $newMac .=  $mac[$i];
-		        }
+		    $count = strlen($this->mac);
+		    $mac = null;
+		    for($i=0;$count>$i;$i++) {
+		        if ($i <> ($count - 1) && $i%2 == 1) $mac .=  $this->mac[$i].':';
+                else $mac .=  $this->mac[$i];
 		    }
+		    $this->mac = $mac;
 		}
 	
 		$query->andFilterWhere([
@@ -63,7 +61,7 @@ class DeviceSearch extends BusinessDevice {
 		]);
 	
 		$query->andFilterWhere(['like', 'serial', $this->serial])
-            ->andFilterWhere(['like', '"mac"::text' , $newMac]);    
+            ->andFilterWhere(['like', '"mac"::text' , $this->mac]);    
 	
 		return $dataProvider;
 	}
