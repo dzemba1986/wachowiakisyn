@@ -48,7 +48,7 @@ class DeviceController extends Controller {
         ];
     }
     
-    function actionValidation($id) {
+    function actionValidation($id = null) {
         
         $request = Yii::$app->request;
         $device = is_null($id) ? Yii::createObject(['class' => static::classNameModel()]) : $this->findModel($id);
