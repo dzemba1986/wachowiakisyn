@@ -89,28 +89,35 @@ class DeviceController extends Controller {
 	    
 	    $request = Yii::$app->request;
 	    
-        if ($request->isPost && $device->load($request->post()) || $address->load($request->post())) {
+	    if ($request->isPost && $device->load($request->post())) {
             $isValid = true;
             
-            $addressChange = !empty($address->getDirtyAttributes()) ? true : false;
-            if ($addressChange) {
-                $newAddress = new Address();
-                $newAddress->t_ulica = $address->t_ulica;
-                $newAddress->dom = $address->dom;
-                $newAddress->dom_szczegol = $address->dom_szczegol;
-                $newAddress->lokal = $address->lokal;
-                $newAddress->lokal_szczegol = $address->lokal_szczegol;
-                $newAddress->pietro = $address->pietro;
-                
-                $isValid = $newAddress->validate();
+            if ($address->load($request->post())) {
+                $addressChange = !empty($address->getDirtyAttributes()) ? true : false;
+                if ($addressChange) {
+                    $newAddress = new Address();
+                    $newAddress->t_ulica = $address->t_ulica;
+                    $newAddress->dom = $address->dom;
+                    $newAddress->dom_szczegol = $address->dom_szczegol;
+                    $newAddress->lokal = $address->lokal;
+                    $newAddress->lokal_szczegol = $address->lokal_szczegol;
+                    $newAddress->pietro = $address->pietro;
+                    
+                    $isValid = $newAddress->validate();
+                }
             }
             $isValid = $device->validate() && $isValid;
             
             try {
+//                 var_dump($isValid); exit();
                 if ($isValid) {
                     $device->scenario = $device::className()::SCENARIO_UPDATE;
                     $transaction = Yii::$app->getDb()->beginTransaction();
-                    if ($addressChange) $newAddress->save(false);
+                    if ($addressChange) {
+                        $newAddress->save(false);
+                        $device->address_id = $newAddress->id;
+                        $device->name = $newAddress->toString(true);
+                    }
                     $device->save(false);
                     
                     $transaction->commit();

@@ -2,6 +2,7 @@
 
 use backend\modules\address\models\Address;
 use backend\modules\address\models\AddressShort;
+use kartik\growl\GrowlAsset;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -13,6 +14,8 @@ use yii\widgets\ActiveForm;
  * @var backend\models\Address $address
  * @var backend\models\Device $device
  */
+
+GrowlAsset::register($this);
 
 $form = ActiveForm::begin([
 	'id' => $device->formName(),
@@ -110,10 +113,16 @@ $(function() {
      	).done(function(result){
     		if(result == 1){
      			$('#device_desc').load('{$urlView}&id=' + {$device->id});
-                $.growl.notice({ message: 'Zaktualizowano serwer'});
+                $.notify('Zaktualizowano urządzenie.', {
+                    type: 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
      		}
      		else{
-     			$.growl.error({ message: 'Błąd edycji serwera'});
+     			$.notify('Błąd aktualizacji urządzenia.', {
+                    type: 'danger',
+                    placement : { from : 'top', align : 'right'}, 
+                });
      		}
      	}).fail(function(){
      		console.log('server error');
