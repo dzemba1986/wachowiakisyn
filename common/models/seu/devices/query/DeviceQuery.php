@@ -15,9 +15,8 @@ class DeviceQuery extends ActiveQuery {
 	
 	public function prepare($builder) {
 	    
-		if ($this->type_id !== NULL) {
-		    $this->select($this->columns)->andWhere(['device.type_id' => $this->type_id]);
-		}
+	    if (empty($this->select)) $this->select($this->columns);
+		if ($this->type_id !== NULL) $this->andWhere(['device.type_id' => $this->type_id]);
 		
 		return parent::prepare($builder);
 	}
