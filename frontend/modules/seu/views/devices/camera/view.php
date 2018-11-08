@@ -1,4 +1,5 @@
 <?php
+use kartik\growl\GrowlAsset;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -15,6 +16,8 @@ use yii\widgets\DetailView;
  * @var string $drop
  * @var backend\models\Camera $device
  */
+
+GrowlAsset::register($this);
 
 echo '<div class="col-md-5">';
 echo DetailView::widget([
@@ -107,11 +110,17 @@ $(function() {
 	
 	clipboard
         .on('success', function(e) {
-            $.growl.notice({ message: 'Skrypt w schowku'});
+            $.notify('Skrypt w schowku.', {
+                type : 'success',
+                placement : { from : 'top', align : 'right'},
+            });
             clipboard.destroy();
         })
         .on('error', function(e) {
-            $.growl.error({ message: 'Brak skryptu w schowku'});
+            $.notify('Niepowodzenie skopiowania skryptu.', {
+                type : 'danger',
+                placement : { from : 'top', align : 'right'},
+            });
             clipboard.destroy();
         });
 });
