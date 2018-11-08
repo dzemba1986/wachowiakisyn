@@ -217,7 +217,7 @@ class InstallTaskController extends Controller
     					$installation = null;
     					//przeszukaj instalacje których typ odpowiada typowi połączenia
     					foreach ($connection->getInstallations(true)->all() as $ins){
-    						if (!is_null($ins->wire_date) && is_null($ins->socket_date) && is_null($ins->socket_user)){
+    						if ($ins->wire_date && !$ins->socket_date && !$ins->socket_user){
     							$installation = $ins;	//podstaw gdy coś znalazł
     							break;
     						}
