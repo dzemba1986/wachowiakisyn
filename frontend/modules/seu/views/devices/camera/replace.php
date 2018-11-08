@@ -1,10 +1,10 @@
 <?php
+use kartik\growl\GrowlAsset;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
-use common\models\seu\devices\GatewayVoip;
 use common\models\seu\devices\Camera;
 
 /**
@@ -12,6 +12,8 @@ use common\models\seu\devices\Camera;
  * @var \yii\widgets\ActiveForm $form
  * @var common\models\seu\devices\Camera $source
  */
+
+GrowlAsset::register($this);
 
 $form = ActiveForm::begin([
 	'id' => 'replace'
@@ -78,11 +80,17 @@ $(function(){
 
     clipboard
         .on('success', function(e) {
-            $.growl.notice({ message: 'Skrypt w schowku'});
+            $.notify('Skrypt w schowku.', {
+                type: 'success',
+                placement : { from : 'top', align : 'right'},
+            });
             clipboard.destroy();
         })
         .on('error', function(e) {
-            $.growl.error({ message: 'Brak skryptu w schowku'});
+            $.notify('Brak skryptu w schowku.', {
+                type: 'danger',
+                placement : { from : 'top', align : 'right'}, 
+            });
             clipboard.destroy();
         });
     
@@ -99,9 +107,17 @@ $(function(){
 				$('#modal').modal('hide');
                 var tree = $("#device_tree").jstree(true);
                 tree.refresh();
-                $('#device_desc').load('{$urlView}&id=' + $('#device-select').val());  
+                $('#device_desc').load('{$urlView}&id=' + $('#device-select').val());
+                $.notify('Podmieniono urządzenia.', {
+                    type: 'success',
+                    placement : { from : 'top', align : 'right'},
+                });  
 	 		}
 	 		else{
+                $.notify('Błąd podmiany.', {
+                    type: 'danger',
+                    placement : { from : 'top', align : 'right'}, 
+                });
 	 		}
 	 	}).fail(function(){
 	 		console.log('server error');

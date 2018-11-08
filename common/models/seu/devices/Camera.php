@@ -212,7 +212,7 @@ class Camera extends BusinessDevice {
 	    $this->dhcp = false;
 	    $this->alias = null;
 	    
-	    if ($post['leaveMac']) {
+	    if (isset($post['leaveMac'])) {
             $tempMac = $destination->mac;
             $destination->mac = $this->mac;
             $this->mac = $tempMac;
