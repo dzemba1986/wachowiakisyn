@@ -5,6 +5,7 @@ namespace frontend\modules\seu\controllers\devices;
 use backend\modules\address\models\Address;
 use common\models\seu\Link;
 use common\models\seu\devices\Device;
+use common\models\seu\network\Ip;
 use frontend\modules\seu\models\forms\AddDeviceOnTreeForm;
 use Yii;
 use yii\base\Exception;
@@ -16,7 +17,6 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
-use common\models\seu\network\Ip;
 
 class DeviceController extends Controller {
     
@@ -91,7 +91,7 @@ class DeviceController extends Controller {
 	    
 	    if ($request->isPost && $device->load($request->post())) {
             $isValid = true;
-            
+            $addressChange = false;
             if ($address->load($request->post())) {
                 $addressChange = !empty($address->getDirtyAttributes()) ? true : false;
                 if ($addressChange) {
