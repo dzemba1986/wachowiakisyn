@@ -35,8 +35,8 @@ trait Ip {
     }
     
     public function getVlansToIps() {
-        
-        if ($this->hasIps && empty($this->vlansToIps)) {
+
+        if ($this->getHasIps() && empty($this->vlansToIps)) {
             $this->vlansToIps = (new \yii\db\Query())
                 ->select(['subnet.vlan_id', 'ip.ip'])
                 ->from('ip')
