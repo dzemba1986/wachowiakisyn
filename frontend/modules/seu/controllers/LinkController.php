@@ -181,14 +181,15 @@ class LinkController extends Controller
 	    	foreach ($devices as $device) {
 	    		
 	    		//powiazany element typu tree
-	    		$modelTree = Link::findOne(['device' => $device['id']]);
+	    		$link = Link::find()->where(['device' => $device['id']])->asArray()->one();
 	    		
 	    		//dopóki nie jest rootem
-	    		while ($modelTree->parent_device <> 1) {
-	    			$modelTree = Link::findOne($modelTree->parent_device);
+	    		while (!in_array($link['parent_device'], [1,2])) {
+	    		    $link = Link::find()->where(['device' => $link['parent_device']])->asArray()->one();
+	    			
 	    			//jezeli elementu tree rodzica nie ma w tablicy to dodaj 
-	    			if (!in_array($modelTree->device . '.' . $modelTree->port, $path))
-	    				array_push($path, $modelTree->device . '.' . $modelTree->port);
+	    			if (!in_array($link['device'] . '.' . $link['port'], $path))
+	    				array_push($path, $link['device'] . '.' . $link['port']);
 	    		}
 	    	}
     	} else 
