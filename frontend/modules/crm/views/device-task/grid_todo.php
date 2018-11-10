@@ -153,7 +153,7 @@ echo GridView::widget([
             ]),
             'class' => 'kartik\grid\ActionColumn',
             'mergeHeader' => true,
-        	'template' => '{close} {addcomment} {comments} {update}',
+        	'template' => '{close} {addcomment} {comments} {update} {tree}',
             'options' => ['style' => 'width:6%;'],
         	'buttons' => [
         		'close' => function ($model, $data) {
@@ -202,6 +202,13 @@ echo GridView::widget([
                             return false;
                         "
             		]);
+        		},
+        		'tree' => function ($url, $model, $key) {
+                    $url = Url::to(['/seu/link/index', 'id' => $model->device_id . '.0']);    
+        		    return Html::a('<span class="glyphicon glyphicon-play"></span>', $url, [
+        		        'title' => \Yii::t('yii', 'SEU'),
+        		        'target'=>'_blank',
+        		    ]);
         		},
         	]
         ],     
