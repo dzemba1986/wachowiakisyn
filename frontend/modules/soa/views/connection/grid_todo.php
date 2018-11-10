@@ -319,6 +319,7 @@ echo GridView::widget([
             'class' => 'kartik\grid\ActionColumn',
             'mergeHeader' => true,
             'template' => '{view} {update} {tree} {history}',
+            'options' => ['style'=>'width:6%;'],
         	'buttons' => [
         	    'view' => function($url, $model, $key) {
                     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
