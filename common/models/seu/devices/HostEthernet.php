@@ -60,7 +60,7 @@ class HostEthernet extends Host {
 	    return ArrayHelper::merge(
 	        parent::rules(),
 	        [
-	            ['mac', 'required', 'message' => 'Wartość wymagana'],
+	            ['mac', 'required', 'message' => 'Wartość wymagana', 'when' => function ($model) { return $model->status; }],
 	            ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
 	            ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
 	            ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => TRUE],

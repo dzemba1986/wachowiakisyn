@@ -22,7 +22,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$urlView = Url::to(['host/tabs-view']);
+$urlView = Url::to(['/seu/host-ethernet/tabs-view']);
 
 $js = <<<JS
 $(function(){

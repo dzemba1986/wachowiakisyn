@@ -7,14 +7,15 @@ use common\models\User;
 use common\models\crm\InstallTask;
 use common\models\history\History;
 use common\models\seu\devices\Device;
+use common\models\seu\devices\GatewayVoip;
 use common\models\seu\devices\Host;
+use common\models\seu\devices\HostEthernet;
+use common\models\seu\devices\OpticalSplitter;
+use common\models\seu\devices\Swith;
 use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
-use common\models\seu\devices\Swith;
-use common\models\seu\devices\GatewayVoip;
-use common\models\seu\devices\OpticalSplitter;
 
 /**
  * @property integer $id
@@ -383,12 +384,12 @@ class Connection extends ActiveRecord
                 
                 if (($this->type_id != 2 && array_key_exists('host_id', $changedAttributes)) && !is_null($changedAttributes['host_id'])) {
                     if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
-                        $host = Host::findOne($changedAttributes['host_id']);
+                        $host = HostEthernet::findOne($changedAttributes['host_id']);
                         $host->status = false;
                         $host->dhcp = false;
                         $host->smtp = false;
                         $host->mac = null;
-                        
+//                         var_dump($host->validate()); var_dump($host->errors); exit();
                         if (!$host->save()) throw new Exception('Błąd zapisu hosta');
                         
                         foreach ($host->ips as $ip)
