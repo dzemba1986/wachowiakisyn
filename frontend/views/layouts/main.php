@@ -42,7 +42,7 @@ $this->beginPage() ?>
                     $boa = Yii::$app->user->id == 18 ? true : false;
                     
                     $menuItems = [
-                        ['label' => 'SOA', 'visible' => !$monitoring, 'items' => [
+                        ['label' => 'LP', 'visible' => !$monitoring, 'items' => [
                             ['label' => 'Umowy do zrobienia', 'url' => ['/soa/connection/index', 'mode' => 'todo']],
                             ['label' => 'Wszystkie umowy', 'url' => ['/soa/connection/index', 'mode' => 'all']],
                             ['label' => 'Umowy niezaksięgowane', 'url' => ['/soa/connection/index', 'mode' => 'noboa']],
@@ -64,6 +64,9 @@ $this->beginPage() ?>
                     	    ['label' => 'Kamery', 'url' => ['/crm/device-task/index']],
                     	    ['label' => 'Serwis', 'url' => ['/crm/serwis-task/index']],
                     	]],
+                        ['label' => 'LOG', 'visible' => !$monitoring, 'items' => [
+                            ['label' => 'Historia IP', 'url' => ['/history/history/ip']]
+                        ]],
                         ['label' => 'Zestawienia', 'visible' => !$monitoring && !$boa, 'items' => [
                             ['label' => 'Konfiguracje', 'url' => ['/report/report/connection']],
                             ['label' => 'Instalacje', 'url' => ['/report/report/installation']],

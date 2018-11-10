@@ -3,7 +3,8 @@
 use kartik\grid\GridView;
 
 /**
- * @var \yii\web\View $title
+ * @var \yii\web\View $this
+ * @var 
  * @var backend\models\HistoryIp $historyIp
  */
 

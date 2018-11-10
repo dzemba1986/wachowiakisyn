@@ -3,6 +3,8 @@
 namespace frontend\modules\history\controllers;
 
 use common\models\history\History;
+use common\models\history\HistoryIpSearch;
+use Yii;
 use yii\web\Controller;
 
 class HistoryController extends Controller {
@@ -26,6 +28,17 @@ class HistoryController extends Controller {
         
         return $this->renderAjax('device', [
             'histories' => $histories
+        ]);
+    }
+    
+    public function actionIp(){
+        
+        $historyIp = new HistoryIpSearch();
+        $dataProvider = $historyIp->search(Yii::$app->request->queryParams);
+        
+        return $this->render('ip', [
+            'historyIp' => $historyIp,
+            'dataProvider' => $dataProvider,
         ]);
     }
 }
