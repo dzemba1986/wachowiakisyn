@@ -27,9 +27,7 @@ class HistoryIpSearch extends HistoryIp
 			return $dataProvider;
 		}
 	
-		$query->andFilterWhere([
-			'ip' => $this->ip,
-		]);
+		$query->andFilterWhere(['like', '"ip"::text', $this->ip]);
 	
 		return $dataProvider;
 	}
