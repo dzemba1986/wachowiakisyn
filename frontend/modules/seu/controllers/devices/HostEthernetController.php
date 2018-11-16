@@ -259,7 +259,7 @@ class HostEthernetController extends HostController {
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             try {
                 if ($type == 'drop') $host->configDrop(true);
-                return [1, $host->snmpVlan];
+                return [1, $host->parent->getSnmpVlan()];
             } catch (\Throwable $t) {
                 var_dump($t->getMessage());
                 return 0;    

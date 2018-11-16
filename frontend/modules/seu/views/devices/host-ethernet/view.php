@@ -63,8 +63,10 @@ echo DetailView::widget([
 		        'link' => Url::to(['send-config', 'id' => $device->id, 'type' => 'drop']),
 		        'data-clipboard-text' => $device->configDrop(),
 		        'onclick' => "
-                    $('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('link'));
-		        
+                    if ({$device->parent->configType} == 1) {
+                        $( '#modal-sm' ).modal('show').find( '#modal-sm-content' ).load($(this).attr('link'));
+                    }
+
                     return false;
                 "
 		    ]),
