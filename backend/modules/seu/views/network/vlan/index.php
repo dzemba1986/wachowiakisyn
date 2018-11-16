@@ -3,67 +3,56 @@
 /**
  * @var \yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
- * @var integer $vlan
  */
 
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$this->title = 'Adresacja';
+$this->params['breadcrumbs'][] = 'SEU';
+$this->params['breadcrumbs'][] = $this->title;
+
+echo $this->renderFile('@app/views/modal/modal_sm.php');
+
 echo GridView::widget([
-    'id' => 'subnet-grid',
+    'id' => 'vlan-grid',
+    'options' => ['class' => 'col-xs-3'],
     'dataProvider' => $dataProvider,
     'pjax' => true,
     'pjaxSettings' => [
         'options' => [
-            'id' => 'subnet-grid-pjax'
+            'id' => 'vlan-grid-pjax'
         ]    
     ],
     'summary' => 'Widoczne {count} z {totalCount}',
     'resizableColumns' => false,
     'columns' => [
-    	'id',	
-        [
-            'label' => 'Podsieć',
-            'attribute' => 'ip',
-        ],
-    	[
-    	    'label' => 'Opis',
-    	    'attribute' => 'desc',
-	    ],
-    	[
-    		'class' => 'kartik\grid\BooleanColumn',
-    		'attribute' => 'dhcp',
-    	],
-        [
-            'label' => 'Wolne',
-            'attribute' => 'freeips',
-        ],
+        'id',	
+    	'desc',
     	[
     		'class' => 'yii\grid\ActionColumn',
-    	    'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', ['subnet/create', 'vlan' => $vlan], [
-    	        'onclick' => "
+    		'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', ['vlan/create'], [
+                'onclick' => "
                     $( '#modal-sm' ).modal('show').find( '#modal-sm-content' ).load($(this).attr('href'));
-    	        
+	    
                     return false;
                 "
-    	    ]),
-    		'template' => '{view} {update} {delete} {dhcp}',
+    		]),
     		'buttons' => [
-    			'view' => function ($url, $data, $key) {
-    				$url = Url::to(['ip/index', 'subnetId' => $data['id']]);
+    			'view' => function ($model, $data) {
+    				$url = Url::to(['subnet/index', 'vlan' => $data->id]);
     				return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-    					'title' => \Yii::t('yii', 'Widok'),
+    					'title' => \Yii::t('yii', 'Widok podsieci'),
     					'data-pjax' => true,
     				    'onclick' => "
-                            $( '#ip-grid' ).load($(this).attr('href'));
+                            $( '#subnet-grid' ).load($(this).attr('href'));
     				    
                             return false;
                         "
     				]);
     			},
-    			'update' => function ($url, $data, $key) {
-                    $url = Url::to(['subnet/update', 'id' => $data['id']]);
+    			'update' => function ($url, $model, $data) {
     				return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
     					'title' => \Yii::t('yii', 'Edycja'),
     					'data-pjax' => '0',
@@ -74,40 +63,32 @@ echo GridView::widget([
                         "
     				]);
     			},
-    			'delete' => function ($url, $data, $key) {
-                    $url = Url::to(['subnet/delete', 'id' => $data['id']]);
+    			'delete' => function ($url, $model, $data) {
     				return Html::a('<span class="glyphicon glyphicon-trash"></span>', false, [
     					'title' => \Yii::t('yii', 'Usuń'),
     				    'onclick' => "
-                            if (confirm('Czy na pewno usunąć podsieć?')){
+                            if (confirm('Czy na pewno usunąć rekord?')){
                     	    	$.ajax({
-                    	        	url: '{$url}',
+                    	        	url: $(this).attr('{$url}'),
                     	            type: 'post',
                     	            dataType: 'json',
                     	            error: function(xhr, status, error) {
-                    	            	alert('Błąd. ' + xhr.responseText);
+                    	            	alert('There was an error with your request.' + xhr.responseText);
                     	            }
                     	        }).done(function(data) {
-                    	        	$.pjax.reload({container: '#subnet-grid-pjax'});
+                    	        	$.pjax.reload({container: '#vlan-grid-pjax'});
                     	        });
                     		}
-                    		
+
                             return false;
                         "
     				]);
-    			},
-    			'dhcp' => function ($url, $data, $key) {
-        			if($data['dhcp']){
-        			    $url = Url::to(['dhcp-value/update', 'subnet' => $data['id']]);
-        				return Html::a('D', $url, [
-    						'title' => \Yii::t('yii', 'DHCP'),
-    						'data-pjax' => '0',
-        				]);
-        			} else
-        				return null;
     			},
     		]
     	],
     ]                
 ]); 
+    
+echo '<div id="subnet-grid" class="col-xs-5"></div>';
+echo '<div id="ip-grid" class="col-xs-4"></div>';
 ?>

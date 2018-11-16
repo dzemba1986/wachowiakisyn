@@ -5,7 +5,7 @@
  * @var string $content
  */
 
-use backend\assets\AppAsset;
+use frontend\assets\AppAsset;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
@@ -52,8 +52,6 @@ $this->beginPage() ?>
                         ['label' => 'SEU', 'visible' => !$monitoring && !$boa, 'items' => [
                             ['label' => 'Ethernet', 'url' => ['/seu/link/index']],
                             ['label' => 'RFoG', 'url' => ['/seu/link/index2']],
-                            '<li class="divider"></li>',
-                            ['label' => 'Adresacja', 'url' => ['/seu/vlan/index']],
                             '<li class="divider"></li>',
                             ['label' => 'Magazyn', 'url' => ['/seu/store/index']],
                         ]],

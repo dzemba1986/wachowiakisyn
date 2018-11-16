@@ -10,13 +10,14 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * AddressController implements the CRUD actions for Address model.
- */
-class VlanController extends Controller
-{
-    public function behaviors()
-    {
+class VlanController extends Controller {
+    
+    public function getViewPath() {
+        
+        return Yii::getAlias('@app/modules/seu/views/network/' . $this->id);
+    }
+    
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -27,17 +28,13 @@ class VlanController extends Controller
         ];
     }
 
-    /**
-     * Lists all Address models.
-     * @return mixed
-     */
-    public function actionGrid()
-    {
-        $modelVlan = new VlanSearch();
-     	$dataProvider = $modelVlan->search(Yii::$app->request->queryParams);
+    public function actionIndex() {
+        
+        $vlanSearch = new VlanSearch();
+     	$dataProvider = $vlanSearch->search(Yii::$app->request->queryParams);
 
-        return $this->render('grid', [
-            'modelVlan' => $modelVlan,
+        return $this->render('index', [
+            'vlanSearch' => $vlanSearch,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -76,26 +73,26 @@ class VlanController extends Controller
 	
     public function actionUpdate($id)
     {
-    	$modelVlan = $this->findModel($id);
-    	$modelVlan->scenario = Vlan::SCENARIO_UPDATE;
+    	$vlan = $this->findModel($id);
+    	$vlan->scenario = Vlan::SCENARIO_UPDATE;
     
     	$request = Yii::$app->request;
     
     	if($request->isAjax){
-    		if($modelVlan->load($request->post())){
-    			if($modelVlan->validate()){
+    		if($vlan->load($request->post())){
+    			if($vlan->validate()){
     				try {
-    					if(!$modelVlan->save())
+    					if(!$vlan->save())
     						throw new Exception('Problem z zapisem vlanu');
     					return 1;
     				} catch (Exception $e) {
-    					var_dump($modelVlan->errors);
+    					var_dump($vlan->errors);
     					exit();
     				}
     			}
     		} else {
     			return $this->renderAjax('update', [
-    					'modelVlan' => $modelVlan
+					'vlan' => $vlan
     			]);
     		}
     	}

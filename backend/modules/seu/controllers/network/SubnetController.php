@@ -3,13 +3,19 @@
 namespace backend\modules\seu\controllers\network;
 
 use common\models\seu\network\Subnet;
-use common\models\seu\network\SubnetSearch;
+use Yii;
 use yii\base\Exception;
+use yii\data\SqlDataProvider;
 use yii\filters\AjaxFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class SubnetController extends Controller {
+    
+    public function getViewPath() {
+        
+        return Yii::getAlias('@app/modules/seu/views/network/' . $this->id);
+    }
     
     public function behaviors() {
         
@@ -23,15 +29,37 @@ class SubnetController extends Controller {
     
     public function actionIndex($vlan) {
         
-		$subnet = new SubnetSearch();
-		$dataProvider = $subnet->search(\Yii::$app->request->queryParams);
+        $totalCount = Yii::$app->db->createCommand('SELECT COUNT(*) FROM subnet WHERE vlan_id=:vlanId', [':vlanId' => $vlan])->queryScalar();
+        
+        $dataProvider = new SqlDataProvider([
+            'sql' => 'SELECT 
+                *, (((broadcast(subnet.ip) - network(subnet.ip)) - 1) - (SELECT Count(*) FROM ip WHERE subnet_id = subnet.id)) as freeips 
+            FROM subnet WHERE vlan_id=:vlanId',
+            'params' => [':vlanId' => $vlan],
+            'totalCount' => $totalCount,
+            'pagination' => [
+                'pageSize' => 40,
+            ],
+            'sort' => [
+                'defaultOrder' => ['freeips' => SORT_ASC],
+                'attributes' => [
+                    'id',
+                    'ip',
+                    'desc',
+                    'dhcp',
+                    'freeips'
+                ],
+            ],
+        ]);
+        
+// 		$subnetSearch = new SubnetSearch();
+// 		$dataProvider = $subnetSearch->search(\Yii::$app->request->queryParams);
 		
-		$dataProvider->query->andWhere(['vlan_id' => $vlan]);
+// 		$dataProvider->query->andWhere(['vlan_id' => $vlan]);
 	
 		return $this->renderAjax('index', [
-			'subnet' => $subnet,
 			'dataProvider' => $dataProvider,
-			'vlan' => $vlan	
+			'vlan' => $vlan,	
 		]);
 	}
 	
@@ -89,10 +117,8 @@ class SubnetController extends Controller {
 		if($id){
 		    $subnet = $this->findModel($id);
 		    
-			if ($subnet->getIps()->count() > 0)
-				return 'Podsieć wykorzystywana';
-			else
-				$subnet->delete();
+			if ($subnet->getIps()->count() > 0) return 'Podsieć wykorzystywana';
+			else $subnet->delete();
 			
 			return 1;
 		} else

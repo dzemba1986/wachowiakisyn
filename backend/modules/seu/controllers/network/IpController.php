@@ -9,14 +9,40 @@ use common\models\seu\network\IpSearch;
 use common\models\seu\network\Subnet;
 use IPBlock;
 use Yii;
+use yii\filters\AjaxFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class IpController extends Controller
-{  
-	public function actionView($device)
-	{
+class IpController extends Controller {
+    
+    public function getViewPath() {
+        
+        return Yii::getAlias('@app/modules/seu/views/network/' . $this->id);
+    }
+    
+    public function behaviors() {
+        
+        return [
+//             'access' => [
+//                 'class' => AccessControl::className(),
+//                 'rules'	=> [
+//                     [
+//                         'allow' => true,
+//                         'actions' => ['view', 'update', 'index', 'update', 'view', 'sync', 'close', 'history'],
+//                         'roles' => ['@']
+//                     ]
+//                 ]
+//             ],
+            [
+                'class' => AjaxFilter::className(),
+                'only' => ['index']
+            ],
+        ];
+    }
+    
+	public function actionView($device) {
+	    
 		$modelIps = !is_null($device) ? Device::findOne($device)->modelIps : [];
 		
 		if(!empty($modelIps)){
@@ -218,10 +244,12 @@ class IpController extends Controller
     
     public function actionIndex($subnetId){
     	
-    	$ip = new IpSearch();
-		$dataProvider = $ip->search(\Yii::$app->request->queryParams);
+    	$ipSearch = new IpSearch();
+		$dataProvider = $ipSearch->search(\Yii::$app->request->queryParams);
 		
-		$dataProvider->query->joinWith('device')->andWhere(['subnet_id' => $subnetId])->orderBy('ip');
+		$dataProvider->query->joinWith('device')->andWhere(['subnet_id' => $subnetId]);
+		$dataProvider->sort->defaultOrder = ['ip' => SORT_ASC];
+		$dataProvider->setPagination(['defaultPageSize' => 40]);
 	
 		return $this->renderAjax('index', [
 			'dataProvider' => $dataProvider,

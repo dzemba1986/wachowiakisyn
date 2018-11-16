@@ -90,6 +90,18 @@ a.desc:after {
     margin: 0 0 15px 0;
 } 
 
+@media (min-width: 1500px) {
+  .container {
+    width: 1470px;
+  }
+}
+
+@media (min-width: 1900px) {
+  .container {
+    width: 1870px;
+  }
+}
+
 /* mniejsze litery w pokazywanych błędach */
  .help-block {
 	font-size: 10px;
@@ -121,10 +133,24 @@ a[title="Show all data"] {
 #connection-grid .sevendays {
 	background-color: #FFc9cC;
 }
-/* #connection-grid .after-date:nth-child(even) { */
-/* 	background-color: #c5c5c5; */
-/* } */
 
-/* #connection-grid .after-date:nth-child(odd) { */
-/* 	background-color: #d6d6d6; */
-/* } */
+/* formularze */
+.row.no-gutter [class*="col-"] {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+
+.row.no-gutter [class*="col-"]:first-child {
+    padding-left: 0px !important;
+    padding-right: 2px !important;
+}
+
+.row.no-gutter [class*="col-"]:last-child {
+    padding-left: 2px !important;
+    padding-right: 0px !important;
+}
+
+.row.no-gutter [class*="col-"]:first-child:last-child {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
