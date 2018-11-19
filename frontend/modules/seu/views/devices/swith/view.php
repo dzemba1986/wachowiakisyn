@@ -65,7 +65,7 @@ echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->vlansToIps as $vlanToIp) {
     
-    $url = Html::a($vlanToIp['ip'], "http://{$vlanToIp['ip']}", ['target'=>'_blank']);
+    $url = Html::a($vlanToIp['ip'], "ssh://{$vlanToIp['ip']}:22222");
     echo '<tr>';
     echo "<th>VLAN {$vlanToIp['vlan_id']}</th>";
     echo "<td>{$url}</td>";
