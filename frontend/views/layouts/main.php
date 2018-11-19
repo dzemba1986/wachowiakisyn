@@ -40,6 +40,7 @@ $this->beginPage() ?>
                 else {
                     $monitoring = Yii::$app->user->id == 23 ? true : false;
                     $boa = Yii::$app->user->id == 18 ? true : false;
+                    $boss = Yii::$app->user->id == 11 ? true : false;
                     
                     $menuItems = [
                         ['label' => 'LP', 'visible' => !$monitoring, 'items' => [
@@ -65,7 +66,7 @@ $this->beginPage() ?>
                         ['label' => 'LOG', 'visible' => !$monitoring, 'items' => [
                             ['label' => 'Historia IP', 'url' => ['/history/history/ip']]
                         ]],
-                        ['label' => 'Zestawienia', 'visible' => !$monitoring && !$boa, 'items' => [
+                        ['label' => 'Zestawienia', 'visible' => $boss, 'items' => [
                             ['label' => 'Konfiguracje', 'url' => ['/report/report/connection']],
                             ['label' => 'Instalacje', 'url' => ['/report/report/installation']],
                             ['label' => 'Montaże', 'url' => ['/report/report/task']],
