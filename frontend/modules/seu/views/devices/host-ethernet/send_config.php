@@ -38,10 +38,16 @@ $(function() {
 	 	).done(function(result) {
 	 		if(result[0] == 1) {
 				$('#modal-sm').modal('hide');
-                $.growl.notice({ message: 'Wysłano konfigurację - ustawiono vlan ' + result[1]});
+                $.notify('Wysłano konfigurację - ustawiono vlan ' + result[1] + '.', {
+                    type : 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
 	 		}
 	 		else {
-	 			$.growl.error({ message: 'Nie wysłano konfiguracji'});
+                $.notify('Niepowodzenie wysłania konfiguracji.', {
+                    type : 'danger',
+                    placement : { from : 'top', align : 'right'},
+                });
 	 		}
 	 	}).fail(function() {
 	 		console.log('server error');
