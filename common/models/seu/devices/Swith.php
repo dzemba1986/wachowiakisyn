@@ -185,8 +185,8 @@ class Swith extends BusinessDevice {
 	public function getSnmpDesc() : string {
 
 	    if (is_null($this->snmpDesc)) {
-	        if ($this->getConfigType() == 1) $this->snmpDesc = substr(snmpget($this->getFirstIp(), 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->portIndex), 7);
-	        elseif ($this->getConfigType() == 2) $this->snmpDesc = substr(snmpget($this->getFirstIp(), 'wymyslj@k12spr0st3', '1.0.8802.1.1.2.1.3.7.1.4.' . $this->portIndex), 7);
+	        if ($this->getConfigType() == 1) $this->snmpDesc = substr(snmpget($this->getFirstIp(), 'wymyslj@k12spr0st3', '1.3.6.1.2.1.31.1.1.1.18.' . $this->getPortNumber()), 7);
+	        elseif ($this->getConfigType() == 2) $this->snmpDesc = substr(snmpget($this->getFirstIp(), 'wymyslj@k12spr0st3', '1.0.8802.1.1.2.1.3.7.1.4.' . $this->getPortNumber()), 7);
 	        else $this->snmpDesc = 'Brak opisu';
 	    }
 	    
