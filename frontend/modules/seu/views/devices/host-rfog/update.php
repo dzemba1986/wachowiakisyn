@@ -19,18 +19,22 @@ $form = ActiveForm::begin([
 	
 	<div class="col-md-4">
 	
-     	<div class="row">
+     	<div class="row no-gutter">
      	
     		<?= $form->field($device, 'proper_name', [
-    			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    			'options' => ['class' => 'col-sm-9']
+    		]) ?>
+    		
+    		<?= $form->field($device, 'input_power', [
+    			'options' => ['class' => 'col-sm-3']
     		]) ?>
 				
 		</div>
     
-    	<div class="row">
+    	<div class="row no-gutter">
     	
     		<?= $form->field($device, 'desc', [
-    			'options' => ['class' => 'col-sm-13', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    			'options' => ['class' => 'col-sm-13']
     		])->textarea() ?>	
     
             <?= Html::submitButton('Zapisz', ['class' => 'btn btn-primary']) ?>

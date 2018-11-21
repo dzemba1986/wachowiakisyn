@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
  * @var backend\models\Host $device
  */
 
-echo $this->renderFile('@backend/views/modal/modal_sm.php');
+echo $this->renderFile('@app/views/modal/modal_sm.php');
 
 echo '<div class="col-md-5">';
 echo DetailView::widget([
@@ -29,6 +29,10 @@ echo DetailView::widget([
 			'label' => 'Typ',
 			'value' => $device->typeName
 		],
+	    [
+	        'label' => 'Moc IN',
+	        'value' => $device->input_power . ' dBm',
+        ]
 	]
 ]);
 echo Html::label('Umowy :', null, ['hidden' => !$device->status]);
