@@ -7,6 +7,8 @@ use common\models\seu\devices\Device;
 use common\models\soa\Connection;
 use common\models\soa\Installation;
 use yii\db\ActiveRecord;
+use common\models\history\History;
+use common\models\history\HistoryIp;
 
 /**
  * This is the model class for table 'address'.
@@ -156,6 +158,16 @@ class Address extends ActiveRecord
 	public function getTasks() {
 	
 		return $this->hasMany(Task::className(), ['address_id' => 'id']);
+	}
+	
+	public function getHistories() {
+	    
+	    return $this->hasMany(History::className(), ['address_id' => 'id']);
+	}
+	
+	public function getHistoryIps() {
+	    
+	    return $this->hasMany(HistoryIp::className(), ['address_id' => 'id']);
 	}
 	
 	private function getShortAddress(){
