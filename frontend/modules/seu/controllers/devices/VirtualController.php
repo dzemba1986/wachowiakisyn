@@ -61,10 +61,10 @@ class VirtualController extends DeviceController
         return $host->configurationChangeMac($newMac);
     }
     
-    public function actionAddOnTree($id) {
+    public function actionAddOnTree($parentId, $childId = null) {
         
         $request = Yii::$app->request;
-        $parent = Device::find()->select('name, address_id')->where(['id' => $id])->asArray()->one();
+        $parent = Device::find()->select('name, address_id')->where(['id' => $parentId])->asArray()->one();
         $virtual = new Virtual();
         $link = new Link();
         
@@ -77,7 +77,7 @@ class VirtualController extends DeviceController
                 $virtual->name = $parent['name'];
                 if (!$virtual->save()) throw new Exception('Błąd zapisu urządzenia');
                 
-                $link->parent_device = $id;
+                $link->parent_device = $parentId;
                 $link->device = $virtual->id;
                 $link->port = 0;
                 if (!$link->save()) throw new Exception('Błąd zapisu drzewa');
@@ -92,7 +92,7 @@ class VirtualController extends DeviceController
             }
         } else {
             return $this->renderAjax('add_on_tree', [
-                'id' => $id,
+                'id' => $parentId,
                 'link' => $link,
                 'virtual' => $virtual
             ]);
