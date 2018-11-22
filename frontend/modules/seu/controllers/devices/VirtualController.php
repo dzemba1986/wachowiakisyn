@@ -83,11 +83,10 @@ class VirtualController extends DeviceController
                 if (!$link->save()) throw new Exception('Błąd zapisu drzewa');
                 
                 $transaction->commit();
-                $this->redirect(['tree/index', 'id' => $virtual->id . '.0']);
+                return 1;
             } catch (\Exception $e) {
                 $transaction->rollBack();
-                var_dump($virtual->errors);
-                var_dump($link->errors);
+                echo $e->getMessage();
                 exit();
             }
         } else {

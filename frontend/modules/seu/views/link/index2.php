@@ -6,8 +6,8 @@ use yii\helpers\Url;
  * @var $this yii\web\View
  */ 
 
-echo $this->renderFile('@backend/views/modal/modal.php');
-echo $this->renderFile('@backend/views/modal/modal_sm.php');
+echo $this->renderFile('@app/views/modal/modal.php');
+echo $this->renderFile('@app/views/modal/modal_sm.php');
 
 $this->registerJsFile('@web/js/jstree/dist/jstree.min.js');
 $this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');
@@ -149,17 +149,17 @@ $(function() {
                             'virtual' : {
                                 'label' : 'Virtualka',
                                 'action' : function () {
-                                    if (node.original.type != 2) return false;
-    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/virtual/add-on-tree&id=' + getId(node.id));	
+                                    if (node.original.type == 5) return false;
+    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/virtual/add-on-tree&parentId=' + getId(node.id));	
                                 }
                             },
-                            'host' : {
-                                'label' : 'Nieaktywny host',
-                                'action' : function () {
-                                    if (node.original.type != 2) return false;
-    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/host/add-inactive-on-tree&id=' + getId(node.id));	
-                                }
-                            }
+//                             'host' : {
+//                                 'label' : 'Nieaktywny host',
+//                                 'action' : function () {
+//                                     if (node.original.type != 2) return false;
+//     							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/host/add-inactive-on-tree&id=' + getId(node.id));	
+//                                 }
+//                             }
                         }
                     }                             
             	}    

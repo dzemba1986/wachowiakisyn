@@ -24,7 +24,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$urlPortList = Url::to(['tree/list-port']);
+$urlPortList = Url::to(['link/list-port']);
 
 $js = <<<JS
 $(function(){
@@ -32,7 +32,7 @@ $(function(){
     $('.modal-header h4').html('Dodaj virtualkę');
 
     $.get('{$urlPortList}&deviceId={$id}', function(data){
-    	$("select[name='Tree[parent_port]']").html(data);
+    	$("select[name='Link[parent_port]']").html(data);
     } );
 
 	$("#add-device-form").on('beforeSubmit', function(e){
@@ -43,7 +43,6 @@ $(function(){
      	).done(function(result){
  			if(result == 1){
                 var tree = $("#device_tree").jstree(true);
-
 				$('#modal-sm').modal('hide');
                 tree.refresh();
 			}

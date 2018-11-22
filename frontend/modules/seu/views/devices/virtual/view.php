@@ -12,45 +12,55 @@ use yii\widgets\DetailView;
 GrowlAsset::register($this);
 
 echo '<div class="col-md-5">';
+
+$attributes = [
+    'id',
+    [
+        'label' => 'Adres',
+        'value' => $device->addressName
+    ],
+    [
+        'label' => 'Status',
+        'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
+    ],
+    [
+        'label' => 'DHCP',
+        'value' => $device->dhcp ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
+        'format' => 'raw'
+    ],
+    [
+        'label' => 'Typ',
+        'value' => $device->typeName
+    ],
+];
+
+if ($device->parent->type_id == 2) {
+    array_push($attributes, [
+        'label' => 'Przełącznik',
+        'value' => Html::a($device->parent->type_id == 2 ? $device->parent->firstIp : 'Splitter', "ssh://{$device->parent->firstIp}:22222") . ' - ' . $device->parent->portName,
+        'format' => 'raw'
+    ]);
+}
+
+array_push($attributes, [
+    'label' => 'Mac',
+    'value' =>  Html::a($device->mac, Url::to(['change-mac', 'id' => $device->id]), ['class' => 'change-mac']),
+    'format' => 'raw',
+    'visible' => $device->status
+]);
+
+if ($device->parent->type_id == 2) {
+    array_push($attributes, [
+        'label' => 'Skrypty',
+        'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $device->configAdd()]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $device->configDrop()]) . ' ' . Html::tag('div', '', ['id' => 'message']),
+        'format' => 'raw',
+        'visible' => $device->status && $device->ips
+    ]);
+}
+
 echo DetailView::widget([
 	'model' => $device,
-	'attributes' => [
-		'id',	
-		[
-			'label' => 'Adres',
-			'value' => $device->addressName
-		],
-		[
-			'label' => 'Status',
-			'value' => $device->status ? 'Aktywny' : 'Nieaktywny'
-		],
-	    [
-	        'label' => 'DHCP',
-	        'value' => $device->dhcp ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
-	        'format' => 'raw'
-	    ],
-		[
-			'label' => 'Typ',
-			'value' => $device->typeName
-		],
-	    [
-	        'label' => 'Przełącznik',
-	        'value' => Html::a($device->parent->firstIp, "ssh://{$device->parent->firstIp}:22222") . ' - ' . $device->parent->portName,
-	        'format' => 'raw'
-        ],
-        [
-            'label' => 'Mac',
-            'value' =>  Html::a($device->mac, Url::to(['change-mac', 'id' => $device->id]), ['class' => 'change-mac']),
-            'format' => 'raw',
-            'visible' => $device->status
-        ],
-        [
-            'label' => 'Skrypty',
-            'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $device->configAdd()]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $device->configDrop()]) . ' ' . Html::tag('div', '', ['id' => 'message']),
-            'format' => 'raw',
-            'visible' => $device->status && $device->ips
-        ]
-	]
+	'attributes' => $attributes,
 ]);
 echo '</div>';
 

@@ -51,13 +51,14 @@ class Virtual extends Device {
 	    return ArrayHelper::merge(
 	        parent::rules(),
 	        [
+	            ['mac', 'default', 'value' => null],
 	            ['mac', 'string', 'min' => 12, 'max' => 17, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
-	            ['mac', MacaddressValidator::className(), 'message' => 'Zły format'],
-	            ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => TRUE],
+	            ['mac', MacaddressValidator::className(), 'message' => 'Zły format', 'skipOnEmpty' => true],
+	            ['mac', 'filter', 'filter' => 'strtolower', 'skipOnEmpty' => true],
 	            ['mac', 'unique', 'targetClass' => self::className(), 'message' => 'Mac zajęty', 'when' => function ($model, $attribute) {
 	                return strtolower($model->{$attribute}) !== strtolower($model->getOldAttribute($attribute));
-	            }, 'filter' => ['status' => TRUE], 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
-	            ['mac', 'trim', 'skipOnEmpty' => TRUE],
+	            }, 'filter' => ['status' => true], 'on' => [self::SCENARIO_CREATE, self::SCENARIO_DEFAULT, self::SCENARIO_UPDATE]],
+	            ['mac', 'trim', 'skipOnEmpty' => true],
 	            
 	            ['dhcp', 'boolean'],
 	            ['dhcp', 'default', 'value' => true],

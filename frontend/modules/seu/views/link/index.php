@@ -160,7 +160,7 @@ $(function() {
                                 'label' : 'Virtualka',
                                 'action' : function () {
                                     if (node.original.type != 2) return false;
-    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/virtual/add-on-tree&id=' + getId(node.id));	
+    							    $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/virtual/add-on-tree&parentId=' + getId(node.id));	
                                 }
                             },
                             'host' : {
