@@ -57,7 +57,7 @@ class HostRfog extends Host {
 	        parent::rules(),
 	        [
 	            ['input_power', 'string'],
-	            ['input_power', 'required', 'message' => 'Wartość wymagana'],
+	            ['input_power', 'default', 'value' => null],
 	            
 	            [['input_power'], 'safe'],
             ]

@@ -14,6 +14,10 @@ echo $this->renderFile('@app/views/modal/modal_sm.php');
 echo '<div class="col-md-5">';
 echo DetailView::widget([
 	'model' => $device,
+    'formatter' => [
+        'class' => 'yii\i18n\Formatter',
+        'nullDisplay' => ''
+    ],
 	'attributes' => [
 		'id',
 		[
@@ -31,7 +35,7 @@ echo DetailView::widget([
 		],
 	    [
 	        'label' => 'Moc IN',
-	        'value' => $device->input_power . ' dBm',
+	        'value' => $device->input_power ? $device->input_power . ' dBm' : null,
         ]
 	]
 ]);
