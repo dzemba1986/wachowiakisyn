@@ -7,13 +7,14 @@ use common\models\seu\devices\GatewayVoip;
 use common\models\seu\devices\Host;
 use common\models\seu\devices\Ups;
 use common\models\seu\devices\Virtual;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 
 class XSeriesConfiguration extends Configuration {
     
     function __construct($device) {
         
         parent::__construct($device);
-        $this->mac = preg_replace('/^([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})$/', '$1.$2.$3', str_replace([':', '.', '-'], '', $device->mac));
+        $this->mac = MacaddressValidator::formatValue($device->mac, 'x');
     }
     
     function add() {

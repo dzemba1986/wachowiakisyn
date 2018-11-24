@@ -7,13 +7,14 @@ use common\models\seu\devices\GatewayVoip;
 use common\models\seu\devices\Host;
 use common\models\seu\devices\Ups;
 use common\models\seu\devices\Virtual;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 
 class ECSeriesConfiguration extends Configuration {
     
     function __construct($device) {
         
         parent::__construct($device);
-        $this->mac = preg_replace('/^([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$/', '$1-$2-$3-$4-$5-$6', str_replace([':', '.', '-'], '', $device->mac));
+        $this->mac = MacaddressValidator::formatValue($device->mac, 'ec');
     }
     
     function add() {

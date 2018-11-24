@@ -3,6 +3,7 @@
 namespace common\models\seu\devices;
 
 use yii\data\ActiveDataProvider;
+use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 
 class DeviceSearch extends BusinessDevice {
     
@@ -39,18 +40,6 @@ class DeviceSearch extends BusinessDevice {
 			return $dataProvider;
 		}
 		
-		if ($this->mac) {
-		    $this->mac = preg_replace('/[^A-Za-z0-9]/', '', $this->mac);
-		    
-		    $count = strlen($this->mac);
-		    $mac = null;
-		    for($i=0;$count>$i;$i++) {
-		        if ($i <> ($count - 1) && $i%2 == 1) $mac .=  $this->mac[$i].':';
-                else $mac .=  $this->mac[$i];
-		    }
-		    $this->mac = $mac;
-		}
-	
 		$query->andFilterWhere([
 			'id' => $this->id,
 			'status' => $this->status,
@@ -61,7 +50,7 @@ class DeviceSearch extends BusinessDevice {
 		]);
 	
 		$query->andFilterWhere(['like', 'serial', $this->serial])
-            ->andFilterWhere(['like', '"mac"::text' , $this->mac]);    
+            ->andFilterWhere(['like', '"mac"::text' , MacaddressValidator::formatValue($this->mac)]);    
 	
 		return $dataProvider;
 	}
