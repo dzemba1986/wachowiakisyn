@@ -42,8 +42,9 @@ $this->beginPage() ?>
                 $boa = Yii::$app->user->id == 18 ? true : false;
                 
                 $menuItems = [
-                    ['label' => 'LP', 'visible' => !$monitoring && !$boa, 'items' => [
-                        ['label' => 'Adresy', 'url' => ['/address/address/list']],
+                    ['label' => 'Adresy', 'visible' => !$monitoring && !$boa, 'items' => [
+                        ['label' => 'Obsługiwane adresy', 'url' => ['/address/address/list']],
+                        ['label' => 'Adresy', 'url' => ['/address/address/index']],
                     ]],
                     ['label' => 'SEU', 'visible' => !$monitoring && !$boa, 'items' => [
                         ['label' => 'Adresacja', 'url' => ['/seu/vlan/index']],
