@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 ActiveForm::begin([
 	'id' => 'send-config'
 ]) ?>
-    <p>Na przełączniku opis portu to <?= $host->parent->getSnmpDesc() ?>. Czy na pewno wysłać konfigurację na przełącznik?</p>
+    <p>Na przełączniku opis portu to <b><?= $host->parent->getSnmpDesc() ?></b>. Czy na pewno wysłać konfigurację na przełącznik? Potrwa to około 10s.</p>
     
     <?= Html::submitButton('Tak', ['class' => 'btn btn-success']) ?>
   
