@@ -6,9 +6,9 @@ use common\models\seu\network\Ip as modelIp;
 
 trait Ip {
     
-    private $vlansToIps = [];
-    private $hasIps = NULL;
-    private $firstIp = NULL;
+    private $_vlansToIps = [];
+    private $_hasIps = NULL;
+    private $_firstIp = NULL;
     
     public final function getIps() {
         
@@ -22,22 +22,22 @@ trait Ip {
     
     public final function getFirstIp() : string {
         
-        if (is_null($this->firstIp)) $this->firstIp = $this->getMainIp()->select('ip')->asArray()->one()['ip'];
+        if (is_null($this->_firstIp)) $this->_firstIp = $this->getMainIp()->select('ip')->asArray()->one()['ip'];
         
-        return $this->firstIp; 
+        return $this->_firstIp; 
     }
     
     public final function getHasIps() : bool {
         
-        if (is_null($this->hasIps)) $this->hasIps = $this->getIps()->count() > 0 ? true : false;
+        if (is_null($this->_hasIps)) $this->_hasIps = $this->getIps()->count() > 0 ? true : false;
         
-        return $this->hasIps;
+        return $this->_hasIps;
     }
     
     public function getVlansToIps() {
 
-        if ($this->getHasIps() && empty($this->vlansToIps)) {
-            $this->vlansToIps = (new \yii\db\Query())
+        if ($this->hasIps && empty($this->_vlansToIps)) {
+            $this->_vlansToIps = (new \yii\db\Query())
                 ->select(['subnet.vlan_id', 'ip.ip'])
                 ->from('ip')
                 ->leftJoin('subnet', 'ip.subnet_id = subnet.id')
@@ -46,7 +46,7 @@ trait Ip {
                 ->all();
         }
         
-        return $this->vlansToIps;
+        return $this->_vlansToIps;
     }
 }
 ?>
