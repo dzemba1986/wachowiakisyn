@@ -152,7 +152,7 @@ $(function() {
                             'device' : {
                                 'label' : 'Urządzenie z magazynu',
                                 'action' : function () {
-                                    if (node.original.type != 2 || node.original.type != 8) return false;
+                                    if (node.original.type != 2 && node.original.type != 8) return false;
     							    $('#modal').modal('show').find('#modal-content').load('?r=seu/device/add-on-tree&parentId=' + getId(node.id));	
                                 }
                             },
