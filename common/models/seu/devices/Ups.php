@@ -53,6 +53,7 @@ class Ups extends BusinessDevice {
 	                "attrs" => [
 	                    'display_name' => $this->mixName,
 	                    'address' => $this->mainIp->ip,
+	                    'vars.geolocation' => $this->geolocation,
 	                    'vars.device' => 'UPS',
 	                    'vars.model' => $this->model->name,
 	                ]
@@ -91,6 +92,7 @@ class Ups extends BusinessDevice {
 	                "attrs" => [
 	                    'display_name' => $this->mixName,
 	                    'address' => $this->mainIp->ip,
+	                    'vars.geolocation' => $this->geolocation,
 	                    'vars.device' => 'Camera',
 	                    'vars.model' => $this->model->name,
 	                ]

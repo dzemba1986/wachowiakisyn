@@ -6,7 +6,7 @@ class UpsQuery extends DeviceQuery {
     
     protected function getColumns() {
         
-        return parent::getColumns() . ', monitoring, dhcp';
+        return parent::getColumns() . ', monitoring, dhcp, geolocation';
     }
 }
 ?>

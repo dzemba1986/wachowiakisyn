@@ -33,6 +33,10 @@ echo DetailView::widget([
 	        'value' => $device->monitoring ? '<font color="green">Tak</font>' : '<font color="red">Nie</font>',
 	        'format' => 'raw'
 	    ],
+	    [
+	        'label' => 'Geolokacja',
+	        'value' => $device->geolocation,
+	    ],
 		[
 			'label' => 'Typ',
 			'value' => $device->typeName
