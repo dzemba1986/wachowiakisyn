@@ -61,14 +61,29 @@ $form = ActiveForm::begin([
      	</div>
     
     	<div class="row">
-        	<?= $form->field($device, 'proper_name', [
-        			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
+    	
+    		<?= $form->field($device, 'mac', [
+    		    'enableAjaxValidation' => true,
+    			'options' => ['class' => 'col-sm-4', 'style' => 'padding-left: 0px; padding-right: 3px;']
     		]) ?>
     		
     		<?= $form->field($device, 'serial', [
     		    'enableAjaxValidation' => true,
-    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 3px; padding-right: 0px;']
+    			'options' => ['class' => 'col-sm-8', 'style' => 'padding-left: 0px; padding-right: 0px;']
     		]) ?>
+    		
+		</div>
+    		
+		<div class="row">
+		
+    		<?= $form->field($device, 'proper_name', [
+    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 3px;']
+    		]) ?>
+			
+			<?= $form->field($device, 'geolocation', [
+    			'options' => ['class' => 'col-sm-6', 'style' => 'padding-left: 0px; padding-right: 0px;']
+    		]) ?>
+    		
 		</div>
 		
 		<div class="row">
