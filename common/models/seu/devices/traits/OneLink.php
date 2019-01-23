@@ -9,6 +9,7 @@ trait OneLink {
     private $parentLink = NULL;
     private $parentId = NULL;
     private $parent = NULL;
+    private $_configParent = null;
     
     public function getParentLink() {
         
@@ -17,7 +18,7 @@ trait OneLink {
         return $this->parentLink; 
     }
     
-    protected function getParentId() {
+    public function getParentId() {
         
         if (is_null($this->parentId)) $this->parentId = $this->getParentLink()['parent_device'];
         
@@ -33,6 +34,22 @@ trait OneLink {
         }
         
         return $this->parent;
+    }
+    
+    public function getConfigParent() {
+        //TODO należy sprawdzić czy urządzenie jest konfigurowalnym rodzicem (np. MC nie jest)
+        if (is_null($this->_configParent)) {
+            $current = $this;
+            while ($current->type_id <> 2) {
+                $prev = $current;
+                $current = Device::findOne($current->getParentId());;
+            }
+            
+            if (!in_array(ParentDevice::class, class_uses($current::className()))) return NULL;
+            $current->portIndex = $prev->getParentLink()['parent_port'];
+        }
+        
+        return $current;
     }
 }
 ?>

@@ -13,9 +13,9 @@ trait Config {
     public function configAdd() {
 
         if ($this->getHasIps()) {
-            if ($this->getParent()->configType == 1) $this->conf = new GSSeriesConfiguration($this);
-            elseif ($this->getParent()->configType == 2) $this->conf = new XSeriesConfiguration($this);
-            elseif ($this->getParent()->configType == 5) $this->conf = new ECSeriesConfiguration($this);
+            if ($this->configParent->configType == 1) $this->conf = new GSSeriesConfiguration($this);
+            elseif ($this->configParent->configType == 2) $this->conf = new XSeriesConfiguration($this);
+            elseif ($this->configParent->configType == 5) $this->conf = new ECSeriesConfiguration($this);
             else return ' ';
         } else return ' ';
         
@@ -25,9 +25,9 @@ trait Config {
     public function configDrop($auto = FALSE) {
         
         if ($this->getHasIps()) {
-            if ($this->getParent()->configType == 1) $this->conf = new GSSeriesConfiguration($this);
-            elseif ($this->getParent()->configType == 2) $this->conf = new XSeriesConfiguration($this);
-            elseif ($this->getParent()->configType == 5) $this->conf = new ECSeriesConfiguration($this);
+            if ($this->configParent->configType == 1) $this->conf = new GSSeriesConfiguration($this);
+            elseif ($this->configParent->configType == 2) $this->conf = new XSeriesConfiguration($this);
+            elseif ($this->configParent->configType == 5) $this->conf = new ECSeriesConfiguration($this);
             else return ' ';
         } else return ' ';
         
@@ -37,9 +37,9 @@ trait Config {
     public function configChangeMac($newMac) {
 
         if ($this->getHasIps()) {
-            if ($this->getParent()->configType == 1) $this->conf = new GSSeriesConfiguration($this);
-            elseif ($this->getParent()->configType == 2) $this->conf = new XSeriesConfiguration($this);
-            elseif ($this->getParent()->configType == 5) $this->conf = new ECSeriesConfiguration($this);
+            if ($this->configParent->configType == 1) $this->conf = new GSSeriesConfiguration($this);
+            elseif ($this->configParent->configType == 2) $this->conf = new XSeriesConfiguration($this);
+            elseif ($this->configParent->configType == 5) $this->conf = new ECSeriesConfiguration($this);
             else return ' ';
         } else return ' ';
         

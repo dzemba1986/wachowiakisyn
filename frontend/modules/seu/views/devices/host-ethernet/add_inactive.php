@@ -19,7 +19,7 @@ $form = ActiveForm::begin([
 ]);
 ?>
 
-	<?= Html::label("Umowa zostanie przypisana do przełącznika " . Html::a($host->parent->firstIp, "ssh://{$host->parent->firstIp}:22222") . "/{$host->parent->portName}") ?>
+	<?= Html::label("Umowa zostanie przypisana do przełącznika " . Html::a($host->configParent->firstIp, "ssh://{$host->configParent->firstIp}:22222") . "/{$host->configParent->portName}") ?>
 	
 	<div class="row">
 

@@ -41,7 +41,7 @@ echo DetailView::widget([
 		],
 	    [
 	        'label' => 'Przełącznik',
-	        'value' => Html::a($device->parent->firstIp, "ssh://{$device->parent->firstIp}:22222") . ' - ' . $device->parent->portName,
+	        'value' => Html::a($device->configParent->firstIp, "ssh://{$device->configParent->firstIp}:22222") . ' - ' . $device->configParent->portName,
 	        'format' => 'raw'
 	    ],
 		[

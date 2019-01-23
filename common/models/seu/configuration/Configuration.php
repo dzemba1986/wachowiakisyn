@@ -20,13 +20,13 @@ abstract class Configuration {
     
     function __construct(Device $device) {
         
-        $this->parentPortNumber = $device->parent->portNumber;
-        $this->parentPortName = $device->parent->portName;
+        $this->parentPortNumber = $device->configParent->portNumber;
+        $this->parentPortName = $device->configParent->portName;
         $this->desc = $device->getMixName(false);
         $this->vlanId = $device->vlansToIps[0]['vlan_id'];
         $this->ip = $device->vlansToIps[0]['ip'];
         $this->typeId = $device->type_id;
-        $this->parentIp = $device->parent->firstIp;
+        $this->parentIp = $device->configParent->firstIp;
         
         if ($this->typeId == Host::TYPE) {
             $this->smtp = $device->smtp;

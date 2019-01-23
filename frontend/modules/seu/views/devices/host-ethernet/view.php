@@ -11,7 +11,6 @@ use yii\widgets\DetailView;
  */
 
 GrowlAsset::register($this);
-
 echo $this->renderFile('@app/views/modal/modal_sm.php');
 
 echo '<div class="col-md-5">';
@@ -44,7 +43,7 @@ echo DetailView::widget([
 		],
 	    [
 	        'label' => 'Przełącznik',
-	        'value' => Html::a($device->parent->firstIp, "ssh://{$device->parent->firstIp}:22222") . ' - ' . $device->parent->portName,
+	        'value' => Html::a($device->configParent->firstIp, "ssh://{$device->configParent->firstIp}:22222") . ' - ' . $device->configParent->portName,
 	        'format' => 'raw'
 	    ],
 		[
@@ -63,7 +62,7 @@ echo DetailView::widget([
 		        'link' => Url::to(['send-config', 'id' => $device->id, 'type' => 'drop']),
 		        'data-clipboard-text' => $device->configDrop(),
 		        'onclick' => "
-                    if ({$device->parent->configType} == 1) {
+                    if ({$device->configParent->configType} == 1) {
                         $( '#modal-sm' ).modal('show').find( '#modal-sm-content' ).load($(this).attr('link'));
                     }
 
