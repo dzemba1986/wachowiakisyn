@@ -26,7 +26,7 @@ class AddressController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'index', 'list', 'create', 'teryt-list', 'update-short', 'delete'
+                            'index', 'list', 'create', 'teryt-list', 'update-short', 'delete', 'view'
                         ],
                         'roles' => ['@']
                     ]
@@ -66,7 +66,7 @@ class AddressController extends Controller
     		'dataProvider' => $dataProvider,
     	]);
     }
-
+    
     public function actionCreate() {
         
     	$request = Yii::$app->request;
@@ -88,6 +88,55 @@ class AddressController extends Controller
 		} catch (Exception $e) {
 			echo $e->getMessage();
 		}
+    }
+    
+    public function actionView($id) {
+        
+        $address = $this->findModel($id);
+        
+        return $this->renderAjax('view', [
+            'address' => $address,
+        ]);
+    }
+    
+    public function actionUpdate($id) {
+        
+        $request = Yii::$app->request;
+        
+        $address = Address::findOne($id);
+        
+        try {
+            if ($address->load($request->post())) {
+                if ($address->save()) return 1;
+                else return 0;
+            } else {
+                return $this->renderAjax('update', [
+                    'address' => $address
+                ]);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    
+    public function actionUpdateShort($id) {
+        
+        $request = Yii::$app->request;
+        
+        $model = AddressShort::findOne($id);
+        
+        try {
+            if ($model->load($request->post())) {
+                if ($model->save()) return 1;
+                else return 0;
+            } else {
+                return $this->renderAjax('update_short', [
+                    'model' => $model
+                ]);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
     
     public function actionTerytList($q) {
@@ -113,32 +162,6 @@ class AddressController extends Controller
     	}
     	
     	return $out;
-    }
-
-    public function actionUpdateShort($id) {
-        
-    	$request = Yii::$app->request;
-    	
-    	if ($request->isAjax){
-    		$model = AddressShort::findOne($id);
-    		
-    		try {
-    			if ($model->load($request->post())) {
-    				if ($model->save())
-    					return 1;
-    				else
-    					return 0;
-    			} else {
-    				return $this->renderAjax('update_short', [
-    					'model' => $model
-    				]);
-    			}
-    		} catch (Exception $e) {
-    			echo $e->getMessage();
-    		}
-    	} else { //TODO może by trzeba było obsłużyć jakoś zapytanie nie ajax'owe?
-    		echo "Zapytanie nie ajax'owe";
-    	}
     }
 
     public function actionDelete($id) {

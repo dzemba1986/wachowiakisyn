@@ -20,7 +20,7 @@ class AddressSearch extends Address
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-        	'pagination' => ['pageSize' => 25],
+        	'pagination' => ['pageSize' => 100],
         ]);
         
         $dataProvider->setSort([

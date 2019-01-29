@@ -11,6 +11,8 @@ use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
+echo $this->renderFile('@app/views/modal/modal.php');
+
 $this->title = 'Adresy';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -58,6 +60,32 @@ $this->params['breadcrumbs'][] = $this->title;
             'lokal',
             'lokal_szczegol',
             'pietro',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update}',
+                'buttons' => [
+                    'view' => function($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
+                            'title' => \Yii::t('yii', 'Podgląd'),
+                            'onclick' => "
+                                $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+                            
+                                return false;
+                            "
+                        ]);
+                    },
+                    'update' => function($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
+                            'title' => \Yii::t('yii', 'Edycja'),
+                            'onclick' => "
+                                $('#modal').modal('show').find('#modal-content').load($(this).attr('href'));
+                            
+                                return false;
+                            "
+                        ]);
+                    },
+                ]
+            ],
         ]
     ]); ?>
 
