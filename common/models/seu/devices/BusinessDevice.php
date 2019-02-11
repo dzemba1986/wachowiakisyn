@@ -66,7 +66,7 @@ abstract class BusinessDevice extends Device {
 	            
 	            ['serial', 'required', 'message' => 'Wartość wymagana'],
 	            ['serial', 'string', 'max' => 30, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
-	            ['serial', 'unique', 'targetClass' => BusinessDevice::className(), 'message' => 'Serial zajęty', 'when' => function ($model, $attribute) {
+	            ['serial', 'unique', 'targetClass' => static::className(), 'message' => 'Serial zajęty', 'when' => function ($model, $attribute) {
 	                return $model->{$attribute} !== $model->getOldAttribute($attribute);
 	            }],
 	            ['serial', 'filter', 'filter' => 'strtoupper', 'skipOnEmpty' => TRUE],

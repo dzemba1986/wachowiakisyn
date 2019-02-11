@@ -44,6 +44,8 @@ return [
                 'optical-amplifier' => 'frontend\modules\seu\controllers\devices\OpticalAmplifierController',
                 'optical-splitter' => 'frontend\modules\seu\controllers\devices\OpticalSplitterController',
                 'optical-transmitter' => 'frontend\modules\seu\controllers\devices\OpticalTransmitterController',
+                'optical-terminator' => 'frontend\modules\seu\controllers\devices\OpticalTerminatorController',
+                'optical-attenuator' => 'frontend\modules\seu\controllers\devices\OpticalAttenuatorController',
                 'radio' => 'frontend\modules\seu\controllers\devices\RadioController',
                 'router' => 'frontend\modules\seu\controllers\devices\RouterController',
                 'server' => 'frontend\modules\seu\controllers\devices\ServerController',

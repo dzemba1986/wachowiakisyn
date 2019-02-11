@@ -96,6 +96,10 @@ abstract class Device extends ActiveRecord {
 			    return new OpticalAmplifier();
 			case OpticalSplitter::TYPE:
 			    return new OpticalSplitter();
+			case OpticalTerminator::TYPE:
+			    return new OpticalTerminator();
+			case OpticalAttenuator::TYPE:
+			    return new OpticalAttenuator();
 		}
 	}
 	
@@ -224,6 +228,10 @@ abstract class Device extends ActiveRecord {
                 return 'optical-amplifier';
             case OpticalSplitter::TYPE:
                 return 'optical-splitter';
+            case OpticalAttenuator::TYPE:
+                return 'optical-attenuator';
+            case OpticalTerminator::TYPE:
+                return 'optical-terminator';
         }
     }
     
