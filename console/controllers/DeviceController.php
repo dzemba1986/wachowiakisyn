@@ -2,10 +2,9 @@
 
 namespace console\controllers;
 
-use backend\models\Camera;
-use backend\models\Device;
-use backend\models\GatewayVoip;
-use backend\models\Swith;
+use common\models\seu\devices\Camera;
+use common\models\seu\devices\GatewayVoip;
+use common\models\seu\devices\Swith;
 use yii\base\Exception;
 use yii\console\Controller;
 
@@ -15,7 +14,7 @@ class DeviceController extends Controller {
 	public function actionList() {
 		
 		//L3
-		$l3s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+		$l3s = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['<>', 'address_id', 1], ['layer3' => true]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -29,7 +28,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//L3-172
-		$l3s_172= Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+		$l3s_172= Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['<>', 'address_id', 1], ['layer3' => true], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -43,7 +42,7 @@ class DeviceController extends Controller {
 		fclose($file);
 		
 		//L3-10
-		$l3s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+		$l3s_10 = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['<>', 'address_id', 1], ['layer3' => true], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 		
 		$ips = '';
@@ -56,229 +55,53 @@ class DeviceController extends Controller {
 		fwrite($file, $ips);
 		fclose($file);
 		
-		//x900
-		$x900s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+		//by model [model_name => file_name]
+		$models = ['x930' => 'x930', 'x900' => 'x900', 'x610' => 'x610', 'x600' => 'x600', 'x510' => 'x510', 'x230' => 'x230', 'x210' => 'x210', 
+		    '8000GS' => '8000GS', '8000GS/24' => '8000GS-24', '8000GS/48' => '8000GS-48', 'EC' => 'ecs'];
 		
-		$ips = '';
-		
-		foreach ($x900s as $x900) {
-			$ips .= $x900['ip'] . "\n";
+		foreach ($models as $model_name => $file_name) {
+		    //all
+		    $devices = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+		    ->where(['and', ['like', 'model.name', $model_name], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
+		    
+		    $ips = '';
+		    
+		    foreach ($devices as $device) {
+		        $ips .= $device['ip'] . "\n";
+		    }
+		    
+		    $file = fopen(\Yii::getAlias('@console') . '/device/lists/' . $file_name, "w");
+		    fwrite($file, $ips);
+		    fclose($file);
+		    
+		    //172.x.x.x
+		    $devices_172 = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+		    ->where(['and', ['like', 'model.name', $model_name], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
+		    
+		    $ips = '';
+		    
+		    foreach ($devices_172 as $device_172) {
+		        $ips .= $device_172['ip'] . "\n";
+		    }
+		    
+		    $file = fopen(\Yii::getAlias('@console') . '/device/lists/' . $file_name . '-172', "w");
+		    fwrite($file, $ips);
+		    fclose($file);
+		    
+		    //10.x.x.x
+		    $devices_10 = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+		    ->where(['and', ['like', 'model.name', $model_name], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
+		    
+		    $ips = '';
+		    
+		    foreach ($devices_10 as $device_10) {
+		        $ips .= $device_10['ip'] . "\n";
+		    }
+		    
+		    $file = fopen(\Yii::getAlias('@console') . '/device/lists/' . $file_name . '-10', "w");
+		    fwrite($file, $ips);
+		    fclose($file);
 		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x900", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x900-172
-		$x900s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x900s_172 as $x900_172) {
-			$ips .= $x900_172['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x900-172", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x900-10
-		$x900s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x900'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x900s_10 as $x900_10) {
-			$ips .= $x900_10['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x900-10", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//8000GS
-		$gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', '8000GS'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($gss as $gs) {
-			$ips .= $gs['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/8000GS", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//8000GS-24p
-		$gss24 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', '8000GS/24'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($gss24 as $gs24) {
-			$ips .= $gs24['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/8000GS-24", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//8000GS-48p
-		$gss48 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', '8000GS/48'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($gss48 as $gs48) {
-			$ips .= $gs48['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/8000GS-48", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x210
-		$x210s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x210'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x210s as $x210) {
-			$ips .= $x210['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x210", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x210-172
-		$x210s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x210'], ['is not', 'address_id', null], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x210s_172 as $x210_172) {
-			$ips .= $x210_172['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x210-172", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x210-10
-		$x210s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x210'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x210s_10 as $x210_10){
-			$ips .= $x210_10['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x210-10", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x230
-		$x230s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x230'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x230s as $x230){
-			$ips .= $x230['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x230", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x230-172
-		$x230s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x230'], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x230s_172 as $x230_172) {
-			$ips .= $x230_172['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x230-172", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x230-10
-		$x230s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x230'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x230s_10 as $x230_10){
-			$ips .= $x230_10['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x230-10", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x510
-		$x510s = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x510'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x510s as $x510){
-			$ips .= $x510['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x510", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x510-172
-		$x510s_172 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x510'], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x510s_172 as $x510_172){
-			$ips .= $x510_172['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x510-172", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//x510-10
-		$x510s_10 = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'x510'], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($x510s_10 as $x510_10){
-			$ips .= $x510_10['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/x510-10", "w");
-		fwrite($file, $ips);
-		fclose($file);
-		
-		//ec
-		$ecs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
-            ->where(['and', ['like', 'model.name', 'EC'], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
-		
-		$ips = '';
-		
-		foreach ($ecs as $ec){
-		    $ips .= $ec['ip'] . "\n";
-		}
-		
-		$file = fopen(\Yii::getAlias('@console') . "/device/lists/ecs", "w");
-		fwrite($file, $ips);
-		fclose($file);
 	}
 	
 	function actionSave() {
@@ -287,7 +110,7 @@ class DeviceController extends Controller {
 	    $log = '';
 	    
 	    //8000GS
-	    $gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $gss = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
 	       ->where(['and', ['config' => 1], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    foreach ($gss as $gs) {
 	        if (!snmpset($gs['ip'], '1nn3c0mmun1ty', 
@@ -312,7 +135,7 @@ class DeviceController extends Controller {
 	        ]
         ];
 	    //nie uwzględnia PLIX'a
-	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $xs = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
 	       ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['<>', 'device.id', 19663]])->orderBy('ip')->asArray()->all();
 	    
         foreach ($xs as $x) {
@@ -331,7 +154,7 @@ class DeviceController extends Controller {
         }
         
 	    //EC
-	    $ecs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $ecs = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['config' => 5], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    
 	    foreach ($ecs as $ec){
@@ -354,7 +177,7 @@ class DeviceController extends Controller {
 	    $log = '';
 	    
 	    //8000GS
-	    $gss = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $gss = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
 	    ->where(['and', ['config' => 1], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    foreach ($gss as $gs) {
 	        try {
@@ -372,7 +195,7 @@ class DeviceController extends Controller {
 	    }
 	    
 	    //X-series
-	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $xs = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['like', '"ip"::text', '172.20.%', false]])->orderBy('ip')->asArray()->all();
 	    foreach ($xs as $x) {
 	        try {
@@ -389,7 +212,7 @@ class DeviceController extends Controller {
 	        }
 	    }
 	    
-	    $xs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $xs = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
             ->where(['and', ['config' => 2], ['<>', 'address_id', 1], ['like', '"ip"::text', '10.%', false]])->orderBy('ip')->asArray()->all();
 	    foreach ($xs as $x) {
 	        try {
@@ -407,7 +230,7 @@ class DeviceController extends Controller {
 	    }
 	    
 	    //EC
-	    $ecs = Device::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
+	    $ecs = Swith::find()->select('device.id, ip, model_id')->joinWith(['mainIp', 'model'])
 	    ->where(['and', ['config' => 5], ['<>', 'address_id', 1]])->orderBy('ip')->asArray()->all();
 	    
 	    foreach ($ecs as $ec){
@@ -432,6 +255,27 @@ class DeviceController extends Controller {
 	    sleep(2);
 	    exec('mv /var/tftp/*.rtf /var/tftp/$(date +%Y-%m-%d)');
 	    exec('lftp -e "set ssl:verify-certificate no; mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 2121 -u backup,b@c4@p 10.111.233.2');
+	}
+	
+	function actionCheckInactiveSwitch() {
+	    
+	    $switches = Swith::find()->where(['and', ['<>', 'address_id', 1], ['distribution' => false]])->asArray()->all();
+	    
+	    $swi = [];
+	    foreach ($switches as $switch) {
+	        
+	        $allHosts = \Yii::$app->db->createCommand('select * from device
+                where type_id = 5 and id in (select device from agregation agr where agr.parent_device=:switchId)')
+                ->bindParam(':switchId', $switch['id'])->queryAll();
+                
+                $inactivehosts = \Yii::$app->db->createCommand('select * from device
+                where type_id = 5 and status is false and id in (select device from agregation agr where agr.parent_device=:switchId)')
+                ->bindParam(':switchId', $switch['id'])->queryAll();
+                
+                if (count($allHosts) == count($inactivehosts)) $swi[] = $switch['name'] . '_' . $switch['mac'];
+	    }
+	    
+	    print_r($swi);
 	}
 	
 	function actionIcingaAdd() {
