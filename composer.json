@@ -34,10 +34,18 @@
 		"vakorovin/yii2-macaddress-validator" : "dev-master",
 		"bobchengbin/yii2-xml-request-parser" : "*",
 		"yiisoft/yii2-httpclient" : "^2.0",
-		"kartik-v/yii2-widget-growl" : "~1.1"
+		"kartik-v/yii2-widget-growl" : "~1.1",
+		"bower-asset/jquery" : "*",
+		"bower-asset/bootstrap" : "*",
+		"bower-asset/yii2-pjax" : "*",
+		"vakata/jstree" : "~3.3",
+		"fullcalendar/fullcalendar" : "~3.10",
+		"zenorocha/clipboardjs" : "~2.0",
+		"php-amqplib/php-amqplib" : "~2.9",
+		"yiisoft/yii2-queue" : "2.0.2",
+		"enqueue/amqp-lib" : "^0.8"
 	},
 	"require-dev" : {
-		"yiisoft/yii2-codeception" : "*",
 		"yiisoft/yii2-debug" : "*",
 		"yiisoft/yii2-gii" : "*",
 		"yiisoft/yii2-faker" : "*"
@@ -45,10 +53,9 @@
 	"config" : {
 		"process-timeout" : 1800
 	},
-	"extra" : {
-		"asset-installer-paths" : {
-			"npm-asset-library" : "vendor/npm",
-			"bower-asset-library" : "vendor/bower"
+	"repositories" : [{
+			"type" : "composer",
+			"url" : "https://asset-packagist.org"
 		}
-	}
+	]
 }

@@ -2031,6 +2031,14 @@ var components = {
         {
             "name": "moment",
             "main": "moment-built.js"
+        },
+        {
+            "name": "jstree",
+            "main": "jstree-built.js"
+        },
+        {
+            "name": "clipboardjs",
+            "main": "clipboardjs-built.js"
         }
     ],
     "baseUrl": "components"

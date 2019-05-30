@@ -13,15 +13,15 @@ use yii\db\ActiveRecord;
  * @property array $port
  */
 
-class Model extends ActiveRecord
-{
-	public static function tableName()
-	{
+class Model extends ActiveRecord {
+    
+	public static function tableName() {
+	    
 		return '{{model}}';
 	}
 	
-	public function rules()
-	{
+	public function rules() {
+	    
 		return [
 		    ['name', 'string'],
 		    ['name', 'required', 'message' => 'Wartość wymagana'],
@@ -40,8 +40,8 @@ class Model extends ActiveRecord
 		];
 	}
 	
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
+	    
 		return [
 			'name' => 'Nazwa',
 		];

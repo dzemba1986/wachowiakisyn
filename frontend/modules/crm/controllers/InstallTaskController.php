@@ -2,204 +2,149 @@
 
 namespace frontend\modules\crm\controllers;
 
-use backend\modules\address\models\Address;
-use common\models\User;
+use common\models\address\Address;
 use common\models\crm\InstallTask;
 use common\models\crm\InstallTaskSearch;
 use common\models\soa\Connection;
 use common\models\soa\Installation;
 use Yii;
 use yii\base\Exception;
+use yii\db\Expression;
+use yii\filters\AjaxFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\helpers\ArrayHelper;
+use yii\web\Response;
+use common\models\crm\Task;
 
-class InstallTaskController extends Controller
-{
-    public function actionIndex($mode = 'todo')
-    {
-        $searchModel = new InstallTaskSearch();
+class InstallTaskController extends TaskController {
+    
+    public function behaviors() {
+        return [
+            [
+                'class' => 'yii\filters\ContentNegotiator',
+                'only' => ['get'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+            [
+                'class' => AjaxFilter::class,
+                'only' => ['get', 'create', 'update', 'close'],
+            ],
+        ];
+    }
+    
+    public function actionIndex() {
         
+        $searchModel = new InstallTaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         
-        if ($mode == 'todo') {
-        	$dataProvider->query->andWhere([
-        		'and',
-        		['close' => null],
-        		['device_id' => null],
-        		["{$searchModel->tableName()}.status" => null]
-        	])->orderBy('start');
-        	
-        } elseif ($mode == 'close') {
-        	$dataProvider->query->joinWith([
-        		'closeUser' => function ($q) {
-        			$q->from(['u' => User::tableName()]);
-    			}
-        	])->andWhere([
-        		'and',	
-        		['is not', 'close', null],
-        		['device_id' => null]
-        	]);
-        	
-        	$dataProvider->query->orderBy('close');
-        }
+        $dataProvider->query->select([
+            'task.id', 'start_at', 'end_at', 'task.type_id', 'task.status', 'category_id', 'label_id', 'task.desc', 'address_id', 
+            'close_by', 'create_by', 'task.close_at', 'fulfit',
+        ]);
         
-        //$dataProvider->query->orderBy('start_date, start_time');
-
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-        	'mode' => $mode,	
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionViewTaskCalendar($start = null, $end = null, $_ = null){
-    	 
-    	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    public function actionGet($start = null, $end = null, $_ = null) {
         
-    	$tasks = InstallTask::find()->select([InstallTask::tableName().'.id', 'start', 'end', 'description', 'address_id', 'color'])
-	    	->joinWith('address')
-	    	->where(['between', 'start', $start, $end])
-	    	->andWhere(['or', ['status' => true], ['is', 'status', null]])
-	    	->orderBy('start')->asArray()->all();
-        
-        $taskss = array_map(function($task) {
-            return array(
-                'id' => $task['id'],
-                'start' => $task['start'],
-                'end' => $task['end'],
-                'title' => Address::findOne($task['address_id'])->toString(true),
-            	'description' => $task['description'],
-            	'color' => $task['color']
-            );
-        }, $tasks);
-        
-        return $taskss;
+    	$tasks = InstallTask::find()->select([
+    	    'task.id', 'start' => 'start_at', 'end' =>'end_at', 'description' => 'desc', 'type' => 'type_id', 
+    	    'category' => new Expression("CASE WHEN category_id = 1 THEN 'Internet' WHEN category_id = 2 THEN 'Telefon' WHEN category_id = 3 THEN 'Telewizja' ELSE 'Inne' END"),
+    	    'calendar' => new Expression("CASE WHEN receive_by = 1 THEN 'Serwis' ELSE 'Szczurek' END"),
+    	    'title' => new Expression("CASE WHEN lokal <> '' THEN name || dom || dom_szczegol || '/' || lokal ELSE name || dom || dom_szczegol END")
+	    ])->join('INNER JOIN', 'address', 'address.id = address_id')->join('INNER JOIN', 'address_short', 'address_short.t_ulica = address.t_ulica')
+    	   ->where(['and', ['between', 'start_at', $start, $end], ['status' => [0,2]]])->orderBy('start_at')->asArray()->all();
+    	
+	    return $tasks;
     }
     
-    public function actionViewCalendar($connectionId = null){
-    	
+    public function actionCreate($timestamp) {
+    
+    	$request = \Yii::$app->request;
     	$session = \Yii::$app->session;
     	
-    	if (!is_null($connectionId))
-    		$session->set('connectionId', $connectionId);
-    	else 
-    		$session->remove('connectionId');
+		$task = \Yii::createObject([
+		    'class' => InstallTask::class, 
+		    'scenario' => InstallTask::SCENARIO_CREATE, 
+		]);
+		
+		if ($conId = $session->get('connectionId')) {
+		    $connection = Connection::findOne($conId);
+		    $address = $connection->address;
+		} else $address = \Yii::createObject(Address::class);
+		
+		if ($request->isPost) {
+        	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+			$transaction = Yii::$app->getDb()->beginTransaction();
+		    try {
+        		if ($address->load($request->post()))
+        		    if (!$address->save()) throw new Exception('Problem z zapisem adresu');
+                
+        	    if ($task->load($request->post())) {
+        	        $task->connection_id = $conId;
+        	        $task->address_id = $address->id;
+        	        
+        	        if (!$task->save()) throw new Exception('Problem z zapisem zadania');
+        	    }
+		    } catch (Exception $e) {
+                $transaction->rollBack();
+                return [0, [$e->getMessage()]];
+		    }
+            $transaction->commit();		    
+		    return [1, 'Montaż dodany'];
+		} else {
+		    $task->day = date('Y-m-d', $timestamp);
+		    $task->start_time = date('H:i', $timestamp);
+		    $task->end_time = date('H:i', $timestamp + 3600);
+		    
+		    if ($conId) {
+		        $task->phone = $connection->phone;
+		        $task->category_id = $connection->type;
+		    }
+		    
+		    return $this->renderAjax('create', [
+		        'task' => $task,
+		        'address' => $address,
+		    ]);
+		}
+    }
+    
+    public function actionClose($id) {
     	
-        if(Yii::$app->request->isAjax){        
+    	$request = \Yii::$app->request;
+    	
+		$task = $this->findModel($id);
+		$task->scenario = Task::SCENARIO_CLOSE;
+    		
+		if ($task->load($request->post())) {
+			$transaction = Yii::$app->db->beginTransaction();
 			
-            return $this->renderAjax('calendar');
-        }
-    }
-    
-    public function actionCreate($timestamp){
-    
-    	$request = \Yii::$app->request;
-    	$session = \Yii::$app->session;
-    	
-    	if ($request->isAjax){
-    		
-    		$task = new InstallTask(['scenario' => InstallTask::SCENARIO_CREATE]);
-    		$address = new Address();
-    		
-    		$session->has('connectionId') ? $connection = Connection::findOne($session->get('connectionId')) : $connection = null;
-    		
-    		$timestamp = $timestamp / 1000;	//odcinam milisekundy
-    		
-    		if ($task->load($request->post())){
-    		
-    			$transaction = Yii::$app->getDb()->beginTransaction();
-    			
-    			try {
-    				$task->add_user = Yii::$app->user->id;
-    				$task->color = $task->getColor();
-    				$task->start = $task->start_date . ' ' . $task->start_time . ':00';
-    				$task->end = $task->start_date . ' ' . $task->end_time . ':00';
-    				
-    				if ($address->load($request->post()) && is_null($connection)){	//zadanie bez LP
-    					if (!$address->save()) 
-    						throw new Exception('Problem z zapisem adresu');
-    					
-    					$task->address_id = $address->id;
-    					
-    					if (!$task->save())
-    						throw new Exception('Problem z zapisem zadania');
-    					
-    				} else {	//zadanie z LP
-    					$task->address_id = $connection->address_id;
-    					
-    					if ($task->save()){
-    						$connection->task_id = $task->id;
-    						if (!$connection->save())
-    							throw new Exception('Problem z zapisem połączenia');
-    					} else
-    						throw new Exception('Problem z zapisem zadania');
-    				}
-    			} catch (Exception $e) {
-    				$transaction->rollBack();
-    				print_r($address->errors);
-    				print_r($task->errors);
-    				isset($connection) ? print_r($connection->errors) : null;
-    				echo $e->getMessage();
-    				return 0;
-    			}
-				
-    			$transaction->commit();
-    			return 1;
-    		} else {
-    			$task->start_date = date('Y-m-d', $timestamp);
-    			$task->start_time = date('H:i', $timestamp);
-    			$task->end_time = date('H:i', $timestamp + 3600);
-    			
-    			if (is_object($connection)){
-    				$task->phone = $connection->phone;
-    				$task->type_id = $connection->type;
-    				$task->category_id = 1;	//wybieramy katęgorię `instalacja`
-    			}
-    			
-    			return $this->renderAjax('create', [
-					'task' => $task,
-					'address' => $address,
-    				'connection' => $connection
+			//gdy montaż jest w ramach umowy i został pozytywnie zakończony
+			$connections = $task->connection;
+			if ($connections && $task->fulfit) {
+			    foreach ($connections as $connection) {
+			        $connection->pay_at = date('Y-m-d');
+			    }
+			}
+		} else {
+		    if ($task->install) {
+    			return $this->renderAjax('close_install', [
+    				'task' => $task
     			]);
-    		}
-    	}
+		    } else {
+    			return $this->renderAjax('close', [
+    				'task' => $task
+    			]);
+		    }
+		}
     }
-    
-    public function actionUpdate($id)
-    {
-    	$request = \Yii::$app->request;
-    	
-    	if ($request->isAjax){
-    		$task = $this->findModel($id);
-    		$task->scenario = InstallTask::SCENARIO_UPDATE;
-    		
-    		if ($task->load(Yii::$app->request->post())){
-    			
-    			try {
-    				$task->start = $task->start_date . ' ' . $task->start_time . ':00';
-    				$task->end = $task->start_date . ' ' . $task->end_time . ':00';
-    				
-    				if (!$task->save())
-    					throw new Exception('Problem z zapisem zadania');
-    			} catch (Exception $e) {
-    				print_r($task->errors);
-    				echo $e->getMessage();
-    				return 0;
-    			}
 
-    			return 1;
-    					
-    		} else {
-    			
-    			return $this->renderAjax('update', [
-    				'task' => $task,
-    			]);
-    		}
-    	}
-    }
-    
-    public function actionClose($id){
+    public function actionClose_back($id) { //TODO do całkowitej przeróbki na poźniej
     	
     	$request = \Yii::$app->request;
     	
@@ -282,21 +227,5 @@ class InstallTaskController extends Controller
     			]);
     		}
     	}
-    }
-
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['view-calendar']);
-    }
-
-    protected function findModel($id)
-    {
-        if (($model = InstallTask::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

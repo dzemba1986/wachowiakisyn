@@ -1,7 +1,7 @@
 <?php
 
 use backend\models\Address;
-use backend\models\AddressShort;
+use backend\models\Teryt;
 use backend\models\Vlan;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;

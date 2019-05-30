@@ -4,19 +4,22 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\ActiveForm;
-use common\models\seu\devices\Swith;
 
 /**
  * @var common\models\seu\devices\Swith $source
  * @var \yii\web\View $this
  * @var \yii\widgets\ActiveForm $form
  */
-
 $form = ActiveForm::begin([
 	'id' => 'replace'
 ]); ?>
 
-	<?= Html::label('Wybierz urządzenie z magazynu') ?>
+	<?= Html::beginTag('div', ['id' => 'error', 'class' => 'alert alert-danger alert-dismissable', 'role' => 'alert', 'style' => 'display:none']); ?>
+	<?= Html::button('&times;', ['class' => 'close', 'data-dismiss' => 'alert', 'aria-hidden' => 'true']); ?>
+	Nie wszystkie porty zostały wypełnione
+	<?= Html::endTag('div'); ?>
+	
+	<?= Html::label('Wybierz urządzenie z magazynu'); ?>
 	
 	<?= Select2::widget([
 			'id' => 'device-select',
@@ -25,7 +28,7 @@ $form = ActiveForm::begin([
             'options' => [
             	'placeholder' => 'Urządzenie nadrzędne',
             	'onchange' => new JsExpression("
-                    $.get('" . Url::to(['link/replace-port']) . "&sId={$source->id}&dId=' + $(this).val(), function(data){
+                    $.get('" . Url::to(['link/replace-port']) . "?sId={$source->id}&dId=' + $(this).val(), function(data){
 				    	$('#port-select').html(data);
                     });
         	    "),
@@ -37,12 +40,11 @@ $form = ActiveForm::begin([
     				'errorLoading' => new JsExpression("function () { return 'Proszę czekać...'; }"),
     			],
     		    'ajax' => [
-    		        'url' => Url::to(['device/list-from-store']),
+    		        'url' => Url::to(['devices/device/list-from-store']),
     		        'dataType' => 'json',
     		        'data' => new JsExpression("function(params) {
     					return {
     						q : params.term,
-                            type : " . json_encode([Swith::TYPE]) . "
     					};
     				}")
     		    ],
@@ -63,27 +65,42 @@ $form = ActiveForm::begin([
 $urlView = Url::to(['tabs-view']);
 
 $js = <<<JS
-$(function(){
-    $('.modal-header h4').html('Podmień przełącznik');
+$(function() {
+    $( '.modal-header h4' ).html('Podmień przełącznik');
 
-    $('#replace').on('beforeSubmit', function(e){
+    $( '#replace' ).on('beforeSubmit', function(e){
 		
-		var form = $(this);
-	 	$.post(
-	  		form.attr('action'),
-	  		form.serialize()
-	 	).done(function(result){
-	 		if(result == 1){
-				$('#modal').modal('hide');
-                var tree = $("#device_tree").jstree(true);
-                tree.refresh();
-                $('#device_desc').load('{$urlView}&id=' + $('#device-select').val());  
-	 		}
-	 		else{
-	 		}
-	 	}).fail(function(){
-	 		console.log('server error');
-	 	});
+        var empty = false;
+        $( '.port' ).each(function () {
+            if ($( this ).val() == '') empty = true;
+        });
+
+        if (!empty) {
+    		var form = $(this);
+    	 	$.post(
+    	  		form.attr('action'),
+    	  		form.serialize()
+    	 	)
+            .done(function(result) {
+    	 		if(result == 1) {
+    				$('#modal').modal('hide');
+                    var tree = $("#device_tree").jstree(true);
+                    tree.refresh();
+                    $('#device_desc').load('{$urlView}?id=' + $('#device-select').val());  
+    	 		}
+    	 		else{
+                    console.log('Blad');  
+                }
+    	 	})
+            .fail(function() {
+    	 		console.log('server error');
+    	 	});
+        } else {
+            $('#error').fadeTo(2000, 500).slideUp(500, function() {
+                $('#error').slideUp(500);
+            }); 
+        }
+
 		return false;				
 	});	
 });

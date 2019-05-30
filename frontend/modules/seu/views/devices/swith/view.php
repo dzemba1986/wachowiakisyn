@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
  * @var backend\models\Swith $device
  */
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => [
@@ -50,19 +50,14 @@ echo DetailView::widget([
 			'label' => 'Producent',
 			'value' => $device->manufacturerName,
 		],
-// 	    [
-// 	        'label' => 'Skrypty',
-// 	        'value' => Html::button('Dodaj', ['class' => 'copy', 'data-clipboard-text' => $add]) . Html::button('Usuń', ['class' => 'copy', 'data-clipboard-text' => $drop]) . ' ' . Html::tag('p', '', ['id' => 'message']),
-// 	        'format' => 'raw',
-//             'visible' => $device->status && $device->ips
-// 	    ]
+	    'desc',
 	]
 ]);
-echo '</div>';
+echo Html::endTag('div');
 
-echo '<div class="col-md-5">';
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
+echo Html::beginTag('table', ['class' => 'table table-striped table-bordered detail-view']);
+echo Html::beginTag('tbody');
 foreach ($device->vlansToIps as $vlanToIp) {
     
     $url = Html::a($vlanToIp['ip'], "ssh://{$vlanToIp['ip']}:22222");
@@ -71,7 +66,7 @@ foreach ($device->vlansToIps as $vlanToIp) {
     echo "<td>{$url}</td>";
     echo '</tr>';
 }
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
+echo Html::endTag('tbody');
+echo Html::endTag('table');
+echo Html::endTag('div');
 ?>

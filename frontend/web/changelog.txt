@@ -1,6 +1,18 @@
 Changelog
 
+v4.0
+
+add: Ładne adresy url
+fix: Wyszukiwanie po adresie MAC - dowolny format ('11:22:33:44:55:66', '112233445566', '11-22-33-44-55-66', '1122.3344.5566'), dowolna wielkość liter.
+add: Wyszukiwanie urządzeń - precyzyjne/zawierające.
+add: Blokada zbędnych opcji (w zależności od urządzenia) w menu kontekstowym na drzewie.
+add: Korekta widoków urządzeń.
+add: Licznik zadań na głównej stronie
+
+plan: Zerowanie instalacji - koszty (PSM, klient)
+plan: Umowy z portem "brak miejsca"
+plan: Kopia adresu MAC do umowy z hosta 
+
 v3.0
  
-issue#1501: cmd.php poller not stripping alpha from snmp get values
 feature: Obsługa RFoG'a

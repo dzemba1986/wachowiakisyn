@@ -18,7 +18,7 @@ echo "<div class='row'>";
 foreach ($links as $link) {
     
     $string = Device::findOne($link['device'])->name;
-    $dropDown = Html::dropDownList("map[{$link['port']}]",  null, [], ['class' => 'port form-control', 'port' => $link['port']]);
+    $dropDown = Html::dropDownList("map[{$link['port']}]",  null, [], ['class' => 'port form-control', 'port' => $link['port'], 'required']);
     echo "<div class='col-md-4'>";
     echo "{$sDevice->model->port[$link['port']]} - {$string} $dropDown";
     echo '<div class="help-block"></div>';
@@ -29,10 +29,10 @@ echo '<div class="form-group">';
 echo Html::submitButton('Zamień', ['class' => 'change btn btn-primary']);
 echo '</div>';
 
-$urlPortList = Url::to(['link/list-port']);
+$urlPortList = Url::to(['link/list-port', 'deviceId' => $dId, 'install' => true, 'mode' => 'all']);
 $js = <<<JS
 $(function(){
-    $.get('{$urlPortList}&deviceId=' + {$dId} + '&install=true&mode=all', function(data){
+    $.get('{$urlPortList}', function(data){
 		$('.port').html(data);
 	});
 

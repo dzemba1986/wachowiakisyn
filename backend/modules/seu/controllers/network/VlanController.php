@@ -12,11 +12,6 @@ use yii\web\NotFoundHttpException;
 
 class VlanController extends Controller {
     
-    public function getViewPath() {
-        
-        return Yii::getAlias('@app/modules/seu/views/network/' . $this->id);
-    }
-    
     public function behaviors() {
         return [
             'verbs' => [

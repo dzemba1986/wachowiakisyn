@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /**
@@ -10,7 +11,7 @@ use yii\widgets\DetailView;
  * @var backend\models\MediaConverter $device
  */
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => [
@@ -36,7 +37,8 @@ echo DetailView::widget([
 			'label' => 'Producent',
 			'value' => $device->manufacturerName,
 		],
+	    'desc',
 	]
 ]);
-echo '</div>';
+echo Html::endTag('div');
 ?>

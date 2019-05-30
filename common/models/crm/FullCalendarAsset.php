@@ -6,8 +6,7 @@ use yii\web\AssetBundle;
 
 class FullCalendarAsset extends AssetBundle {
     
-    public $basePath = '@webroot/js/fullcalendar_new';
-    public $baseUrl = '@web/js/fullcalendar_new';
+    public $sourcePath = '@vendor/fullcalendar/fullcalendar/dist';
     
     public $language = 'pl';
     public $autoGenerate = true;
@@ -15,6 +14,7 @@ class FullCalendarAsset extends AssetBundle {
     
     public $css = [
         'fullcalendar.min.css',
+        '/css/fullcalendar/custom_fullcalendar.css',
     ];
     
     public $js = [

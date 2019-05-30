@@ -20,6 +20,8 @@ use yii\widgets\ActiveForm;
 
 class HostEthernetController extends HostController {
     
+    static public $model = HostEthernet::class;
+    
     public function behaviors() {
         
         return ArrayHelper::merge(
@@ -311,10 +313,5 @@ class HostEthernetController extends HostController {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model, 'mac');
         }
-    }
-    
-    protected static function classNameModel() {
-        
-        return HostEthernet::className();
     }
 }

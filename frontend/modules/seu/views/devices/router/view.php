@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
  * @var backend\models\Router $device
  */
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => [
@@ -38,20 +38,20 @@ echo DetailView::widget([
 		],
 	]
 ]);
-echo '</div>';
+echo Html::endTag('div');
 
-echo '<div class="col-md-5">';
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
+echo Html::beginTag('table', ['class' => 'table table-striped table-bordered detail-view']);
+echo Html::beginTag('tbody');
 foreach ($device->vlansToIps as $vlanToIp) {
     
-    $url = Html::a($vlanToIp['ip'], "http://{$vlanToIp['ip']}", ['target'=>'_blank']);
+    $url = Html::a($vlanToIp['ip'], "ssh://{$vlanToIp['ip']}:22222");
     echo '<tr>';
     echo "<th>VLAN {$vlanToIp['vlan_id']}</th>";
     echo "<td>{$url}</td>";
     echo '</tr>';
 }
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
+echo Html::endTag('tbody');
+echo Html::endTag('table');
+echo Html::endTag('div');
 ?>

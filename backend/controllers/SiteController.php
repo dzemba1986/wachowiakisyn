@@ -9,6 +9,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
+use common\models\crm\Task;
 
 /**
  * Site controller
@@ -25,7 +26,7 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error', 'get-menu', 'php-info', 'check-address'],
+                        'actions' => ['login', 'error', 'get-menu', 'php-info', 'check-address', 'test'],
                         'allow' => true,
                     ],
                     [
@@ -197,117 +198,10 @@ class SiteController extends Controller
         return $this->goHome();
     }
     
-    public function actionGetMenu()
+    public function actionTest()
     {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-       	
-		$menu = [
-           	[
-            	'html' => 'Adresy',
-            	'items' => [
-            		[
-            			'html' => '<a href=' . Url::to(['address/index']) . '>Lista</a>'
-            		],
-            		[
-            			'html' => '<a href=' . Url::to(['address/list']) . '>Dodaj</a>'
-            		],
-            	]	
-            ],
-            [   
-            	'html' => 'Połączenia',
-                'items' => [
-                	[
-                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'nopay', 'ConnectionSearch[nocontract]' => 0]) . '>Niepłacący</a>'
-                    ],
-                    [
-                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'install']) . '>Bez kabla</a>'
-                    ],
-                    [
-                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'conf']) . '>Do konfiguracji</a>',
-                    ],
-                    [
-                    	'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'off']) . '>Nieaktywne</a>',
-                    ],
-                    [
-                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'pay']) . '>Płacący</a>'
-                    ],
-                    [
-                        'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'all']) . '>Wszystkie</a>'
-                    ],
-                ]
-            ],
-            [
-                'html' => '<a href=' . Url::toRoute('installation/index') . '>Instalacje</a>',
-            ],
-			['id' => 'menu-separator'],	
-            [
-            	'html' => 'Zestawienia',
-            	'items' => [
-            		[
-            			'html' => '<a href=' . Url::to(['raport/connection']) . '>Podłączenia</a>'
-            		],
-            		[
-            			'html' => '<a href=' . Url::to(['raport/installation']) . '>Instalacje</a>'
-            		],
-            	],
-            ],
-            [
-            	'html' => 'Boa',
-            	'items' => [
-            		[
-            			'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'noboa']) . '>Niezaksięgowane</a>'
-            		],
-            		[
-            			'html' => '<a href=' . Url::to(['connection/index', 'mode' => 'boa']) . '>Zaksiegowane</a>'
-            		],
-            	],
-            ],
-			['id' => 'menu-separator'],	
-			[
-				'html' => '<a href=' . Url::toRoute(['tree/index']) . '>Drzewo urządzeń</a>',
-			],
-			[
-				'html' => '<a href=' . Url::toRoute(['ip/history']) . '>Historia IP</a>',
-			],
-			[
-				'html' => 'Sieć',
-				'items' => [
-					[
-						'html' => '<a href=' . Url::to(['vlan/grid']) . '>Adresacja</a>'
-					],
-					[
-						'html' => '<a href=' . Url::to(['dhcp/index']) . '>DHCP</a>'
-					],
-				],
-			],
-			[
-				'html' => '<a href=' . Url::to(['store/index']) . '>Magazyn</a>',
-			],
-			['id' => 'menu-separator'],	
-			[
-				'html' => 'Montaże',
-				'items' => [
-					[
-						'html' => '<a href=' . Url::to(['task/install-task/', 'mode' => 'todo']) . '>Niewykonane</a>'
-					],
-					[
-						'html' => '<a href=' . Url::to(['task/install-task', 'mode' => 'close']) . '>Wykonane</a>'
-					],
-				],
-			],
-			[
-				'html' => 'Zadania',
-				'items' => [
-					[
-						'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'todo']) . '>Niewykonane</a>'
-					],
-					[
-						'html' => '<a href=' . Url::to(['task/device-task', 'mode' => 'close']) . '>Wykonane</a>'
-					],
-				],
-			],
-        ];
-    	
-		return $menu;
+        $a = Task::findAll([15293, 15289]);
+        
+        print_r($a);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use backend\models\AddressShort;
+use backend\models\Teryt;
 use backend\models\ConnectionType;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;

@@ -1,5 +1,5 @@
 <?php 
-use backend\models\AddressShort;
+use backend\models\Teryt;
 use backend\models\ConnectionType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;

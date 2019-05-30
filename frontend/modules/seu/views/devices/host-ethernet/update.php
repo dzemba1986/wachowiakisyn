@@ -71,7 +71,7 @@ $(function() {
       		form.serialize()
      	).done(function(result){
     		if(result == 1){
-     			$('#device_desc').load('{$urlView}&id=' + {$device->id});
+     			$('#device_desc').load('{$urlView}?id=' + {$device->id});
                 $.notify('Zaktualizowano hosta.', {
                     type : 'success',
                     placement : { from : 'top', align : 'right'},

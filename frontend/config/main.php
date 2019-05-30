@@ -34,29 +34,6 @@ return [
         ],
         'seu' => [
             'class' => 'frontend\modules\seu\Module',
-            'controllerMap' => [
-                'device' => 'frontend\modules\seu\controllers\devices\DeviceController',
-                'camera' => 'frontend\modules\seu\controllers\devices\CameraController',
-                'gateway-voip' => 'frontend\modules\seu\controllers\devices\GatewayVoipController',
-                'host-ethernet' => 'frontend\modules\seu\controllers\devices\HostEthernetController',
-                'host-rfog' => 'frontend\modules\seu\controllers\devices\HostRfogController',
-                'media-converter' => 'frontend\modules\seu\controllers\devices\MediaConverterController',
-                'optical-amplifier' => 'frontend\modules\seu\controllers\devices\OpticalAmplifierController',
-                'optical-splitter' => 'frontend\modules\seu\controllers\devices\OpticalSplitterController',
-                'optical-transmitter' => 'frontend\modules\seu\controllers\devices\OpticalTransmitterController',
-                'optical-terminator' => 'frontend\modules\seu\controllers\devices\OpticalTerminatorController',
-                'optical-attenuator' => 'frontend\modules\seu\controllers\devices\OpticalAttenuatorController',
-                'radio' => 'frontend\modules\seu\controllers\devices\RadioController',
-                'router' => 'frontend\modules\seu\controllers\devices\RouterController',
-                'server' => 'frontend\modules\seu\controllers\devices\ServerController',
-                'swith' => 'frontend\modules\seu\controllers\devices\SwithController',
-                'ups' => 'frontend\modules\seu\controllers\devices\UpsController',
-                'virtual' => 'frontend\modules\seu\controllers\devices\VirtualController',
-                'dhcp-value' => 'frontend\modules\seu\controllers\network\DhcpValueController',
-                'ip' => 'frontend\modules\seu\controllers\network\IpController',
-                'subnet' => 'frontend\modules\seu\controllers\network\SubnetController',
-                'vlan' => 'frontend\modules\seu\controllers\network\VlanController',
-            ]
         ],
         'soa' => [
             'class' => 'frontend\modules\soa\Module',
@@ -64,6 +41,14 @@ return [
         ],
 	],
     'components' => [
+        'request' => [
+            'baseUrl' => '',
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+//             'enableStrictParsing' => false,
+        ],
         'urlManagerBackend' => [
             'class' => 'yii\web\urlManager',
             'baseUrl' => '/backend/',

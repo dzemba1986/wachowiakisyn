@@ -6,8 +6,5 @@ use common\models\seu\devices\OpticalAttenuator;
 
 class OpticalAttenuatorController extends DeviceController {
     
-    protected static function classNameModel() {
-        
-        return OpticalAttenuator::class;
-    }
+    static public $model = OpticalAttenuator::class;
 }

@@ -2,29 +2,50 @@
 
 use common\models\crm\FullCalendarAsset;
 use common\models\soa\Connection;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
- * @var $this yii\web\View
- * @var $model backend\models\Connection
+ * @var yii\web\View $this
  */
-require_once '_modal_task.php';
 
-//FullCalendarAsset::register($this);
+echo $this->renderFile('@app/views/modal/modal.php');
+FullCalendarAsset::register($this);
 
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/lib/qtip/jquery.qtip.min.js', ['position' => \yii\web\View::POS_BEGIN]);
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/lib/moment.min.js', ['position' => \yii\web\View::POS_BEGIN]);
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/fullcalendar.min.js', ['position' => \yii\web\View::POS_BEGIN]);
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/lang-all.js', ['position' => \yii\web\View::POS_BEGIN]);
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxcore.js');
-$this->registerJsFile(Yii::$app->request->BaseUrl . '/js/jqwidgets/jqxmenu.js');
+echo Html::tag('div', ['id' => 'calendar']);
 
-$this->registerCssFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/lib/qtip/jquery.qtip.min.css');
-$this->registerCssFile(Yii::$app->request->BaseUrl . '/js/fullcalendar/fullcalendar.min.css');
+$js = <<<JS
+$(function() {
+    $('#calendar').fullCalendar({
+        header : {
+			left : 'prev, next, today',
+			center : 'title',
+			right : 'agendaDay, agendaWeek'
+		},
+        lang : 'pl',
+		timezone : 'local',
+		defaultView : 'agendaWeek',
+        minTime : '09:00',
+		maxTime : '16:00',
+		slotDuration : '01:00:00',
+        hiddenDays : [0], //ukryj niedzielę
+		allDaySlot : false,
+		contentHeight : 530,
+		height : 530,
+        eventSources: [
+            {
+                url: '/crm/install-task/get',
+                color: '#336600',
+                textColor: 'black',
+                editable: false,
+            },
+        ],
+    });
+});
+JS;
 
-
-?> 
-<div id="calendar"></div>
+$this->registerJs($js);
+?>
 
 <script>
 

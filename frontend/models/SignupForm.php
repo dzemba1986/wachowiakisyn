@@ -12,8 +12,8 @@ class SignupForm extends Model
     public $email;
     public $password;
 
-    public function rules()
-    {
+    public function rules() {
+        
         return [
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required', 'message' => 'Login wymagany'],
@@ -34,7 +34,7 @@ class SignupForm extends Model
         ];
     }
     
-    public function attributeLabels(){
+    public function attributeLabels() {
     	
     	return array(
     		'username' => 'Login',
@@ -45,8 +45,8 @@ class SignupForm extends Model
     	);
     }
 
-    public function signup()
-    {
+    public function signup() {
+        
         if ($this->validate()) {
             $user = new User();
             $user->username = $this->username;

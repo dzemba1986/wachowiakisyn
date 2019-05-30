@@ -1,7 +1,7 @@
 <?php
 
-use common\modules\crm\models\TaskCategory;
-use common\modules\crm\models\TaskType;
+use common\models\crm\TaskCategory;
+use common\models\crm\TaskType;
 use kartik\date\DatePicker;
 use kartik\time\TimePicker;
 use yii\helpers\ArrayHelper;

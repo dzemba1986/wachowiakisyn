@@ -11,37 +11,30 @@ use yii\db\ActiveRecord;
  * @property string $upload
  */
 
-class Package extends ActiveRecord
-{
-	public static function tableName()
-	{
-		return '{{package}}';
+class Package extends ActiveRecord {
+    
+	public static function tableName() {
+	    
+		return '{{connection_package}}';
 	}
 
-	public function rules()
-	{
+	public function rules() {
+	    
 		return [
 		    ['name', 'string'],
 		    ['name', 'requred'],
 		    
-		    ['type_id', 'integer'],
-		    ['type_id', 'requred'],
+		    ['parent_id', 'integer'],
+		    ['parent_id', 'requred'],
 		    
-		    ['download', 'integer'],
-		    
-		    ['upload', 'integer'],
-		    
-			[['name', 'type', 'download', 'upload'], 'safe'],
+			[['name', 'parent_id'], 'safe'],
 		];
 	}
 	
-	public function attributeLabels()
-	{
-		return array(
+	public function attributeLabels() {
+	    
+		return [
 			'name' => 'Nazwa',
-			'type_id' => 'Typ',
-			'download' => 'Download',
-			'upload' => 'Upload',
-		);
+		];
 	}
 }

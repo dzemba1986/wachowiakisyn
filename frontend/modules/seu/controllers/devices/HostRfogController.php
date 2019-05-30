@@ -16,6 +16,8 @@ use yii\widgets\ActiveForm;
 
 class HostRfogController extends HostController {
     
+    static public $model = HostRfog::class;
+    
     public function behaviors() {
         
         return ArrayHelper::merge(
@@ -187,10 +189,5 @@ class HostRfogController extends HostController {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model, 'mac');
         }
-    }
-    
-    protected static function classNameModel() {
-        
-        return HostRfog::className();
     }
 }

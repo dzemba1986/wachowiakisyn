@@ -6,8 +6,5 @@ use common\models\seu\devices\Radio;
 
 class RadioController extends DeviceController {
     
-    protected static function classNameModel() {
-        
-        return Radio::className();
-    }
+    static public $model = Radio::class;
 }

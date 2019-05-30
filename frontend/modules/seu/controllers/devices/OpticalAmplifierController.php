@@ -6,8 +6,5 @@ use common\models\seu\devices\OpticalAmplifier;
 
 class OpticalAmplifierController extends DeviceController {
     
-    protected static function classNameModel() {
-        
-        return OpticalAmplifier::className();
-    }
+    static public $model = OpticalAmplifier::class;
 }

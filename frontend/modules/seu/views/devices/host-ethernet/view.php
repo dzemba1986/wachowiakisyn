@@ -13,7 +13,7 @@ use yii\widgets\DetailView;
 GrowlAsset::register($this);
 echo $this->renderFile('@app/views/modal/modal_sm.php');
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => [
@@ -42,16 +42,21 @@ echo DetailView::widget([
 			'value' => $device->typeName
 		],
 	    [
+	        'label' => 'Ip',
+	        'value' => Html::a("{$device->vlansToIps[0]['ip']}", Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['id' => 'check-dhcp','target'=>'_blank']) . " [ vlan{$device->vlansToIps[0]['vlan_id']} ]",
+	        'format' => 'raw',
+        ],
+        [
+            'label' => 'Mac',
+            'value' =>  Html::a($device->mac, Url::to(['change-mac', 'id' => $device->id]), ['class' => 'change-mac']),
+            'format' => 'raw',
+            'visible' => $device->status
+        ],
+	    [
 	        'label' => 'Przełącznik',
-	        'value' => Html::a($device->configParent->firstIp, "ssh://{$device->configParent->firstIp}:22222") . ' - ' . $device->configParent->portName,
+	        'value' => Html::a($device->configParent->firstIp, "ssh://{$device->configParent->firstIp}:22222") . " [ {$device->configParent->portName} ]",
 	        'format' => 'raw'
 	    ],
-		[
-			'label' => 'Mac',
-		    'value' =>  Html::a($device->mac, Url::to(['change-mac', 'id' => $device->id]), ['class' => 'change-mac']),
-		    'format' => 'raw',
-            'visible' => $device->status
-		],
 		[
 		    'label' => 'Skrypty',
 		    'value' => Html::button('Dodaj', [
@@ -71,39 +76,27 @@ echo DetailView::widget([
 		    ]),
 		    'format' => 'raw',
 		    'visible' => $device->status && $device->hasIps
-		]
+		],
+		'desc'
 	]
 ]);
-echo Html::label('Umowy :', null, ['hidden' => !$device->status]);
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
+
+echo Html::endTag('div');
+
+echo Html::beginTag('div', ['class' => 'col-md-5']);
+echo Html::beginTag('table', ['class' => 'table table-striped table-bordered detail-view']);
+echo Html::beginTag('tbody');
 foreach ($device->connectionsTypeNameToSoaId as $connection) {
     
     $link = Html::a('Zamknij', Url::to(['/soa/connection/close', 'id' => $connection['id']]), ['class' => 'close-connection']);
-	echo '<tr>';
-	echo "<th>{$connection['name']} ({$connection['soa_id']})</th>";
-	echo "<td>{$link}</td>";
-    echo '</tr>';
+    echo Html::beginTag('tr');
+    echo Html::tag('th', "{$connection['name']} ({$connection['soa_id']})");
+    echo Html::tag('td', $link);
+    echo Html::endTag('tr');
 }
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
-
-echo '<div class="col-md-5">';
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
-foreach ($device->vlansToIps as $vlanToIp) {
-    
-    $link = Html::a($vlanToIp['ip'], Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['id' => 'check-dhcp','target'=>'_blank']);
-    echo '<tr>';
-    echo "<th>VLAN {$vlanToIp['vlan_id']}</th>";
-    echo "<td>{$link}</td>";
-    echo '</tr>';
-}
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
-
+echo Html::endTag('tbody');
+echo Html::endTag('table');
+echo Html::endTag('div');
 
 $js = <<<JS
 $(function() {

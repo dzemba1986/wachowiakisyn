@@ -43,11 +43,11 @@ $this->beginPage() ?>
                 
                 $menuItems = [
                     ['label' => 'Adresy', 'visible' => !$monitoring && !$boa, 'items' => [
-                        ['label' => 'Obsługiwane adresy', 'url' => ['/address/address/list']],
-                        ['label' => 'Adresy', 'url' => ['/address/address/index']],
+                        ['label' => 'Obsługiwane adresy', 'url' => ['/address/address/index']],
+                        ['label' => 'Dostępne usługi', 'url' => ['/address/address/service-by-address']],
                     ]],
                     ['label' => 'SEU', 'visible' => !$monitoring && !$boa, 'items' => [
-                        ['label' => 'Adresacja', 'url' => ['/seu/vlan/index']],
+                        ['label' => 'Adresacja', 'url' => ['/seu/network/vlan/index']],
                     ]],
                 ];
             }

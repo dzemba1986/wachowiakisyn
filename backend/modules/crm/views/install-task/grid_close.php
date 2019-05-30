@@ -1,6 +1,6 @@
 <?php
 
-use backend\modules\address\models\AddressShort;
+use backend\modules\address\models\Teryt;
 use common\models\User;
 use common\modules\crm\models\TaskCategory;
 use common\modules\crm\models\TaskType;

@@ -5,11 +5,10 @@ use yii\web\AssetBundle;
 
 class MomentAsset extends AssetBundle {
 
-    public $basePath = '@webroot/js/fullcalendar_new';
-    public $baseUrl = '@web/js/fullcalendar_new';
+    public $sourcePath = '@vendor/moment/moment';
 
     public $js = [
-        'lib/moment.min.js'
+        'moment.js'
     ];
 }
 

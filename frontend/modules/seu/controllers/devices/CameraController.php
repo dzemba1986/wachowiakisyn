@@ -9,8 +9,10 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 
-class CameraController extends DeviceController
-{	
+class CameraController extends DeviceController {
+    
+    static public $model = Camera::class;
+    
     public function behaviors() {
         
         return ArrayHelper::merge(
@@ -63,10 +65,5 @@ class CameraController extends DeviceController
         Yii::$app->response->format = Response::FORMAT_JSON;
         
         return $camera->configChangeMac($dCamera->mac);
-    }
-    
-    protected static function classNameModel() {
-        
-        return Camera::className();
-    }
+    }    
 }

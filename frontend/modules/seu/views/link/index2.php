@@ -1,50 +1,35 @@
 <?php
 
-use yii\helpers\Url;
+use components\clipboardjs\ClipboardJsAsset;
+use components\jstree\JsTreeAsset;
+use yii\helpers\Html;
 
 /** 
  * @var $this yii\web\View
  */ 
+JsTreeAsset::register($this);
+ClipboardJsAsset::register($this);
 
 echo $this->renderFile('@app/views/modal/modal.php');
 echo $this->renderFile('@app/views/modal/modal_sm.php');
 
-$this->registerJsFile('@web/js/jstree/dist/jstree.min.js');
-$this->registerCssFile('@web/js/jstree/dist/themes/default/style.min.css');
-$this->registerJsFile('@web/js/clipboard.min.js');
-$this->registerJsFile('@web/js/jquery-url-min.js');
-
 $this->title = 'SEU';
 $this->params['breadcrumbs'][] = $this->title;
 
-echo '<div class="col-sm-4">';
-echo '<input class="search form-control"></input>';
-echo '<div id="device_tree" class="sidebar"></div>';
-echo '</div>';
-echo '<div id="device_desc" style="position: fixed; right:-2%;" class="col-sm-8 tabbable tabs-left"></div>';
+echo Html::beginTag('div', ['class' => 'col-sm-4']);
+echo Html::input('text', 'search', null, ['class' => 'search form-control', 'placeholder' => "Szukaj..."]);
+echo Html::checkbox('like', false, ['id' => 'like']);
+echo Html::label('Zawiera', 'like');
+echo Html::tag('div', '', ['id' => 'device_tree', 'class' => 'sidebar']);
+echo Html::endTag('div', []);
+echo Html::tag('div', '', ['id' => "device_desc", 'style' => 'position: fixed; right:-2%;', 'class' => 'col-sm-8 tabbable tabs-left']);
 
-$urlGetChildren = Url::to(['get-children']);
-$urlSearch = Url::to(['search']);
-$urlMove = Url::to(['move']);
-$urlCopy = Url::to(['copy']);
-
+$id = json_encode(Yii::$app->request->get('id'));
 $js = <<<JS
 $(function() {
 
-    function getId(id) {
-      	return id.substr(0, id.indexOf('.'));
-    }
-
-    function getPort(id) {
-      	return id.substr(id.indexOf('.') + 1);
-    }
-
     $('.search').keyup(function(e) {
-		// gdy wcisnieto [enter]
-		if (e.which == 13) {
-	        var searchString = $(this).val();
-	        $('#device_tree').jstree('search', searchString);
-		}
+		if (e.which == 13)  $('#device_tree').jstree('search', $(this).val()); // gdy wcisnieto [enter]
     });
 
     $("#device_tree").jstree({
@@ -53,58 +38,59 @@ $(function() {
     		    'variant' : 'large'
     		},
     		'data' : {
-    			'url' : '{$urlGetChildren}',
+    			'url' : 'get-children',
     		    'data' : function (node) {
     		    	return { 
         		    	'id' : function (obj, callback) {
             		    	if (node.id == '#') 
             		    		return 2;
             		    	else 
-            		    		return getId(node.id);
+            		    		return node.original.seuId;
             		    } 
     		    	};
     		    }
     		},
     		'check_callback' : function (op, node, parent, position, more) {
-
-                if (op === "delete_node") {   
-                    //if (this.is_parent(node)) return false;
-                    if (node.original.type == 5) return false;
+                if (op === "delete_node") {
+                    if (this.is_parent(node) && !node.original.delete) return false;
                 }
             }
     	},
         'search' : {
             'ajax' : {
-                'url' : '{$urlSearch}',
+                'url' : 'search',
    				'dataType' : 'json',
+                'data' : {
+                    'like' : document.getElementById("like").checked
+                }
             },
             'search_callback' : function (str, node) {
                 var test = false;
-	            
-                if(node.id == str || node.original.name.includes(str.toUpperCase()) || node.original.network.mac == str.toLowerCase()) {
-                    test = true; 
+                if (document.getElementById("like").checked == false) {
+                    if ((node.original.seuId == str || node.original.name == str.toUpperCase() || node.original.proper_name == str.toLowerCase()) || node.original.network.mac == str.replace(/\W/g, '')) test = true;
+                } else {
+                    if ((node.original.seuId == str || node.original.name.includes(str.toUpperCase()) || node.original.proper_name.includes(str.toLowerCase())) || node.original.network.mac == str.replace(/\W/g, '')) test = true;
                 }
-	         	
-                var ips = node.original.network.ips;
-	         	ips.forEach(function(element){
-   		         	if(element.ip == str){
-   	   		         	test = true;
-   		         	} 	
-   		        });
+                 
+                if (!test) {
+                    var ips = node.original.network.ips;
+    	         	ips.forEach(function(element){
+       		         	if(element.ip == str) {
+       	   		         	test = true;
+       		         	} 	
+       		        });
+                }
 
                 return test;
 	        }
         },
         'contextmenu' : {
             'items': function (node) {
-
-            	var tree = $("#device_tree").jstree(true);
-                        
                 return {
                     'Update': {
-                        'label' : 'Edytuj',
+                        'label' : 'Edycja',
                         'action' : function () {
-                			$('#device_desc').load('?r=seu/' + node.original.controller + '/tabs-update&id=' + getId(node.id));	
+                            $('#device_desc').load('/seu/devices/' + node.original.controller + '/tabs-update?id=' + node.original.seuId);
                         }
                     },
                     'Store' : {
@@ -186,32 +172,25 @@ $(function() {
 	$('#device_tree')
         //przejscie z LP do SEU
         .on('ready.jstree', function(e, data) {
-        	data.instance.search($.url("?id")); 
+            var id = $id;
+        	if (id) { data.instance.search(id); }  
         })
-
         .on('search.jstree', function (e, data) {
-    	   data.instance.select_node(data.res); 
+            if (data.nodes.length == 1) data.instance.select_node(data.res); 
         })
-
         .on('select_node.jstree', function(e, data) {
             var node = data.node;
-
-            $('#device_desc').load('?r=seu/' + node.original.controller + '/tabs-view&id=' + getId(node.id));                    
+            $('#device_desc').load('/seu/devices/' + node.original.controller + '/tabs-view?id=' + node.original.seuId);
         })
-
         .on('move_node.jstree', function(e, data) {
-            
             var deviceId = getId(data.node.id);
             var port = getPort(data.node.id);
             var newParentId = getId(data.parent);
-            $('#modal-sm').modal('show').find('#modal-sm-content').load('{$urlMove}&deviceId=' + deviceId + '&port=' + port + '&newParentId=' + newParentId);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('/seu/link/move?deviceId=' + deviceId + '&port=' + port + '&newParentId=' + newParentId);
         })
-
         .on('delete_node.jstree', function(e, data) {
             var node = data.node;
-            var deviceId = getId(data.node.id);
-            var port = getPort(data.node.id);
-            $('#modal-sm').modal('show').find('#modal-sm-content').load('?r=seu/' + node.original.controller + '/delete-from-tree&id=' + deviceId + '&port=' + port);
+            $('#modal-sm').modal('show').find('#modal-sm-content').load('/seu/devices/' + node.original.controller + '/delete-from-tree?id=' + node.original.seuId + '&port=' +  node.original.port);
         });      
 });
 JS;

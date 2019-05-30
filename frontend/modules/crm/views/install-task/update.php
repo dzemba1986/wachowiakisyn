@@ -1,106 +1,111 @@
 <?php
 
-use common\models\crm\TaskCategory;
-use common\models\crm\TaskType;
+use common\models\crm\InstallTask;
 use kartik\date\DatePicker;
 use kartik\time\TimePicker;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use common\models\crm\TaskCategory;
 
 /**
  * @var yii\web\View $this
  * @var backend\modules\task\models\InstallTask $task
  * @var yii\widgets\ActiveForm $form
  */
-?>
-	
-<?php $form = ActiveForm::begin(['id'=>$task->formName()]); ?>
 
-	<?= $form->field($task, 'start_date')->label('Data i czas')->textInput()->widget(DatePicker::className(), [
-			'type' => DatePicker::TYPE_COMPONENT_APPEND,
-			'language' => 'pl',
-			'pluginOptions' => [
-	        	'format' => 'yyyy-mm-dd',
-	            'todayHighlight' => true,
-	        ]
-		]) ?>
+$form = ActiveForm::begin([
+    'id' => $task->formName(),
+    'options' => ['style' => 'padding-left:10px;padding-right:10px'],
+]);
+    echo Html::tag('div', '', ['id' => 'error', 'class' => 'row alert alert-danger alert-dismissable', 'role' => 'alert', 'style' => 'display:none']);
 
-    <div class="row">
-	
-	<?= $form->field($task, 'start_time', [
-			'template' => "{input}\n{hint}\n{error}",
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']
-		])->widget(TimePicker::className(), [
-			'pluginOptions' => [
-				'minuteStep' => 60,
-				'showMeridian' => false
-			]		
-		]) ?>
-	
-	<?= $form->field($task, 'end_time', [
-			'template' => "{input}\n{hint}\n{error}",
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-		])->widget(TimePicker::className(), [
-			'pluginOptions' => [
-				'minuteStep' => 60,
-				'showMeridian' => false
-			]		
-		]) ?>
-		
-	</div>	   
-	
-	<div class="row">
-	
-	<?= $form->field($task, 'type_id',[
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']
-		])->dropDownList(ArrayHelper::map(TaskType::find()->all(), 'id', 'name')) ?>
-	
-	<?= $form->field($task, 'category_id', [
-			'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-		])->dropDownList(ArrayHelper::map(TaskCategory::find()->all(), 'id', 'name')) ?>
-	</div>
-	
-	<div class="row">
-	
-	<?= $form->field($task, 'phone', ['options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']]) ?>
-	
-	<?= $form->field($task, 'paid_psm')->checkbox() ?>
-	
-	</div>
-	
-	<?= $form->field($task, 'description')->textarea(['rows' => '4', 'style' => 'resize: vertical', 'maxlength' => 1000]) ?>
-	
-	<div class="form-group">
-        <?= Html::submitButton('Edytuj', ['class' => 'btn btn-primary']) ?>
-    </div>
+    echo Html::tag('h4', $task->address, ['style' => 'text-align: center']);
 
-<?php ActiveForm::end(); ?>
+    echo Html::beginTag('div', ['class' => 'row no-gutter']);
+    
+        echo $form->field($task, 'day', [
+            'options' => ['class' => 'col-md-6']
+        ])->label(false)->widget(DatePicker::class, [
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
+            'language' => 'pl',
+            'pluginOptions' => [
+                'format' => 'yyyy-mm-dd',
+                'todayHighlight' => true,
+            ]
+        ]);
+        
+        echo $form->field($task, 'start_time', [
+            'options' => ['class' => 'col-md-3']
+        ])->label(false)->widget(TimePicker::class, [
+            'pluginOptions' => [
+                'showMeridian' => false
+            ]
+        ]);;
+        
+        echo $form->field($task, 'end_time', [
+            'options' => ['class' => 'col-md-3']
+        ])->label(false)->widget(TimePicker::class, [
+            'pluginOptions' => [
+                'showMeridian' => false
+            ]
+        ]);
+    
+    echo Html::endTag('div');
+	
+    echo Html::beginTag('div', ['class' => 'row no-gutter']);
+    
+        echo $form->field($task, 'category_id', [
+            'options' => ['class' => 'col-md-3']
+        ])->dropDownList(ArrayHelper::map(TaskCategory::find()->where(['parent_id' => InstallTask::TYPE])->asArray()->all(), 'id', 'name'), ['prompt' => 'Wybierz...']);
+        
+        echo $form->field($task, 'phone', ['options' => ['class' => 'col-md-3']]);
+        
+        echo $form->field($task, 'pay_by', [
+            'options' => ['class' => 'col-md-3']
+        ])->dropDownList(InstallTask::PAY_BY);
+        
+        echo $form->field($task, 'receive_by', [
+            'options' => ['class' => 'col-md-3']
+        ])->dropDownList(InstallTask::RECEIVE_BY);
+        
+        echo Html::endTag('div');
+        
+        echo Html::beginTag('div', ['class' => 'row']);
+        
+        echo $form->field($task, 'desc')->textarea(['rows' => '4', 'style' => 'resize: vertical', 'maxlength' => 1000, 'placeholder' => 'Dodaj przybliżony koszt']);
+    
+    echo Html::endTag('div');
+    
+    echo Html::submitButton('Edytuj', ['class' => 'row btn btn-primary']);
 
-<?php
+ActiveForm::end();
+
 $js = <<<JS
 $(function(){
-    $('.modal-header h4').html('{$task->address->toString()}');
+    $('#modal-title').html('Edycja montażu');
 
 	$('#{$task->formName()}').on('beforeSubmit', function(e){
 
 	 	$.post(
 	  		$(this).attr("action"),
 	  		$(this).serialize()
-	 	).done(function(result){
-			
-	 		if(result == 1){
+	 	).done(function(result) {
+	 		if(result[0] == 1) {
 	 			$(this).trigger('reset');
-				$('#modal-task').modal('hide');
+				$('#modal').modal('hide');
 				$('#calendar').fullCalendar('refetchEvents');
-	 			$.pjax.reload({container:'#task-grid-pjax'});
+	 		} else {
+                $('#error').html(result[1]);
+	 			$('#error').fadeTo(2500, 500).slideUp(500, function() {
+                    $('#error').slideUp(500);
+                });
 	 		}
-	 		else{
-			
-	 			$('#message').html(result);
-	 		}
-	 	}).fail(function(){
-	 		console.log('server error');
+	 	}).fail(function() {
+	 		$('#error').html('Problem z wysłaniem żądania');
+ 			$('#error').fadeTo(2500, 500).slideUp(500, function() {
+                $('#error').slideUp(500);
+            });
 	 	});
 		return false;				
 	});

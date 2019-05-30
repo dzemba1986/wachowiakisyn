@@ -59,16 +59,20 @@ class LinkController extends Controller
         $nodes = (new \yii\db\Query())
             ->select([
                 new Expression("CASE WHEN proper_name IS NULL THEN concat(prefix, device.name) ELSE concat(prefix, device.name, '_', proper_name) END"),
-                'agregation.device',
+                'device.name',
+                'proper_name',
+                'device.id',
                 'port',
                 'parent_port',
                 'model_id',
                 'mac',
                 'status',
                 'device.type_id',
-                'icon',
                 'children',
-                'technic'
+                'technic',
+                'copy',
+                'delete',
+                'icon',
             ])
             ->from('device')
             ->leftJoin('agregation', 'device.id = agregation.device')
@@ -79,26 +83,30 @@ class LinkController extends Controller
         
         if (!empty($nodes)) {
              foreach ($nodes as $node){
-                $ips = Ip::find()->select('ip')->where(['device_id' => $node['device']])->asArray()->all();
+                $ips = Ip::find()->select('ip')->where(['device_id' => $node['id']])->asArray()->all();
                 $text = $node['status'] ?
-                    $model->port[$node['parent_port']] . '	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'] :
-                    $model->port[$node['parent_port']] . '	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i><font color="red">'.$node['concat'].'</font>';
+                    $model->port[$node['parent_port']] . '	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(/'. $node['icon'] .'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'] :
+                    $model->port[$node['parent_port']] . '	:<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(/'. $node['icon'] .'); background-position: center center; background-size: auto auto;"></i><font color="red">'.$node['concat'].'</font>';
                 
             	$children[] = [
-            		'id' => (int) $node['device'] . '.' . $node['port'],
-            	    'text' => !($id == 1 || $id == 2)	? 
+            	    'id' => $node['id'] . '.' . $node['port'],
+            	    'seuId' => (int) $node['id'],
+            	    'port' => $node['port'],
+            	    'text' => !($id == 1 || $id == 2) ? 
                         $text :
-            			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(\''. $node['icon'] .'\'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'],
-            		'name' => $node['concat'],
+            			'<i class="jstree-icon jstree-themeicon jstree-themeicon-custom" role="presentation" style="background-image : url(/'. $node['icon'] .'); background-position: center center; background-size: auto auto;"></i>'.$node['concat'],
+            		'name' => strtoupper($node['name']),
+            	    'proper_name' => strtolower($node['proper_name']),
+            	    'icon' => false,
             	    'network' => [
-            	        'mac' => $node['mac'],
+            	        'mac' => MacaddressValidator::formatValue($node['mac'], 'cisco'),
             	        'ips' => $ips,
             	    ],
-            	    'type' => $node['type_id'],
             	    'controller' => Device::getController($node['type_id'], $node['technic']),
             		'state' => $node['model_id'] == 5 ? ['opened' => true] : [], //dla centralnych automatyczne rozwijanie
-            		'icon' => false,
-            	    'children' => $node['children']
+            	    'children' => $node['children'],
+            	    'copy' => $node['copy'],
+            	    'delete' => $node['delete'],
             	];
             }
         } else $children = [];
@@ -158,28 +166,48 @@ class LinkController extends Controller
         return $children;
     }
     
-    public function actionSearch($str) {
+    public function actionSearch($like, $str) {
     
     	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     	
     	//gdy dlugosc szukanego tekstu jest wieksza od 3
-    	if (strlen($str) > 3){
-	    	$path = [];
-	    	
+    	if (strlen($str) > 2) {
 	    	$validatorIp = new IpValidator(['ipv6' => false]);
 	    	$validatorMac = new MacaddressValidator();
 	    	
-	    	if ($validatorIp->validate($str)){
+	    	if ($validatorIp->validate($str)) {
 				$devices = Ip::find()->select('device_id AS id')->where(['ip' => $str])->asArray()->all();
-	    	} elseif ($validatorMac->validate($str)){
-	    	    $devices = Device::find()->select('id')->where(['and', ['"mac"::text' => $str], ['status' => true]])->asArray()->all();
+	    	} elseif ($validatorMac->validate($str)) {
+	    	    $mac = MacaddressValidator::formatValue($str);
+	    	    $devices = Device::find()->select('id')->where(['and', ['"mac"::text' => strtolower($mac)], ['status' => true]])->asArray()->all();
+	    	} elseif (is_numeric($str)) {
+	    	    $devices = Device::find()->select('id')->where(['and', ['id' => (int) $str], ['is not', 'status', null]])->asArray()->all();
 	    	} else {
-	    	    $devices = Device::find()->select('id')->where(['or', ['id' => (int) $str], ['like', 'name', strtoupper($str) . '%', false]])->andWhere(['is not', 'status', null])->asArray()->all();
+    	        if ($like == 'false') { //TODO może inaczej?
+    	            $devices = Device::find()->select('id')->where([
+    	                'and',
+    	                [
+    	                    'or',
+    	                    ['upper(name)' => strtoupper($str)],
+    	                    ['lower(proper_name)' => strtolower($str)]
+    	                ],
+    	                ['is not', 'status', null]
+    	            ])->asArray()->all();
+    	        } else {
+    	            $devices = Device::find()->select('id')->where([
+                        'and', 
+                        [
+                           'or', 
+                            ['like', 'upper(name)', strtoupper($str)],
+                            ['like', 'lower(proper_name)', strtolower($str)]
+                        ],
+                        ['is not', 'status', null]
+    	            ])->asArray()->all();
+    	        }
 	    	}
 	    	
-	    	//przejscie przez wszystkie wyszukane obiekty typu device 
+	    	$path = [];
 	    	foreach ($devices as $device) {
-	    		
 	    		//powiazany element typu tree
 	    		$link = Link::find()->where(['device' => $device['id']])->asArray()->one();
 	    		
@@ -188,8 +216,8 @@ class LinkController extends Controller
 	    		    $link = Link::find()->where(['device' => $link['parent_device']])->asArray()->one();
 	    			
 	    			//jezeli elementu tree rodzica nie ma w tablicy to dodaj 
-	    			if (!in_array($link['device'] . '.' . $link['port'], $path))
-	    				array_push($path, $link['device'] . '.' . $link['port']);
+	    			if (!in_array($link['device'] . '.' . $link['port'], $path)) array_push($path, $link['device'] . '.' . $link['port']);
+	    			else break;
 	    		}
 	    	}
     	} else 

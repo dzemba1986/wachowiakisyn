@@ -2,104 +2,95 @@
 
 namespace common\models\crm;
 
+use common\models\crm\query\TaskQuery;
 use common\models\seu\devices\Device;
-use common\models\seu\devices\DeviceType;
+use yii\behaviors\AttributeBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
- * @property integer $id
- * @property string $create
- * @property string $close
- * @property string $description
- * @property integer $category_id
- * @property integer $type_id
- * @property integer $add_user
- * @property integer $close_user
- * @property integer $status
- * @property integer $address_id
  * @property integer $device_id
- * @property integer $device_type
- * @property integer $when
- * @property boolean $editable
- * @property integer $close_description
  */
-class DeviceTask extends Task
-{	
-    public function attributes(){
-    	
-    	return ArrayHelper::merge(
-    		parent::attributes(),
-    		[
-    			'when',	
-    			'editable',
-    			'close_description',
-    			'device_id',
-    			'device_type'	
-    		]
-    	);
-    }
 
-    public function rules(){
+class DeviceTask extends Task {
+    
+    const TYPE = 1;
+
+    public static function columns() {
+        
+        return ArrayHelper::merge(
+            parent::columns(),
+            [
+                'device_id',
+            ]
+        );
+    }
+    
+    public function rules() {
     	
         return ArrayHelper::merge(
         	[	
-        		['address_id', 'default', 'value' => Device::findOne($this->device_id)->address_id],	
+        	    ['category_id', 'required', 'message' => 'Wartość wymagana'],
+        	    ['category_id', 'in', 'range' => [1, 2, 3, 4]],
         			
         		['device_id', 'integer'],
         		['device_id', 'required', 'message' => 'Wartość wymagana'],
         			
-        		['device_type', 'integer'],
-        		['device_type', 'default', 'value' => Device::findOne($this->device_id)->type_id],	
-        		['device_type', 'required', 'message' => 'Wartość wymagana'],
-        			
-        		['when', 'date', 'format' => 'yyyy-MM-dd H:i:s'],
-        			
-        		['close_description', 'required', 'message' => 'Wartość wymagana'],
-        			
-	            ['editable', 'boolean'],
-	        	['editable', 'default', 'value' => true],
-	            
-        		[['editable', 'when', 'close_description', 'device_id', 'device_type', 'status'], 'safe']
+        		['close_desc', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],
         	],
         	parent::rules()
         );
     }
     
-    public function scenarios()
-    {
+    public function scenarios() {
+        
     	$scenarios = parent::scenarios();
-    	array_push($scenarios[self::SCENARIO_CREATE], 'when', 'device_id', 'device_type');
-    	array_push($scenarios[self::SCENARIO_UPDATE], 'when', 'status');
-    	array_push($scenarios[self::SCENARIO_CLOSE], 'editable', 'close_description');
+    	array_push($scenarios[self::SCENARIO_CREATE], 'device_id');
     	
     	return $scenarios;
     }
     
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
+        
         return ArrayHelper::merge(
         	parent::attributeLabels(),	
         	[
-	            'when' => 'Na kiedy',
-	            'close_description' => 'Zrobiono',
         		'device_id' => 'Urządzenie',
-        		'device_type' => 'Typ urządzenia'	
         	]
         );
     }
     
-    public static function getCountOpenTask(){
-    	
-    	return self::find()->where(['and', ['status' => null], ['is not', 'device_id', null]])->count();
+    public function behaviors() {
+        
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                [
+                    'class' => AttributeBehavior::class,
+                    'attributes' => [
+                        self::EVENT_BEFORE_INSERT => 'address_id',
+                    ],
+                    'value' => Device::find()->select('address_id')->where(['id' => $this->device_id])->asArray()->one()['address_id'],
+                ],
+            ],
+        );
     }
     
-    public function getDevice(){
+//     public function beforeSave($insert) {
+        
+//         if (!$insert) {
+//             if ($this->status != 2 && !$this->close_at) $this->status = 2;
+//         }
+        
+//         parent::beforeSave($insert);
+//     }
+    
+    public static function find() {
+        
+        return new TaskQuery(get_called_class(), ['type_id' => self::TYPE, 'columns' => self::columns()]);
+    }
+    
+    public function getDevice() {
     	
     	return $this->hasOne(Device::className(), ['id' => 'device_id']);
-    }
-    
-    public function getDeviceType(){
-    	
-    	return $this->hasOne(DeviceType::className(), ['id' => 'device_type']);
     }
 }

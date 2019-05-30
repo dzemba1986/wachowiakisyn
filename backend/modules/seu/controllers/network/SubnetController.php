@@ -12,11 +12,6 @@ use yii\web\NotFoundHttpException;
 
 class SubnetController extends Controller {
     
-    public function getViewPath() {
-        
-        return Yii::getAlias('@app/modules/seu/views/network/' . $this->id);
-    }
-    
     public function behaviors() {
         
         return [

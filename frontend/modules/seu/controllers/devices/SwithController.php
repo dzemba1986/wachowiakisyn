@@ -7,8 +7,10 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
-class SwithController extends DeviceController
-{	
+class SwithController extends DeviceController {
+    
+    static public $model = Swith::class;
+    
     public function behaviors() {
         
         return ArrayHelper::merge(
@@ -29,10 +31,5 @@ class SwithController extends DeviceController
     function actionGetIpLink($id) {
         
         return Html::a('ssh', "ssh://{$this->findModel($id)->ips[0]->ip}:22222");
-    }
-    
-    protected static function classNameModel() {
-        
-        return Swith::className();
     }
 }

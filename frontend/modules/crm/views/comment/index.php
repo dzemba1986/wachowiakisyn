@@ -3,30 +3,26 @@
 
 /**
  * @var yii\web\View $this
- * @var common\models\crm\Comment $comments
+ * @var common\models\crm\Comment $comment
+ * @var common\models\crm\Comment[] $comments
  */
-?>
-<div class="comment-index">
 
-	<?php foreach ($comments as $comment): ?>
+use yii\helpers\Html;
 
-		<div class="col">
-			<h4><p><?= $comment->description ?></p></h4>
-			<p>
-				<?= $comment->create ?>
-				<tab style="padding-left: 4em;"><?= $comment->user->last_name ?></tab>
-			</p>
-			<hr>
-		</div>
-		
-	<?php endforeach; ?>
-	
-</div>
+foreach ($comments as $comment) {
+    echo Html::beginTag('div', ['class' => 'col']);
+        echo Html::tag('p', $comment->description);
+        echo Html::beginTag('p');
+            echo Html::tag('span', $comment->create . ' ', ['style' => 'color:green; font-size:10px; margin-right:20px;']);
+            echo Html::tag('span', $comment->user->last_name, ['style' => 'color:blue; font-size:10px;']);
+        echo Html::endTag('p');
+        echo Html::tag('hr');
+    echo Html::endTag('div');
+}
 
-<?php
 $js = <<<JS
 $(function() {
-    $('.modal-header h4').html('Komentarze');
+    $( '#modal-title' ).html('Komentarze');
 });
 JS;
 

@@ -41,7 +41,7 @@ echo GridView::widget([
     		]),
     		'buttons' => [
     			'view' => function ($model, $data) {
-    				$url = Url::to(['subnet/index', 'vlan' => $data->id]);
+    				$url = Url::to(['network/subnet/index', 'vlan' => $data->id]);
     				return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
     					'title' => \Yii::t('yii', 'Widok podsieci'),
     					'data-pjax' => true,

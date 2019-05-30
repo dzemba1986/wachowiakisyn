@@ -5,8 +5,8 @@ namespace common\models\soa;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 
-class ConnectionSearch extends Connection
-{	
+class ConnectionSearch extends Connection {
+    
 	public $street;
 	public $house;
 	public $house_detail;
@@ -15,44 +15,37 @@ class ConnectionSearch extends Connection
 	public $minConfDate;
 	public $maxConfDate;
 
-    public function rules()
-	{
+    public function rules() {
+        
 		return [
-			[	
-				['ara_id', 'soa_id', 'start_date', 'conf_date', 'pay_date', 'close_date', 'phone_date',
-				'add_user', 'conf_user', 'close_user', 'nocontract', 'task_id', 'vip',
-				'socket', 'again', 'wire',
-				'type_id', 'package_id', 'street', 'house', 'house_detail', 'flat', 'flat_detail',
-				'minConfDate', 'maxConfDate'],
-				'safe'
-			]		
+			[['type_id', 'package_id', 'start_at', 'street'], 'safe']		
 		];
 	}
 	
-	public function search($params)
-	{
-		$query = Connection::find();
+	public function search($params) {
+	    
+		$query = self::find();
 	
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
             'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],				
 		]);
 	
-		$query->joinWith(['address', 'type', 'package']);
+		$query->joinWith(['address', 'type', 'package' => function ($q) { $q->from(['package' => Package::tableName()]); }]);
 		
 		$dataProvider->setSort([
 			'defaultOrder' => [
-				'start_date' => SORT_ASC, 
+				'start_at' => SORT_ASC, 
 				'street' => SORT_ASC, 
 				'house' => new Expression('case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end, dom'), 
 				'flat' => new Expression('case when substring(lokal from \'^\d+$\') is null then 9999 else cast(lokal as integer) end, lokal')
 			],
 			'attributes' => [
-				'start_date',
-				'conf_date',
-				'pay_date',
-				'close_date',
-				'synch_date',	
+				'start_at',
+				'conf_at',
+				'pay_at',
+				'close_at',
+				'synch_at',	
 				'type_id',
 				'package_id',	
 				'nocontract',
@@ -92,12 +85,12 @@ class ConnectionSearch extends Connection
 		$query->FilterWhere([
 			'ara_id' => $this->ara_id,
 			'soa_id' => $this->soa_id,	
-			'"date"(start_date)' => $this->start_date,
-			'conf_date' => $this->conf_date,
-			'pay_date' => $this->pay_date,
-		    '"date"(synch_date)' => $this->synch_date,
-			'"date"(close_date)' => $this->close_date,
-			'phone_date' => $this->phone_date,
+			'"date"(start_at)' => $this->start_at,
+			'conf_at' => $this->conf_at,
+			'pay_at' => $this->pay_at,
+		    '"date"(synch_at)' => $this->synch_at,
+			'"date"(close_at)' => $this->close_at,
+			'move_phone_at' => $this->move_phone_at,
 			'connection.type_id' => $this->type_id,
 			'package_id' => $this->package_id,
 			't_ulica' => $this->street,

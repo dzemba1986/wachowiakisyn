@@ -11,7 +11,7 @@ use yii\widgets\DetailView;
 
 echo $this->renderFile('@app/views/modal/modal_sm.php');
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
     'formatter' => [
@@ -36,23 +36,26 @@ echo DetailView::widget([
 	    [
 	        'label' => 'Moc IN',
 	        'value' => $device->input_power ? $device->input_power . ' dBm' : null,
-        ]
+        ],
+	    'desc',
 	]
 ]);
-echo Html::label('Umowy :', null, ['hidden' => !$device->status]);
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
+echo Html::endTag('div');
+
+echo Html::beginTag('div', ['class' => 'col-md-5']);
+echo Html::beginTag('table', ['class' => 'table table-striped table-bordered detail-view']);
+echo Html::beginTag('tbody');
 foreach ($device->connectionsTypeNameToSoaId as $connection) {
     
-    $link = Html::a('Zamknij', Url::to(['connection/close', 'id' => $connection['id']]), ['class' => 'close-connection']);
-	echo '<tr>';
-	echo "<th>{$connection['name']} ({$connection['soa_id']})</th>";
-	echo "<td>{$link}</td>";
-    echo '</tr>';
+    $link = Html::a('Zamknij', Url::to(['/soa/connection/close', 'id' => $connection['id']]), ['class' => 'close-connection']);
+    echo Html::beginTag('tr');
+    echo Html::tag('th', "{$connection['name']} ({$connection['soa_id']})");
+    echo Html::tag('td', $link);
+    echo Html::endTag('tr');
 }
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
+echo Html::endTag('tbody');
+echo Html::endTag('table');
+echo Html::endTag('div');
 
 $js = <<<JS
 $(function() {

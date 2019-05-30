@@ -6,7 +6,7 @@
  * @var yii\data\ActiveDataProvider $dataProvider
  */
 
-use backend\modules\address\models\AddressShort;
+use backend\modules\address\models\Teryt;
 use common\models\soa\InstallationType;
 use kartik\grid\GridView;
 use nterms\pagesize\PageSize;

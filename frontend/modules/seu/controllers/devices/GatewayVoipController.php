@@ -10,6 +10,8 @@ use yii\web\Response;
 
 class GatewayVoipController extends DeviceController
 {
+    static public $model = GatewayVoip::class;
+    
     public function behaviors() {
         
         return ArrayHelper::merge(
@@ -35,10 +37,5 @@ class GatewayVoipController extends DeviceController
         Yii::$app->response->format = Response::FORMAT_JSON;
         
         return $gv->configChangeMac($dGv->mac);
-    }
-    
-    protected static function classNameModel() {
-        
-        return GatewayVoip::className();
     }
 }

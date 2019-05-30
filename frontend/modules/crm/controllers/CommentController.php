@@ -3,6 +3,8 @@
 namespace frontend\modules\crm\controllers;
 
 use common\models\crm\Comment;
+use common\models\crm\DeviceTask;
+use common\models\crm\Task;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -20,30 +22,23 @@ class CommentController extends Controller{
     public function actionCreate($taskId){
     	
     	$request = \Yii::$app->request;
+    	$comment = new Comment();
     	
-    	if ($request->isAjax){
-	    	$comment = new Comment();
-	    	
-	    	if ($comment->load($request->post())){
-		    	
-	    		$comment->task_id = $taskId;
-		    	
-		    	if ($comment->save())
-		    		return 1;
-		    	else {
-		    		print_r($comment->errors);
-		    		return 0;
-		    	}
-	    	} else {
-		    	return $this->renderAjax('create', [
-		    		'comment' => $comment
-		    	]);
+    	if ($comment->load($request->post())){
+	    	$task = Task::findOne($taskId);
+	    	if ($task instanceof DeviceTask) $task->status = 2;
+    		$comment->task_id = $taskId;
+	    	if ($comment->save() && $task->save())
+	    		return 1;
+	    	else {
+// 	    		print_r($task->errors); exit();
+	    		return 0;
 	    	}
+    	} else {
+	    	return $this->renderAjax('create', [
+	    		'comment' => $comment
+	    	]);
     	}
-    }
-    
-    public function actionUpdate($id){
-    	
     }
     
     public function actionDelete($id){

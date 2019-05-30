@@ -6,8 +6,5 @@ use common\models\seu\devices\Ups;
 
 class UpsController extends DeviceController {
     
-    protected static function classNameModel() {
-        
-        return Ups::className();
-    }
+    static public $model = Ups::class;
 }

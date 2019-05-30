@@ -1,11 +1,12 @@
 <?php
+use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /**
  * @var backend\models\Swith $device
  */
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => [
@@ -31,7 +32,8 @@ echo DetailView::widget([
 			'label' => 'Producent',
 			'value' => $device->manufacturerName,
 		],
+	    'desc',
 	]
 ]);
-echo '</div>';
+echo Html::tag('div');
 ?>

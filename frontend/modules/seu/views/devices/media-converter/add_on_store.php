@@ -53,14 +53,6 @@ use yii\widgets\ActiveForm;
         ]  
     )?>
     
-    <?= $form->field($device, 'mac', 
-        [       
-            'enableAjaxValidation' => true, 
-            'validateOnChange' => false,
-            'options' => ['style' => ['display' => 'none']],
-        ]
-    )?>
-    
     <?= $form->field($device, 'desc', ['options' => ['style' => ['display' => 'none']]])->textarea()?>
     
     <div class="form-group">

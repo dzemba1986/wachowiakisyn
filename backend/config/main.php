@@ -10,7 +10,7 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'defaultRoute' => '/address/address/list',
+    'defaultRoute' => '/address/address/index',
     'timeZone' => 'Europe/Warsaw',
     'bootstrap' => ['log'],
     'modules' => [
@@ -37,35 +37,19 @@ return [
         ],
         'seu' => [
             'class' => 'backend\modules\seu\Module',
-            'controllerMap' => [
-                'device' => 'backend\modules\seu\controllers\devices\DeviceController',
-                'camera' => 'backend\modules\seu\controllers\devices\CameraController',
-                'gateway-voip' => 'backend\modules\seu\controllers\devices\GatewayVoipController',
-                'host-ethernet' => 'backend\modules\seu\controllers\devices\HostEthernetController',
-                'host-rfog' => 'backend\modules\seu\controllers\devices\HostRfogController',
-                'media-converter' => 'backend\modules\seu\controllers\devices\MediaConverterController',
-                'optical-amplifier' => 'backend\modules\seu\controllers\devices\OpticalAmplifierController',
-                'optical-splitter' => 'backend\modules\seu\controllers\devices\OpticalSplitterController',
-                'optical-transmitter' => 'backend\modules\seu\controllers\devices\OpticalTransmitterController',
-                'radio' => 'backend\modules\seu\controllers\devices\RadioController',
-                'router' => 'backend\modules\seu\controllers\devices\RouterController',
-                'server' => 'backend\modules\seu\controllers\devices\ServerController',
-                'swith' => 'backend\modules\seu\controllers\devices\SwithController',
-                'ups' => 'backend\modules\seu\controllers\devices\UpsController',
-                'virtual' => 'backend\modules\seu\controllers\devices\VirtualController',
-                'dhcp-value' => 'backend\modules\seu\controllers\network\DhcpValueController',
-                'ip' => 'backend\modules\seu\controllers\network\IpController',
-                'subnet' => 'backend\modules\seu\controllers\network\SubnetController',
-                'vlan' => 'backend\modules\seu\controllers\network\VlanController',
-            ]
         ],
         'soa' => [
             'class' => 'backend\modules\soa\Module'
         ],
     ],
     'components' => [
+        'request' => [
+            'baseUrl' => '/admin',
+        ],
         'urlManager' => [
-            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+//             'enableStrictParsing' => false,
         ],
     	'assetManager' => [
     		'bundles' => [

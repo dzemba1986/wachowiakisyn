@@ -4,7 +4,8 @@ use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
- * @var integer $id         Device ID
+ * @var integer $id Device ID
+ * @var integer $type Device type ID
  */
 
 echo Tabs::widget([
@@ -13,7 +14,7 @@ echo Tabs::widget([
 	    [
 	        'label' => 'Dane',
 	    	'active' => true,	
-			'linkOptions' => ['data-url' => Url::to(['view', 'id' => $id])]
+	        'linkOptions' => ['data-url' => Url::to([$this->context->id . '/view', 'id' => $id])]
 	    ],
 		[
 			'label' => 'Historia',
@@ -110,7 +111,7 @@ echo Tabs::widget([
 
 $(function(){
 
-	$("#w0-tab0").load($("a[href='#w0-tab0']").attr('data-url'))
+	$("#w0-tab0").load($("a[href='#w0-tab0']").attr('data-url'));
 
 	$('a[data-toggle="tab"]').click(function(e) {
 	    var $this = $(this),

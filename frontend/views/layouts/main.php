@@ -5,10 +5,15 @@
  * @var string $content
  */
 
+use backend\modules\address\models\Teryt;
 use frontend\assets\AppAsset;
+use kartik\select2\Select2;
+use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this); 
@@ -38,54 +43,108 @@ $this->beginPage() ?>
                 
                 if (Yii::$app->user->isGuest) $menuItems = [];
                 else {
-                    $monitoring = Yii::$app->user->id == 23 ? true : false;
-                    $boa = Yii::$app->user->id == 18 ? true : false;
-                    $boss = Yii::$app->user->id == 11 ? true : false;
-                    
                     $menuItems = [
-                        ['label' => 'LP', 'visible' => !$monitoring, 'items' => [
-                            ['label' => 'Umowy do zrobienia', 'url' => ['/soa/connection/index', 'mode' => 'todo']],
-                            ['label' => 'Wszystkie umowy', 'url' => ['/soa/connection/index', 'mode' => 'all']],
-                            ['label' => 'Umowy niezaksięgowane', 'url' => ['/soa/connection/index', 'mode' => 'noboa']],
-                            '<li class="divider"></li>',
-                            ['label' => 'Instalacje', 'url' => ['/soa/installation/index']],
-                        ]],
-                        ['label' => 'SEU', 'visible' => !$monitoring && !$boa, 'items' => [
-                            ['label' => 'Ethernet', 'url' => ['/seu/link/index']],
-                            ['label' => 'RFoG', 'url' => ['/seu/link/index2']],
-                            '<li class="divider"></li>',
-                            ['label' => 'Magazyn', 'url' => ['/seu/store/index']],
-                        ]],
-                        ['label' => 'CRM', 'visible' => !$monitoring && !$boa, 'items' => [
-                    	    ['label' => 'Kalendarz', 'url' => ['/crm/task/index']],
-                    	    ['label' => 'Usterki', 'url' => ['/crm/client-task/index']],
-                    	    ['label' => 'Montaże', 'url' => ['/crm/install-task/index']],
-                    	    ['label' => 'Kamery', 'url' => ['/crm/device-task/index']],
-                    	    ['label' => 'Serwis', 'url' => ['/crm/serwis-task/index']],
-                    	]],
-                        ['label' => 'LOG', 'visible' => !$monitoring, 'items' => [
-                            ['label' => 'Historia IP', 'url' => ['/history/history/ip']]
-                        ]],
-                        ['label' => 'Zestawienia', 'visible' => $boss, 'items' => [
-                            ['label' => 'Konfiguracje', 'url' => ['/report/report/connection']],
-                            ['label' => 'Instalacje', 'url' => ['/report/report/installation']],
-                            ['label' => 'Montaże', 'url' => ['/report/report/task']],
-                        ]],
-                        ['label' => 'Kamery', 'visible' => $monitoring, 'url' => ['/crm/device-task/index', 'mode' => 'monitoring']],
+                        [
+                            'label' => 'Umowy', 'items' => [
+                                [
+                                    'label' => 'Otwarte', 
+                                    'url' => ['/soa/connection/index', 'mode' => 'todo']
+                                ],
+                                [
+                                    'label' => 'Wszystkie', 
+                                    'url' => ['/soa/connection/index', 'mode' => 'all']
+                                ],
+                                [
+                                    'label' => 'Niezaksięgowane', 
+                                    'url' => ['/soa/connection/index', 'mode' => 'noboa']
+                                ],
+//                                 '<li class="divider"></li>',
+//                                 [
+//                                     'label' => 'Instalacje', 
+//                                     'url' => ['/soa/installation/index']
+//                                 ],
+                            ]
+                        ],
+                        [
+                            'label' => 'CRM ' . Html::tag('span', '', ['id' => 'device-count-task','class' => 'badge', 'style' => 'background-color: red;']), 
+                            'items' => [
+                        	    [
+                        	        'label' => 'Kalendarz', 
+                        	        'url' => ['/crm/task/calendar']
+                        	    ],
+                        	    [
+                        	        'label' => 'Zgłoszenia', 
+                        	        'url' => ['/crm/task/index?TaskSearch[status][0]=0&TaskSearch[status][1]=2']
+                        	    ],
+//                         	    [
+//                         	        'label' => 'Montaże', 
+//                         	        'url' => ['/crm/install-task/index?InstallTaskSearch[status][0]=0']
+//                         	    ],
+//                                 [
+//                                     'label' => 'Kamery', 
+//                                     'url' => ['/crm/device-task/index?DeviceTaskSearch[status][0]=0&DeviceTaskSearch[status][1]=2']
+//                                 ],
+//                         	    [
+//                         	        'label' => 'Własne', 
+//                         	        'url' => ['/crm/sefl-task/index']
+//                         	    ],
+                        	]
+                        ],
+                        [
+                            'label' => 'SEU', 'items' => [
+                                [
+                                    'label' => 'Ethernet', 
+                                    'url' => ['/seu/link/index']
+                                ],
+                                [
+                                    'label' => 'RFoG', 
+                                    'url' => ['/seu/link/index2']
+                                ],
+                                '<li class="divider"></li>',
+                                [
+                                    'label' => 'Magazyn', 
+                                    'url' => ['/seu/store/index']
+                                ],
+                            ]
+                        ],
+                        [
+                            'label' => 'LOG', 'items' => [
+                                [
+                                    'label' => 'Historia IP', 
+                                    'url' => ['/history/history/ip']
+                                ]
+                            ]
+                        ],
+                        [
+                            'label' => 'Zestawienia', 'items' => [
+                                [
+                                    'label' => 'Konfiguracje', 
+                                    'url' => ['/report/report/connection']
+                                ],
+                                [
+                                    'label' => 'Instalacje', 
+                                    'url' => ['/report/report/installation']
+                                ],
+                                [
+                                    'label' => 'Montaże', 
+                                    'url' => ['/report/report/task']
+                                ],
+                            ]
+                        ],
+                        [
+                            'label' => 'Kamery', 
+                            'url' => ['/crm/device-task/index', 'mode' => 'monitoring']
+                        ],
                     ];
+                    
+                    
                 }
                 
-                echo Nav::widget([
-                    'options' => ['class' => 'navbar-nav navbar-left'],
-                    'items' => $menuItems,
-                ]);
-                
-                $menuLogin = [];
                 if (Yii::$app->user->isGuest) {
-                    $menuLogin[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-                    $menuLogin[] = ['label' => 'Login', 'url' => ['/site/login']];
+                    $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+                    $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
                 } else {
-                    $menuLogin[] = [
+                    $menuItems[] = [
                         'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                         'items' => [
                             [
@@ -100,12 +159,48 @@ $this->beginPage() ?>
                         ]
                     ];
                 }
-                
                 echo Nav::widget([
-                    'options' => ['class' => 'navbar-nav navbar-right'],
-                    'items' => $menuLogin,
+                    'options' => ['class' => 'navbar-nav navbar-left'],
+                    'items' => $menuItems,
+                    'encodeLabels' => false,
                 ]);
-                
+
+                if (!Yii::$app->user->isGuest) {
+                    ActiveForm::begin([
+                        'id' => 'address-search',
+                        'options' => ['class' => 'navbar-form navbar-right'],
+                        'method' => 'get',
+                        'action' => ['/soa/address/index'],
+                    ]);
+                        
+                        echo Html::beginTag('div', ['class' => 'form-group']);
+                            echo Select2::widget([
+                                'name' => 'AddressSearch[ulica]',
+                                'data' => ArrayHelper::map(Teryt::findOrderStreetName(), 't_ulica', 'ulica'),
+                                'pluginOptions' => [
+                                    'placeholder' => 'Ulica',
+                                    'allowClear' => true,
+                                    'width' => '220px',
+                                ],
+                            ]);
+                        echo Html::endTag('div');
+        
+                        echo Html::textInput('AddressSearch[dom]', '', [
+                            'placeholder' => 'Dom', 
+                            'class' => 'form-control',
+                            'style' => 'margin: 0 2px 0 2px',
+                        ]);
+    
+                        echo Html::textInput('AddressSearch[lokal]', '', [
+                            'placeholder' => 'Lokal', 
+                            'class' => 'form-control',
+                            'style' => 'margin: 0 2px 0 0',
+                        ]);
+                        
+                        echo Html::submitButton('<i class="glyphicon glyphicon-search"></i>', ['class' => 'btn btn-danger']);
+                    
+                    ActiveForm::end();
+                }
             NavBar::end();
         ?>
 
@@ -127,6 +222,16 @@ $this->beginPage() ?>
     </footer>
 
 <?php
+$url = Url::to(['/crm/device-task/get-count-open-task']);
+$js = <<<JS
+$(function() {
+    $.get( '{$url}', function( data ) {
+        $( '#device-count-task' ).html( data );
+    });   
+});
+JS;
+
+$this->registerJs($js);
 $this->endBody() ?>
 </body>
 </html>

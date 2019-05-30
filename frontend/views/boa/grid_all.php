@@ -1,5 +1,5 @@
 <?php 
-use backend\models\AddressShort;
+use backend\models\Teryt;
 use backend\models\ConnectionType;
 use backend\models\Package;
 use kartik\grid\GridView;

@@ -11,8 +11,6 @@ use yii\widgets\DetailView;
 
 GrowlAsset::register($this);
 
-echo '<div class="col-md-5">';
-
 $attributes = [
     'id',
     [
@@ -57,16 +55,16 @@ if ($device->parent->type_id == 2) {
         'visible' => $device->status && $device->ips
     ]);
 }
-
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => $attributes,
 ]);
-echo '</div>';
+echo Html::endTag('div');
 
-echo '<div class="col-md-5">';
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
+echo Html::beginTag('table', ['class' => 'table table-striped table-bordered detail-view']);
+echo Html::beginTag('tbody');
 foreach ($device->vlansToIps as $vlanToIp) {
     
     $link = Html::a($vlanToIp['ip'], Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['id' => 'check-dhcp','target'=>'_blank']);
@@ -75,9 +73,9 @@ foreach ($device->vlansToIps as $vlanToIp) {
     echo "<td>{$link}</td>";
     echo '</tr>';
 }
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
+echo Html::endTag('tbody');
+echo Html::endTag('table');
+echo Html::endTag('div');
 
 $js = <<<JS
 $(function(){

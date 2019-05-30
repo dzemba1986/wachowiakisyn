@@ -3,50 +3,52 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\User;
+use common\models\crm\Task;
 /**
  * @var yii\web\View $this
- * @var app\models\Modyfication $modelTask
+ * @var common\models\crm\InstallTask $task
  * @var yii\widgets\ActiveForm $form
  */
 ?>
 	
 <?php $form = ActiveForm::begin([
-	'id' => $task->formName()
-]); ?>
+	'id' => $task->formName(),
+    'options' => ['style' => 'padding-left:10px;padding-right:10px'],
+]);
 
-	<div class="row">
+	echo Html::beginTag('div', ['class' => 'row no-gutter']);
+	
+	   echo $form->field($task, 'done_by', [
+	       'options' => ['class' => 'col-md-6']
+	   ])->dropDownList(User::getIstallers(), ['multiple' => true]);
+	   
+	   echo $form->field($task, 'pay_by', [
+	       'options' => ['class' => 'col-md-6']
+	   ])->dropDownList(Task::PAY_BY);
 
-    <?= $form->field($task, 'installer', [
-    		'options' => ['class' => 'col-md-6', 'style' => 'padding-right: 5px;']
-    ])->dropDownList(User::getIstallers(), ['multiple' => true]) ?>
-   
-    <?= $form->field($task, 'cost', [
-    		//'template' => "{input}\n{hint}\n{error}",
-    		'options' => ['placeholder' => 'Koszt', 'class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-    ])->label('Koszt i status') ?>
-    
-    <?= $form->field($task, 'status', [
-    		'template' => "{input}\n{hint}\n{error}",
-    		'options' => ['class' => 'col-md-6', 'style' => 'padding-left: 5px;']
-    ])->dropDownList([1 => 'Wykonane', 0 => 'Niewykonane'], ['prompt' => 'Status']) ?>
-    
-    </div>
-    
-    <?= $form->field($task, 'paid_psm')->checkbox() ?>
-    
-    <?= $form->field($task, 'description')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical']) ?>
-    
-    <div class="form-group">
-        <?= Html::submitButton('Zamknij', ['class' => 'btn btn-primary']) ?>
-    </div>
+	   echo $form->field($task, 'cost', [
+	       'options' => ['class' => 'col-md-3']
+	   ])->textInput(['placeholder' => 'Koszt'])->label(false);
 
-<?php ActiveForm::end(); ?>
+	   echo $form->field($task, 'fulfit', [
+	       'options' => ['class' => 'col-md-3']
+	   ])->dropDownList(['Tak', 'Nie'], ['prompt' => 'Wykonano'])->label(false);
 
-<?php
+    echo Html::endTag('div');
+	
+	echo Html::beginTag('div', ['class' => 'row no-gutter']);
+        echo $form->field($task, 'close_desc')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical']);
+        
+        echo Html::submitButton('Zamknij', ['class' => 'btn btn-primary']);
+    echo Html::endTag('div');
+
+    ActiveForm::end(); 
+
 $js = <<<JS
-$(function(){
-	$('#{$task->formName()}').on('beforeSubmit', function(e){
+$(function() {
+    $('#modal-sm-title').html('Zamykanie montażu');
 
+	$('#{$task->formName()}').on('beforeSubmit', function(e) {
 	 	$.post(
 	  		$(this).attr("action"),
 	  		$(this).serialize()
@@ -58,7 +60,6 @@ $(function(){
 	 			$.pjax.reload({container:'#task-grid-pjax'});
 	 		}
 	 		else{
-			
 	 			alert(result);
 	 		}
 	 	}).fail(function(){

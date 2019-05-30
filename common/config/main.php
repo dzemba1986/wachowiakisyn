@@ -16,6 +16,7 @@ return [
 		'@frontend' => dirname(dirname(__DIR__)) . '/frontend',
 		'@backend' => dirname(dirname(__DIR__)) . '/backend',
 		'@console' => dirname(dirname(__DIR__)) . '/console',
+	    '@components' => dirname(dirname(__DIR__)) . '/components',
 		'@loganalyzer' => 'http://172.20.4.17:701',
 	    '@bower' => '@vendor/bower-asset',
 	    '@npm'   => '@vendor/npm-asset',

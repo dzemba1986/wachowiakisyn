@@ -1,6 +1,6 @@
 <?php
 
-use backend\modules\address\models\AddressShort;
+use backend\modules\address\models\Teryt;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;

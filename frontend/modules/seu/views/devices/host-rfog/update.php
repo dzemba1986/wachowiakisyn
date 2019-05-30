@@ -46,7 +46,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$urlView = Url::to(['tabs-view']);
+$urlView = Url::to(['tabs-view', 'id' => $device->id]);
 
 $js = <<<JS
 $(function() {
@@ -59,7 +59,7 @@ $(function() {
       		form.serialize()
      	).done(function(result){
     		if(result == 1) {
-     			$('#device_desc').load('{$urlView}&id=' + {$device->id});
+     			$('#device_desc').load('{$urlView}');
                 $.notify('Zaktualizowano hosta.', {
                     type : 'success',
                     placement : { from : 'top', align : 'right'},

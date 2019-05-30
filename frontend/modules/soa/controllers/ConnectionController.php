@@ -10,13 +10,11 @@ use yii\filters\AccessControl;
 use yii\filters\AjaxFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-/**
- * ConnectionController implements the CRUD actions for Connection model.
- */
-class ConnectionController extends Controller
-{
-    public function behaviors()
-    {
+
+class ConnectionController extends Controller {
+    
+    public function behaviors() {
+        
         return [
         	'access' => [
         		'class' => AccessControl::className(),
@@ -35,22 +33,23 @@ class ConnectionController extends Controller
         ];
     }
 
-    public function actionIndex($mode = 'todo')
-    {
+    public function actionIndex($mode = 'todo') {
+        
         $searchModel = new ConnectionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
         if ($mode == 'todo') {
-            $dataProvider->sort->defaultOrder = ['start_date' => SORT_DESC];
-            $dataProvider->query->joinWith('task')->andWhere([
+            $dataProvider->sort->defaultOrder = ['start_at' => SORT_DESC];
+            $dataProvider->query->andWhere([
                 'connection.nocontract' => false
             ])->andWhere([
                 'or',
-                ['and', ['or', ['conf_date' => null], ['pay_date' => null]], ['connection.type_id' => [1,3]]],
-                ['and', ['pay_date' => null], ['connection.type_id' => 2]]
-            ])->andWhere(['close_date' => null]);
+                ['and', ['or', ['conf_at' => null], ['pay_at' => null]], ['connection.type_id' => [1,3]]],
+                ['and', ['pay_at' => null], ['connection.type_id' => 2]]
+            ])->andWhere(['connection.close_at' => null]);
+//         var_dump($dataProvider); exit();
             
-            return $this->render('grid_todo', [
+            return $this->render('todo', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
             ]);
@@ -68,6 +67,23 @@ class ConnectionController extends Controller
                 'dataProvider' => $dataProvider,
             ]);
         }
+    }
+    
+    public function actionIndexByAddress($address_id) {
+        
+        $searchModel = new ConnectionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        $dataProvider->sort->defaultOrder = ['start_at' => SORT_DESC];
+        $dataProvider->query->where([
+            'nocontract' => false,
+            'address_id' => $address_id
+        ]);
+            
+        return $this->render('index_by_address', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionView($id) {

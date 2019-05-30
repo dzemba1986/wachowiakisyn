@@ -2,47 +2,41 @@
 
 namespace common\models\crm;
 
+use common\models\User;
 use yii\data\ActiveDataProvider;
 
-class InstallTaskSearch extends InstallTask
-{
-    public function rules()
-    {
+class InstallTaskSearch extends InstallTask {
+
+    public function rules() {
+        
         return [
-        		[['start', 'end', 'color', 'description', 'installer', 'street', 'house', 'house_detail', 'minClose', 'maxClose',
-              'flat', 'flat_detail', 'type_id', 'cost', 'status', 'category_id', 'add_user', 'close_user', 'paid_psm'], 'safe']
+        		[['!start_at', '!end_at', 'desc', 'installer', 'street', 'house', 'house_detail', 'minClose', 'maxClose',
+              'flat', 'flat_detail', 'cost', 'status', 'category_id', 'create_by', 'close_by', 'payer', 'fulfit'], 'safe']
         ];
     }
     
-    public function search($params)
-    {
-        $query = InstallTask::find();
+    public function search($params) {
+        
+        $query = InstallTask::find()->joinWith(['address', 'createBy', 'closeBy' => function ($q) { $q->from(['closeBy' => User::tableName()]); }]);
 
         $dataProvider = new ActiveDataProvider([
 			'query' => $query,
             'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
 		]);
 	
-		$query->joinWith([
-			'address',
-			'type',
-			'category',
-			'addUser',
-        ]);
-		
 		$dataProvider->setSort([
+		    'defaultOrder' => ['start_at' => SORT_ASC],
 			'attributes' => [
-				'create',
-				'start',
-				'end',
-				'close',
-				'color',
+				'start_at',
+				'end_at',
+				'close_at',
 				'status',
 				'type_id',
 				'category_id',
-				'add_user',
-				'close_user',
-			    'paid_psm',
+				'create_by',
+				'close_by',
+			    'payer',
+			    'fulfit',
 				'street' => [
 					'asc' => ['t_ulica' => SORT_ASC],
 					'desc' => ['t_ulica' => SORT_DESC],
@@ -67,27 +61,24 @@ class InstallTaskSearch extends InstallTask
         }
         
         $query->andFilterWhere([
-            'id' => $this->id,
-            'end' => $this->end,
-            'close' => $this->close,
+            'end_at' => $this->end_at,
+            'close_at' => $this->close_at,
             't_ulica' => $this->street,
 			'dom' => $this->house,
         	'dom_szczegol' => $this->house_detail,
 			'lokal' => $this->flat,
-        	'add_user' => $this->add_user,
-        	'close_user' => $this->close_user,
-            'paid_psm' => $this->paid_psm,
+        	'create_by' => $this->create_by,
+        	'close_by' => $this->close_by,
+            'payer' => $this->payer,
         	'task.status' => $this->status,	
             'task.type_id' => $this->type_id,
-            'category_id' => $this->category_id
+            'category_id' => $this->category_id,
+            'fulfit' => $this->fulfit,
         ]);
 
-        $query->andFilterWhere(['like', 'installer', $this->installer])
-        	->andFilterWhere(['like', '("start")::text', $this->start.'%', false])
-        	->andFilterWhere(['like', 'lokal_szczegol', $this->flat_detail])
-        	->andFilterWhere(['>=', 'close', $this->minClose]);
+        $query->andFilterWhere(['like', '("start_at")::text', $this->start_at . '%', false]);
         
-        if (!empty($this->maxClose)) $query->andFilterWhere(['<=', 'close', $this->maxClose . ' 23:59:59']);
+//             if (!empty($this->maxClose)) $query->andFilterWhere(['<=', 'close', $this->maxClose . ' 23:59:59']);
 
         return $dataProvider;
     }

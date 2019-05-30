@@ -154,3 +154,33 @@ a[title="Show all data"] {
     padding-left: 0px !important;
     padding-right: 0px !important;
 }
+
+.vertical {
+	writing-mode: vertical-lr;
+  	min-width: 50px; /* for firefox */
+}
+
+.group-infra {
+	background: #e6f5ff; 
+/*	border: 0px !important; */
+}
+
+.group-net {
+	background: #f0f5f5; 
+/*	border: 0px !important; */
+}
+
+.group-phone {
+	background: #e6f5ff; 
+	border: 0px !important;
+}
+
+.group-tv {
+	background: #e6f5ff; 
+	border: 0px !important;
+}
+
+.group-package {
+	background: #e6f5ff; 
+	border: 0px !important;
+}

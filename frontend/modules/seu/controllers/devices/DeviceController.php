@@ -20,11 +20,6 @@ use yii\widgets\ActiveForm;
 
 class DeviceController extends Controller {
     
-    public function getViewPath() {
-        
-        return Yii::getAlias('@app/modules/seu/views/devices/' . $this->id);
-    }
-    
     public function behaviors() {
         
         return [
@@ -61,9 +56,7 @@ class DeviceController extends Controller {
     
 	public function actionTabsView($id) {
 	    
-		return $this->renderPartial('/devices/device/tabs-view', [
-			'id' => $id,
-		]);
+		return $this->renderPartial('/devices/device/tabs-view', ['id' => $id]);
 	}
 	
 	public function actionView($id) {
@@ -77,9 +70,7 @@ class DeviceController extends Controller {
 	
 	public function actionTabsUpdate($id) {
 	    
-		return $this->renderPartial('/devices/device/tabs-update', [
-			'id' => $id,
-		]);
+		return $this->renderPartial('/devices/device/tabs-update', ['id' => $id]);
 	}
 	
 	public function actionUpdate($id) {
@@ -155,8 +146,7 @@ class DeviceController extends Controller {
         	    	    ['like', 'upper(d.name)', strtoupper($q) . '%', false], 
         	    	    ['is not', 'status', null], 
         	    	    ['d.type_id' => $type]
-        	    	])
-        	    	->orderBy('d.name');
+        	    	])->orderBy('d.name');
 	        $command = $query->createCommand();
 	        $data = $command->queryAll();
 	        $out['results'] = array_values($data);
@@ -176,7 +166,7 @@ class DeviceController extends Controller {
         
         return $out;
     }
-    
+
 	public final function actionListFromStore($q = null) {
 	
 	    $response = Yii::$app->response;
@@ -241,7 +231,6 @@ class DeviceController extends Controller {
 	    if($request->isPost) {
 	        try {
 	            $transaction = Yii::$app->getDb()->beginTransaction();
-	            
 	            if (!($device->canBeParent && $device->isParent())) {
 	                $out = 1;
 	                $count = Link::find()->where(['device' => $id])->count();
@@ -357,15 +346,10 @@ class DeviceController extends Controller {
 	
     protected function findModel($id) {
         
-        if (($model = static::classNameModel()::findOne($id)) !== null) {
+        if (($model = static::$model::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-    
-    protected static function classNameModel() {
-        
-        return Device::className();
     }
 }

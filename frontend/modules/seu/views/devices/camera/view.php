@@ -19,7 +19,7 @@ use yii\widgets\DetailView;
 
 GrowlAsset::register($this);
 
-echo '<div class="col-md-5">';
+echo Html::beginTag('div', ['class' => 'col-md-5']);
 echo DetailView::widget([
 	'model' => $device,
 	'attributes' => [
@@ -51,6 +51,11 @@ echo DetailView::widget([
 			'label' => 'Typ',
 			'value' => $device->typeName
 		],
+	    [
+	        'label' => 'Ip',
+	        'value' => Html::a("{$device->vlansToIps[0]['ip']}", "http://{$device->vlansToIps[0]['ip']}", ['target'=>'_blank']) . " [ vlan{$device->vlansToIps[0]['vlan_id']} ]",
+	        'format' => 'raw',
+	    ],
 		[
 			'label' => 'Mac',
 			'value' => $device->mac,
@@ -70,7 +75,7 @@ echo DetailView::widget([
 		],
 	    [
 	        'label' => 'Przełącznik',
-	        'value' => Html::a($device->parent->firstIp, "ssh://{$device->parent->firstIp}:22222") . ' - ' . $device->parent->portName,
+	        'value' => Html::a($device->parent->firstIp, "ssh://{$device->parent->firstIp}:22222") . " [ {$device->parent->portName} ]",
 	        'format' => 'raw'
         ],
 	    [
@@ -84,25 +89,11 @@ echo DetailView::widget([
 	        'value' => Html::a('Podgląd', 'http://' . $device->vlansToIps[0]['ip'] . '/image', ['target'=>'_blank']) . ' | ' . Html::a('Reboot', 'http://' . $device->vlansToIps[0]['ip'] . '/command/main.cgi?System=reboot', ['target'=>'_blank']),
 	        'format' => 'raw',
 	        'visible' => $device->status && $device->hasIps
-	    ]
+	    ],
+	    'desc',
 	]
 ]);
-echo '</div>';
-
-echo '<div class="col-md-5">';
-echo '<table class="table table-striped table-bordered detail-view">';
-echo '<tbody>';
-foreach ($device->vlansToIps as $vlanToIp) {
-    
-    $url = Html::a($vlanToIp['ip'], "http://{$vlanToIp['ip']}", ['target'=>'_blank']);
-    echo '<tr>';
-    echo "<th>VLAN {$vlanToIp['vlan_id']}</th>";
-    echo "<td>{$url}</td>";
-    echo '</tr>';
-}
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
+echo Html::endTag('div');
 
 $js = <<<JS
 $(function() {

@@ -2,18 +2,18 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\crm\DeviceTask;
 
 /**
  * @var yii\web\View $this
- * @var backend\modules\task\models\InstallTask $task
+ * @var common\models\crm\DeviceTask $task
  * @var yii\widgets\ActiveForm $form
  */
 ?>
 	
 <?php $form = ActiveForm::begin(['id'=>$task->formName()]); ?>
-
 	
-	<?= $form->field($task, 'status')->dropDownList([null => 'w trakcie', false => 'do wymiany']) ?>
+	<?= $form->field($task, 'category_id')->dropDownList(DeviceTask::$categoryName) ?>
 	
 	<div class="form-group">
         <?= Html::submitButton('Edytuj', ['class' => 'btn btn-primary']) ?>
@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 <?php
 $js = <<<JS
 $(function(){
-    $('.modal-header h4').html('Zmień status');
+    $( '#modal-sm-title' ).html('Zmień kategorię');
 
 	$('#{$task->formName()}').on('beforeSubmit', function(e){
 

@@ -4,76 +4,60 @@ namespace common\models\crm;
 
 use yii\data\ActiveDataProvider;
 
-class DeviceTaskSearch extends DeviceTask
-{
-	public $createAtTime;
-	public $createAtDate;
-	
-    public function rules()
-    {
+class DeviceTaskSearch extends DeviceTask {
+    
+    public function rules() {
+        
         return [
-            [['create', 'device_id', 'close', 'type_id', 'status', 'device_type', 'category_id', 'add_user', 'close_user'], 'safe']
+            [['create_at', 'device_id', 'close_at', 'type_id', 'status', 'label_id', 'category_id', 'create_by', 'close_by', 'fulfit'], 'safe']
         ];
     }
     
-    public function search($params)
-    {
-        $query = DeviceTask::find();
+    public function search($params) {
+        
+//         $query = DeviceTask::find()->joinWith(['device', 'addUser', 'closeUser' => function ($q) { $q->from(['closeUser' => User::tableName()]); }]);
+        $query = DeviceTask::find()->joinWith(['device', 'closeBy']);
 
         $dataProvider = new ActiveDataProvider([
 			'query' => $query,
             'pagination' => ['defaultPageSize' => 100, 'pageSizeLimit' => [1,5000]],
 		]);
 	
-		$query->joinWith([
-			'device',
-// 			'deviceType',	
-// 			'type',
-// 			'category',
-			'addUser',
-        ]);
-		
 		$dataProvider->setSort([
+		    'defaultOrder' => ['task.status' => SORT_ASC, 'create_at' => SORT_DESC],
 			'attributes' => [
-				'create',
-				'close',	
-				'status',
+				'create_at',
+				'close_at',	
+				'task.status',
+			    'label_id',
+			    'fulfit',
 				'type_id',
 				'category_id',
-				'add_user',
-				'close_user',
+				'create_by',
+				'close_by',
 				'device_id' => [
 					'asc' => ['device.name' => SORT_ASC],
 					'desc' => ['device.name' => SORT_DESC],
 				],
-				'device_type'	
 			]
 		]);
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-        
+
         $query->andFilterWhere([
         	'device_id' => $this->device_id,
-        	'device_type' => $this->device_type,
-        	'when' => $this->when,	
-        	'close_user' => $this->close_user,
-        	'add_user' => $this->add_user,
+        	'close_by' => $this->close_by,
+        	'create_by' => $this->create_by,
             'type_id' => $this->type_id,
-            'category_id' => $this->category_id
+            'category_id' => $this->category_id,
+            'label_id' => $this->label_id,
+            'fulfit' => $this->fulfit,
+            'task.status' => $this->status,
         ]);
         
-        if ($this->status == 'null')
-        	$query->andWhere([self::tableName() . '.status' => null]);
-        elseif ($this->status == '')
-        	$query->andWhere(['or',[self::tableName() . '.status' => true], [self::tableName() . '.status' => false], [self::tableName() . '.status' => null]]);
-        else
-        	$query->andWhere([self::tableName() . '.status' => $this->status]);
-
-        $query->andFilterWhere(['like', '("create")::text', $this->create.'%', false]);
-        //gdy filtr jest pusty bez if'a zapytanie daje zerowy wynik
-        if (!empty($this->close)) $query->andFilterWhere(['like', '("close")::text', $this->close.'%', false]);
+        $query->andFilterWhere(['like', '("task"."create_at")::text', $this->create_at . '%', false]);
 
         return $dataProvider;
     }

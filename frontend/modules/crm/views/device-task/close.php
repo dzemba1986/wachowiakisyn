@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 /**
  * @var yii\web\View $this
- * @var app\models\Modyfication $modelTask
+ * @var common\models\crm\DeviceTask $task
  * @var yii\widgets\ActiveForm $form
  */
 ?>
@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 	'id' => $task->formName()
 ]); ?>
 
-    <?= $form->field($task, 'close_description')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical']) ?>
+    <?= $form->field($task, 'close_desc')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical'])->label('Co wykonano?') ?>
     
     <div class="form-group">
         <?= Html::submitButton('Zamknij', ['class' => 'btn btn-primary']) ?>
@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 <?php
 $js = <<<JS
 $(function(){
-    $('.modal-header h4').html('Zamkanie zgłoszenia');
+    $('#modal-sm-title').html('Zamkanie zgłoszenia');
 
 	$('#{$task->formName()}').on('beforeSubmit', function(e){
 
@@ -39,7 +39,6 @@ $(function(){
 	 			$.pjax.reload({container:'#task-grid-pjax'});
 	 		}
 	 		else{
-			
 	 			alert(result);
 	 		}
 	 	}).fail(function(){

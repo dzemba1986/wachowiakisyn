@@ -1,7 +1,7 @@
 <?php
 
 use backend\modules\address\models\Address;
-use backend\modules\address\models\AddressShort;
+use backend\modules\address\models\Teryt;
 use kartik\growl\GrowlAsset;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
@@ -101,7 +101,7 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end() ?>
 
 <?php
-$urlView = Url::to(['tabs-view']);
+$urlView = Url::to(['tabs-view', 'id' => $device->id]);
 
 $js = <<<JS
 $(function() {
@@ -114,7 +114,7 @@ $(function() {
       		form.serialize()
      	).done(function(result){
     		if(result == 1){
-     			$('#device_desc').load('{$urlView}&id=' + {$device->id});
+     			$('#device_desc').load('{$urlView}');
                 $.notify('Zaktualizowano urządzenie.', {
                     type: 'success',
                     placement : { from : 'top', align : 'right'},

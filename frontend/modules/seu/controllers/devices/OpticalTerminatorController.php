@@ -6,8 +6,5 @@ use common\models\seu\devices\OpticalTerminator;
 
 class OpticalTerminatorController extends DeviceController {
     
-    protected static function classNameModel() {
-        
-        return OpticalTerminator::class;
-    }
+    static public $model = OpticalTerminator::class;
 }

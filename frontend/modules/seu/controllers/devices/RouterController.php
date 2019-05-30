@@ -6,8 +6,5 @@ use common\models\seu\devices\Router;
 
 class RouterController extends DeviceController
 {
-    protected static function classNameModel() {
-        
-        return Router::className();
-    }
+    static public $model = Router::class;
 }

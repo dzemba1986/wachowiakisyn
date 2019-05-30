@@ -6,8 +6,5 @@ use common\models\seu\devices\OpticalTransmitter;
 
 class OpticalTransmitterController extends DeviceController {
     
-    protected static function classNameModel() {
-        
-        return OpticalTransmitter::className();
-    }
+    static public $model = OpticalTransmitter::class;
 }

@@ -1,0 +1,8 @@
+#contextMenu {
+  position: absolute;
+  display:none;
+  z-index: 2;
+}
+#contextMenu .dropdown-menu{
+  border: none;
+}

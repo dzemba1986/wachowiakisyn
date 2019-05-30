@@ -1,10 +1,5 @@
 <?php
 
-namespace common\models\soa;
-
-use backend\modules\address\models\Address;
-
-
 /**
  * @property integer $id
  * @property integer $address_id
@@ -18,18 +13,29 @@ use backend\modules\address\models\Address;
  * @property string $status
  * @property array $connectionTypeIds
  */
-class Installation extends \yii\db\ActiveRecord
-{
-	const SCENARIO_CREATE = 'create';
+
+namespace common\models\soa;
+
+use common\models\address\Address;
+
+class Installation extends \yii\db\ActiveRecord {
+	
+    const SCENARIO_CREATE = 'create';
 	const SCENARIO_UPDATE = 'update';
 	const SCENARIO_SOCKET = 'socket';
+	const TYPENAME = [
+	    1 => Utp::TYPENAME, 
+	    2 => Utp3::TYPENAME, 
+	    3 => Coax::TYPENAME, 
+	    4 => Fiber::TYPENAME,
+	];
 	
-    public static function tableName()
-    {
+    public static function tableName() {
+        
         return '{{installation}}';
     }
       
-	public function rules(){
+	public function rules() {
 		
 		return [
 			
@@ -67,8 +73,8 @@ class Installation extends \yii\db\ActiveRecord
 		];
 	}
 	
-	public function scenarios()
-	{
+	public function scenarios() {
+	    
 		$scenarios = parent::scenarios();
 		$scenarios[self::SCENARIO_CREATE] = ['id', 'wire_date', 'wire_length', 'wire_user', 'type_id', 'address_id'];
 		$scenarios[self::SCENARIO_UPDATE] = ['wire_date', 'wire_length', 'wire_user', 'socket_user', 'socket_date', 'invoice_date', 'status'];
@@ -77,9 +83,9 @@ class Installation extends \yii\db\ActiveRecord
 		return $scenarios;
 	}
 
-	public function attributeLabels()
-	{
-		return array(
+	public function attributeLabels() {
+	    
+		return [
 			'id' => 'ID',
 			'address_id' => 'Adres',
 			'wire_length' => 'Długość',
@@ -95,17 +101,12 @@ class Installation extends \yii\db\ActiveRecord
 			'flat' => 'Lokal',
 			'flat_detail' => 'Nazwa',
 			'status' => 'Status'
-		);
+		];
 	}
     
-    public function getAddress(){
+    public function getAddress() {
     
         return $this->hasOne(Address::className(), ['id' => 'address_id'])->select('id, t_ulica, ulica_prefix, ulica, dom, dom_szczegol, lokal, lokal_szczegol');
-    }
-    
-    public function getType(){
-    
-    	return $this->hasOne(InstallationType::className(), ['id' => 'type_id']);
     }
     
     /**

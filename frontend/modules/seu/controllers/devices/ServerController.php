@@ -6,8 +6,5 @@ use common\models\seu\devices\Server;
 
 class ServerController extends DeviceController
 {	
-    protected static function classNameModel() {
-        
-        return Server::className();
-    }
+    static public $model = Server::class;
 }

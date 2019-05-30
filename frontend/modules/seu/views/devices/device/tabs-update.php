@@ -4,23 +4,23 @@ use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
- * @var integer $id         Device ID
+ * @var integer $id Device ID
+ * @var integer $type Device type ID
  */
 
 echo Tabs::widget([
-		'encodeLabels' => false,
-		'items'=> [
-		    [
-		        'label' => 'Dane',
-		    	'active' => true,	
-				'linkOptions' => ['data-url' => Url::to(['update', 'id' => $id])]
-		    ],
-			[
-				'label' => 'Adresacja',
-				'linkOptions' => ['data-url' => Url::to(['ip/update', 'deviceId' => $id])]
-			],
-		]
-		
+	'encodeLabels' => false,
+	'items'=> [
+	    [
+	        'label' => 'Dane',
+	    	'active' => true,	
+	        'linkOptions' => ['data-url' => Url::to([$this->context->id . '/update', 'id' => $id])]
+	    ],
+		[
+			'label' => 'Adresacja',
+			'linkOptions' => ['data-url' => Url::to(['ip/update', 'deviceId' => $id])]
+		],
+	]
 ]);
 
 ?>

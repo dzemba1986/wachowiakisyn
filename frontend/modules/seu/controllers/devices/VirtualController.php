@@ -13,6 +13,8 @@ use yii\web\Response;
 
 class VirtualController extends DeviceController
 {	
+    static public $model = Virtual::class;
+    
     public function behaviors() {
         
         return ArrayHelper::merge(
@@ -99,9 +101,4 @@ class VirtualController extends DeviceController
     }
     
     function actionReplace($id) {}
-    
-    protected static function classNameModel() {
-        
-        return Virtual::className();
-    }
 }

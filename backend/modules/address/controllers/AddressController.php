@@ -2,21 +2,25 @@
 
 namespace backend\modules\address\controllers;
 
-use backend\modules\address\models\Address;
-use backend\modules\address\models\AddressSearch;
-use backend\modules\address\models\AddressShort;
-use backend\modules\address\models\AddressShortSearch;
+use backend\modules\address\models\Teryt;
+use backend\modules\address\models\TerytSearch;
+use common\models\address\Address;
+use common\models\address\AddressSearch;
 use Yii;
 use yii\base\Exception;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\AjaxFilter;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use backend\modules\address\models\ServiceRangeSearch;
+use backend\modules\address\models\ServiceRange;
 
-class AddressController extends Controller
-{
+class AddressController extends Controller {
+    
     public function behaviors() {
         
         return [
@@ -26,7 +30,7 @@ class AddressController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
-                            'index', 'list', 'create', 'teryt-list', 'update-short', 'delete', 'view'
+                            'index', 'list', 'service-by-address', 'address-by-street', 'create-street', 'create-service', 'view', 'update-teryt'
                         ],
                         'roles' => ['@']
                     ]
@@ -40,55 +44,114 @@ class AddressController extends Controller
             ],
             [
                 'class' => AjaxFilter::className(),
-                'only' => ['create', 'teryt-list', 'update-short']
+                'only' => ['create-new-street', 'list', 'index2']
+            ],
+            [
+                'class' => 'yii\filters\ContentNegotiator',
+                'only' => ['list'],
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
             ],
         ];
     }
+    
+    public function actionList($q) {
+        
+        $out = ['results' => ['id' => '', 'concat' => '']];
+        
+        if (!is_null($q)) {
+            $query = new Query();
+            $query->select(['id' => 'sym_ul', new Expression("CONCAT(cecha, ' ', nazwa_2, ' ', nazwa_1)")])
+            ->from('ulic')->where(['and', ['woj' => '30'], ['pow' => '64'], ['rodz_gmi' => '9'], ['like', 'lower(nazwa_1)', mb_strtolower($q, 'UTF-8')]])->limit(50);
+            
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        }
+        
+        return $out;
+    }
 
+    
     public function actionIndex() {
         
-        $searchModel = new AddressSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    
-    public function actionList() {
-        
-    	$searchModel = new AddressShortSearch();
+    	$searchModel = new TerytSearch();
     	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
     	
-    	return $this->render('list', [
+    	return $this->render('index', [
     		'searchModel' => $searchModel,
     		'dataProvider' => $dataProvider,
     	]);
     }
     
-    public function actionCreate() {
+    public function actionAddressByStreet($t_ulica) {
+        
+        $searchModel = new AddressSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        $dataProvider->query->andWhere([
+            't_ulica' => $t_ulica
+        ]);
+
+        return $this->renderAjax('address', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionServiceByAddress() {
+        
+        $searchModel = new ServiceRangeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('service', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionCreateStreet() {
         
     	$request = Yii::$app->request;
-    	
-		$model = new AddressShort();
+		$model = new Teryt();
 		
-		try {
-			if ($model->load($request->post())) {
-				$model->config = (int) $model->config;	//z POST'a pobiera jako string
-				if ($model->save())
-					return 1;
-				else
-					return var_dump($model->firstErrors);
-			} else {
-				return $this->renderAjax('create_short', [
-					'model' => $model
-				]);
-			}
-		} catch (Exception $e) {
-			echo $e->getMessage();
+		if ($model->load($request->post())) {
+			if ($model->save())
+				return 1;
+			else
+				return var_dump($model->firstErrors);
+		} else {
+			return $this->renderAjax('create_street', [
+				'model' => $model
+			]);
 		}
     }
+    
+    public function actionCreateService() {
+        
+    	$request = Yii::$app->request;
+        $service = Yii::createObject(ServiceRange::class);
+        
+        if ($service->load($request->post())) {
+            if ($service->save()) return 1;
+            else return var_dump($service->firstErrors);
+        } else {
+            return $this->renderAjax('create_service', [
+                'service' => $service,
+            ]);
+        }
+    }
+
+    public function actionUpdateService($id) {
+        
+        $service = ServiceRange::findOne($id);
+        
+        return $this->renderAjax('update_service', [
+            'service' => $service,
+        ]);
+    }
+
     
     public function actionView($id) {
         
@@ -119,18 +182,17 @@ class AddressController extends Controller
         }
     }
     
-    public function actionUpdateShort($id) {
+    public function actionUpdateTeryt($id) {
         
         $request = Yii::$app->request;
-        
-        $model = AddressShort::findOne($id);
+        $model = Teryt::findOne($id);
         
         try {
             if ($model->load($request->post())) {
                 if ($model->save()) return 1;
                 else return 0;
             } else {
-                return $this->renderAjax('update_short', [
+                return $this->renderAjax('update_teryt', [
                     'model' => $model
                 ]);
             }
@@ -139,30 +201,7 @@ class AddressController extends Controller
         }
     }
     
-    public function actionTerytList($q) {
-    	
-    	\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    	
-    	$out = ['results' => ['id' => '', 'concat' => '']];
-    	
-    	if (!is_null($q)) {
-    		
-    		// ...AS id... potrzebne by była możliwość wybrania rezultatów
-    		$query = new Query();
-    		$query->select(['sym_ul AS id', new \yii\db\Expression("
-	    		CONCAT(cecha, ' ', nazwa_2, ' ', nazwa_1)
-	    	"), 'sym', 'gmi', 'cecha', 'nazwa_1', 'nazwa_2'])
-	    	->from('ulic')
-	    	->where(['and', ['woj' => '30'], ['pow' => '64'], ['rodz_gmi' => '9'], ['like', 'nazwa_1', $q]])
-    		->limit(10);
-	    		
-			$command = $query->createCommand();
-	 		$data = $command->queryAll();
-	    	$out['results'] = array_values($data);
-    	}
-    	
-    	return $out;
-    }
+    
 
     public function actionDelete($id) {
         

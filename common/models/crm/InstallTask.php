@@ -2,95 +2,62 @@
 
 namespace common\models\crm;
 
+use common\models\crm\query\TaskQuery;
+use yii\behaviors\BlameableBehavior;
 use yii\helpers\ArrayHelper;
 use yii\web\JsExpression;
 
 /**
- * @property string $start
- * @property string $end
- * @property string $start_date
- * @property string $start_time
- * @property string $end_time
- * @property string $class_name
- * @property string $color
- * @property string $installer
- * @property string $phone
+ * @property string $done_by Who closed task (for engineer)
+ * @property string $phone 
  * @property float $cost
- * @property boolean $editable
- * @property boolean $nocontract
- * @property boolean $paid_psm
+ * @property integer $pay_by Payer: 1 -> klient; 2 -> wtvk
+ * @property integer $connection_id
+ * @property string $wire_at
+ * @property string $wire_by
+ * @property integer $wire_lenght
+ * @property string $socket_at
+ * @property string $socket_by
+ * @property boolean $install it task do install?
+ * @property boolean $again Is it reinstall?
+ * @property integer $install_type
  */
-class InstallTask extends Task
-{	
-	public $street;
-	public $house;
-	public $house_detail;
-	public $flat;
-	public $flat_detail;
-	public $start_date;
-	public $start_time;
-	public $end_time;
-	public $minClose;
-	public $maxClose;
-	
-    public function attributes(){
+
+class InstallTask extends Task {
+    
+    const TYPE = 3;
+    const CONTROLLER = 'install-task';
+    
+    public static function columns() {
     	
     	return ArrayHelper::merge(
-    		parent::attributes(),
+    		parent::columns(),
     		[
-    			'start', 
-    			'end', 
-    			'class_name', 
-    			'color', 
-    			'installer', 
+    		    'wire_at',
+    		    'wire_by',
+    		    'wire_length',
+    		    'socket_at',
+    		    'socket_by',
+    		    'install',
+    		    'install_again',
+    		    'cost', //koszt
+    		    'pay_by', //1 - klient, 2 - WTVK
+    			'done_by', //kto wykonał montaż [string]
     			'phone', 
-    			'cost', 
-    			'editable',
-    			'nocontract',
-    			'paid_psm'	
     		]
     	);
     }
 
-    public function rules(){
+    public function rules() {
     	
         return ArrayHelper::merge(
         	parent::rules(),	
         	[	
-        		['start', 'date', 'format' => 'php:Y-m-d H:i:s', 'message'=>'Zły format'],
-	            ['start', 'required', 'message'=>'Wartość wymagana'],
-	            
-        		['end', 'date', 'format' => 'php:Y-m-d H:i:s', 'message'=>'Zły format'],
-	            ['end', 'required', 'message'=>'Wartość wymagana'],
-	            
-        		['start_date', 'date', 'format' => 'yyyy-MM-dd', 'message'=>'Zły format'],
-        		['start_date', 'match', 'pattern' => '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', 'message'=>'Zły format'],
-        		['start_date', 'required', 'message'=>'Wartość wymagana'],
-        			
-        		['start_time', 'date', 'format' => 'php:H:i', 'whenClient' => new JsExpression('function() {return false}')],
-        		['start_time', 'match', 'pattern' => '/^(0[0-9]|1[0-9]|2[0123])\:([012345][0-9])$/u', 'message'=>'Zły format',
-        			'whenClient' => new JsExpression('function() {return false}')
-        		],
-        		['start_time', 'required', 'message'=>'Wartość wymagana'],
-        			
-        		['end_time', 'date', 'format' => 'php:H:i', 'whenClient' => new JsExpression('function() {return false}')],
-        		['end_time', 'match', 'pattern' => '/^(0[0-9]|1[0-9]|2[0123])\:([012345][0-9])$/u', 'message'=>'Zły format',
-        			'whenClient' => new JsExpression('function() {return false}')
-        		],
-        		['end_time', 'required', 'message'=>'Wartość wymagana'],
-        		['end_time', 'compare', 'compareAttribute' => 'start_time', 'operator' => '>', 'message' => 'Wartość > od czasu początkowego'],
-        			
-	            ['color', 'string'],
-	        	['color', 'default', 'value' => null],
-	            
-	            ['class_name', 'string'],
-	        	['class_name', 'default', 'value' => null],
-	            
-	            ['editable', 'boolean', 'trueValue' => true, 'falseValue' => false],
-	        	['editable', 'default', 'value' => true],
-	        	
-        		['paid_psm', 'boolean'],
-        		['paid_psm', 'default', 'value' => false],
+        	    ['category_id', 'required', 'message' => 'Wartość wymagana'],
+        	    
+        		['pay_by', 'integer'], //TODO przy montażach instalacji w ramach umowy płatnikiem musi być WTVK
+        	    ['pay_by', 'required', 'message' => 'Wartość wymagana'],
+        	    ['pay_by', 'filter', 'filter' => 'intval'],
         			
 	            ['cost', 'double', 'message' => 'Wartość liczbowa'],
 	        	['cost', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
@@ -99,54 +66,64 @@ class InstallTask extends Task
 	        	['installer', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
 	            
 	            ['phone', 'trim'],
-	            ['phone', 'string', 'min'=>9, 'max'=>13, 'tooShort'=>'Minimum 9 znaków', 'tooLong'=>'Maksimum 12 znaków'],
-	            
-	            [['start', 'end', 'start_date', 'start_time', 'end_time', 'all_day', 'installer', 'color', 'editable', 'class_name', 'cost', 'phone', 'street'], 'safe'],
+	            ['phone', 'string', 'min' => 9, 'max' => 13, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],
         	]
         );
     }
     
-    public function scenarios()
-    {
+    public function scenarios() {
+        
     	$scenarios = parent::scenarios();
-    	array_push($scenarios[self::SCENARIO_CREATE], 'start', 'end', 'start_date', 'start_time', 'end_time', 'color', 'class_name', 'editable', 'phone', 'nocontract', 'paid_psm');
-    	array_push($scenarios[self::SCENARIO_UPDATE], 'start', 'end', 'start_date', 'start_time', 'end_time', 'color', 'class_name', 'editable', 'phone', 'paid_psm');
-    	array_push($scenarios[self::SCENARIO_CLOSE], 'editable', 'color', 'paid_psm', 'installer', 'cost');
+    	array_push($scenarios[self::SCENARIO_CREATE], 'phone', 'payer', 'connection_id');
+    	array_push($scenarios[self::SCENARIO_UPDATE], 'phone', 'payer');
+    	array_push($scenarios[self::SCENARIO_CLOSE], 'payer', 'installer', 'cost', 'connection_id');
     	
     	return $scenarios;
     }
 
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
+        
         return ArrayHelper::merge(
         	parent::attributeLabels(),	
         	[
-	            'start' => 'Start',
-	            'end' => 'Koniec',
-	            'color' => 'Kolor',
-	            'installer' => 'Wykonał',
 	            'phone' => 'Telefon',
 	            'cost' => 'Koszt',
-        		'street' => 'Ulica',
-        		'house' => 'Dom',
-        		'house_detail' => 'Klatka',
-        		'flat' => 'Lokal',
-        		'paid_psm' => 'PSM'	
+        		'pay_by' => 'Płatnik',
+        		'done_by' => 'Wykonał',
         	]
         );
     }
     
-    public function afterFind(){
-	    
-    	$this->start_date = date('Y-m-d', strtotime($this->start));
-	    $this->start_time = date('H:i', strtotime($this->start));
-	    $this->end_time = date('H:i', strtotime($this->end));
-	    
-	    parent::afterFind();
+    public function behaviors() {
+        
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                [
+                    'class' => BlameableBehavior::class,
+                    'attributes' => [
+                        self::EVENT_BEFORE_INSERT => ['create_by'],
+                        self::EVENT_CLOSE_TASK => ['close_by'],
+                    ],
+                    'value' => \Yii::$app->user->id,
+                ],
+            ]
+        );
     }
     
-    public function getColor(){
-    	
-    	return $this->type->color;
+//     public function beforeValidate() {
+        
+//         if ($this->payer) $this->payer = (int) $this->payer;
+        
+//         return parent::beforeValidate();
+//     }
+    
+    public static function find() {
+        
+        return new TaskQuery(get_called_class(), ['type_id' => self::TYPE, 'columns' => self::columns()]);
+    }
+    
+    public function actions() {
+        
     }
 }

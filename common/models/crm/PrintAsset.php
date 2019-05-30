@@ -5,8 +5,7 @@ use yii\web\AssetBundle;
 
 class PrintAsset extends AssetBundle {
     
-    public $basePath = '@webroot/js/fullcalendar_new';
-    public $baseUrl = '@web/js/fullcalendar_new';
+    public $sourcePath = '@vendor/fullcalendar/fullcalendar/dist';
     
     public $css = [
         'fullcalendar.print.min.css'
