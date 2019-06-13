@@ -1,5 +1,6 @@
 <?php
 
+use kartik\growl\GrowlAsset;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -9,43 +10,41 @@ use yii\widgets\ActiveForm;
  * @var ActiveForm $form
  */
 
-?>
+GrowlAsset::register($this);
 
-<?php $form = ActiveForm::begin(['id' => $comment->formName()]); ?>
+$form = ActiveForm::begin(['id' => $comment->formName()]);
 
-	<?= $form->field($comment, 'description')->textarea(['rows' => '4', 'style' => 'resize: vertical', 'maxlength' => 1000, 'placeholder' => 'Dodaj komentarz']) ?>
+    echo $form->field($comment, 'desc')->textarea(['rows' => '4', 'style' => 'resize: vertical', 'maxlength' => 1000, 'placeholder' => 'Dodaj komentarz']);
 	
-	<div class="form-group">
-        <?= Html::submitButton('Dodaj', ['class' => 'btn btn-success']) ?>
-    </div>
+	echo Html::submitButton('Dodaj', ['class' => 'btn btn-success']);
 	
-			
+ActiveForm::end();
 
-<?php ActiveForm::end(); ?>
-
-
-<?php
 $js = <<<JS
-$(function(){
-    $('.modal-header h4').html('Dodaj komentarz');
+$(function() {
+    $('#modal-title').html('Dodaj komentarz');
 
 	$('#{$comment->formName()}').on('beforeSubmit', function(e){
 
 	 	$.post(
 	  		$(this).attr("action"),
 	  		$(this).serialize()
-	 	).done(function(result){
-			
-	 		if(result == 1){
+	 	).done(function(result) {
+	 		if(result[0] == 1){
 	 			$(this).trigger('reset');
 				$('#modal').modal('hide');
 	 			$.pjax.reload({container:'#task-grid-pjax'});
+                $.notify(result[1], {
+                    type : 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
+	 		} else {
+                $.notify(result[1], {
+                    type : 'danger',
+                    placement : { from : 'top', align : 'right'},
+                });
 	 		}
-	 		else{
-			
-	 			$('#message').html(result);
-	 		}
-	 	}).fail(function(){
+	 	}).fail(function() {
 	 		console.log('server error');
 	 	});
 		return false;				

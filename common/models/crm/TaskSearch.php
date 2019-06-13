@@ -51,8 +51,8 @@ class TaskSearch extends Task {
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
             'programme' => $this->programme,
+            '("task"."create_at")::date' => $this->create_at,
         ]);
-        $query->andFilterWhere(['like', '("create_at")::text', $this->create_at . '%', false]);
         
         return $dataProvider;
     }

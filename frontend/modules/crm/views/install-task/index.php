@@ -109,7 +109,7 @@ require_once '_modal_task.php';
             	'attribute' => 'street',
             	'value' => 'address.ulica',
             	'filterType' => GridView::FILTER_SELECT2,
-            	'filter' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
+            	'filter' => ArrayHelper::map(Teryt::findOrderStreetName(), 't_ulica', 'ulica'),
             	'filterWidgetOptions' => [
             		'pluginOptions' => ['allowClear' => true],
             	],

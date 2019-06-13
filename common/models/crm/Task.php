@@ -27,7 +27,7 @@ use common\models\soa\Connection;
  * @property integer $close_by
  * @property integer $receive_by
  * @property integer $status
- * @property integer $label_id
+ * @property integer $subcategory_id
  * @property integer $address_id
  * @property boolean $fulfit
  * @property boolean $programme
@@ -130,16 +130,14 @@ abstract class Task extends ActiveRecord {
             ['receive_by', 'integer'],
             ['receive_by', 'in', 'range' => [1, 2]],
             
-            ['address_id', 'integer'],
-            
             ['desc', 'string', 'max' => 1000, 'tooLong' => 'Maximum {max} znaków'],
             
             ['close_desc', 'string', 'max' => 1000, 'tooLong' => 'Maximum {max} znaków'],
 
             ['category_id', 'integer'],
             
-            ['label_id', 'integer'],
-            ['label_id', 'default', 'value' => null],
+            ['subcategory_id', 'integer'],
+            ['subcategory_id', 'default', 'value' => null],
             
             ['receive_by', 'required', 'message' => 'Wartość wymagana'],
             
@@ -156,7 +154,7 @@ abstract class Task extends ActiveRecord {
     	    'desc', 'category_id', 'type_id', 'day', 'start_time', 'end_time'
     	];
     	$scenarios[self::SCENARIO_UPDATE] = ['start_at', 'end_at', 'exec_from', 'exec_to', 'receive_by', 'day', 'start_time', 'end_time', 'desc', 'category_id', 
-    	    'label_id', 'receive_by'
+    	    'subcategory_id', 'receive_by'
     	];
     	$scenarios[self::SCENARIO_CLOSE] = ['close_at', 'close_by', 'close_desc', 'status', 'fulfit'];
     	
@@ -180,9 +178,9 @@ abstract class Task extends ActiveRecord {
             'create_by' => 'Autor',
             'close_by' => 'Zamknął',
             'receive_by' => 'Kalendarz',
-            'label_id' => 'Etykieta',
             'fulfit' => 'Wykonane',
             'programme' => 'Kalendarz',
+            'comments_count' => 'Komentarze'
         ];
     }
     
@@ -209,7 +207,7 @@ abstract class Task extends ActiveRecord {
                     self::EVENT_BEFORE_INSERT => ['create_at'],
                     self::EVENT_CLOSE_TASK => ['close_at'],
                 ],
-                'value' => new Expression('NOW()'),
+                'value' => new Expression('NOW()::timestamp(0)'),
             ],
             [
                 'class' => BlameableBehavior::class,
@@ -225,7 +223,8 @@ abstract class Task extends ActiveRecord {
                     self::EVENT_BEFORE_UPDATE => 'status',
                 ],
                 'value' => function () {
-                    return ($this->status != 2 && !$this->close_at && !$this->close_by) ? 2 : 1;
+                    if ($this->status != 1 && $this->close_at && $this->close_by) return 1;
+                    elseif ($this->status == 0) return 2;
                 }
             ],
         ];

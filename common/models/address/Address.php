@@ -221,32 +221,58 @@ class Address extends ActiveRecord {
 
 	public function getServiceRange() {
 	    
-	    if (is_null($this->_range)) {
-            $services = ServiceRange::find()->where(['t_ulica' => $this->t_ulica, 'dom' => $this->dom])->all();
-            $servicesFilters1 = $servicesFilters2 = $servicesFilters3 = [];
-	        //filtracja po klatce
-	        if ($this->dom_szczegol) {
-	            foreach ($services as $service) {
-	                if ($this->dom_szczegol == $service->dom_szczegol) array_push($servicesFilters1, $service);
-	            }
-	        } else {
-	            foreach ($services as $service) {
-	                if (!$service->dom_szczegol) array_push($servicesFilters1, $service);
-	            }
-	        }
-	        //filtracja po lokalu
-	        if ($this->lokal) {
-	            foreach ($servicesFilters1 as $service) {
-	                if (!$service->lokal_od && !$service->lokal_do) array_push($servicesFilters3, $service);
-	                if ($service->lokal_od && $service->lokal_do && ($this->lokal >= $service->lokal_od) && ($this->lokal <= $service->lokal_do)) 
-	                    array_push($servicesFilters2, $service);
-	            }
-	            if (!$servicesFilters2) $servicesFilters2 = $servicesFilters3;
-	        }
-    	    $this->_range = count($servicesFilters2) == 1 ? $servicesFilters2[0] : false;
-	    }
+        $this->_range = false;
+	    $address = [
+	        't_ulica' => $this->t_ulica, 
+	        'dom' => $this->dom, 
+	        'dom_szczegol' => $this->dom_szczegol, 
+	        'lokal' => $this->lokal, 
+	        'lokal_szczegol' => $this->lokal_szczegol
+	    ];
         
-	    return $this->_range;
+        $ranges = ServiceRange::find()->select([
+            'id', 't_ulica', 'dom', 'dom_szczegol', 'lokal_od', 'lokal_do'
+        ])->where(['t_ulica' => $this->t_ulica])->asArray()->all();
+        $rangesF1 = $rangesF2 = $rangesF3 = $rangesF4 = [];
+        
+        foreach ($ranges as $range) {
+            if ($range['dom'] == $address['dom'] && $range['dom_szczegol'] == $address['dom_szczegol'] && $range['lokal_od'] && $range['lokal_do'] &&
+                $address['lokal'] >= $range['lokal_od'] && $address['lokal'] <= $range['lokal_do']) array_push($rangesF1, $range);
+
+            if ($range['dom'] == $address['dom'] && $range['dom_szczegol'] == $address['dom_szczegol'] && is_null($range['lokal_od']) && is_null($range['lokal_do']))
+                array_push($rangesF2, $range);
+
+            if ($range['dom'] == $address['dom'] && is_null($range['dom_szczegol']) && is_null($range['lokal_od']) && is_null($range['lokal_do']))
+                array_push($rangesF3, $range);
+
+            if (is_null($range['dom']) && is_null($range['dom_szczegol']) && is_null($range['lokal_od']) && is_null($range['lokal_do']))
+                array_push($rangesF4, $range);
+        }
+        
+        $filters = [$rangesF1, $rangesF2, $rangesF3, $rangesF4];
+        
+        foreach ($filters as $filter) {
+            if (!$filter) continue;
+            elseif (count($filter) == 1) {
+                $this->_range = ServiceRange::findOne($filter[0]['id']);
+                $this->_range->addressId = $this->id;
+                break;
+            }
+        }
+        
+        
+//         if (!$rangesF1) {
+//             if (!$rangesF2) {
+//                 if (!$rangesF3) {
+//                     if (count($rangesF4) == 1) $this->_range = ServiceRange::findOne($rangesF4[0]['id']);
+//                 } elseif (count($rangesF3) == 1) $this->_range = ServiceRange::findOne($rangesF3[0]['id']);
+//             } elseif (count($rangesF2) == 1) $this->_range = ServiceRange::findOne($rangesF2[0]['id']);
+//         } elseif (count($rangesF1) == 1) {
+//             $this->_range = ServiceRange::findOne($rangesF1[0]['id']);
+            
+//         }
+        
+        return $this->_range;
 	}
     
 	/**

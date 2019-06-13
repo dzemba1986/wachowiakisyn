@@ -10,6 +10,11 @@ return [
             'baseUrl' => 'https://10.111.233.4:5665/v1',
             'requestConfig' => ['format' => 'json', 'options' => ['sslverify_peer' => false, 'sslverify_peer_name' => false]], //['sslverify_peer' => false, 'sslverify_peer_name' => false],
         ],
+        'formatter' => [
+            'class'           => 'yii\i18n\Formatter',
+            'defaultTimeZone' => 'Europe/Warsaw',
+            'nullDisplay' => ''
+        ],
     ],
 	'aliases' => [
 		'@common' => dirname(__DIR__),

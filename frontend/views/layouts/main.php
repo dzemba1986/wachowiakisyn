@@ -44,27 +44,27 @@ $this->beginPage() ?>
                 if (Yii::$app->user->isGuest) $menuItems = [];
                 else {
                     $menuItems = [
-                        [
-                            'label' => 'Umowy', 'items' => [
-                                [
-                                    'label' => 'Otwarte', 
-                                    'url' => ['/soa/connection/index', 'mode' => 'todo']
-                                ],
-                                [
-                                    'label' => 'Wszystkie', 
-                                    'url' => ['/soa/connection/index', 'mode' => 'all']
-                                ],
-                                [
-                                    'label' => 'Niezaksięgowane', 
-                                    'url' => ['/soa/connection/index', 'mode' => 'noboa']
-                                ],
-//                                 '<li class="divider"></li>',
+//                         [
+//                             'label' => 'Umowy', 'items' => [
 //                                 [
-//                                     'label' => 'Instalacje', 
-//                                     'url' => ['/soa/installation/index']
+//                                     'label' => 'Otwarte', 
+//                                     'url' => ['/soa/connection/index', 'mode' => 'todo']
 //                                 ],
-                            ]
-                        ],
+//                                 [
+//                                     'label' => 'Wszystkie', 
+//                                     'url' => ['/soa/connection/index', 'mode' => 'all']
+//                                 ],
+//                                 [
+//                                     'label' => 'Niezaksięgowane', 
+//                                     'url' => ['/soa/connection/index', 'mode' => 'noboa']
+//                                 ],
+// //                                 '<li class="divider"></li>',
+// //                                 [
+// //                                     'label' => 'Instalacje', 
+// //                                     'url' => ['/soa/installation/index']
+// //                                 ],
+//                             ]
+//                         ],
                         [
                             'label' => 'CRM ' . Html::tag('span', '', ['id' => 'device-count-task','class' => 'badge', 'style' => 'background-color: red;']), 
                             'items' => [
@@ -73,17 +73,17 @@ $this->beginPage() ?>
                         	        'url' => ['/crm/task/calendar']
                         	    ],
                         	    [
-                        	        'label' => 'Zgłoszenia', 
+                        	        'label' => 'Zadania', 
                         	        'url' => ['/crm/task/index?TaskSearch[status][0]=0&TaskSearch[status][1]=2']
                         	    ],
 //                         	    [
 //                         	        'label' => 'Montaże', 
 //                         	        'url' => ['/crm/install-task/index?InstallTaskSearch[status][0]=0']
 //                         	    ],
-//                                 [
-//                                     'label' => 'Kamery', 
-//                                     'url' => ['/crm/device-task/index?DeviceTaskSearch[status][0]=0&DeviceTaskSearch[status][1]=2']
-//                                 ],
+                                [
+                                    'label' => 'Kamery', 
+                                    'url' => ['/crm/device-task/index?DeviceTaskSearch[status][0]=0&DeviceTaskSearch[status][1]=2']
+                                ],
 //                         	    [
 //                         	        'label' => 'Własne', 
 //                         	        'url' => ['/crm/sefl-task/index']

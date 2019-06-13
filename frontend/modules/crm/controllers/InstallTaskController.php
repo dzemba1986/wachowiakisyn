@@ -5,16 +5,14 @@ namespace frontend\modules\crm\controllers;
 use common\models\address\Address;
 use common\models\crm\InstallTask;
 use common\models\crm\InstallTaskSearch;
+use common\models\crm\Task;
 use common\models\soa\Connection;
 use common\models\soa\Installation;
 use Yii;
 use yii\base\Exception;
 use yii\db\Expression;
 use yii\filters\AjaxFilter;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use common\models\crm\Task;
 
 class InstallTaskController extends TaskController {
     
@@ -53,11 +51,12 @@ class InstallTaskController extends TaskController {
     public function actionGet($start = null, $end = null, $_ = null) {
         
     	$tasks = InstallTask::find()->select([
-    	    'task.id', 'start' => 'start_at', 'end' =>'end_at', 'description' => 'desc', 'type' => 'type_id', 
-    	    'category' => new Expression("CASE WHEN category_id = 1 THEN 'Internet' WHEN category_id = 2 THEN 'Telefon' WHEN category_id = 3 THEN 'Telewizja' ELSE 'Inne' END"),
+    	    'task.id', 'start' => 'start_at', 'end' =>'end_at', 'description' => 'desc', 'type' => 'type_id', 'category' => 'tc.name',
     	    'calendar' => new Expression("CASE WHEN receive_by = 1 THEN 'Serwis' ELSE 'Szczurek' END"),
-    	    'title' => new Expression("CASE WHEN lokal <> '' THEN name || dom || dom_szczegol || '/' || lokal ELSE name || dom || dom_szczegol END")
-	    ])->join('INNER JOIN', 'address', 'address.id = address_id')->join('INNER JOIN', 'address_short', 'address_short.t_ulica = address.t_ulica')
+    	    'title' => new Expression("CASE WHEN lokal <> '' THEN teryt.name || dom || dom_szczegol || '/' || lokal ELSE teryt.name || dom || dom_szczegol END")
+	    ])->join('INNER JOIN', 'address', 'address.id = address_id')
+	       ->join('INNER JOIN', 'teryt', 'teryt.t_ulica = address.t_ulica')
+	       ->join('INNER JOIN', 'task_category AS tc', 'tc.id = task.category_id')
     	   ->where(['and', ['between', 'start_at', $start, $end], ['status' => [0,2]]])->orderBy('start_at')->asArray()->all();
     	
 	    return $tasks;
@@ -114,35 +113,35 @@ class InstallTaskController extends TaskController {
 		}
     }
     
-    public function actionClose($id) {
+//     public function actionClose($id) {
     	
-    	$request = \Yii::$app->request;
+//     	$request = \Yii::$app->request;
     	
-		$task = $this->findModel($id);
-		$task->scenario = Task::SCENARIO_CLOSE;
+// 		$task = $this->findModel($id);
+// 		$task->scenario = Task::SCENARIO_CLOSE;
     		
-		if ($task->load($request->post())) {
-			$transaction = Yii::$app->db->beginTransaction();
+// 		if ($task->load($request->post())) {
+// 			$transaction = Yii::$app->db->beginTransaction();
 			
-			//gdy montaż jest w ramach umowy i został pozytywnie zakończony
-			$connections = $task->connection;
-			if ($connections && $task->fulfit) {
-			    foreach ($connections as $connection) {
-			        $connection->pay_at = date('Y-m-d');
-			    }
-			}
-		} else {
-		    if ($task->install) {
-    			return $this->renderAjax('close_install', [
-    				'task' => $task
-    			]);
-		    } else {
-    			return $this->renderAjax('close', [
-    				'task' => $task
-    			]);
-		    }
-		}
-    }
+// 			//gdy montaż jest w ramach umowy i został pozytywnie zakończony
+// 			$connections = $task->connection;
+// 			if ($connections && $task->fulfit) {
+// 			    foreach ($connections as $connection) {
+// 			        $connection->pay_at = date('Y-m-d');
+// 			    }
+// 			}
+// 		} else {
+// 		    if ($task->install) {
+//     			return $this->renderAjax('close_install', [
+//     				'task' => $task
+//     			]);
+// 		    } else {
+//     			return $this->renderAjax('close', [
+//     				'task' => $task
+//     			]);
+// 		    }
+// 		}
+//     }
 
     public function actionClose_back($id) { //TODO do całkowitej przeróbki na poźniej
     	

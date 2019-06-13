@@ -17,8 +17,9 @@ use kartik\grid\CheckboxColumn;
  * @var backend\modules\task\models\InstallTaskSearch $searchModel
  */
 
-echo $this->renderFile('@app/views/modal/modal.php');
 echo $this->renderFile('@app/views/modal/modal_sm.php');
+echo $this->renderFile('@app/views/modal/modal.php');
+echo $this->renderFile('@app/views/modal/modal_lg.php');
 $this->params['breadcrumbs'][] = 'Zadania';
 
 echo GridView::widget([
@@ -49,6 +50,7 @@ echo GridView::widget([
     'panel' => [
         'before' => '',
     ],
+    'rowOptions' => ['class' => 'text-center'],
     'columns' => [
         [
             'header' => Html::a('<span class="glyphicon glyphicon-plus"></span>', Url::to(['task/create']), ['id' => 'add-task']),
@@ -78,6 +80,7 @@ echo GridView::widget([
                     'todayHighlight' => true,
                 ]
             ],
+            'headerOptions' => ['class' => 'text-center'],
         ],
         [
             'attribute' => 'address_id',
@@ -108,6 +111,8 @@ echo GridView::widget([
                 'options' => ['multiple' => true],
             ],
             'filterInputOptions' => ['placeholder' => 'Typ'],
+            'headerOptions' => ['class' => 'text-center'],
+            'contentOptions' => ['style' => 'width: 17%;'],
         ],
         [
             'attribute' => 'category_id',
@@ -120,6 +125,8 @@ echo GridView::widget([
                 'options' => ['multiple' => true],
             ],
             'filterInputOptions' => ['placeholder' => 'Kategoria'],
+            'headerOptions' => ['class' => 'text-center'],
+            'contentOptions' => ['style' => 'width: 17%;'],
         ],
         [
             'attribute' => 'subcategory_id',
@@ -132,6 +139,8 @@ echo GridView::widget([
                 'options' => ['multiple' => true],
             ],
             'filterInputOptions' => ['placeholder' => 'Podkategoria'],
+            'headerOptions' => ['class' => 'text-center'],
+            'contentOptions' => ['style' => 'width: 17%;'],
         ],
         [
             'attribute' => 'status',
@@ -149,6 +158,8 @@ echo GridView::widget([
                 'options' => ['multiple' => true],
             ],
             'filterInputOptions' => ['placeholder' => 'Status'],
+            'headerOptions' => ['class' => 'text-center'],
+            'contentOptions' => ['style' => 'width: 17%;'],
         ],
 //         [
 //             'attribute' => 'close_at',
@@ -167,16 +178,21 @@ echo GridView::widget([
 //         ],
         [
             'attribute' => 'programme',
+            'header' => Html::tag('span', '', ['class' => 'glyphicon glyphicon-calendar']),
             'format' => 'raw',
             'filter' => ['Nie', 'Tak'],
             'value' => function ($model) {
                 $span = Html::tag('span', '', ['class' => 'glyphicon glyphicon-calendar']);
                 if ($model->programme) {
                     $range = date('Y-m-d H:i', strtotime($model->start_at)) . ' - ' . date('H:i', strtotime($model->end_at));                    
-                    return Html::a($span, ['calendar-ajax', 'date' => date('Y-m-d', strtotime($model->start_at))], ['data-toggle' => 'tooltip', 'title' => $range]);
+                    return Html::a($span, ['calendar-ajax', 'date' => date('Y-m-d', strtotime($model->start_at))], [
+                        'data-toggle' => 'tooltip', 'title' => $range,
+                        'onclick' => "$('#modal-lg').modal('show').find('#modal-lg-content').load($(this).attr('href')); return false;"
+                    ]);
                 }
                 else return Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-plus']), ['']);
             },
+            'headerOptions' => ['class' => 'text-center'],
         ],
         [
             'class' => CheckboxColumn::class,

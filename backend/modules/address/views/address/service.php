@@ -60,9 +60,10 @@ echo GridView::widget([
             'contentOptions' => ['class' => 'group-infra'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->utp == -1) return '<span class="label label-danger">todo</span>';
-                if ($model->utp == 0) return '<span class="label label-danger">brak</span>';
-                else return $model->utp;
+                if ($model->utp == -1) return '<span class="label label-warning">todo</span>';
+                elseif ($model->utp == 0) return '<span class="label label-danger">brak</span>';
+                elseif ($model->utp == -2) return '<span class="label label-warning">wizja</span>';
+                elseif ($model->utp > 0) return '<span class="label label-success">tak</span>';
             },
             'filter' => false,
         ],
@@ -72,9 +73,10 @@ echo GridView::widget([
             'contentOptions' => ['class' => 'group-infra'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->utp_cat3 == -1) return '<span class="label label-danger">todo</span>';
-                if ($model->utp_cat3 == 0) return '<span class="label label-danger">brak</span>';
-                else return $model->utp_cat3;
+                if ($model->utp_cat3 == -1) return '<span class="label label-warning">todo</span>';
+                elseif ($model->utp_cat3 == 0) return '<span class="label label-danger">brak</span>';
+                elseif ($model->utp_cat3 == -2) return '<span class="label label-warning">wizja</span>';
+                elseif ($model->utp_cat3 > 0) return '<span class="label label-success">tak</span>';
             },
             'filter' => false,
         ],
@@ -84,9 +86,10 @@ echo GridView::widget([
             'contentOptions' => ['class' => 'group-infra'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->coax == -1) return '<span class="label label-danger">todo</span>';
-                if ($model->coax == 0) return '<span class="label label-danger">brak</span>';
-                else return $model->coax;
+                if ($model->coax == -1) return '<span class="label label-warning">todo</span>';
+                elseif ($model->coax == 0) return '<span class="label label-danger">brak</span>';
+                elseif ($model->coax == -2) return '<span class="label label-warning">wizja</span>';
+                elseif ($model->coax > 0) return '<span class="label label-success">tak</span>';
             },
             'filter' => false,
         ],
@@ -96,80 +99,69 @@ echo GridView::widget([
             'contentOptions' => ['class' => 'group-infra'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->optical_fiber == -1) return '<span class="label label-danger">todo</span>';
-                if ($model->optical_fiber == 0) return '<span class="label label-danger">brak</span>';
-                else return $model->optical_fiber;
+                if($model->optical_fiber == -1) return '<span class="label label-warning">todo</span>';
+                elseif($model->optical_fiber == 0) return '<span class="label label-danger">brak</spapn>';
+                elseif($model->optical_fiber == -2) return '<span class="label label-warning">wizja</pspan>';
+                elseif ($model->optical_fiber > 0) return '<span class="label label-success">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'net_utp',
+            'attribute' => 'net_1g_utp',
             'headerOptions' => ['class' => 'vertical group-net'],
             'contentOptions' => ['class' => 'group-net'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->net_utp == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->net_utp == 1) return '<span class="label label-success">tak</span>';
+                if ($model->net_1g_utp == 0) return '<span class="label label-danger">nie</span>';
+                elseif ($model->net_1g_utp == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'net_optical_fiber',
+            'attribute' => 'net_1g_opt',
             'headerOptions' => ['class' => 'vertical group-net'],
             'contentOptions' => ['class' => 'group-net'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->net_optical_fiber == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->net_optical_fiber == 1) return '<span class="label label-success">tak</span>';
+                if ($model->net_1g_opt == 0) return '<span class="label label-danger">nie</span>';
+                elseif ($model->net_1g_opt == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'netx_utp',
+            'attribute' => 'net_10g_utp',
             'headerOptions' => ['class' => 'vertical group-net'],
             'contentOptions' => ['class' => 'group-net'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->netx_utp == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->netx_utp == 1) return '<span class="label label-success">tak</span>';
+                if ($model->net_10g_utp == 0) return '<span class="label label-danger">nie</span>';
+                elseif ($model->net_10g_utp == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'netx_optical_fiber',
+            'attribute' => 'net_10g_opt',
             'headerOptions' => ['class' => 'vertical group-net'],
             'contentOptions' => ['class' => 'group-net'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->netx_optical_fiber == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->netx_optical_fiber == 1) return '<span class="label label-success">tak</span>';
+                if ($model->net_10g_opt == 0) return '<span class="label label-danger">nie</span>';
+                elseif ($model->net_10g_opt == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'phone_utp',
+            'attribute' => 'phone',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #fff0e6;'],
     	    'contentOptions' => ['style' => 'background: #fff0e6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->phone_utp == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->phone_utp == 1) return '<span class="label label-success">tak</span>';
-                else return '<span class="label label-warning">tak</span>';
-            },
-            'filter' => false,
-        ],
-        [
-            'attribute' => 'phone_utp_cat3',
-    	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #fff0e6;'],
-    	    'contentOptions' => ['style' => 'background: #fff0e6;'],
-            'format' => 'raw',
-            'value' => function ($model) {
-                if ($model->phone_utp_cat3 == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->phone_utp_cat3 == 1) return '<span class="label label-success">tak</span>';
+                if ($model->phone == 0) return '<span class="label label-danger">nie</span>';
+                elseif ($model->phone == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
@@ -181,7 +173,7 @@ echo GridView::widget([
             'format' => 'raw',
             'value' => function ($model) {
                 if ($model->hfc == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->hfc == 1) return '<span class="label label-success">tak</span>';
+                elseif ($model->hfc == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
@@ -193,19 +185,19 @@ echo GridView::widget([
             'format' => 'raw',
             'value' => function ($model) {
                 if ($model->iptv_utp == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->iptv_utp == 1) return '<span class="label label-success">tak</span>';
+                elseif ($model->iptv_utp == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'iptv_optical_fiber',
+            'attribute' => 'iptv_opt',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffe6ff;'],
     	    'contentOptions' => ['style' => 'background: #ffe6ff;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->iptv_optical_fiber == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->iptv_optical_fiber == 1) return '<span class="label label-success">tak</span>';
+                if ($model->iptv_opt == 0) return '<span class="label label-danger">nie</span>';
+                elseif ($model->iptv_opt == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
@@ -217,79 +209,79 @@ echo GridView::widget([
             'format' => 'raw',
             'value' => function ($model) {
                 if ($model->rfog == 0) return '<span class="label label-danger">nie</span>';
-                if ($model->rfog == 1) return '<span class="label label-success">tak</span>';
+                elseif ($model->rfog == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'iptv_net_utp',
+            'attribute' => 'iptv_net_1g_utp',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffffe6;'],
     	    'contentOptions' => ['style' => 'background: #ffffe6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->iptv_net_utp == 0) return '<span class="label label-danger">nie</span>';    
-                if ($model->iptv_net_utp == 1) return '<span class="label label-success">tak</span>';
+                if ($model->iptv_net_1g_utp == 0) return '<span class="label label-danger">nie</span>';    
+                elseif ($model->iptv_net_1g_utp == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'iptv_net_optical_fiber',
+            'attribute' => 'iptv_net_1g_opt',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffffe6;'],
     	    'contentOptions' => ['style' => 'background: #ffffe6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->iptv_net_optical_fiber == 0) return '<span class="label label-danger">nie</span>';    
-                if ($model->iptv_net_optical_fiber == 1) return '<span class="label label-success">tak</span>';
+                if ($model->iptv_net_1g_opt == 0) return '<span class="label label-danger">nie</span>';    
+                elseif ($model->iptv_net_1g_opt == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'iptv_netx_utp',
+            'attribute' => 'iptv_net_10g_utp',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffffe6;'],
     	    'contentOptions' => ['style' => 'background: #ffffe6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->iptv_netx_utp == 0) return '<span class="label label-danger">nie</span>';    
-                if ($model->iptv_netx_utp == 1) return '<span class="label label-success">tak</span>';
+                if ($model->iptv_net_10g_utp == 0) return '<span class="label label-danger">nie</span>';    
+                elseif ($model->iptv_net_10g_utp == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'iptv_netx_optical_fiber',
+            'attribute' => 'iptv_net_10g_opt',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffffe6;'],
     	    'contentOptions' => ['style' => 'background: #ffffe6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->iptv_netx_optical_fiber == 0) return '<span class="label label-danger">nie</span>';    
-                if ($model->iptv_netx_optical_fiber == 1) return '<span class="label label-success">tak</span>';
+                if ($model->iptv_net_10g_opt == 0) return '<span class="label label-danger">nie</span>';    
+                elseif ($model->iptv_net_10g_opt == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'rfog_net',
+            'attribute' => 'rfog_net_1g',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffffe6;'],
     	    'contentOptions' => ['style' => 'background: #ffffe6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->rfog_net == 0) return '<span class="label label-danger">nie</span>';    
-                if ($model->rfog_net == 1) return '<span class="label label-success">tak</span>';
+                if ($model->rfog_net_1g == 0) return '<span class="label label-danger">nie</span>';    
+                elseif ($model->rfog_net_1g == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,
         ],
         [
-            'attribute' => 'rfog_netx',
+            'attribute' => 'rfog_net_10g',
     	    'headerOptions' => ['class' => 'vertical', 'style' => 'background: #ffffe6;'],
     	    'contentOptions' => ['style' => 'background: #ffffe6;'],
             'format' => 'raw',
             'value' => function ($model) {
-                if ($model->rfog_netx == 0) return '<span class="label label-danger">nie</span>';    
-                if ($model->rfog_netx == 1) return '<span class="label label-success">tak</span>';
+                if ($model->rfog_net_10g == 0) return '<span class="label label-danger">nie</span>';    
+                elseif ($model->rfog_net_10g == 1) return '<span class="label label-success">tak</span>';
                 else return '<span class="label label-warning">tak</span>';
             },
             'filter' => false,

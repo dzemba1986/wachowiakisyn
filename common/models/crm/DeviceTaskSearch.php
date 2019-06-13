@@ -9,7 +9,7 @@ class DeviceTaskSearch extends DeviceTask {
     public function rules() {
         
         return [
-            [['create_at', 'device_id', 'close_at', 'type_id', 'status', 'label_id', 'category_id', 'create_by', 'close_by', 'fulfit'], 'safe']
+            [['create_at', 'device_id', 'close_at', 'type_id', 'status', 'subcategory_id', 'category_id', 'create_by', 'close_by', 'fulfit'], 'safe']
         ];
     }
     
@@ -29,10 +29,10 @@ class DeviceTaskSearch extends DeviceTask {
 				'create_at',
 				'close_at',	
 				'task.status',
-			    'label_id',
 			    'fulfit',
 				'type_id',
 				'category_id',
+				'subcategory_id',
 				'create_by',
 				'close_by',
 				'device_id' => [
@@ -52,12 +52,10 @@ class DeviceTaskSearch extends DeviceTask {
         	'create_by' => $this->create_by,
             'type_id' => $this->type_id,
             'category_id' => $this->category_id,
-            'label_id' => $this->label_id,
             'fulfit' => $this->fulfit,
             'task.status' => $this->status,
+            '("task"."create_at")::date' => $this->create_at,
         ]);
-        
-        $query->andFilterWhere(['like', '("task"."create_at")::text', $this->create_at . '%', false]);
 
         return $dataProvider;
     }

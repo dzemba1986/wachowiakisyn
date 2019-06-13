@@ -4,26 +4,49 @@ namespace frontend\modules\crm\controllers;
 
 use common\models\crm\DeviceTask;
 use common\models\crm\DeviceTaskSearch;
-use frontend\modules\crm\models\forms\CreateMonitoringTask;
+use frontend\modules\crm\models\forms\CameraTask;
 use Yii;
-use yii\base\Exception;
 use yii\db\Expression;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\web\Response;
 
-class DeviceTaskController extends Controller {
+class DeviceTaskController extends TaskController {
     
-    public function actionCreate() {
+    public function behaviors() {
         
-        $model = new CreateMonitoringTask();
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules'	=> [
+                        [
+                            'allow' => true,
+                            'actions' => [
+                                'get-count-open-task', 'create-camera-task', 'check-double'
+                            ],
+                            'roles' => ['@']
+                        ]
+                    ]
+                ],
+            ]
+        );
+    }
+    
+    public function actionCreateCameraTask() {
+        
+        $model = new CameraTask();
         if ($model->load(Yii::$app->request->post())) {
+            \Yii::$app->response->format = Response::FORMAT_JSON;
+            
             if ($model->create()) {
-                return 1;
+                return [1, 'Dodano zgłoszenie'];
             } else
-                return 0;
+                return [0, 'Błąd dodania zgłoszenia'];
         }
         
-        return $this->renderAjax('create', [
+        return $this->renderAjax('create_camera_task', [
             'model' => $model,
         ]);
     }
@@ -41,6 +64,13 @@ class DeviceTaskController extends Controller {
         
         return $out;
     }
+
+    public function actionCheckDouble($deviceId) {
+        
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        return DeviceTask::find()->where(['device_id' => $deviceId, 'status' => [0,2]])->count();
+    }
     
     public function actionIndex() {
         
@@ -48,10 +78,10 @@ class DeviceTaskController extends Controller {
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         
     	$dataProvider->query->select([
-    	   'task.id', 'task.create_at', 'task.type_id', 'task.status', 'category_id', 'label_id', 'task.desc', 'device_id', 'close_by', 'task.close_at', 'fulfit',
+    	   'task.id', 'task.create_at', 'task.type_id', 'task.status', 'category_id', 'task.desc', 'device_id', 'task.close_by', 'task.close_at', 'fulfit',
     	    'comments_count' => new Expression('COUNT(task_id)')
-    	])->joinWith('comments')->groupBy('task_id, task.id, name');
-    	
+    	])->joinWith(['comments'])->groupBy('task_id, task.id, name');
+
     	return $this->render('index', [
     	    'searchModel' => $searchModel,
     	    'dataProvider' => $dataProvider,
@@ -59,69 +89,35 @@ class DeviceTaskController extends Controller {
         	
     }
    
-    public function actionUpdate($id) {
-        
-    	$request = \Yii::$app->request;
+//     public function actionClose($id) {
     	
-		$task = $this->findModel($id);
-// 		var_dump($task->day); exit();
-		$task->scenario = DeviceTask::SCENARIO_UPDATE;
+//     	$request = \Yii::$app->request;
+    	
+// 		$task = $this->findModel($id);
+// 		$task->scenario = DeviceTask::SCENARIO_CLOSE;
 		
-		if ($task->load($request->post())) {
-			try {
-				if (!$task->save()) throw new Exception('Problem z zapisem');
-			} catch (Exception $e) {
-				print_r($task);
-				echo $e->getMessage();
-				return 0;
-			}
-
-			return 1;
-		} else {
-			return $this->renderAjax('update', [
-				'task' => $task,
-			]);
-		}
-    }
-    
-    public function actionClose($id) {
-    	
-    	$request = \Yii::$app->request;
-    	
-		$task = $this->findModel($id);
-		$task->scenario = DeviceTask::SCENARIO_CLOSE;
-		
-		if ($task->load($request->post())){
-			try {
-				$task->trigger(DeviceTask::EVENT_CLOSE_TASK);
-				if (!$task->save()) throw new Exception('Problem z zamknięciem zadania');
-			} catch (Exception $e) {
-				print_r($task->errors); exit();
-				echo $e->getMessage();
-				return 0;
-			}
+// 		if ($task->load($request->post())){
+// 			try {
+// 				$task->trigger(DeviceTask::EVENT_CLOSE_TASK);
+// 				if (!$task->save()) throw new Exception('Problem z zamknięciem zadania');
+// 			} catch (Exception $e) {
+// 				print_r($task->errors); exit();
+// 				echo $e->getMessage();
+// 				return 0;
+// 			}
 			
-			return 1;
-		} else {
-			return $this->renderAjax('close', [
-				'task' => $task
-			]);
-		}
-    }
+// 			return 1;
+// 		} else {
+// 			return $this->renderAjax('close', [
+// 				'task' => $task
+// 			]);
+// 		}
+//     }
 
     public function actionDelete($id) {
         
         $this->findModel($id)->delete();
 
         return $this->redirect(['view-calendar']);
-    }
-
-    protected function findModel($id) {
-        
-        if (($model = DeviceTask::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

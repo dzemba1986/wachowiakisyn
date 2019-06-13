@@ -4,6 +4,8 @@ namespace backend\modules\address\models;
 
 use common\models\soa\Coax;
 use common\models\soa\Fiber;
+use common\models\soa\Installation;
+use common\models\soa\Tv;
 use common\models\soa\Utp;
 use common\models\soa\Utp3;
 use yii\behaviors\AttributeBehavior;
@@ -27,38 +29,39 @@ use yii\db\ActiveRecord;
  * @property integer utp_cat3
  * @property integer coax
  * @property integer optical_fiber
- * @property integer net_utp
- * @property integer net_optical_fiber
- * @property integer netx_utp
- * @property integer netx_optical_fiber
- * @property integer phone_utp
- * @property integer phone_utp_cat3
+ * @property integer net_1g_utp
+ * @property integer net_1g_opt
+ * @property integer net_10g_utp
+ * @property integer net_10g_opt
+ * @property integer phone
  * @property integer hfc
  * @property integer iptv_utp
- * @property integer iptv_optical_fiber
+ * @property integer iptv_opt
  * @property integer rfog
- * @property integer iptv_net_utp
- * @property integer iptv_net_optical_fiber
- * @property integer iptv_netx_utp
- * @property integer iptv_netx_optical_fiber
- * @property integer rfog_net
- * @property integer rfog_netx
+ * @property integer iptv_net_1g_utp
+ * @property integer iptv_net_1g_opt
+ * @property integer iptv_net_10g_utp
+ * @property integer iptv_net_10g_opt
+ * @property integer rfog_net_1g
+ * @property integer rfog_net_10g
  */
 
 class ServiceRange extends ActiveRecord {
     
-    const SERVICE_INFRASTRUCTURE = [
-        0, 3, 0, 3, 0, 1, 2, 0, 3, 3, 0, 3, 0, 3, 0, 3
-    ];
-    const INFRASTRUCTURE_ATTRIBUTES = [
+    const INFRASTRUCTURES = [
         'utp', 'utp_cat3', 'coax', 'optical_fiber'
     ];
     
-    const SERVICE_ATTRIBUTES = [
-        'net_utp', 'net_optical_fiber', 'netx_utp', 'netx_optical_fiber', 'phone_utp', 'phone_utp_cat3', 'hfc', 'iptv_utp', 'iptv_optical_fiber', 'rfog',
-        'iptv_net_utp', 'iptv_net_optical_fiber', 'iptv_netx_utp', 'iptv_netx_optical_fiber', 'rfog_net', 'rfog_netx'
+    const SERVICES = [
+        'net_1g_utp', 'net_1g_opt', 'net_10g_utp', 'net_10g_opt', 'phone', 'hfc', 'iptv_utp', 'iptv_opt', 'rfog',
+        'iptv_net_1g_utp', 'iptv_net_1g_opt', 'iptv_net_10g_utp', 'iptv_net_10g_opt', 'rfog_net_1g', 'rfog_net_10g'
     ];
+    
+//     const SERVICES_INFO = [
+//         0 => 'Nie świadczymy'
+//     ];
     private $_teryt = null;
+    public $addressId = null;
     
 	public static function tableName() : string {
 		
@@ -87,11 +90,11 @@ class ServiceRange extends ActiveRecord {
 		    ['lokal_do', 'default', 'value' => null],
 		    ['lokal_do', 'trim'],
 
-		    [self::INFRASTRUCTURE_ATTRIBUTES, 'number', 'integerOnly' => true, 'min' => -1, 'max' => 3],
-		    [self::INFRASTRUCTURE_ATTRIBUTES, 'required', 'message' => 'Wartość wymagana'],
+		    [self::INFRASTRUCTURES, 'number', 'integerOnly' => true, 'min' => -1, 'max' => 3],
+		    [self::INFRASTRUCTURES, 'required', 'message' => 'Wartość wymagana'],
 
-		    [self::SERVICE_ATTRIBUTES, 'number', 'integerOnly' => true, 'min' => 0, 'max' => 2],
-		    [self::SERVICE_ATTRIBUTES, 'required', 'message' => 'Wartość wymagana'],
+		    [self::SERVICES, 'number', 'integerOnly' => true, 'min' => 0, 'max' => 2],
+		    [self::SERVICES, 'required', 'message' => 'Wartość wymagana'],
 		    
 			[['t_woj', 't_pow', 't_gmi', 't_rodz', 't_miasto', 't_ulica', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal_od', 'lokal_do', 'rfog', 'iptv', 'internet', 'dvb_c', 'phone'], 'safe'],
 		];
@@ -117,22 +120,21 @@ class ServiceRange extends ActiveRecord {
 		    'utp_cat3' => 'UTP3',
 		    'coax' => 'COAX',
 		    'optical_fiber' => 'FIBER',
-		    'net_utp' => 'NET_UTP',
-		    'net_optical_fiber' => 'NET_OF',
-		    'netx_utp' => 'NETX_UTP',
-		    'netx_optical_fiber' => 'NETX_OF',
-		    'phone_utp' => 'PHONE_UTP',
-		    'phone_utp_cat3' => 'PHONE_UTP3',
+		    'net_1g_utp' => 'NET_UTP',
+		    'net_1g_opt' => 'NET_OF',
+		    'net_10g_utp' => 'NETX_UTP',
+		    'net_10g_opt' => 'NETX_OF',
+		    'phone' => 'PHONE',
 		    'hfc' => 'HFC',
 		    'iptv_utp' => 'IPTV_UTP',
-		    'iptv_optical_fiber' => 'IPTV_OF',
+		    'iptv_opt' => 'IPTV_OF',
 		    'rfog' => 'RFOG',
-		    'iptv_net_utp' => 'IPTV_NET_UTP',
-		    'iptv_net_optical_fiber' => 'IPTV_NET_OF',
-		    'iptv_netx_utp' => 'IPTV_NETX_UTP',
-		    'iptv_netx_optical_fiber' => 'IPTV_NETX_OF',
-		    'rfog_net' => 'RFOG_NET',
-		    'rfog_netx' => 'RFOG_NETX',
+		    'iptv_net_1g_utp' => 'IPTV_NET_UTP',
+		    'iptv_net_1g_opt' => 'IPTV_NET_OF',
+		    'iptv_net_10g_utp' => 'IPTV_NETX_UTP',
+		    'iptv_net_10g_opt' => 'IPTV_NETX_OF',
+		    'rfog_net_1g' => 'RFOG_NET',
+		    'rfog_net_10g' => 'RFOG_NETX',
 		];
 	}
 	
@@ -196,6 +198,67 @@ class ServiceRange extends ActiveRecord {
 	    if (is_null($this->_teryt)) $this->_teryt = $this->hasOne(Teryt::class, ['t_ulica' => 't_ulica'])->asArray()->one();
 	    
 	    return $this->_teryt;
+	}
+	
+	public function getAllServices() {
+	    
+	    $serviceInfo = [$this->net_1g_utp, $this->net_1g_opt, $this->net_10g_utp, $this->net_10g_opt, $this->phone, $this->hfc, $this->iptv_utp, $this->iptv_opt, $this->rfog,
+	        $this->iptv_net_1g_utp, $this->iptv_net_1g_opt, $this->iptv_net_10g_utp, $this->iptv_net_10g_opt, $this->rfog_net_1g, $this->rfog_net_10g
+	    ];
+	    $serviceInstall = [1, 4, 1, 4, 2, 4, 1, 4, 4, 1, 4, 1, 4, 1, 4];
+	    $installInfo = [Utp::TYPE => $this->utp, Utp3::TYPE => $this->utp_cat3, Coax::TYPE => $this->coax, Fiber::TYPE => $this->optical_fiber];
+	    
+	    $countServiceInfo = count($serviceInfo);
+	    $countServiceInstall = count($serviceInstall);
+	    $array = [];
+	    if ($countServiceInfo == $countServiceInstall && $countServiceInstall == count(self::SERVICES)) {
+	        $countUtp = $countUtp3 = $countCoax = $countFiber = null;
+	        for ($i = 0; $i <= $countServiceInfo - 1; $i++) {
+	            if ($installInfo[$serviceInstall[$i]] == -1) { //gdy instalację robi szczurek
+	                if ($serviceInstall[$i] == Utp::TYPE) {
+	                    if (!$countUtp) $countUtp = Installation::find()->where(['type_id' => Utp::TYPE, 'address_id' => $this->addressId])->count();
+                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp];
+                        continue;
+	                } elseif ($serviceInstall[$i] == Utp3::TYPE) {
+                        if (!$countUtp3) $countUtp3 = Installation::find()->where(['type_id' => Utp3::TYPE, 'address_id' => $this->addressId])->count();
+                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp3];
+                        continue;
+	                } elseif ($serviceInstall[$i] == Coax::TYPE) {
+	                    if (!$countCoax) $countCoax = Installation::find()->where(['type_id' => Coax::TYPE, 'address_id' => $this->addressId])->count();
+                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countCoax];
+                        continue;
+	                } elseif ($serviceInstall[$i] == Fiber::TYPE) {
+	                    if (!$countFiber) $countFiber = Installation::find()->where(['type_id' => Fiber::TYPE, 'address_id' => $this->addressId])->count();
+                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countFiber];
+                        continue;
+	                }
+	            }
+                $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $installInfo[$serviceInstall[$i]]];   
+            }
+	            
+            return $array;
+        }
+        
+	    return false;
+	}
+	
+	public function getRmqServices() {
+	    
+	    //service_info -> 0 - nie świadczymy, 1 - świadczymy, 2 - świadczymy, ewentualnie...
+	    //install_info -> 0 - brak, 1.. - liczba przewodów danego typu, -2 kontakt z serwisem
+	    
+	    $allServices = $this->getAllServices();
+	    $rmq = [];
+	    foreach ($allServices as $service) {
+	        if ($service['service_info'] <> 0) {
+	            if ($service['install_info'] > 0) $rmqInstall = 1; 
+	            elseif ($service['install_info'] == 0) $rmqInstall = 2; 
+	            elseif ($service['install_info'] == -2) $rmqInstall = 3; 
+	            $rmq[] = [$service['service_id'], $rmqInstall, $service['service_info']];
+	        }
+	    }
+	    
+	    return $rmq;
 	}
 	
 	public function getInstallsCount() {

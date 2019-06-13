@@ -3,8 +3,8 @@
 namespace common\models\crm;
 
 use common\models\crm\query\TaskQuery;
+use common\models\seu\devices\BusinessDevice;
 use common\models\seu\devices\Device;
-use yii\behaviors\AttributeBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 class DeviceTask extends Task {
     
     const TYPE = 1;
+    const CONTROLLER = 'device-task';
 
     public static function columns() {
         
@@ -28,16 +29,22 @@ class DeviceTask extends Task {
     public function rules() {
     	
         return ArrayHelper::merge(
+        	parent::rules(),
         	[	
+//         	    [
+//         	        'address_id', 
+//         	        'default', 
+//         	        'value' => Device::find()->select(['address_id'])->where(['id' => $this->device_id])->asArray()->one()['address_id'], 
+//         	        'on' => self::SCENARIO_CREATE
+//         	    ],
+//         	    ['address_id', 'integer'],
+//         	    ['address_id', 'required', 'message' => 'Wartość wymagana'],
+
         	    ['category_id', 'required', 'message' => 'Wartość wymagana'],
-        	    ['category_id', 'in', 'range' => [1, 2, 3, 4]],
         			
         		['device_id', 'integer'],
         		['device_id', 'required', 'message' => 'Wartość wymagana'],
-        			
-        		['close_desc', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],
-        	],
-        	parent::rules()
+        	]
         );
     }
     
@@ -59,30 +66,16 @@ class DeviceTask extends Task {
         );
     }
     
-    public function behaviors() {
+    public function beforeSave($insert) {
         
-        return ArrayHelper::merge(
-            parent::behaviors(),
-            [
-                [
-                    'class' => AttributeBehavior::class,
-                    'attributes' => [
-                        self::EVENT_BEFORE_INSERT => 'address_id',
-                    ],
-                    'value' => Device::find()->select('address_id')->where(['id' => $this->device_id])->asArray()->one()['address_id'],
-                ],
-            ],
-        );
+        if (!parent::beforeSave($insert)) return false;
+        
+        if ($insert) {
+            $this->address_id = Device::find()->select(['address_id'])->where(['id' => $this->device_id])->asArray()->one()['address_id'];
+        }
+
+        return true;
     }
-    
-//     public function beforeSave($insert) {
-        
-//         if (!$insert) {
-//             if ($this->status != 2 && !$this->close_at) $this->status = 2;
-//         }
-        
-//         parent::beforeSave($insert);
-//     }
     
     public static function find() {
         
@@ -91,6 +84,6 @@ class DeviceTask extends Task {
     
     public function getDevice() {
     	
-    	return $this->hasOne(Device::className(), ['id' => 'device_id']);
+    	return $this->hasOne(BusinessDevice::class, ['id' => 'device_id']);
     }
 }

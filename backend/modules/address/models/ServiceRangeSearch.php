@@ -11,14 +11,14 @@ class ServiceRangeSearch extends ServiceRange {
     public function rules() : array {
     	
         return [
-            [ArrayHelper::merge(['ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_od'], self::INFRASTRUCTURE_ATTRIBUTES, self::SERVICE_ATTRIBUTES), 'safe'],
+            [ArrayHelper::merge(['ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal', 'lokal_od'], self::INFRASTRUCTURES, self::SERVICES), 'safe'],
         ];
     }
 
     public function search($params) {
         
         $query = ServiceRange::find()->select(
-            ArrayHelper::merge(['id', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal_od', 'lokal_do'], self::INFRASTRUCTURE_ATTRIBUTES, self::SERVICE_ATTRIBUTES)
+            ArrayHelper::merge(['id', 'ulica_prefix', 'ulica', 'dom', 'dom_szczegol', 'lokal_od', 'lokal_do'], self::INFRASTRUCTURES, self::SERVICES)
         );
 
         $dataProvider = new ActiveDataProvider([
@@ -28,6 +28,7 @@ class ServiceRangeSearch extends ServiceRange {
         
         $dataProvider->setSort([
             'attributes' => [
+                'ulica',
                 'dom' => [
                     'asc' => ['dom' => new Expression(
                         'case when substring(dom from \'^\d+$\') is null then 9999 else cast(dom as integer) end, dom'
@@ -47,6 +48,7 @@ class ServiceRangeSearch extends ServiceRange {
                 ],
             ],
             'defaultOrder' => [
+                'ulica' => SORT_ASC,
                 'dom' => SORT_ASC,
                 'dom_szczegol' => SORT_ASC,
                 'lokal_od' => SORT_ASC

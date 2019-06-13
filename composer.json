@@ -43,7 +43,8 @@
 		"zenorocha/clipboardjs" : "~2.0",
 		"php-amqplib/php-amqplib" : "~2.9",
 		"yiisoft/yii2-queue" : "2.0.2",
-		"enqueue/amqp-lib" : "^0.8"
+		"enqueue/amqp-lib" : "^0.8",
+		"karriere/json-decoder" : "~2.2"
 	},
 	"require-dev" : {
 		"yiisoft/yii2-debug" : "*",

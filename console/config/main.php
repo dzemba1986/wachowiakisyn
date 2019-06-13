@@ -10,7 +10,7 @@ $params = array_merge(
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'queue'],
+    'bootstrap' => ['log', 'queueSeuToSoa', 'queueSeuFromSoa'],
     'controllerNamespace' => 'console\controllers',
     'components' => [
         'log' => [
@@ -21,13 +21,25 @@ return [
                 ],
             ],
         ],
-        'queue' => [
+        'queueSeuToSoa' => [
             'class' => \yii\queue\amqp_interop\Queue::class,
             'host' => 'rabbitmq.wtvk.pl',
             'port' => 5672,
             'user' => 'daniel',
             'password' => '4@l@$hn140v',
-            'queueName' => 'testdaniel',
+            'queueName' => 'SEU-SOA',
+//             'priority' => 10,
+//             'driver' => yii\queue\amqp_interop\Queue::ENQUEUE_AMQP_LIB,
+//             'strictJobType' => false,
+//             'serializer' => \yii\queue\serializers\JsonSerializer::class,
+        ],
+        'queueSeuFromSoa' => [
+            'class' => \yii\queue\amqp_interop\Queue::class,
+            'host' => 'rabbitmq.wtvk.pl',
+            'port' => 5672,
+            'user' => 'daniel',
+            'password' => '4@l@$hn140v',
+            'queueName' => 'SOA-SEU',
 //             'priority' => 10,
 //             'driver' => yii\queue\amqp_interop\Queue::ENQUEUE_AMQP_LIB,
 //             'strictJobType' => false,

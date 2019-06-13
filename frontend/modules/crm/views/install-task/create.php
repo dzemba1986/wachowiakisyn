@@ -32,7 +32,7 @@ $form = ActiveForm::begin([
         echo $form->field($address, 't_ulica', [
             'options' => ['class' => 'col-sm-6']
         ])->label(false)->widget(Select2::class,[
-            'data' => ArrayHelper::map(AddressShort::findOrderStreetName(), 't_ulica', 'ulica'),
+            'data' => ArrayHelper::map(Teryt::findOrderStreetName(), 't_ulica', 'ulica'),
             'options' => ['placeholder' => 'Ulica'],
         ]);
         

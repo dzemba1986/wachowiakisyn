@@ -3,68 +3,79 @@
 namespace common\models\crm;
 
 use common\models\User;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * @property integer $id
- * @property string $create
- * @property string $description
- * @property integer $user_id
+ * @property string $create_at
+ * @property string $desc
+ * @property integer $create_by
  * @property integer $comment_id
  * @property integer $task_id
  */
-class Comment extends ActiveRecord
-{	
-	const SCENARIO_UPDATE = 'update';
-	
-    public static function tableName(){
+class Comment extends ActiveRecord {
+    
+    public static function tableName() {
         
     	return '{{comment}}';
     }
 	
-    public function rules()
-    {
+    public function rules() {
+        
         return [	
-        		
-            ['create', 'date', 'format' => 'yyyy-MM-dd H:i:s'],
-        	['create', 'default', 'value' => date('Y-m-d H:i:s')],
-        	['create', 'required', 'message'=>'Wartość wymagana'],	
-            
-            ['description', 'string'],
+            ['desc', 'string'],
             
             ['task_id', 'integer'],
         		
             ['comment_id', 'integer'],
             
-        	['user_id', 'default', 'value' => \Yii::$app->user->id],
-            ['user_id', 'integer'],
-            ['user_id', 'required', 'message'=>'Wartość wymagana'],
-        	
-            
-            [['id', 'create', 'task_id', 'comment_id', 'user_id', 'description'], 'safe'],
+            [['create_at', 'task_id', 'comment_id', 'create_by', 'desc'], 'safe'],
         ];
     }
     
-    public function scenarios()
-    {
-    	$scenarios = parent::scenarios();
-    	$scenarios[self::SCENARIO_UPDATE] = ['description'];
-    	
-    	return $scenarios;
-    }
-    
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
+        
         return [
             'id' => 'ID',
-        	'create' => 'Utworzono',
-            'user_id' => 'Utworzył',
-            'description' => 'Komentarz'
+        	'create_at' => 'Utworzono',
+            'create_by' => 'Autor',
+            'desc' => 'Komentarz'
         ];
     }
     
-    public function getUser(){
+    public function behaviors() {
+        
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => ['create_at'],
+                ],
+                'value' => new Expression('NOW()::timestamp(0)'),
+            ],
+            [
+                'class' => BlameableBehavior::class,
+                'attributes' => [
+                    self::EVENT_BEFORE_INSERT => ['create_by'],
+                ],
+                'value' => \Yii::$app->user->id,
+            ],
+        ];
+    }
+    
+    public function beforeSave($insert) {
+        
+        if (!parent::beforeSave($insert)) return false;
+        if ($insert) Task::updateAll(['status' => 2], ['id' => $this->task_id, 'status' => 0]);
 
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return true;
+    }
+    
+    public function getCreateBy() {
+
+        return $this->hasOne(User::class, ['id' => 'create_by']);
     }
 }

@@ -3,37 +3,42 @@
 namespace frontend\modules\crm\controllers;
 
 use common\models\crm\Comment;
-use common\models\crm\DeviceTask;
 use common\models\crm\Task;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\base\Exception;
 
-class CommentController extends Controller{
+class CommentController extends Controller {
 	
-    public function actionIndex($taskId){
+    public function actionIndex($taskId) {
         
-    	$comments = Comment::find()->where(['task_id' => $taskId])->orderBy('create')->all();
+        $comments = Comment::find()->joinWith('createBy')->select([
+            'create_at', 'last_name', 'desc',
+        ])->where(['task_id' => $taskId])->orderBy('create_at')->asArray()->all();
     	
     	return $this->renderAjax('index', [
     		'comments' => $comments
     	]);
     }
 
-    public function actionCreate($taskId){
+    public function actionCreate($taskId) {
     	
     	$request = \Yii::$app->request;
     	$comment = new Comment();
     	
-    	if ($comment->load($request->post())){
+    	if ($comment->load($request->post())) {
+    	    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 	    	$task = Task::findOne($taskId);
-	    	if ($task instanceof DeviceTask) $task->status = 2;
+//             $task->status = 2;
     		$comment->task_id = $taskId;
-	    	if ($comment->save() && $task->save())
-	    		return 1;
-	    	else {
-// 	    		print_r($task->errors); exit();
-	    		return 0;
-	    	}
+    		
+    		try {
+	    	  if (!($comment->save() && $task->save())) throw new Exception('Nie dodano komentarza');
+    		} catch (Exception $e) {
+    		    return [0, $e->getMessage()];
+    		}
+    		
+    		return [1, 'Dodano komentarz'];
     	} else {
 	    	return $this->renderAjax('create', [
 	    		'comment' => $comment
@@ -41,19 +46,16 @@ class CommentController extends Controller{
     	}
     }
     
-    public function actionDelete($id){
+    public function actionDelete($id) {
     	
         $this->findModel($id)->delete();
 
         return $this->redirect(['view-calendar']);
     }
 
-    protected function findModel($id){
+    protected function findModel($id) {
     	
-        if (($model = Comment::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
+        if ($model = Comment::findOne($id) !== null) return $model;
+        else throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

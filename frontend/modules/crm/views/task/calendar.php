@@ -1,8 +1,11 @@
 <?php
 
 use common\models\crm\FullCalendarAsset;
-use yii\helpers\Html;
+use common\models\crm\Task;
+use common\models\crm\TaskCategory;
 use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * @var yii\web\View $this
@@ -18,39 +21,30 @@ $this->params['breadcrumbs'][] = 'Zadania';
 
 echo Html::beginTag('div', ['class' => 'row']);
     echo Html::beginTag('div', ['class' => 'col-lg-2']);
-        echo Html::label('Kalendarz', 'calendar_view');
         echo Html::beginTag('div', ['class' => 'input-group']);
             echo Select2::widget([
                 'name' => 'calendar',
-                'data' => [
-                    'Serwis' => 'Serwis',
-                    'Szczurek' => 'Szczurek',
-                ],
+                'data' => Task::RECEIVE_BY,
                 'options' => [
                     'id' => 'calendar_filter',
                     'class' => 'filter',
-                    'multiple' => true
+                    'multiple' => true,
+                    'placeholder' => 'Kalendarz...'
                 ],
             ]);
         echo Html::endTag('div');
     echo Html::endTag('div');
 
     echo Html::beginTag('div', ['class' => 'col-lg-2']);
-        echo Html::label('Typ', 'calendar_view');
         echo Html::beginTag('div', ['class' => 'input-group']);
             echo Select2::widget([
                 'name' => 'type',
-                'data' => [
-                    'Montaż' => 'Montaż',
-                    'Serwis' => 'Serwis',
-                    'Urządzenie' => 'Urządzenie',
-                    'Własne' => 'Własne',
-                    'Blokada' => 'Blokada',
-                ],
+                'data' => ArrayHelper::map(TaskCategory::find()->where(['parent_id' => 0])->asArray()->all(), 'id', 'name'),
                 'options' => [
                     'id' => 'type_filter',
                     'class' => 'filter',
-                    'multiple' => true
+                    'multiple' => true,
+                    'placeholder' => 'Typ...'
                 ],
             ]);
         echo Html::endTag('div');
@@ -62,6 +56,8 @@ echo Html::tag('div', '', ['id' => 'calendar', 'style' => 'padding-top:30px']);
 
 $js = <<<JS
 $(function() {
+    $('#modal-lg-title').html('Kalendarz');
+
     $( '#calendar' ).fullCalendar({
         header : {
 			left : 'prev, next, today, printButton',
@@ -70,6 +66,7 @@ $(function() {
 		},
         defaultView: 'agendaWeek',
         height: 830,
+        allDaySlot : false,
         minTime: '06:00:00',
         maxTime: '22:00:00',
         timezone : 'local',

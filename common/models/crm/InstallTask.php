@@ -53,6 +53,8 @@ class InstallTask extends Task {
         return ArrayHelper::merge(
         	parent::rules(),	
         	[	
+        	    ['address_id', 'required', 'message' => 'Wartość wymagana'],
+
         	    ['category_id', 'required', 'message' => 'Wartość wymagana'],
         	    
         		['pay_by', 'integer'], //TODO przy montażach instalacji w ramach umowy płatnikiem musi być WTVK
@@ -62,8 +64,8 @@ class InstallTask extends Task {
 	            ['cost', 'double', 'message' => 'Wartość liczbowa'],
 	        	['cost', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
 	            
-	            ['installer', 'string', 'message' => 'Wartość znakowa', 'whenClient' => new JsExpression('function() {return false}')],
-	        	['installer', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
+	            ['done_by', 'string', 'message' => 'Wartość znakowa', 'whenClient' => new JsExpression('function() {return false}')],
+	        	['done_by', 'required', 'message' => 'Wartość wymagana', 'on' => self::SCENARIO_CLOSE],	
 	            
 	            ['phone', 'trim'],
 	            ['phone', 'string', 'min' => 9, 'max' => 13, 'tooShort' => 'Minimum {min} znaków', 'tooLong' => 'Maximum {max} znaków'],

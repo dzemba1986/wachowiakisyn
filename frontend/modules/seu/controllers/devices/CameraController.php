@@ -37,17 +37,16 @@ class CameraController extends DeviceController {
         $out = ['results' => ['id' => '', 'alias' => '']];
         
         if (!is_null($q)) {
-            
             $query = new Query();
-            $query->select(['d.id', 'd.alias'])
-            ->from('device d')
+            $query->select(['id', 'alias'])
+            ->from('device')
             ->where([
                 'and',
-                ['like', "replace(lower(d.alias), '_', ' ')", str_replace('_', ' ', strtolower($q)) . '%', false],
+                ['like', "replace(lower(alias), '_', ' ')", str_replace('_', ' ', strtolower($q)) . '%', false],
                 ['<>', 'address_id', 1],
                 ['is not', 'status', null],
-                ['d.type_id' => Camera::TYPE]
-            ])->orderBy('d.alias');
+                ['type_id' => Camera::TYPE]
+            ])->orderBy('alias');
             
             $command = $query->createCommand();
             $data = $command->queryAll();

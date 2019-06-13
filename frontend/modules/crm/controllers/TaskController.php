@@ -5,11 +5,36 @@ namespace frontend\modules\crm\controllers;
 use common\models\crm\Task;
 use common\models\crm\TaskSearch;
 use Exception;
+use Yii;
 use yii\db\Expression;
+use yii\filters\AccessControl;
+use yii\filters\AjaxFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class TaskController extends Controller {
+    
+    public function behaviors() {
+        
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules'	=> [
+                    [
+                        'allow' => true,
+                        'actions' => [
+                            'calendar', 'calendar-ajax', 'index', 'update', 'view', 'close'
+                        ],
+                        'roles' => ['@']
+                    ]
+                ]
+            ],
+            [
+                'class' => AjaxFilter::class,
+                'only' => ['calendar-ajax', 'view', 'update', 'close']
+            ],
+        ];
+    }
     
     public function actionCalendar() {
     
@@ -25,7 +50,7 @@ class TaskController extends Controller {
         
         if ($connectionId) $session->set('connectionId', $connectionId);
         
-        return $this->renderAjax('calendar_ajax');
+        return $this->renderAjax('calendar');
     }
 
     public function actionIndex() {
@@ -69,11 +94,39 @@ class TaskController extends Controller {
                 return [0, $e->getMessage()];
             }
             
-            return [1, 'Montaż uaktualniono'];
+            return [1, 'Uaktualniono zadanie'];
             
         } else {
             return $this->renderAjax('update', [
                 'task' => $task,
+            ]);
+        }
+    }
+    
+    public function actionClose($id) {
+        
+        $request = \Yii::$app->request;
+        
+        $task = $this->findModel($id);
+        $task->scenario = Task::SCENARIO_CLOSE;
+        
+        if ($task->load($request->post())) {
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            $transaction = Yii::$app->db->beginTransaction();
+            
+            try {
+                $task->trigger(get_class($task)::EVENT_CLOSE_TASK);
+                if (!$task->save()) throw new Exception('Problem z zamknięciem zadania');
+            } catch (Exception $e) {
+                $transaction->rollBack();
+                return [0, $e->getMessage()];
+            }
+            
+            $transaction->commit();
+            return [1, 'Zamknięto zadanie'];
+        } else {
+            return $this->renderAjax('close', [
+                'task' => $task
             ]);
         }
     }

@@ -1,5 +1,6 @@
 <?php
 
+use kartik\growl\GrowlAsset;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 /**
@@ -7,39 +8,43 @@ use yii\widgets\ActiveForm;
  * @var common\models\crm\DeviceTask $task
  * @var yii\widgets\ActiveForm $form
  */
-?>
-	
-<?php $form = ActiveForm::begin([
+
+GrowlAsset::register($this);
+
+$form = ActiveForm::begin([
 	'id' => $task->formName()
-]); ?>
+]);
 
-    <?= $form->field($task, 'close_desc')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical'])->label('Co wykonano?') ?>
+    echo $form->field($task, 'close_desc')->textarea(['rows' => '4', 'maxlength' => 1000, 'style' => 'resize: vertical'])->label('Co wykonano?');
     
-    <div class="form-group">
-        <?= Html::submitButton('Zamknij', ['class' => 'btn btn-primary']) ?>
-    </div>
+    echo Html::submitButton('Zamknij', ['class' => 'btn btn-primary']);
 
-<?php ActiveForm::end(); ?>
+ActiveForm::end();
 
-<?php
 $js = <<<JS
-$(function(){
+$(function() {
     $('#modal-sm-title').html('Zamkanie zgłoszenia');
 
-	$('#{$task->formName()}').on('beforeSubmit', function(e){
-
+	$('#{$task->formName()}').on('beforeSubmit', function(e) {
 	 	$.post(
 	  		$(this).attr("action"),
 	  		$(this).serialize()
-	 	).done(function(result){
-			
-	 		if(result == 1){
+	 	).done(function(result) {
+	 		if(result[0] == 1) {
 	 			$(this).trigger('reset');
 				$('#modal-sm').modal('hide');
 	 			$.pjax.reload({container:'#task-grid-pjax'});
+                $.notify(result[1], {
+                    type : 'success',
+                    placement : { from : 'top', align : 'right'},
+                });
 	 		}
 	 		else{
-	 			alert(result);
+	 			$('#modal-sm').modal('hide');
+	 			$.notify(result[1], {
+                    type : 'danger',
+                    placement : { from : 'top', align : 'right'}, 
+                });
 	 		}
 	 	}).fail(function(){
 	 		console.log('server error');
