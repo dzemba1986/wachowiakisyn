@@ -231,7 +231,7 @@ $(function() {
 });
 JS;
 
-$this->registerJs($js);
+if (!Yii::$app->user->isGuest) $this->registerJs($js);
 $this->endBody() ?>
 </body>
 </html>

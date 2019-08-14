@@ -12,12 +12,10 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class ConnectionController extends Controller {
-    
-    public function behaviors() {
-        
-        return [
-        	'access' => [
-        		'class' => AccessControl::className(),
+	public function behaviors() {
+		return [
+			'access' => [
+				'class' => AccessControl::className(),
         		'rules'	=> [
         			[
         				'allow' => true,

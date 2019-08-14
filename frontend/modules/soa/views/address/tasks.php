@@ -1,8 +1,8 @@
 <?php
 
-use common\models\User;
 use common\models\crm\Task;
 use common\models\crm\TaskCategory;
+use kartik\grid\ActionColumn;
 use kartik\grid\BooleanColumn;
 use kartik\grid\ExpandRowColumn;
 use kartik\grid\GridView;
@@ -10,14 +10,14 @@ use kartik\grid\SerialColumn;
 use nterms\pagesize\PageSize;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use kartik\grid\ActionColumn;
 
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var common\models\crm\TaskSearch $searchModel
  */
+echo $this->renderFile('@app/views/modal/modal.php');
+
 echo GridView::widget([
     'id' => 'task-grid',
     'dataProvider' => $dataProvider,
@@ -126,9 +126,7 @@ echo GridView::widget([
         ],
         [
             'attribute' => 'close_by',
-            'value' => function ($model) {
-                return $model->close_by <> 19 ? 'closeBy.last_name' : $model->done_by;
-            }
+            'value' => 'closeBy.last_name',
         ],
         [
             'attribute' => 'fulfit',
@@ -169,11 +167,23 @@ echo GridView::widget([
                 'template' => '{list}',
                 'options' => ['class' => 'form-control'],
             ]),
-            'template' => '{close}',
+            'template' => '{view} {update} {close}',
             'dropdown' => true,
             'dropdownMenu' => ['style' => 'left: -100px;'],
             'dropdownButton' => ['label' => 'Akcje','class'=>'btn btn-secondary', 'style' => 'padding: 0px 5px'],
             'buttons' => [
+                'view' => function ($url, $model, $key) {
+                    $link = Html::a('<span class="glyphicon glyphicon-eye-open"></span> Podgląd', ['/crm/' . $model::CONTROLLER . '/view', 'id' => $key], [
+                        'onclick' => "$('#modal').modal('show').find('#modal-content').load($(this).attr('href')); return false;"
+                    ]);
+                    return Html::tag('li', $link, []);
+                },
+                'update' => function ($url, $model, $key) {
+                    $link = Html::a('<span class="glyphicon glyphicon-pencil"></span> Edycja', [$model::CONTROLLER . '/update', 'id' => $key], [
+                        'onclick' => "$('#modal').modal('show').find('#modal-content').load($(this).attr('href')); return false;"
+                    ]);
+                    return Html::tag('li', $link, []);
+                },
                 'close' => function ($url, $model, $key) {
                     $link = Html::a('<span class="glyphicon glyphicon-ok"></span> Zamknij', [$model::CONTROLLER . '/close', 'id' => $key], [
                         'onclick' => "$('#modal-sm').modal('show').find('#modal-sm-content').load($(this).attr('href')); return false;"

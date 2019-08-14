@@ -33,7 +33,7 @@ use yii\db\ActiveRecord;
  * @property string $pietro
  * @property Installation[] $installations
  * @property Device[] $devices
- * @property InstallTask[] $tasks
+ * @property Task[] $tasks
  * @property Connection[] $connections
  */
 
@@ -42,7 +42,7 @@ class Address extends ActiveRecord {
 	const SCENARIO_UPDATE = 'update';
 	
 	private $_teryt = null;
-    private $_range = null;
+    private $_serviceRange = null;
     
 	public static function tableName() : string {
 		
@@ -172,36 +172,49 @@ class Address extends ActiveRecord {
 	    return $out;
 	}
 	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
 	public function getInstallations() {
 	
 		return $this->hasMany(Installation::class, ['address_id' => 'id']);
 	}
-	
+    
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
 	public function getConnections() {
 	
 		return $this->hasMany(Connection::class, ['address_id' => 'id']);
 	}
-
-	public function getActiveConnections() {
-	
-		return $this->hasMany(Connection::class, ['address_id' => 'id'])->where(['close_at' => null]);
-	}
-	
+    
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
 	public function getDevices() {
 	
 		return $this->hasMany(Device::class, ['address_id' => 'id']);
 	}
 	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
 	public function getTasks() {
 	
 		return $this->hasMany(Task::class, ['address_id' => 'id']);
 	}
 	
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
 	public function getHistories() {
 	    
 	    return $this->hasMany(History::class, ['address_id' => 'id']);
 	}
-	
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
 	public function getHistoryIps() {
 	    
 	    return $this->hasMany(HistoryIp::class, ['address_id' => 'id']);
@@ -219,9 +232,14 @@ class Address extends ActiveRecord {
         return $this->_teryt;
 	}
 
+	/**
+	 * Zwraca zakres z dostępnymi usługami który jest przypisany danemu adresowi. W przypadku jego nie odnalezienia zwraca fałsz.
+	 * 
+	 * @return boolean|\backend\modules\address\models\ServiceRange Przypisany do adresu zakres z umowami lub fałsz w innym przypadku
+	 */
 	public function getServiceRange() {
 	    
-        $this->_range = false;
+        $this->_serviceRange = false;
 	    $address = [
 	        't_ulica' => $this->t_ulica, 
 	        'dom' => $this->dom, 
@@ -254,31 +272,19 @@ class Address extends ActiveRecord {
         foreach ($filters as $filter) {
             if (!$filter) continue;
             elseif (count($filter) == 1) {
-                $this->_range = ServiceRange::findOne($filter[0]['id']);
-                $this->_range->addressId = $this->id;
+                $this->_serviceRange = ServiceRange::findOne($filter[0]['id']);
+                $this->_serviceRange->addressId = $this->id;
                 break;
             }
         }
         
-        
-//         if (!$rangesF1) {
-//             if (!$rangesF2) {
-//                 if (!$rangesF3) {
-//                     if (count($rangesF4) == 1) $this->_range = ServiceRange::findOne($rangesF4[0]['id']);
-//                 } elseif (count($rangesF3) == 1) $this->_range = ServiceRange::findOne($rangesF3[0]['id']);
-//             } elseif (count($rangesF2) == 1) $this->_range = ServiceRange::findOne($rangesF2[0]['id']);
-//         } elseif (count($rangesF1) == 1) {
-//             $this->_range = ServiceRange::findOne($rangesF1[0]['id']);
-            
-//         }
-        
-        return $this->_range;
+        return $this->_serviceRange;
 	}
     
 	/**
-	 * Check address if exist.
+	 * Sprawdza czy istnieje już taki sam adres.
 	 *
-	 * @return integer|bool ID founded address or false if not exist.
+	 * @return integer|bool ID znalezionego adresu lub false w innym przypadku.
 	 */
 	private function checkExist() {
 	
@@ -318,7 +324,7 @@ class Address extends ActiveRecord {
                 return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol;
         else
             if ($this->lokal)
-                return $this->ulica_prefix . ' '.$this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/'.$this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
+                return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . '/' . $this->lokal . $this->lokal_szczegol . ' (piętro ' . $this->pietro . ')';
             else
                 return $this->ulica_prefix . ' ' . $this->ulica . ' ' . $this->dom . $this->dom_szczegol . ' (piętro ' . $this->pietro . ')';
 	}

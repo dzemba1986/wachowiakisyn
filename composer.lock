@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "051378b19a933eb0eef03cb3a5b72c55",
+    "content-hash": "a224406c1f6542e833b300c3c56ed30a",
     "packages": [
         {
             "name": "bobchengbin/yii2-xml-request-parser",
@@ -385,16 +385,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.8",
+            "version": "2.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "c26463ff9241f27907112fbcd0c86fa670cfef98"
+                "reference": "128cc721d771ec2c46ce59698f4ca42b73f71b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/c26463ff9241f27907112fbcd0c86fa670cfef98",
-                "reference": "c26463ff9241f27907112fbcd0c86fa670cfef98",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/128cc721d771ec2c46ce59698f4ca42b73f71b25",
+                "reference": "128cc721d771ec2c46ce59698f4ca42b73f71b25",
                 "shasum": ""
             },
             "require": {
@@ -438,7 +438,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2019-05-16T22:02:54+00:00"
+            "time": "2019-06-23T10:14:27+00:00"
         },
         {
             "name": "enqueue/amqp-lib",
@@ -659,53 +659,6 @@
             "time": "2019-01-11T02:03:31+00:00"
         },
         {
-            "name": "karriere/json-decoder",
-            "version": "v2.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/karriereat/json-decoder.git",
-                "reference": "bb720a787be00acc5a74d7e1e2e30823a12bc292"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/karriereat/json-decoder/zipball/bb720a787be00acc5a74d7e1e2e30823a12bc292",
-                "reference": "bb720a787be00acc5a74d7e1e2e30823a12bc292",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "karriere/code-quality": "^3.0",
-                "sebastian/comparator": "^1.1",
-                "sebastian/exporter": "^2.0",
-                "sebastian/recursion-context": "^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Karriere\\JsonDecoder\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes Pichler",
-                    "email": "johannes.pichler@karriere.at",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "JsonDecoder implementation that allows you to convert your JSON data into PHP class objects",
-            "keywords": [
-                "decoder",
-                "json"
-            ],
-            "time": "2019-03-05T10:26:22+00:00"
-        },
-        {
             "name": "kartik-v/yii2-dialog",
             "version": "v1.0.5",
             "source": {
@@ -820,12 +773,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "939d90102eb52043827dee1afbb65b50f90aac00"
+                "reference": "2686eeb1d77a9321a6db8a99ee07d383f20ca0ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/939d90102eb52043827dee1afbb65b50f90aac00",
-                "reference": "939d90102eb52043827dee1afbb65b50f90aac00",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/2686eeb1d77a9321a6db8a99ee07d383f20ca0ed",
+                "reference": "2686eeb1d77a9321a6db8a99ee07d383f20ca0ed",
                 "shasum": ""
             },
             "require": {
@@ -864,7 +817,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2019-05-29T07:44:08+00:00"
+            "time": "2019-06-19T07:34:58+00:00"
         },
         {
             "name": "kartik-v/yii2-helpers",
@@ -975,12 +928,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-mpdf.git",
-                "reference": "6eed5cfadef55ae19d2863a46a24dabb61ee9ccd"
+                "reference": "c4141e4e8ed8dc395189ae134078d79ffe2484cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-mpdf/zipball/6eed5cfadef55ae19d2863a46a24dabb61ee9ccd",
-                "reference": "6eed5cfadef55ae19d2863a46a24dabb61ee9ccd",
+                "url": "https://api.github.com/repos/kartik-v/yii2-mpdf/zipball/c4141e4e8ed8dc395189ae134078d79ffe2484cf",
+                "reference": "c4141e4e8ed8dc395189ae134078d79ffe2484cf",
                 "shasum": ""
             },
             "require": {
@@ -1019,7 +972,7 @@
                 "utf8",
                 "yii2"
             ],
-            "time": "2019-05-25T07:26:13+00:00"
+            "time": "2019-06-19T08:04:04+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-activeform",
@@ -1182,12 +1135,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-select2.git",
-                "reference": "3fa5d9d12edde54ad5f4a0547f66dd5cef1125dc"
+                "reference": "56ab85f7f742c756d17952790a63a4129e15e5e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/3fa5d9d12edde54ad5f4a0547f66dd5cef1125dc",
-                "reference": "3fa5d9d12edde54ad5f4a0547f66dd5cef1125dc",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/56ab85f7f742c756d17952790a63a4129e15e5e5",
+                "reference": "56ab85f7f742c756d17952790a63a4129e15e5e5",
                 "shasum": ""
             },
             "require": {
@@ -1227,7 +1180,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2019-05-25T07:30:32+00:00"
+            "time": "2019-06-19T07:42:57+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-timepicker",
@@ -1416,16 +1369,16 @@
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v8.0.1",
+            "version": "v8.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "2b6fab3d2a539a475d6e765bb06d8d2185955e55"
+                "reference": "ab0662606cc2396015616633946f3b8918d818a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/2b6fab3d2a539a475d6e765bb06d8d2185955e55",
-                "reference": "2b6fab3d2a539a475d6e765bb06d8d2185955e55",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/ab0662606cc2396015616633946f3b8918d818a7",
+                "reference": "ab0662606cc2396015616633946f3b8918d818a7",
                 "shasum": ""
             },
             "require": {
@@ -1481,7 +1434,7 @@
                 "php",
                 "utf-8"
             ],
-            "time": "2019-05-07T14:10:43+00:00"
+            "time": "2019-06-17T09:03:49+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2268,16 +2221,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.28",
+            "version": "v3.4.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "afe411c2a6084f25cff55a01d0d4e1474c97ff13"
+                "reference": "d129c017e8602507688ef2c3007951a16c1a8407"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/afe411c2a6084f25cff55a01d0d4e1474c97ff13",
-                "reference": "afe411c2a6084f25cff55a01d0d4e1474c97ff13",
+                "url": "https://api.github.com/repos/symfony/process/zipball/d129c017e8602507688ef2c3007951a16c1a8407",
+                "reference": "d129c017e8602507688ef2c3007951a16c1a8407",
                 "shasum": ""
             },
             "require": {
@@ -2313,7 +2266,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-22T12:54:11+00:00"
+            "time": "2019-05-30T15:47:52+00:00"
         },
         {
             "name": "vakata/jstree",
@@ -2418,16 +2371,16 @@
         },
         {
             "name": "yiisoft/yii2",
-            "version": "2.0.20",
+            "version": "2.0.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "bd05e0e0ac353cb239997da78f459d0960a1fe9f"
+                "reference": "417299927ed14adcd51c69a9d75311c5fc33d227"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/bd05e0e0ac353cb239997da78f459d0960a1fe9f",
-                "reference": "bd05e0e0ac353cb239997da78f459d0960a1fe9f",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/417299927ed14adcd51c69a9d75311c5fc33d227",
+                "reference": "417299927ed14adcd51c69a9d75311c5fc33d227",
                 "shasum": ""
             },
             "require": {
@@ -2514,7 +2467,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2019-06-04T19:10:59+00:00"
+            "time": "2019-07-02T20:28:40+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap",

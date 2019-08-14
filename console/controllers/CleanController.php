@@ -2,8 +2,8 @@
 
 namespace console\controllers;
 
+use common\models\address\Address;
 use yii\console\Controller;
-use backend\modules\address\models\Address;
 
 
 class CleanController extends Controller {

@@ -2,15 +2,22 @@
 
 namespace console\controllers;
 
+use common\models\seu\network\Dhcp;
 use yii\console\Controller;
-use backend\models\Dhcp;
+use common\models\seu\network\Subnet;
 
 class DhcpController extends Controller {
 	
 	// The command "yii example/create test" will call "actionCreate('test')"
 	public function actionGenerate() {
 		
-		Dhcp::generateFile();
+	    $subnets = Subnet::findAll(['vlan_id' => [2,4]]);
+	    
+	    foreach ($subnets as $subnet) {
+	        
+    		Dhcp::generateFile($subnet);
+    		sleep(5);
+	    }
 	}
 
 	// The command "yii example/index city" will call "actionIndex('city', 'name')"

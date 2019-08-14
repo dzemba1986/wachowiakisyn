@@ -12,7 +12,7 @@ return [
 	'bootstrap' => ['log'],
 	'modules' => [
 		'v1' => [
-			'basePath' => dirname(__DIR__) . '/../../',
+// 			'basePath' => dirname(__DIR__) . '/../../',
 			'class' => 'app\versions\v1\RestModule' 
 			],
 	],

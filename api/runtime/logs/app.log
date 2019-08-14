@@ -2270,3 +2270,1560 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1540412120.5129
     'REQUEST_TIME' => 1540412120
 ]
+2019-06-27 09:07:23 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 09:07:23 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14499'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561619243.5288
+    'REQUEST_TIME' => 1561619243
+]
+2019-06-27 09:08:01 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 09:08:00 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14501'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connection'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561619280.8984
+    'REQUEST_TIME' => 1561619280
+]
+2019-06-27 09:10:29 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 09:10:29 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14520'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connection'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561619429.007
+    'REQUEST_TIME' => 1561619429
+]
+2019-06-27 09:11:03 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 09:11:03 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14522'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561619463.6063
+    'REQUEST_TIME' => 1561619463
+]
+2019-06-27 09:11:52 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 09:11:52 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14528'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561619512.306
+    'REQUEST_TIME' => 1561619512
+]
+2019-06-27 09:14:03 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 09:14:03 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14535'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561619643.1662
+    'REQUEST_TIME' => 1561619643
+]
+2019-06-27 10:08:43 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 10:08:43 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14742'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561622923.1946
+    'REQUEST_TIME' => 1561622923
+]
+2019-06-27 10:10:47 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 10:10:47 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14753'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561623047.4612
+    'REQUEST_TIME' => 1561623047
+]
+2019-06-27 11:03:26 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 11:03:26 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14964'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561626206.0532
+    'REQUEST_TIME' => 1561626206
+]
+2019-06-27 11:04:02 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 11:04:02 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '14966'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561626242.4531
+    'REQUEST_TIME' => 1561626242
+]
+2019-06-27 11:42:01 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: Unable to determine the path info of the current request. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php:942
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(883): yii\web\Request->resolvePathInfo()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\UrlRule.php(221): yii\web\Request->getPathInfo()
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\UrlManager.php(310): yii\rest\UrlRule->parseRequest(Object(yii\web\UrlManager), Object(yii\web\Request))
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Request.php(272): yii\web\UrlManager->parseRequest(Object(yii\web\Request))
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(82): yii\web\Request->resolve()
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#7 {main}
+2019-06-27 11:42:01 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '15034'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn'
+    'DOCUMENT_URI' => '/api/web/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/api/web/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561628521.6058
+    'REQUEST_TIME' => 1561628521
+]
+2019-06-27 11:45:27 [127.0.0.1][-][-][error][yii\base\ErrorException:2] yii\base\ErrorException: get_class() expects parameter 1 to be object, null given in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\db\ActiveQueryTrait.php:122
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleError(2, 'get_class() exp...', 'C:\\WinNMP\\WWW\\w...', 122, Array)
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\db\ActiveQueryTrait.php(122): get_class(NULL)
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\db\ActiveQuery.php(219): yii\db\ActiveQuery->createModels(Array)
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\db\Query.php(238): yii\db\ActiveQuery->populate(Array)
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all(NULL)
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\data\ActiveDataProvider.php(116): yii\db\ActiveQuery->all(NULL)
+#6 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\data\BaseDataProvider.php(101): yii\data\ActiveDataProvider->prepareModels()
+#7 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\data\BaseDataProvider.php(114): yii\data\BaseDataProvider->prepare()
+#8 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\Serializer.php(186): yii\data\BaseDataProvider->getModels()
+#9 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\Serializer.php(152): yii\rest\Serializer->serializeDataProvider(Object(yii\data\ActiveDataProvider))
+#10 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\Controller.php(99): yii\rest\Serializer->serialize(Object(yii\data\ActiveDataProvider))
+#11 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\Controller.php(77): yii\rest\Controller->serializeData(Object(yii\data\ActiveDataProvider))
+#12 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Controller.php(159): yii\rest\Controller->afterAction(Object(yii\rest\IndexAction), Object(yii\data\ActiveDataProvider))
+#13 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(528): yii\base\Controller->runAction('index', Array)
+#14 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('v1/connection/i...', Array)
+#15 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#16 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#17 {main}
+2019-06-27 11:45:25 [127.0.0.1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '15052'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn/api/web'
+    'DOCUMENT_URI' => '/index.php'
+    'REQUEST_URI' => '/v1/connections'
+    'SCRIPT_NAME' => '/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561628725.4651
+    'REQUEST_TIME' => 1561628725
+]
+2019-06-27 12:08:37 [127.0.0.1][-][-][error][yii\base\UnknownClassException] yii\base\UnknownClassException: Unable to find 'app\versions\v1\models\ConnectionResource' in file: C:\WinNMP\WWW\wachowiakisyn\api/versions/v1/models/ConnectionResource.php. Namespace missing? in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\BaseYii.php:296
+Stack trace:
+#0 [internal function]: yii\BaseYii::autoload('app\\versions\\v1...')
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\Action.php(90): spl_autoload_call('app\\versions\\v1...')
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\ViewAction.php(29): yii\rest\Action->findModel('7375')
+#3 [internal function]: yii\rest\ViewAction->run('7375')
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Action.php(94): call_user_func_array(Array, Array)
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Controller.php(157): yii\base\Action->runWithParams(Array)
+#6 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(528): yii\base\Controller->runAction('view', Array)
+#7 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('v1/connection/v...', Array)
+#8 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#9 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#10 {main}
+2019-06-27 12:08:37 [127.0.0.1][-][-][info][application] $_GET = [
+    'id' => '7375'
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '16526'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn/api/web'
+    'DOCUMENT_URI' => '/index.php'
+    'REQUEST_URI' => '/v1/connections/7375'
+    'SCRIPT_NAME' => '/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561630117.4782
+    'REQUEST_TIME' => 1561630117
+]
+2019-06-27 12:12:34 [127.0.0.1][-][-][error][yii\base\UnknownClassException] yii\base\UnknownClassException: Unable to find 'app\versions\v1\controllers\ConnectionController' in file: C:\WinNMP\WWW\wachowiakisyn\api/versions/v1/controllers/ConnectionController.php. Namespace missing? in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\BaseYii.php:296
+Stack trace:
+#0 [internal function]: yii\BaseYii::autoload('app\\versions\\v1...')
+#1 [internal function]: spl_autoload_call('app\\versions\\v1...')
+#2 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(637): class_exists('app\\versions\\v1...')
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(596): yii\base\Module->createControllerByID('connection')
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(588): yii\base\Module->createController('view')
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(522): yii\base\Module->createController('connection/view')
+#6 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('v1/connection/v...', Array)
+#7 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#8 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#9 {main}
+2019-06-27 12:12:34 [127.0.0.1][-][-][info][application] $_GET = [
+    'id' => '7375'
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '16785'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn/api/web'
+    'DOCUMENT_URI' => '/index.php'
+    'REQUEST_URI' => '/v1/connections/7375'
+    'SCRIPT_NAME' => '/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561630354.5346
+    'REQUEST_TIME' => 1561630354
+]
+2019-06-27 12:13:18 [127.0.0.1][-][-][error][yii\base\InvalidConfigException] yii\base\InvalidConfigException: The "modelClass" property must be set. in C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\rest\ActiveController.php:65
+Stack trace:
+#0 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\BaseObject.php(109): yii\rest\ActiveController->init()
+#1 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Controller.php(86): yii\base\BaseObject->__construct(Array)
+#2 [internal function]: yii\base\Controller->__construct('connection', Object(app\versions\v1\RestModule), Array)
+#3 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\di\Container.php(376): ReflectionClass->newInstanceArgs(Array)
+#4 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\di\Container.php(156): yii\di\Container->build('app\\versions\\v1...', Array, Array)
+#5 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\BaseYii.php(345): yii\di\Container->get('app\\versions\\v1...', Array)
+#6 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(642): yii\BaseYii::createObject('app\\versions\\v1...', Array)
+#7 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(596): yii\base\Module->createControllerByID('connection')
+#8 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(588): yii\base\Module->createController('view')
+#9 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Module.php(522): yii\base\Module->createController('connection/view')
+#10 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('v1/connection/v...', Array)
+#11 C:\WinNMP\WWW\wachowiakisyn\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#12 C:\WinNMP\WWW\wachowiakisyn\api\web\index.php(19): yii\base\Application->run()
+#13 {main}
+2019-06-27 12:13:18 [127.0.0.1][-][-][info][application] $_GET = [
+    'id' => '7375'
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => '431286086e0d025b5860ec3b40ec05be'
+    '_csrf' => 'd04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"m27Svx63LlsMtWEyrK5pYdP_TEqdaraa\";}'
+]
+
+$_SERVER = [
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Daniel\\AppData\\Roaming'
+    'CommonProgramFiles' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPOSER_CACHE_DIR' => 'c:\\winnmp\\bin\\composer'
+    'COMPOSER_HOME' => 'c:\\winnmp\\bin\\composer'
+    'COMPUTERNAME' => 'DESKTOP-RKPNT2F'
+    'ComSpec' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Daniel'
+    'LOCALAPPDATA' => 'C:\\Users\\Daniel\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-RKPNT2F'
+    'MOZ_PLUGIN_PATH' => 'C:\\Program Files\\Tracker Software\\PDF Viewer\\Win32\\'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OneDrive' => 'C:\\Users\\Daniel\\OneDrive'
+    'OPENSSL_CONF' => 'c:\\winnmp\\conf\\openssl.conf'
+    'OS' => 'Windows_NT'
+    'Path' => 'C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\usr\\bin;C:\\Program Files\\Git\\cmd;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\Scripts\\;C:\\Users\\Daniel\\AppData\\Local\\Programs\\Python\\Python37\\;C:\\Users\\Daniel\\AppData\\Local\\Microsoft\\WindowsApps;C:\\WinNMP\\bin;C:\\usr\\mibs;'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 58 Stepping 9, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '3a09'
+    'ProgramData' => 'C:\\ProgramData'
+    'ProgramFiles' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'SESSIONNAME' => 'Console'
+    'SystemDrive' => 'C:'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'TEMP' => 'c:\\winnmp\\tmp'
+    'TMP' => 'c:\\winnmp\\tmp'
+    'USERDOMAIN' => 'DESKTOP-RKPNT2F'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-RKPNT2F'
+    'USERNAME' => 'Daniel'
+    'USERPROFILE' => 'C:\\Users\\Daniel'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'windir' => 'C:\\WINDOWS'
+    'WINNMP' => 'windows'
+    'HTTP_COOKIE' => 'PHPSESSID=431286086e0d025b5860ec3b40ec05be; _csrf=d04c6cfb9aea5ad71baa77bcbdfc0c5e7f0ec06f96d946eafd6d07bedbeea8c7a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22m27Svx63LlsMtWEyrK5pYdP_TEqdaraa%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'pl,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+    'HTTP_HOST' => 'localhost:8080'
+    'REDIS' => 'localhost'
+    'HTTP_MOD_REWRITE' => 'on'
+    'WTSERVER' => 'windows'
+    'WT_SITE' => 'localhost'
+    'SERVER_SITE' => 'localhost'
+    'SERVER_NAME' => 'localhost'
+    'REDIRECT_STATUS' => '200'
+    'SERVER_PORT' => '8080'
+    'SERVER_ADDR' => '127.0.0.1'
+    'REMOTE_PORT' => '16826'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'SERVER_SOFTWARE' => 'nginx/1.15.8'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'REQUEST_SCHEME' => 'http'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'DOCUMENT_ROOT' => 'c:/winnmp/www/wachowiakisyn/api/web'
+    'DOCUMENT_URI' => '/index.php'
+    'REQUEST_URI' => '/v1/connections/7375'
+    'SCRIPT_NAME' => '/index.php'
+    'CONTENT_LENGTH' => ''
+    'CONTENT_TYPE' => ''
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'SCRIPT_FILENAME' => 'c:/winnmp/www/wachowiakisyn/api/web/index.php'
+    'PATH_INFO' => ''
+    'FCGI_ROLE' => 'RESPONDER'
+    'PHP_SELF' => ''
+    'REQUEST_TIME_FLOAT' => 1561630398.5189
+    'REQUEST_TIME' => 1561630398
+]

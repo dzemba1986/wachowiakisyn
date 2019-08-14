@@ -1,7 +1,7 @@
 <?php
 namespace app\versions\v1\models;
 
-use backend\modules\address\models\Address;
+use common\models\address\Address;
 
 class AddressResource extends Address {
     

@@ -26,6 +26,7 @@ class m190513_065307_add_tasks_for_conn extends Migration {
             ['connection.close_at' => null]
         ])->all();
         
+        //
         $conf_map = [
             4 => [23, 42],
             9 => [25, 47],

@@ -5,7 +5,6 @@ namespace backend\modules\address\models;
 use common\models\soa\Coax;
 use common\models\soa\Fiber;
 use common\models\soa\Installation;
-use common\models\soa\Tv;
 use common\models\soa\Utp;
 use common\models\soa\Utp3;
 use yii\behaviors\AttributeBehavior;
@@ -216,7 +215,8 @@ class ServiceRange extends ActiveRecord {
 	        for ($i = 0; $i <= $countServiceInfo - 1; $i++) {
 	            if ($installInfo[$serviceInstall[$i]] == -1) { //gdy instalację robi szczurek
 	                if ($serviceInstall[$i] == Utp::TYPE) {
-	                    if (!$countUtp) $countUtp = Installation::find()->where(['type_id' => Utp::TYPE, 'address_id' => $this->addressId])->count();
+	                    //TODO będą montaże zamiast instalacji
+	                    if (!$countUtp) $countUtp = Installation::find()->where(['type_id' => Utp::TYPE, 'address_id' => $this->addressId])->count(); 
                         $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp];
                         continue;
 	                } elseif ($serviceInstall[$i] == Utp3::TYPE) {
@@ -254,7 +254,7 @@ class ServiceRange extends ActiveRecord {
 	            if ($service['install_info'] > 0) $rmqInstall = 1; 
 	            elseif ($service['install_info'] == 0) $rmqInstall = 2; 
 	            elseif ($service['install_info'] == -2) $rmqInstall = 3; 
-	            $rmq[] = [$service['service_id'], $rmqInstall, $service['service_info']];
+	            $rmq[] = ['id' => $service['service_id'], 'name' => self::SERVICES[$service['service_id'] - 1], 'install' => $rmqInstall, 'priority' => $service['service_info']];
 	        }
 	    }
 	    

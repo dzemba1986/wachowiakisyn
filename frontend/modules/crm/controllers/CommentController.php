@@ -13,7 +13,7 @@ class CommentController extends Controller {
     public function actionIndex($taskId) {
         
         $comments = Comment::find()->joinWith('createBy')->select([
-            'create_at', 'last_name', 'desc',
+            'create_at', 'create_by', 'last_name', 'desc',
         ])->where(['task_id' => $taskId])->orderBy('create_at')->asArray()->all();
     	
     	return $this->renderAjax('index', [

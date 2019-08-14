@@ -1,7 +1,11 @@
 <?php
-namespace common\models\rmq\events;
+namespace common\models\rmq;
 
+use yii\behaviors\AttributeBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
+use yii\helpers\Json;
 
 /**
  * @property integer $id
@@ -12,8 +16,9 @@ use yii\db\ActiveRecord;
  * @property string $message
  */
 
-abstract class RmqEvent extends ActiveRecord implements RmqEventInterface {
+abstract class Job extends ActiveRecord {
     
+    const TYPE = 0;
     
     public static function tableName() {
         
@@ -36,6 +41,16 @@ abstract class RmqEvent extends ActiveRecord implements RmqEventInterface {
         ];
     }
     
+    public function fields() {
+        
+        return [
+            'event_id',
+            'case_id',
+            'event_type',
+            'create_at',
+        ];
+    }
+    
     public function rules() {
         
         return [
@@ -51,10 +66,10 @@ abstract class RmqEvent extends ActiveRecord implements RmqEventInterface {
             ['event_type', 'integer'],
             ['event_type', 'required', 'message' => 'Wartość wymagana'],
             
-//             ['create_at', 'date', 'format' => ''], //TODO
+            ['create_at', 'date', 'format' => 'php:c'],
             ['create_at', 'required', 'message' => 'Wartość wymagana'],
 
-            ['message', 'required', 'message' => 'Wartość wymagana'],
+//             ['message', 'required', 'message' => 'Wartość wymagana'],
         ];
     }
     
@@ -68,36 +83,49 @@ abstract class RmqEvent extends ActiveRecord implements RmqEventInterface {
         ];
     }
     
-//     public function behaviors() {
+    public function behaviors() {
         
-//         return [
+        return [
 //             [
 //                 'class' => AttributeBehavior::class,
 //                 'attributes' => [
-//                     self::EVENT_BEFORE_INSERT => 'event_id',
+//                     self::EVENT_BEFORE_VALIDATE => 'event_id',
 //                 ],
 //                 'value' => function () {
-//                     $max = RmqEvent::find()->select(['max' => new Expression('max(event_id)')])->where(['case_id' => $this->case_id])->asArray()->one()['max'];
-//                     if ($max) return $max + 1;
+//                     $max = Job::find()->select(['max' => new Expression('max(event_id)')])->where(['and', ['case_id' => $this->case_id], '(event_id % 2) = 1'])->asArray()->one()['max'];
+//                     if ($max) return $max + 2;
 //                     else return 1;
 //                 }
 //             ],
 //             [
 //                 'class' => TimestampBehavior::class,
 //                 'attributes' => [
-//                     self::EVENT_BEFORE_INSERT => ['create_at'],
+//                     self::EVENT_BEFORE_VALIDATE => ['create_at'],
 //                 ],
-//                 'value' => new Expression('NOW()::timestamp(0)'),
+//                 'value' => date('c'),
 //             ],
-//         ];
-//     }
+            [
+                'class' => AttributeBehavior::class,
+                'attributes' => [
+                    self::EVENT_BEFORE_VALIDATE => 'event_type',
+                ],
+                'value' => static::TYPE,
+            ],
+        ];
+    }
     
-    public function toObject($json) {
+    public function afterValidate() {
         
-        $this->event_id = $json['event_id'];
-        $this->case_id = $json['case_id'];
-        $this->event_type = $json['event_type'];
-        $this->create_at = $json['create_at'];
+        $extraProperties = array_intersect_key(get_object_vars($this), array_flip(array_diff($this->fields(), ['event_id', 'case_id', 'event_type', 'create_at'])));
+        $this->message = Json::encode($extraProperties);
+    }
+    
+    public function setParams() {
+        
+        $max = Job::find()->select(['max' => new Expression('max(event_id)')])->where(['and', ['case_id' => $this->case_id], '(event_id % 2) = 1'])->asArray()->one()['max'];
+        if ($max) $this->event_id = $max + 2;
+        else $this->event_id = 1;
+
+        $this->create_at = date('c');
     }
 }
-
