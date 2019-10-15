@@ -52,7 +52,7 @@ class HuaweiSeriesConfiguration extends Configuration {
                 }
             }
         } elseif ($this->typeId == GatewayVoip::TYPE) {
-            $add = "acl name voip{$this->parentPortNumber} 31{$this->parentPortNumber}\n";
+	        	$add = "acl name voip" . sprintf("%02d", $this->parentPortNumber) . " 31" . sprintf("%02d", $this->parentPortNumber) . "\n";
             $add .= "rule 5 deny udp destination-port eq bootpc\n";
             $add .= "rule 10 permit ip source {$this->ip} 0 destination 213.5.208.0 0.0.0.63\n";
             $add .= "rule 15 permit ip source {$this->ip} 0 destination 213.5.208.128 0.0.0.63\n";
@@ -65,7 +65,7 @@ class HuaweiSeriesConfiguration extends Configuration {
             $add .= "description vo{$this->desc}\n";
             $add .= "port default vlan {$this->vlanId}\n";
             $add .= "loopback-detect enable\n";
-            $add .= "traffic-filter inbound acl name voip{$this->parentPortNumber}\n";
+            $add .= "traffic-filter inbound acl name voip" . sprintf("%02d", $this->parentPortNumber) . "\n";
             $add .= "undo lldp enable\n";
             $add .= "undo port-security enable\n";
             $add .= "port-security enable\n";
@@ -76,20 +76,20 @@ class HuaweiSeriesConfiguration extends Configuration {
             $add .= "save\n";
             $add .= "Y\n";
         } elseif ($this->typeId == Camera::TYPE) {
-	        	$add = "acl name voip{$this->parentPortNumber} 31{$this->parentPortNumber}\n";
+	        	$add = "acl name cam" . sprintf("%02d", $this->parentPortNumber) . " 32" . sprintf("%02d", $this->parentPortNumber) . "\n";
 	        	$add .= "rule 5 deny udp destination-port eq bootpc\n";
 	        	$add .= "rule 10 permit ip source {$this->ip} 0 destination 213.5.208.128 0.0.0.63\n";
-	        	$add .= "rule 15 permit ip source {$this->ip} 0 destination 192.168.5.0 0.0.0.63\n";
+	        	$add .= "rule 15 permit ip source {$this->ip} 0 destination 192.168.5.0 0.0.0.255\n";
 	        	$add .= "rule 20 permit ip source {$this->ip} 0 destination 10.111.0.0 0.0.255.255\n";
 	        	$add .= "rule 25 permit udp source 0.0.0.0 0 source-port eq bootpc destination-port eq bootps\n";
 	        	$add .= "rule 30 deny ip\n";
 	        	$add .= "quit\n";
 	        	$add .= "interface {$this->parentPortName}\n";
 	        	$add .= "shutdown\n";
-	        	$add .= "description vo{$this->desc}\n";
+	        	$add .= "description cam{$this->desc}\n";
 	        	$add .= "port default vlan {$this->vlanId}\n";
 	        	$add .= "loopback-detect enable\n";
-	        	$add .= "traffic-filter inbound acl name cam{$this->parentPortNumber}\n";
+	        	$add .= "traffic-filter inbound acl name cam" . sprintf("%02d", $this->parentPortNumber) . "\n";
 	        	$add .= "undo lldp enable\n";
 	        	$add .= "undo port-security enable\n";
 	        	$add .= "port-security enable\n";
