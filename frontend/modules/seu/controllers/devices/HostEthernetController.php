@@ -6,6 +6,7 @@ use backend\modules\address\models\Address;
 use common\models\seu\Link;
 use common\models\seu\devices\Host;
 use common\models\seu\devices\HostEthernet;
+use common\models\seu\devices\HostRfog;
 use common\models\seu\network\Ip;
 use common\models\soa\Connection;
 use frontend\modules\seu\models\forms\AddHostEthernetForm;
@@ -157,10 +158,14 @@ class HostEthernetController extends HostController {
             }
         } else {
             //znajdz wszystkie hosty z danego adresu i o danym systemie (ethernet czy rfog)
-            $allHosts = Host::find()->select('id, type_id, name, status, technic')->where([
-                'address_id' => $connection->address_id, 
-                'technic' => $connection->technic
-            ])->all();
+        		if ($connection->technic == 1)
+        			$allHosts = HostEthernet::find()->select('id, type_id, name, status, address_id, technic')->where([
+        				'address_id' => $connection->address_id,
+        			])->all();
+        		elseif ($connection->technic == 2)
+        			$allHosts = HostRfog::find()->select('id, type_id, name, status, address_id, technic')->where([
+        				'address_id' => $connection->address_id,
+        			])->all();
             
             //wybierz spoód wyszukanych tylko te hosty które są nieaktywne lub nie mają umowy o tym typie co własnie dodawana
             $hosts = [];
