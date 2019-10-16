@@ -21,12 +21,12 @@ class HuaweiSeriesConfiguration extends Configuration {
         $add = ' ';
         if ($this->typeId == Host::TYPE) {
             if (strpos($this->parentIp, '172.') === 0) {
-                $add = "interface GigabitEthernet{$this->parentPortName}\n";
+                $add = "interface {$this->parentPortName}\n";
                 $add .= "shutdown\n";
                 $add .= "description {$this->desc}\n";
                 $add .= "port default vlan {$this->vlanId}\n";
                 $add .= "loopback-detect enable\n";
-                $add .= "traffic-filter inbound acl name net-user{$this->parentPortNumber}\n";
+                $add .= "traffic-filter inbound acl name net-user\n";
                 $add .= "undo lldp enable\n";
                 $add .= "undo port-security enable\n";
                 $add .= "port-security enable\n";
