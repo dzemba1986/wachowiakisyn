@@ -62,7 +62,7 @@ class HuaweiSeriesConfiguration extends Configuration {
             $add .= "quit\n";
             $add .= "interface {$this->parentPortName}\n";
             $add .= "shutdown\n";
-            $add .= "description vo{$this->desc}\n";
+            $add .= "description {$this->desc}\n";
             $add .= "port default vlan {$this->vlanId}\n";
             $add .= "loopback-detect enable\n";
             $add .= "traffic-filter inbound acl name voip" . sprintf("%02d", $this->parentPortNumber) . "\n";
@@ -86,7 +86,7 @@ class HuaweiSeriesConfiguration extends Configuration {
 	        	$add .= "quit\n";
 	        	$add .= "interface {$this->parentPortName}\n";
 	        	$add .= "shutdown\n";
-	        	$add .= "description cam{$this->desc}\n";
+	        	$add .= "description {$this->desc}\n";
 	        	$add .= "port default vlan {$this->vlanId}\n";
 	        	$add .= "loopback-detect enable\n";
 	        	$add .= "traffic-filter inbound acl name cam" . sprintf("%02d", $this->parentPortNumber) . "\n";
@@ -116,7 +116,7 @@ class HuaweiSeriesConfiguration extends Configuration {
                 $drop .= "shutdown\n";
                 $drop .= "port default vlan 555\n";
                 $drop .= "undo port-security enable\n";
-                $drop .= "undo traffic-filter inbound acl name net-user{$this->parentPortNumber}\n";
+                $drop .= "undo traffic-filter inbound acl name net-user\n";
                 $drop .= "undo qos lr inbound\n";
                 $drop .= "undo qos lr outbound\n";
                 $drop .= "undo dhcp snooping check dhcp-chaddr enable\n";
@@ -172,8 +172,9 @@ class HuaweiSeriesConfiguration extends Configuration {
         
         $change = "interface {$this->parentPortName}\n";
         $change .= "shutdown\n";
+        $change .= "undo port-security enable\n";
         $change .= "port-security enable\n";
-        $change .= "port-security mac-address {$this->mac} vlan {$this->vlanId}\n";
+        $change .= "port-security mac-address {$newMac} vlan {$this->vlanId}\n";
         $change .= "quit\n";
         $change .= "quit\n";
         $change .= "reset dhcp snooping user-bind interface {$this->parentPortName}\n";
