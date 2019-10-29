@@ -260,7 +260,7 @@ class ServiceRange extends ActiveRecord {
                     $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countFiber];
                     continue;
 	                }
-	            } else;
+	            } else
                 $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $installInfo[$serviceInstall[$i]]];   
             }
 // 	          var_dump($array); exit();  
