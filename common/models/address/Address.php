@@ -273,7 +273,11 @@ class Address extends ActiveRecord {
             if (!$filter) continue;
             elseif (count($filter) == 1) {
                 $this->_serviceRange = ServiceRange::findOne($filter[0]['id']);
-                $this->_serviceRange->addressId = $this->id;
+                $this->_serviceRange->address_ulica = $this->ulica;
+                $this->_serviceRange->address_dom = $this->dom;
+                $this->_serviceRange->address_dom_szczegol = $this->dom_szczegol;
+                $this->_serviceRange->address_lokal = $this->lokal;
+                $this->_serviceRange->address_lokal_szczegol = $this->lokal_szczegol;
                 break;
             }
         }

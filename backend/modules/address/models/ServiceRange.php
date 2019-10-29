@@ -60,7 +60,11 @@ class ServiceRange extends ActiveRecord {
 //         0 => 'Nie świadczymy'
 //     ];
     private $_teryt = null;
-    public $addressId = null;
+    public $address_ulica = null;
+    public $address_dom = null;
+    public $address_dom_szczegol = null;
+    public $address_lokal = null;
+    public $address_lokal_szczegol = null;
     
 	public static function tableName() : string {
 		
@@ -204,7 +208,7 @@ class ServiceRange extends ActiveRecord {
 	    $serviceInfo = [$this->net_1g_utp, $this->net_1g_opt, $this->net_10g_utp, $this->net_10g_opt, $this->phone, $this->hfc, $this->iptv_utp, $this->iptv_opt, $this->rfog,
 	        $this->iptv_net_1g_utp, $this->iptv_net_1g_opt, $this->iptv_net_10g_utp, $this->iptv_net_10g_opt, $this->rfog_net_1g, $this->rfog_net_10g
 	    ];
-	    $serviceInstall = [1, 4, 1, 4, 2, 4, 1, 4, 4, 1, 4, 1, 4, 1, 4];
+	    $serviceInstall = [1, 4, 1, 4, 2, 3, 1, 4, 4, 1, 4, 1, 4, 4, 4];
 	    $installInfo = [Utp::TYPE => $this->utp, Utp3::TYPE => $this->utp_cat3, Coax::TYPE => $this->coax, Fiber::TYPE => $this->optical_fiber];
 	    
 	    $countServiceInfo = count($serviceInfo);
@@ -215,27 +219,51 @@ class ServiceRange extends ActiveRecord {
 	        for ($i = 0; $i <= $countServiceInfo - 1; $i++) {
 	            if ($installInfo[$serviceInstall[$i]] == -1) { //gdy instalację robi szczurek
 	                if ($serviceInstall[$i] == Utp::TYPE) {
-	                    //TODO będą montaże zamiast instalacji
-	                    if (!$countUtp) $countUtp = Installation::find()->where(['type_id' => Utp::TYPE, 'address_id' => $this->addressId])->count(); 
-                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp];
-                        continue;
+                    //TODO będą montaże zamiast instalacji
+                    if (!$countUtp) 
+                	    $countUtp = \Yii::$app->db->createCommand(
+                	      'SELECT COUNT(*) FROM installation i
+                        JOIN address a ON a.id = i.address_id
+                        WHERE type_id=:type and a.ulica=:ulica and a.dom=:dom and a.dom_szczegol=:dom_szczegol and a.lokal=:lokal and a.lokal_szczegol=:lokal_szczegol',
+                        [':type' => Utp::TYPE, ':ulica' => $this->address_ulica, ':dom' => $this->address_dom, ':dom_szczegol' => $this->address_dom_szczegol, ':lokal' => $this->address_lokal, ':lokal_szczegol' => $this->address_lokal_szczegol]
+                      )->queryScalar();
+                    $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp];
+                    continue;
 	                } elseif ($serviceInstall[$i] == Utp3::TYPE) {
-                        if (!$countUtp3) $countUtp3 = Installation::find()->where(['type_id' => Utp3::TYPE, 'address_id' => $this->addressId])->count();
-                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp3];
-                        continue;
+                    if (!$countUtp3)
+                	    $countUtp3 = \Yii::$app->db->createCommand(
+                	      'SELECT COUNT(*) FROM installation i
+                        JOIN address a ON a.id = i.address_id
+                        WHERE type_id=:type and a.ulica=:ulica and a.dom=:dom and a.dom_szczegol=:dom_szczegol and a.lokal=:lokal and a.lokal_szczegol=:lokal_szczegol',
+                        [':type' => Utp3::TYPE, ':ulica' => $this->address_ulica, ':dom' => $this->address_dom, ':dom_szczegol' => $this->address_dom_szczegol, ':lokal' => $this->address_lokal, ':lokal_szczegol' => $this->address_lokal_szczegol]
+                      )->queryScalar();
+                    $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countUtp3];
+                    continue;
 	                } elseif ($serviceInstall[$i] == Coax::TYPE) {
-	                    if (!$countCoax) $countCoax = Installation::find()->where(['type_id' => Coax::TYPE, 'address_id' => $this->addressId])->count();
-                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countCoax];
-                        continue;
+                    if (!$countCoax)
+                	    $countCoax = \Yii::$app->db->createCommand(
+                	      'SELECT COUNT(*) FROM installation i
+                        JOIN address a ON a.id = i.address_id
+                        WHERE type_id=:type and a.ulica=:ulica and a.dom=:dom and a.dom_szczegol=:dom_szczegol and a.lokal=:lokal and a.lokal_szczegol=:lokal_szczegol',
+                        [':type' => Coax::TYPE, ':ulica' => $this->address_ulica, ':dom' => $this->address_dom, ':dom_szczegol' => $this->address_dom_szczegol, ':lokal' => $this->address_lokal, ':lokal_szczegol' => $this->address_lokal_szczegol]
+                      )->queryScalar();
+                    $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countCoax];
+                    continue;
 	                } elseif ($serviceInstall[$i] == Fiber::TYPE) {
-	                    if (!$countFiber) $countFiber = Installation::find()->where(['type_id' => Fiber::TYPE, 'address_id' => $this->addressId])->count();
-                        $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countFiber];
-                        continue;
+                    if (!$countFiber)
+                	    $countFiber = \Yii::$app->db->createCommand(
+                	      'SELECT COUNT(*) FROM installation i
+                        JOIN address a ON a.id = i.address_id
+                        WHERE type_id=:type and a.ulica=:ulica and a.dom=:dom and a.dom_szczegol=:dom_szczegol and a.lokal=:lokal and a.lokal_szczegol=:lokal_szczegol',
+                        [':type' => Fiber::TYPE, ':ulica' => $this->address_ulica, ':dom' => $this->address_dom, ':dom_szczegol' => $this->address_dom_szczegol, ':lokal' => $this->address_lokal, ':lokal_szczegol' => $this->address_lokal_szczegol]
+                      )->queryScalar();
+                    $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $countFiber];
+                    continue;
 	                }
-	            }
+	            } else;
                 $array[self::SERVICES[$i]] = ['service_id' => $i + 1, 'service_info' => $serviceInfo[$i], 'install_id' => $serviceInstall[$i], 'install_info' => $installInfo[$serviceInstall[$i]]];   
             }
-	            
+// 	          var_dump($array); exit();  
             return $array;
         }
         
