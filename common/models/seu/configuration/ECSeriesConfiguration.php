@@ -53,7 +53,7 @@ class ECSeriesConfiguration extends Configuration {
                 $add .= "discard pvs\n";
                 $add .= "no shutdown\n";
                 $add .= "end\n";
-                $add .= "cop r s\n";
+                $add .= "cop r st\n";
             } elseif ($this->connectionsCount == 1) {
                 if ($this->connectionType == 1) {
                     $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
@@ -87,7 +87,7 @@ class ECSeriesConfiguration extends Configuration {
                     $add .= "discard pvs\n";
                     $add .= "no shutdown\n";
                     $add .= "end\n";
-                    $add .= "cop r s\n";
+                    $add .= "cop r st\n";
                 } elseif ($this->connectionType == 3) {
                     $add = "mac-address-table static {$this->mac} interface ethernet {$this->parentPortName}  vlan {$this->vlanId}  permanent\n";
                     $add .= "access-list IP extended iptv-only{$this->parentPortNumber}\n";
@@ -118,7 +118,7 @@ class ECSeriesConfiguration extends Configuration {
                     $add .= "discard pvs\n";
                     $add .= "no shutdown\n";
                     $add .= "end\n";
-                    $add .= "cop r s\n";
+                    $add .= "cop r st\n";
                 }
             }
         } elseif ($this->typeId == GatewayVoip::TYPE) {
@@ -156,7 +156,7 @@ class ECSeriesConfiguration extends Configuration {
             $add .= "discard pvs\n";
             $add .= "no shutdown\n";
             $add .= "end\n";
-            $add .= "cop r s\n";
+            $add .= "cop r st\n";
         } elseif ($this->typeId == Ups::TYPE) {
             $add = " ";
         }
@@ -207,7 +207,7 @@ class ECSeriesConfiguration extends Configuration {
             $drop .= "no access-list IP extended iptv-only{$this->parentPortNumber}\n";
             $drop .= "exit\n";
             $drop .= "clear ip dhcp snooping binding {$this->mac} {$this->ip}\n";
-            $drop .= "cop r s\n";
+            $drop .= "cop r st\n";
         } elseif ($this->typeId == GatewayVoip::TYPE) {
             $drop = " ";   
         } elseif ($this->typeId == Camera::TYPE) {
@@ -254,7 +254,7 @@ class ECSeriesConfiguration extends Configuration {
             $drop .= "no access-list IP extended iptv-only{$this->parentPortNumber}\n";
             $drop .= "exit\n";
             $drop .= "clear ip dhcp snooping binding {$this->mac} {$this->ip}\n";
-            $drop .= "cop r s\n";
+            $drop .= "cop r st\n";
         }
         
         return $drop;
@@ -273,7 +273,7 @@ class ECSeriesConfiguration extends Configuration {
         $change .= "port security\n";
         $change .= "no shutdown\n";
         $change .= "end\n";
-        $change .= "cop r s\n";
+        $change .= "cop r st\n";
     
         return $change;
     }
