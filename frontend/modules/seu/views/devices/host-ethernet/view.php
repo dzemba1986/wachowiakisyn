@@ -94,7 +94,8 @@ echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->vlansToIps as $vlanToIp) {
     
-    $link = Html::a($vlanToIp['ip'], Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['id' => 'check-dhcp','target'=>'_blank']);
+//     $link = Html::a($vlanToIp['ip'], Url::to("http://172.20.4.17:701/index.php?sourceid=3&filter=clientmac%3A%3D" . base_convert(preg_replace('/:/', '', $device->mac), 16, 10) . "&search=Search"), ['id' => 'check-dhcp','target'=>'_blank']);
+    $link = Html::a($vlanToIp['ip'], Url::to("http://log.serwis.wtvk.pl/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(source,tag,facility_label,severity_label,message),filters:!(('state':(store:appState),meta:(alias:!n,disabled:!f,index:'37e9acc0-11e7-11ea-a2fe-b58791c3a479',key:message,negate:!f,params:(query:'$device->mac'),type:phrase,value:'$device->mac'),query:(match:(message:(query:'$device->mac',type:phrase))))),index:'37e9acc0-11e7-11ea-a2fe-b58791c3a479',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc)))"));
     echo '<tr>';
     echo "<th>VLAN {$vlanToIp['vlan_id']}</th>";
     echo "<td>{$link}</td>";
