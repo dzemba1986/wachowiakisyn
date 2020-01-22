@@ -233,7 +233,7 @@ class SwitchController extends Controller {
 	    exec('mkdir /var/tftp/$(date +%Y-%m-%d)');
 	    sleep(2);
 	    exec('mv /var/tftp/*.rtf /var/tftp/$(date +%Y-%m-%d)');
-	    exec('lftp -e "set ssl:verify-certificate no; mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 2121 -u backup,b@c4@p 10.111.233.2');
+	    exec('lftp -e "mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 21 -u backup,HmUlrF5mBTYe7UJAOaB3 10.111.233.2');
 	}
 }
 ?>
