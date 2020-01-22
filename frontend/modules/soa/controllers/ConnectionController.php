@@ -94,7 +94,7 @@ class ConnectionController extends Controller
             ['is not', 'host_id', null]
         ])->count();
         
-        $disableDevicesList = (!$allConnections && !$connection->host_id && $connection->type_id <> 2) || ($connection->type_id == 2 && (Yii::$app->user->id == 24 || Yii::$app->user->id == 22)) ? false : true;
+        $disableDevicesList = (!$allConnections && !$connection->host_id && $connection->type_id <> 2) || ($connection->type_id == 2 && (Yii::$app->user->id == 26 || Yii::$app->user->id == 24)) ? false : true;
 
         if ($connection->load($request->post())) {
             if (!empty($connection->close_date) && is_null($connection->oldAttributes['close_date'])) {
