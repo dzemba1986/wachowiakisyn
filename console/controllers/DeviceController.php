@@ -57,7 +57,7 @@ class DeviceController extends Controller {
 		
 		//by model [model_name => file_name]
 		$models = ['x930' => 'x930', 'x900' => 'x900', 'x610' => 'x610', 'x600' => 'x600', 'x510' => 'x510', 'x230' => 'x230', 'x210' => 'x210', 
-		    '8000GS' => '8000GS', '8000GS/24' => '8000GS-24', '8000GS/48' => '8000GS-48', 'EC' => 'ecs'];
+		  '8000GS' => '8000GS', '8000GS/24' => '8000GS-24', '8000GS/48' => '8000GS-48', 'EC' => 'ecs', 'S1720' => 'hwS1720', '720' => 'hws'];
 		
 		foreach ($models as $model_name => $file_name) {
 		    //all
@@ -254,7 +254,7 @@ class DeviceController extends Controller {
 	    exec('mkdir /var/tftp/$(date +%Y-%m-%d)');
 	    sleep(2);
 	    exec('mv /var/tftp/*.rtf /var/tftp/$(date +%Y-%m-%d)');
-	    exec('lftp -e "set ssl:verify-certificate no; mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 2121 -u backup,b@c4@p 10.111.233.2');
+	    exec('lftp -e "mirror -R /var/tftp/$(date +%Y-%m-%d)/ /switch/; exit" -p 21 -u backup,HmUlrF5mBTYe7UJAOaB3 10.111.233.2');
 	}
 	
 	function actionCheckInactiveSwitch() {
@@ -314,9 +314,9 @@ class DeviceController extends Controller {
 // 	    }
 	}
 	
-	function actionIcingaDel() {
+	function actionIcingaDel($id) {
 	    
-        echo \Yii::$app->apiIcingaClient->delete('objects/hosts/swOP5G?cascade=1', null, [
+        echo \Yii::$app->apiIcingaClient->delete("objects/hosts/$id?cascade=1", null, [
             'Content-Type' => 'application/json',
             'Authorization' => 'Basic YXBpOmFwaXBhc3M=',
             'Accept' => 'application/json'
