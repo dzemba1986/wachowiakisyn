@@ -28,8 +28,6 @@ class XSeriesConfiguration extends Configuration {
                 $add .= "switchport port-security maximum 0\n";
                 $add .= "switchport port-security\n";
                 $add .= "description {$this->desc}\n";
-                $add .= "egress-rate-limit 820032\n";
-                $add .= "service-policy input 800M\n";
                 $this->smtp ? $add .= "access-group anyuser-smtp\n" : $add .= "access-group anyuser\n";
                 $add .= "switchport access vlan {$this->vlanId}\n";
                 $add .= "spanning-tree portfast\n";
@@ -204,8 +202,6 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
                 $drop .= "interface {$this->parentPortName}\n";
                 $drop .= "no switchport port-security\n";
-                $drop .= "no service-policy input 800M\n";
-                $drop .= "no egress-rate-limit\n";
                 $this->smtp ? $drop .= "no access-group anyuser-smtp\n" : $drop .= "no access-group anyuser\n";
                 $drop .= "switchport access vlan 555\n";
                 $drop .= "exit\n";

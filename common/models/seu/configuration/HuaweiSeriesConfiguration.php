@@ -31,8 +31,6 @@ class HuaweiSeriesConfiguration extends Configuration {
                 $add .= "undo port-security enable\n";
                 $add .= "port-security enable\n";
                 $add .= "port-security mac-address {$this->mac} vlan {$this->vlanId}\n";
-                $add .= "qos lr outbound cir 855000 cbs 855000\n";
-                $add .= "qos lr inbound cir 870000 cbs 870000\n";
                 $add .= "dhcp snooping check dhcp-chaddr enable\n";
                 $add .= "dhcp snooping max-user-number 1\n";
                 $add .= "undo shutdown\n";
@@ -117,8 +115,6 @@ class HuaweiSeriesConfiguration extends Configuration {
                 $drop .= "port default vlan 555\n";
                 $drop .= "undo port-security enable\n";
                 $drop .= "undo traffic-filter inbound acl name net-user\n";
-                $drop .= "undo qos lr inbound\n";
-                $drop .= "undo qos lr outbound\n";
                 $drop .= "undo dhcp snooping check dhcp-chaddr enable\n";
                 $drop .= "undo dhcp snooping max-user-number\n";
                 $drop .= "loopback-detect enable\n";
