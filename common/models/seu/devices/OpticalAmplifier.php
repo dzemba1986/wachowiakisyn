@@ -49,15 +49,11 @@ class OpticalAmplifier extends BusinessDevice {
 	    return ArrayHelper::merge(
 	        parent::rules(),
 	        [
-	            ['input_power', 'default', 'value' => function ($model, $attribute) {
-	                return $model->model_id == 8 ? '-3 - 10' : '';
-	            }],
+              ['input_power', 'default', 'value' => '-3 - 10'],
 	            ['input_power', 'string'],
 	            ['input_power', 'required', 'message' => 'Wartość wymagana'],
 	            
-	            ['output_power', 'default', 'value' => function ($model, $attribute) {
-	                return $model->model_id == 8 ? 17 : 0;
-	            }],
+	            ['output_power', 'default', 'value' => 17],
 	            ['output_power', 'integer'],
 	            ['output_power', 'required', 'message' => 'Wartość wymagana'],
 	            
