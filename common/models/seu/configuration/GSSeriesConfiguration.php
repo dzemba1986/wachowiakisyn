@@ -160,8 +160,6 @@ class GSSeriesConfiguration extends Configuration {
             $add .= "switchport access vlan {$this->vlanId}\n";
             $add .= "description {$this->desc}\n";
             $add .= "service-acl input user{$this->parentPortNumber}\n";
-            $add .= "traffic-shape 830000 8300000\n";
-            $add .= "rate-limit 938000\n";
             $add .= "port security mode lock\n";
             $add .= "port security discard\n";
             $add .= "spanning-tree portfast\n";

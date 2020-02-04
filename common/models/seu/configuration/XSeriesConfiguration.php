@@ -48,8 +48,7 @@ class XSeriesConfiguration extends Configuration {
                     $add .= "spanning-tree portfast\n";
                     $add .= "spanning-tree portfast bpdu-guard enable\n";
                     $add .= "description {$this->desc}\n";
-                    $add .= "egress-rate-limit 820032\n";
-                    $add .= "service-policy input iptv-user-800M\n";
+                    $add .= "service-policy input iptv-user-1G\n";
                     $this->smtp ? $add .= "access-group iptv-user-smtp\n" : $add .= "access-group iptv-user\n";
                     $add .= "no ip igmp trusted all\n";
                     $add .= "ip igmp trusted report\n";
@@ -70,8 +69,7 @@ class XSeriesConfiguration extends Configuration {
                         $add .= "spanning-tree portfast\n";
                         $add .= "spanning-tree portfast bpdu-guard enable\n";
                         $add .= "description {$this->desc}\n";
-                        $add .= "egress-rate-limit 820032\n";
-                        $add .= "service-policy input internet-user-800M\n";
+                        $add .= "service-policy input internet-user-1G\n";
                         $this->smtp ? $add .= "access-group internet-user-smtp\n" : $add .= "access-group internet-user\n";
                         $add .= "no ip igmp trusted all\n";
                         $add .= "switchport access vlan {$this->vlanId}\n";
@@ -90,8 +88,7 @@ class XSeriesConfiguration extends Configuration {
                         $add .= "spanning-tree portfast\n";
                         $add .= "spanning-tree portfast bpdu-guard enable\n";
                         $add .= "description {$this->desc}\n";
-                        $add .= "egress-rate-limit 820032\n";
-                        $add .= "service-policy input iptv-only-800M\n";
+                        $add .= "service-policy input iptv-only-1G\n";
                         $add .= "access-group iptv-only\n";
                         $add .= "no ip igmp trusted all\n";
                         $add .= "ip igmp trusted report\n";
@@ -174,8 +171,7 @@ class XSeriesConfiguration extends Configuration {
             $add .= "spanning-tree portfast\n";
             $add .= "spanning-tree portfast bpdu-guard enable\n";
             $add .= "description {$this->desc}\n";
-            $add .= "egress-rate-limit 820032\n";
-            $add .= "service-policy input iptv-user-800M\n";
+            $add .= "service-policy input iptv-user-1G\n";
             $add .= "access-group iptv-user\n";
             $add .= "no ip igmp trusted all\n";
             $add .= "ip igmp trusted report\n";
@@ -216,10 +212,9 @@ class XSeriesConfiguration extends Configuration {
                 $drop .= "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\r\n";
                 $drop .= "int {$this->parentPortName}\r\n";
                 $drop .= "no switchport port-security\r\n";
-                $drop .= "no service-policy input internet-user-800M\r\n";
-                $drop .= "no service-policy input iptv-user-800M\r\n";
-                $drop .= "no service-policy input iptv-only-800M\r\n";
-                $drop .= "no egress-rate-limit\r\n";
+                $drop .= "no service-policy input internet-user-1G\r\n";
+                $drop .= "no service-policy input iptv-user-1G\r\n";
+                $drop .= "no service-policy input iptv-only-1G\r\n";
                 $drop .= "no ip igmp trust all\r\n";
                 $this->smtp ? $drop .= "no access-group internet-user-smtp\r\n" : $drop .= "no access-group internet-user\r\n";
                 $this->smtp ? $drop .= "no access-group iptv-user-smtp\r\n" : $drop .= "no access-group iptv-user\r\n";
@@ -273,10 +268,9 @@ class XSeriesConfiguration extends Configuration {
             $drop = "no mac address-table static {$this->mac} forward interface {$this->parentPortName} vlan {$this->vlanId}\n";
             $drop .= "int {$this->parentPortName}\n";
             $drop .= "no switchport port-security\n";
-            $drop .= "no service-policy input internet-user-800M\n";
-            $drop .= "no service-policy input iptv-user-800M\n";
-            $drop .= "no service-policy input iptv-only-800M\n";
-            $drop .= "no egress-rate-limit\n";
+            $drop .= "no service-policy input internet-user-1G\n";
+            $drop .= "no service-policy input iptv-user-1G\n";
+            $drop .= "no service-policy input iptv-only-1G\n";
             $drop .= "no ip igmp trust all\n";
             $drop .= "no access-group internet-user\n";
             $drop .= "no access-group iptv-user\n";

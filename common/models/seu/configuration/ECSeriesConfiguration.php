@@ -65,8 +65,6 @@ class ECSeriesConfiguration extends Configuration {
                     $add .= "description {$this->desc}\n";
                     $add .= "ip igmp filter 7\n";
                     $add .= "port security\n";
-                    $add .= "rate-limit input 890000\n";
-                    $add .= "rate-limit output 840000\n";
                     $add .= "switchport allowed vlan add {$this->vlanId} untagged\n";
                     $add .= "switchport ingress-filtering\n";
                     $add .= "switchport mode access\n";
@@ -96,8 +94,6 @@ class ECSeriesConfiguration extends Configuration {
                     $add .= "description {$this->desc}\n";
                     $add .= "ip igmp filter 8\n";
                     $add .= "port security\n";
-                    $add .= "rate-limit input 890000\n";
-                    $add .= "rate-limit output 840000\n";
                     $add .= "switchport allowed vlan add {$this->vlanId} untagged\n";
                     $add .= "switchport ingress-filtering\n";
                     $add .= "switchport mode access\n";
@@ -135,8 +131,6 @@ class ECSeriesConfiguration extends Configuration {
             $add .= "description {$this->desc}\n";
             $add .= "ip igmp filter 8\n";
             $add .= "port security\n";
-            $add .= "rate-limit input 890000\n";
-            $add .= "rate-limit output 840000\n";
             $add .= "switchport allowed vlan add {$this->vlanId} untagged\n";
             $add .= "switchport ingress-filtering\n";
             $add .= "switchport mode access\n";
@@ -212,10 +206,6 @@ class ECSeriesConfiguration extends Configuration {
             $drop .= "shutdown\n";
             $drop .= "ip igmp filter 7\n";
             $drop .= "no port security\n";
-            $drop .= "rate-limit input 1000000\n";
-            $drop .= "no rate-limit input\n";
-            $drop .= "rate-limit output 1000000\n";
-            $drop .= "no rate-limit output\n";
             $drop .= "switchport allowed vlan add 555 untagged\n";
             $drop .= "switchport ingress-filtering\n";
             $drop .= "switchport mode access\n";
