@@ -133,7 +133,7 @@ class HuaweiSeriesConfiguration extends Configuration {
             $drop = "interface {$this->parentPortName}\n";
             $drop .= "shutdown\n";
             $drop .= "port default vlan 555\n";
-            $drop .= "undo traffic-filter inbound acl name voip{$this->parentPortNumber}\n";
+            $drop .= "undo traffic-filter inbound acl name voip" . sprintf("%02d", $this->parentPortNumber) . "\n";
             $drop .= "undo port-security enable\n";
             $drop .= "undo description\n";
             $drop .= "undo shutdown\n";
@@ -146,7 +146,7 @@ class HuaweiSeriesConfiguration extends Configuration {
 	        	$drop = "interface {$this->parentPortName}\n";
 	        	$drop .= "shutdown\n";
 	        	$drop .= "port default vlan 555\n";
-	        	$drop .= "undo traffic-filter inbound acl name cam{$this->parentPortNumber}\n";
+	        	$drop .= "undo traffic-filter inbound acl name cam" . sprintf("%02d", $this->parentPortNumber) . "\n";
 	        	$drop .= "undo port-security enable\n";
 	        	$drop .= "undo description\n";
 	        	$drop .= "undo shutdown\n";
