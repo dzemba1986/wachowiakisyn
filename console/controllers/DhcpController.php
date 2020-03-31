@@ -2,15 +2,15 @@
 
 namespace console\controllers;
 
+use common\models\seu\network\Dhcp;
 use yii\console\Controller;
-use backend\models\Dhcp;
 
 class DhcpController extends Controller {
 	
 	// The command "yii example/create test" will call "actionCreate('test')"
-	public function actionGenerate() {
+	public function actionGenerateAllFile() {
 		
-		Dhcp::generateFile();
+		Dhcp::generateFileAll();
 	}
 
 	// The command "yii example/index city" will call "actionIndex('city', 'name')"

@@ -35,4 +35,36 @@ class Dhcp extends Model
 	    
 	    file_put_contents($updateFile, time());
 	}
+	
+	public static function generateFileAll() {
+	  
+	  $pathDhcp = \Yii::getAlias('@console/dhcp');
+	  $updateFile = $pathDhcp . '/subnets/.update_notify';
+	  
+	  $subnets = Subnet::find()->where(['dhcp' => true])->all();
+	  
+	  foreach ($subnets as $subnet) {
+	    $ips = Ip::find()->joinWith('device')->select(['device_id', 'ip', 'mac'])->where([
+	      'subnet_id' => $subnet->id, 'dhcp' => true, 'main' => true
+	    ])->orderBy('ip')->asArray()->all();
+	    
+	    $data = "# PODSIEĆ {$subnet->desc}\n\n";
+	    $data .= "subnet {$subnet->blockIp->getFirstIp()} netmask {$subnet->blockIp->getMask()} {\n";
+	    $data .= "{$subnet->generateOptionsDhcp()}";
+	    
+	    foreach ($ips as $ip) {
+	      $data .= "\thost {$ip['device_id']} {\n";
+	      $data .= "\t\thardware ethernet {$ip['device']['mac']};\n";
+	      $data .= "\t\tfixed-address {$ip['ip']};\n";
+	      $data .= "\t}\n";
+	    }
+	    
+	    $data .= "}";
+	    
+	    $fileConf = $pathDhcp . '/subnets/' . $subnet->id . '.conf';
+	    file_put_contents($fileConf, $data);
+	  }
+	  
+	  file_put_contents($updateFile, time());
+	}
 }
