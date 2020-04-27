@@ -160,7 +160,26 @@ class HuaweiSeriesConfiguration extends Configuration {
         } elseif ($this->typeId == Ups::TYPE) {
             $add = " ";
         } elseif ($this->typeId == Virtual::TYPE) {
-            $add = " ";
+            $add = "interface {$this->parentPortName}\n";
+            $add .= "shutdown\n";
+            $add .= "description {$this->desc}\n";
+            $add .= "port default vlan {$this->vlanId}\n";
+            $add .= "loopback-detect enable\n";
+            $add .= "traffic-filter inbound acl name iptv-user\n";
+            $add .= "traffic-policy User inbound\n";
+            $add .= "igmp-snooping group-policy 2005 vlan {$this->vlanId}\n";
+            $add .= "multicast-source-deny\n";
+            $add .= "undo lldp enable\n";
+            $add .= "undo port-security enable\n";
+            $add .= "port-security enable\n";
+            $add .= "port-security mac-address {$this->mac} vlan {$this->vlanId}\n";
+            $add .= "dhcp snooping check dhcp-chaddr enable\n";
+            $add .= "dhcp snooping max-user-number 1\n";
+            $add .= "undo shutdown\n";
+            $add .= "quit\n";
+            $add .= "quit\n";
+            $add .= "save\n";
+            $add .= "Y\n";
         }
 
     return $add;
@@ -218,7 +237,26 @@ class HuaweiSeriesConfiguration extends Configuration {
         } elseif ($this->typeId == Ups::TYPE) {
             $drop = " ";
         } elseif ($this->typeId == Virtual::TYPE) {
-            $drop = " ";
+            $drop .= "interface {$this->parentPortName}\n";
+            $drop .= "shutdown\n";
+            $drop .= "port default vlan 555\n";
+            $drop .= "undo port-security enable\n";
+            $drop .= "undo traffic-filter inbound acl name net-user\n";
+            $drop .= "undo traffic-filter inbound acl name iptv-user\n";
+            $drop .= "undo traffic-filter inbound acl name iptv-only\n";
+            $drop .= "undo dhcp snooping check dhcp-chaddr enable\n";
+            $drop .= "undo traffic-policy User inbound\n";
+            $drop .= "undo igmp-snooping group-policy 2004 vlan {$this->vlanId}\n";
+            $drop .= "undo igmp-snooping group-policy 2005 vlan {$this->vlanId}\n";
+            $drop .= "undo dhcp snooping max-user-number\n";
+            $drop .= "loopback-detect enable\n";
+            $drop .= "undo lldp enable\n";
+            $drop .= "undo shutdown\n";
+            $drop .= "quit\n";
+            $drop .= "quit\n";
+            $drop .= "reset dhcp snooping user-bind interface {$this->parentPortName}\n";
+            $drop .= "save\n";
+            $drop .= "Y\n";
         }
     return $drop;
     }
