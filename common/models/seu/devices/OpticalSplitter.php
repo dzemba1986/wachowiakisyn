@@ -50,7 +50,7 @@ class OpticalSplitter extends BusinessDevice
 	        $parent,
 	        [
 	            ['insertion_loss', 'default', 'value' => function ($model, $attribute) {
-                  if ($model->model_id == 36 || $model->model_id == 89) $out = 3.8;
+	                if ($model->model_id == 36 || $model->model_id == 89 || $model->model_id == 106) $out = 3.8;
 	                if ($model->model_id == 37 || $model->model_id == 97) $out = 7.2;
 	                if ($model->model_id == 38 || $model->model_id == 82) $out = 10.2;
 	                if ($model->model_id == 39 || $model->model_id == 88) $out = 13.6;
