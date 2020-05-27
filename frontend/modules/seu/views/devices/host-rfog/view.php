@@ -44,7 +44,7 @@ echo '<table class="table table-striped table-bordered detail-view">';
 echo '<tbody>';
 foreach ($device->connectionsTypeNameToSoaId as $connection) {
     
-    $link = Html::a('Zamknij', Url::to(['connection/close', 'id' => $connection['id']]), ['class' => 'close-connection']);
+    $link = Html::a('Zamknij', Url::to(['/soa/connection/close', 'id' => $connection['id']]), ['class' => 'close-connection']);
 	echo '<tr>';
 	echo "<th>{$connection['name']} ({$connection['soa_id']})</th>";
 	echo "<td>{$link}</td>";

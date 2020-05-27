@@ -16,6 +16,8 @@ use vakorovin\yii2_macaddress_validator\MacaddressValidator;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
+use common\models\seu\devices\HostRfog;
+use common\models\seu\Link;
 
 /**
  * @property integer $id
@@ -385,16 +387,24 @@ class Connection extends ActiveRecord
                 if (($this->type_id != 2 && array_key_exists('host_id', $changedAttributes)) && !is_null($changedAttributes['host_id'])) {
                     if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
                         $host = HostEthernet::findOne($changedAttributes['host_id']);
-                        $host->status = false;
-                        $host->dhcp = false;
-                        $host->smtp = false;
-                        $host->mac = null;
+                        if ($host == 1) {
+                            $host->status = false;
+                            $host->dhcp = false;
+                            $host->smtp = false;
+                            $host->mac = null;
+
 //                         var_dump($host->validate()); var_dump($host->errors); exit();
-                        if (!$host->save()) throw new Exception('Błąd zapisu hosta');
+                            if (!$host->save()) throw new Exception('Błąd zapisu hosta');
+                            
+                            foreach ($host->ips as $ip)
+                                if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
+                        } elseif ($host == 0) {
+                            $host = HostRfog::findOne($changedAttributes['host_id']);
+                            $link = Link::findOne(['device' => $changedAttributes['host_id']]);
+                            $link->delete();
+                            $host->delete();
+                        }
                         
-                        foreach ($host->ips as $ip)
-                            if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
-    
                     }
                 }
             }
