@@ -81,7 +81,21 @@ class Ip extends ActiveRecord
     	        exit();
     	    }
     	    
+    	    $ip = new \IPv4($this->ip);
+    	    
 	        Dhcp::generateFile($this->subnet);
+	        \Yii::$app->keaDb->createCommand()
+	           ->delete('hosts', ['host_id' => $this->device_id])
+	           ->execute();
+	        \Yii::$app->keaDb->createCommand()
+	           ->insert('hosts', [
+	               'host_id' => $this->device_id,
+                   'dhcp_identifier' => "DECODE(REPLACE('{$device->mac}', ':', ''), 'hex)",
+                   'dhcp_identifier_type' => 0,
+                   'dhcp4_subnet_id' => $this->subnet_id,
+                   'ipv4_address' => $ip->numeric()
+               ])
+	           ->execute();
 	    }
 	}
 	
@@ -117,5 +131,8 @@ class Ip extends ActiveRecord
 	public function afterDelete() {
 	    
         Dhcp::generateFile($this->subnet);
+	    \Yii::$app->keaDb->createCommand()
+	       ->delete('hosts', ['host_id' => $this->device_id])
+	       ->execute();
 	}
 }

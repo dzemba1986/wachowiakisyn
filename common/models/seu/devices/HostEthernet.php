@@ -166,7 +166,13 @@ class HostEthernet extends Host {
 	    
 	    if (!$insert) {
 	        if (array_key_exists('mac', $changedAttributes) || array_key_exists('dhcp', $changedAttributes)) {
-	            !empty($this->ips) ? Dhcp::generateFile($this->ips[0]->subnet) : null;
+	            if(!empty($this->ips)) {
+	                Dhcp::generateFile($this->ips[0]->subnet);
+	               
+	                \Yii::$app->keaDb->createCommand()
+	                   ->update('hosts', ['dhcp_identifier' => "DECODE(REPLACE('{$this->mac}', ':', ''), 'hex')"], ['host_id' => $this->id])
+	                   ->execute();
+	            }
 	        }
 	    } else {
 	        $history = \Yii::createObject([
