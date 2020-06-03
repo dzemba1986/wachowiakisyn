@@ -384,10 +384,15 @@ class Connection extends ActiveRecord
                 
                 if (!$history->save()) throw new Exception('Błąd zapisu historii');
                 
-                if (($this->type_id != 2 && array_key_exists('host_id', $changedAttributes)) && !is_null($changedAttributes['host_id'])) {
+//                 var_dump($this->type_id); 
+//                 var_dump(array_key_exists('host_id', $changedAttributes));
+//                 var_dump(!is_null($changedAttributes['host_id']));
+//                 var_dump(self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0);
+//                 exit();
+                if ($this->type_id != 2 && array_key_exists('host_id', $changedAttributes) && !is_null($changedAttributes['host_id'])) {
                     if (self::find()->where(['host_id' => $changedAttributes['host_id']])->count() == 0) {
                         $host = HostEthernet::findOne($changedAttributes['host_id']);
-                        if ($host == 1) {
+                        if ($host instanceof HostEthernet) {
                             $host->status = false;
                             $host->dhcp = false;
                             $host->smtp = false;
@@ -398,13 +403,12 @@ class Connection extends ActiveRecord
                             
                             foreach ($host->ips as $ip)
                                 if (!$ip->delete()) throw new Exception('Błąd usuwania IP');
-                        } elseif ($host == 0) {
+                        } else {
                             $host = HostRfog::findOne($changedAttributes['host_id']);
                             $link = Link::findOne(['device' => $changedAttributes['host_id']]);
                             $link->delete();
                             $host->delete();
                         }
-                        
                     }
                 }
             }
